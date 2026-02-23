@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+html { scroll-behavior: smooth; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
 .panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
@@ -49,7 +50,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .rebuttal-point { margin-bottom: 0.5rem; }
@@ -99,6 +100,90 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <p>But a void is not a foundation. Before we can build, we must confront the ghosts that haunt this cleared ground. These are not trivial phantoms. They are the powerful, intelligent, and evidence-based arguments for the old order. They are the doubts that are likely forming in your own mind right now.</p>
 
   <p>To ignore these doubts would be an act of intellectual cowardice. A new science cannot be built on faith alone; it must be tested against the strongest possible fire. Therefore, I will now put my own thesis on trial. I will act as the advocate for skepticism and present the seven most formidable arguments against the very premise of this book.</p>
+
+  <!-- SVG: Trial by fire — crisis/heat metaphor with warm red/amber gradients -->
+  <svg style="display:block;width:100%;max-width:520px;margin:1.5rem auto;" viewBox="0 0 520 130" aria-label="Trial by fire illustration — seven pillars tested by flame">
+    <defs>
+      <linearGradient id="fireBgGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a1a1a"/>
+        <stop offset="100%" stop-color="#292524"/>
+      </linearGradient>
+      <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#dc2626"/>
+        <stop offset="50%" stop-color="#d97706"/>
+        <stop offset="100%" stop-color="#fef08a" stop-opacity="0.5"/>
+      </linearGradient>
+      <linearGradient id="pillarGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#44403c"/>
+        <stop offset="100%" stop-color="#292524"/>
+      </linearGradient>
+      <radialGradient id="glowGrad" cx="50%" cy="100%" r="60%">
+        <stop offset="0%" stop-color="#d97706" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#d97706" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="fire-glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+      <filter id="pillar-shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.4"/>
+      </filter>
+    </defs>
+    <!-- Dark dramatic background -->
+    <rect x="0" y="0" width="520" height="130" rx="8" fill="url(#fireBgGrad)"/>
+    <!-- Ground glow -->
+    <rect x="0" y="90" width="520" height="40" rx="0" fill="url(#glowGrad)" opacity="0.8"/>
+    <!-- Ground line -->
+    <rect x="0" y="108" width="520" height="22" rx="0" fill="#1c1917"/>
+    <!-- Seven pillars -->
+    <text x="260" y="18" text-anchor="middle" font-size="11" fill="#fef08a" font-weight="700" font-family="'Playfair Display', Georgia, serif" opacity="0.9">Seven Fallacies — Tested by Fire</text>
+    <!-- Pillars (7 total) -->
+    <rect x="22"  y="55" width="18" height="55" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="82"  y="50" width="18" height="60" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="142" y="52" width="18" height="58" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="202" y="48" width="18" height="62" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="262" y="53" width="18" height="57" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="322" y="49" width="18" height="61" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <rect x="382" y="54" width="18" height="56" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
+    <!-- Flame shapes on each pillar — animated flicker -->
+    <path d="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" fill="url(#flameGrad)" opacity="0.9">
+      <animate attributeName="d" values="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z;M22,56 Q27,38 31,26 Q35,40 37,25 Q41,38 40,56Z;M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" dur="0.9s" repeatCount="indefinite"/>
+    </path>
+    <path d="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" fill="url(#flameGrad)" opacity="0.85">
+      <animate attributeName="d" values="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z;M82,51 Q87,33 91,20 Q95,35 97,20 Q101,33 100,51Z;M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" dur="1.1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" fill="url(#flameGrad)" opacity="0.9">
+      <animate attributeName="d" values="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z;M142,53 Q147,35 151,22 Q155,37 157,22 Q161,35 160,53Z;M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" dur="0.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" fill="url(#flameGrad)" opacity="0.85">
+      <animate attributeName="d" values="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z;M202,49 Q207,31 211,18 Q215,33 217,18 Q221,31 220,49Z;M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" dur="1.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" fill="url(#flameGrad)" opacity="0.9">
+      <animate attributeName="d" values="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z;M262,54 Q267,36 271,23 Q275,38 277,23 Q281,36 280,54Z;M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" dur="0.95s" repeatCount="indefinite"/>
+    </path>
+    <path d="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" fill="url(#flameGrad)" opacity="0.85">
+      <animate attributeName="d" values="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z;M322,50 Q327,32 331,19 Q335,34 337,19 Q341,32 340,50Z;M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" dur="1.05s" repeatCount="indefinite"/>
+    </path>
+    <path d="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" fill="url(#flameGrad)" opacity="0.9">
+      <animate attributeName="d" values="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z;M382,55 Q387,37 391,24 Q395,39 397,24 Q401,37 400,55Z;M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" dur="0.85s" repeatCount="indefinite"/>
+    </path>
+    <!-- Pillar labels -->
+    <text x="31"  y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">I</text>
+    <text x="91"  y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">II</text>
+    <text x="151" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">III</text>
+    <text x="211" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">IV</text>
+    <text x="271" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">V</text>
+    <text x="331" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">VI</text>
+    <text x="391" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">VII</text>
+    <!-- "Survived" text on right -->
+    <text x="470" y="70" text-anchor="middle" font-size="13" fill="#4ade80" font-weight="700" font-family="'Playfair Display', Georgia, serif" opacity="0.9">Survived</text>
+    <text x="470" y="86" text-anchor="middle" font-size="9" fill="#86efac" font-family="'DM Sans', system-ui, sans-serif">Foundations hold.</text>
+    <circle cx="470" cy="55" r="12" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.7">
+      <animate attributeName="r" values="12;14;12" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0.4;0.7" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <text x="470" y="59" text-anchor="middle" font-size="14" fill="#4ade80" font-family="'DM Sans', system-ui, sans-serif">&#x2713;</text>
+  </svg>
 
   <div class="stat-callout">
     <div class="stat-number">7</div>

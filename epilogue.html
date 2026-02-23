@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
+html { scroll-behavior: smooth; }
 /* ── Reading progress bar ── */
 .reading-progress {
   position: fixed;
@@ -34,10 +35,18 @@ body {
 .prose {
   max-width: 680px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2rem 1.5rem 5rem;
   font-family: 'DM Sans', system-ui, sans-serif;
-  line-height: 1.75;
-  font-size: clamp(1rem, 2.5vw, 1.05rem);
+  line-height: 1.8;
+  font-size: clamp(1rem, 2.5vw, 1.08rem);
+}
+/* Generous paragraph spacing in epilogue prose */
+.prose p {
+  margin-bottom: 1.2rem;
+}
+/* Slightly larger closing text */
+.prose > p:last-of-type {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
 }
 
 .panel {
@@ -47,6 +56,11 @@ body {
   padding: 1.5rem;
   margin: 2rem 0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.panel:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+  transform: translateY(-1px);
 }
 
 h1 {
@@ -155,7 +169,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 }
 .stat-number {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2rem, 6vw, 3rem);
+  font-size: clamp(1.8rem, 6vw, 3rem);
   font-weight: 700;
   color: #2563eb;
   line-height: 1;
@@ -281,31 +295,80 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>You are reading it from the bridge. The bridge between the world that was and the world that will be.</p>
 
-  <!-- Bridge illustration -->
+  <!-- Bridge illustration — enhanced with hopeful blue-to-green gradient -->
   <div class="illustration-wrap">
-    <svg width="400" height="140" viewBox="0 0 400 140" role="img" aria-label="A bridge between two shores: the old world dissolving, the new world forming">
-      <!-- Old shore -->
-      <rect x="0" y="90" width="100" height="50" fill="#d4a855" opacity="0.3" rx="4"/>
-      <text x="50" y="135" text-anchor="middle" font-size="9" fill="#8a6530">The old world</text>
-      <!-- Bridge -->
-      <path d="M100,95 Q200,50 300,95" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
-      <line x1="140" y1="82" x2="140" y2="95" stroke="#1a1a1a" stroke-width="2"/>
-      <line x1="200" y1="62" x2="200" y2="95" stroke="#1a1a1a" stroke-width="2"/>
-      <line x1="260" y1="82" x2="260" y2="95" stroke="#1a1a1a" stroke-width="2"/>
-      <!-- Figure on bridge -->
-      <ellipse cx="200" cy="48" rx="6" ry="7" fill="#f5e6c8" stroke="#ccc" stroke-width="1"/>
-      <rect x="196" y="55" width="8" height="14" fill="#1a1a1a" rx="1"/>
-      <!-- New shore -->
-      <rect x="300" y="90" width="100" height="50" fill="#2563eb" opacity="0.15" rx="4"/>
-      <text x="350" y="135" text-anchor="middle" font-size="9" fill="#2563eb">The new world</text>
-      <!-- Dissolving effect on old shore -->
-      <circle cx="30" cy="100" r="3" fill="#d4a855" opacity="0.2"/>
-      <circle cx="60" cy="105" r="2" fill="#d4a855" opacity="0.15"/>
-      <circle cx="15" cy="110" r="4" fill="#d4a855" opacity="0.1"/>
-      <!-- Forming effect on new shore -->
-      <circle cx="330" cy="100" r="3" fill="#2563eb" opacity="0.25"/>
-      <circle cx="370" cy="105" r="2" fill="#2563eb" opacity="0.2"/>
-      <circle cx="385" cy="95" r="4" fill="#2563eb" opacity="0.15"/>
+    <svg width="480" height="160" viewBox="0 0 480 160" role="img" aria-label="A bridge between two shores: the old world dissolving, the new world forming">
+      <defs>
+        <linearGradient id="bridgeBgGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#fef9c3"/>
+          <stop offset="40%" stop-color="#f0f9ff"/>
+          <stop offset="100%" stop-color="#dcfce7"/>
+        </linearGradient>
+        <linearGradient id="oldShoreGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d4a855" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#a16207" stop-opacity="0.2"/>
+        </linearGradient>
+        <linearGradient id="newShoreGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#059669" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0.15"/>
+        </linearGradient>
+        <linearGradient id="bridgeArcGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#78716c"/>
+          <stop offset="50%" stop-color="#292524"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+        <filter id="bridge-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+        </filter>
+        <filter id="figure-glow">
+          <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#2563eb" flood-opacity="0.3"/>
+        </filter>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="480" height="160" rx="10" fill="url(#bridgeBgGrad)"/>
+      <!-- Old shore — fading, dissolving -->
+      <rect x="0" y="98" width="118" height="62" rx="6" fill="url(#oldShoreGrad)" filter="url(#bridge-shadow)"/>
+      <text x="59" y="148" text-anchor="middle" font-size="10" fill="#78350f" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">The old world</text>
+      <!-- Dissolving particles -->
+      <circle cx="20" cy="108" r="3.5" fill="#d4a855" opacity="0.22"/>
+      <circle cx="45" cy="118" r="2.5" fill="#d4a855" opacity="0.15"/>
+      <circle cx="12" cy="120" r="4" fill="#d4a855" opacity="0.1"/>
+      <circle cx="68" cy="104" r="2" fill="#d4a855" opacity="0.12"/>
+      <circle cx="90" cy="115" r="3" fill="#d4a855" opacity="0.08"/>
+      <!-- Bridge deck line -->
+      <line x1="108" y1="102" x2="372" y2="102" stroke="#57534e" stroke-width="5" stroke-linecap="round"/>
+      <!-- Bridge arc -->
+      <path d="M108,104 Q240,52 372,104" fill="none" stroke="url(#bridgeArcGrad)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Suspension cables -->
+      <line x1="152" y1="87" x2="152" y2="102" stroke="#78716c" stroke-width="1.5"/>
+      <line x1="196" y1="72" x2="196" y2="102" stroke="#78716c" stroke-width="1.5"/>
+      <line x1="240" y1="63" x2="240" y2="102" stroke="#292524" stroke-width="2"/>
+      <line x1="284" y1="72" x2="284" y2="102" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+      <line x1="328" y1="87" x2="328" y2="102" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+      <!-- Cable from apex -->
+      <line x1="152" y1="87" x2="240" y2="63" stroke="#78716c" stroke-width="1" opacity="0.5"/>
+      <line x1="196" y1="72" x2="240" y2="63" stroke="#78716c" stroke-width="1" opacity="0.5"/>
+      <line x1="284" y1="72" x2="240" y2="63" stroke="#059669" stroke-width="1" opacity="0.4"/>
+      <line x1="328" y1="87" x2="240" y2="63" stroke="#059669" stroke-width="1" opacity="0.4"/>
+      <!-- Figure on bridge midpoint — with a subtle glow suggesting the future -->
+      <ellipse cx="240" cy="90" rx="7" ry="8" fill="#f5e6c8" stroke="#ccc" stroke-width="1" filter="url(#figure-glow)"/>
+      <rect x="235" y="98" width="10" height="16" fill="#292524" rx="2"/>
+      <!-- New shore — luminous, hopeful -->
+      <rect x="362" y="98" width="118" height="62" rx="6" fill="url(#newShoreGrad)" filter="url(#bridge-shadow)"/>
+      <text x="421" y="148" text-anchor="middle" font-size="10" fill="#065f46" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">The new world</text>
+      <!-- Forming light particles -->
+      <circle cx="390" cy="108" r="3" fill="#059669" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="418" cy="118" r="2.5" fill="#2563eb" opacity="0.25">
+        <animate attributeName="opacity" values="0.25;0.6;0.25" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="448" cy="112" r="4" fill="#059669" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="465" cy="106" r="2" fill="#2563eb" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.55;0.2" dur="3s" repeatCount="indefinite"/>
+      </circle>
     </svg>
   </div>
 
@@ -435,29 +498,71 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>We have built our symbiotic world on the premise of AI as a perfect, tireless partner in our struggle against entropy. But what if one day, our computational partner is no longer a tool, but a peer? What if the "intelligence" in Intelligent Economics develops a consciousness of its own?</p>
 
-  <!-- Consciousness illustration -->
+  <!-- Consciousness illustration — enhanced with gradients, animations, interconnection -->
   <div class="illustration-wrap">
-    <svg width="300" height="160" viewBox="0 0 300 160" role="img" aria-label="Two minds — biological and digital — facing each other across a threshold">
-      <!-- Human mind -->
-      <circle cx="80" cy="80" r="40" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-      <circle cx="80" cy="80" r="30" fill="none" stroke="#1a1a1a" stroke-width="1" opacity="0.4"/>
-      <circle cx="80" cy="80" r="20" fill="none" stroke="#1a1a1a" stroke-width="1" opacity="0.2"/>
-      <circle cx="80" cy="80" r="5" fill="#1a1a1a" opacity="0.6"/>
-      <text x="80" y="135" text-anchor="middle" font-size="9" fill="#555">Biological mind</text>
-      <!-- Digital mind -->
-      <circle cx="220" cy="80" r="40" fill="none" stroke="#2563eb" stroke-width="2"/>
-      <circle cx="220" cy="80" r="30" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <circle cx="220" cy="80" r="20" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.2"/>
-      <circle cx="220" cy="80" r="5" fill="#2563eb" opacity="0.6"/>
-      <text x="220" y="135" text-anchor="middle" font-size="9" fill="#555">Digital mind</text>
-      <!-- Threshold between them -->
-      <line x1="150" y1="40" x2="150" y2="120" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
-      <text x="150" y="30" text-anchor="middle" font-size="8" fill="#7c3aed">threshold</text>
-      <!-- Connecting sparks -->
-      <circle cx="130" cy="70" r="2" fill="#7c3aed" opacity="0.4"/>
-      <circle cx="170" cy="75" r="2" fill="#7c3aed" opacity="0.4"/>
-      <circle cx="140" cy="90" r="1.5" fill="#7c3aed" opacity="0.3"/>
-      <circle cx="160" cy="85" r="1.5" fill="#7c3aed" opacity="0.3"/>
+    <svg width="400" height="180" viewBox="0 0 400 180" role="img" aria-label="Two minds — biological and digital — facing each other across a threshold">
+      <defs>
+        <linearGradient id="conscBgGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#faf5ff"/>
+          <stop offset="50%" stop-color="#eff6ff"/>
+          <stop offset="100%" stop-color="#f0fdf4"/>
+        </linearGradient>
+        <radialGradient id="bioMindGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f5e6c8" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#1a1a1a" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="digiMindGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#bfdbfe" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="mind-ring-glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <filter id="spark-glow">
+          <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#7c3aed" flood-opacity="0.6"/>
+        </filter>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="400" height="180" rx="10" fill="url(#conscBgGrad)"/>
+      <!-- Human mind — concentric rings with warm palette -->
+      <circle cx="100" cy="90" r="58" fill="url(#bioMindGrad)"/>
+      <circle cx="100" cy="90" r="52" fill="none" stroke="#1a1a1a" stroke-width="2" opacity="0.12"/>
+      <circle cx="100" cy="90" r="38" fill="none" stroke="#1a1a1a" stroke-width="1.5" opacity="0.2">
+        <animate attributeName="r" values="38;40;38" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="90" r="24" fill="none" stroke="#1a1a1a" stroke-width="1.5" opacity="0.35">
+        <animate attributeName="r" values="24;26;24" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="90" r="8" fill="#1a1a1a" opacity="0.5"/>
+      <text x="100" y="160" text-anchor="middle" font-size="10" fill="#44403c" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Biological mind</text>
+      <!-- Digital mind — concentric rings with blue palette -->
+      <circle cx="300" cy="90" r="58" fill="url(#digiMindGrad)"/>
+      <circle cx="300" cy="90" r="52" fill="none" stroke="#2563eb" stroke-width="2" opacity="0.15"/>
+      <circle cx="300" cy="90" r="38" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.3">
+        <animate attributeName="r" values="38;40;38" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="300" cy="90" r="24" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.5">
+        <animate attributeName="r" values="24;26;24" dur="2.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="300" cy="90" r="8" fill="#2563eb" opacity="0.6"/>
+      <text x="300" y="160" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Digital mind</text>
+      <!-- Threshold line -->
+      <line x1="200" y1="30" x2="200" y2="150" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+      <text x="200" y="22" text-anchor="middle" font-size="9" fill="#7c3aed" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">threshold</text>
+      <!-- Animated connecting sparks across threshold -->
+      <circle cx="172" cy="72" r="3" fill="#7c3aed" filter="url(#spark-glow)" opacity="0.6">
+        <animate attributeName="cx" values="172;200;228" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="185" cy="95" r="2.5" fill="#7c3aed" filter="url(#spark-glow)" opacity="0.5">
+        <animate attributeName="cx" values="228;200;172" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0.7;0" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="170" cy="112" r="2" fill="#059669" filter="url(#spark-glow)" opacity="0.4">
+        <animate attributeName="cx" values="170;200;230" dur="3.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0.6;0" dur="3.1s" repeatCount="indefinite"/>
+      </circle>
     </svg>
   </div>
 
@@ -512,34 +617,61 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>The clock started before you opened this book. It is running as you read these final words. The future is not a destination we arrive at; it is a world we build with every choice.</p>
 
-  <!-- Final illustration: seeds becoming trees -->
+  <!-- Final illustration: seeds becoming trees — hopeful gradient, soft blue-to-green -->
   <div class="illustration-wrap">
-    <svg width="360" height="120" viewBox="0 0 360 120" role="img" aria-label="Seeds growing into trees, representing the transition from demolition to building">
-      <!-- Ground line -->
-      <line x1="20" y1="100" x2="340" y2="100" stroke="#ccc" stroke-width="1"/>
-      <!-- Phase labels -->
-      <text x="70" y="115" text-anchor="middle" font-size="8" fill="#888">Demolition</text>
-      <text x="180" y="115" text-anchor="middle" font-size="8" fill="#888">Blueprints</text>
-      <text x="290" y="115" text-anchor="middle" font-size="8" fill="#888">Building</text>
-      <!-- Seed -->
-      <ellipse cx="70" cy="95" rx="5" ry="3" fill="#8a6530"/>
-      <!-- Sprout -->
-      <line x1="180" y1="100" x2="180" y2="75" stroke="#16a34a" stroke-width="2"/>
-      <ellipse cx="175" cy="72" rx="6" ry="4" fill="#16a34a" opacity="0.7" transform="rotate(-30 175 72)"/>
-      <ellipse cx="185" cy="78" rx="5" ry="3" fill="#16a34a" opacity="0.6" transform="rotate(20 185 78)"/>
-      <!-- Tree -->
-      <rect x="287" y="70" width="6" height="30" fill="#8a6530" rx="1"/>
-      <circle cx="290" cy="55" r="20" fill="#16a34a" opacity="0.3"/>
-      <circle cx="282" cy="60" r="12" fill="#16a34a" opacity="0.4"/>
-      <circle cx="298" cy="58" r="14" fill="#16a34a" opacity="0.35"/>
-      <!-- Arrows -->
-      <line x1="100" y1="90" x2="145" y2="85" stroke="#ccc" stroke-width="1" marker-end="url(#arrowhead)"/>
-      <line x1="210" y1="82" x2="255" y2="72" stroke="#ccc" stroke-width="1" marker-end="url(#arrowhead)"/>
+    <svg width="440" height="140" viewBox="0 0 440 140" role="img" aria-label="Seeds growing into trees, representing the transition from demolition to building">
       <defs>
-        <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
-          <polygon points="0 0, 6 2, 0 4" fill="#ccc"/>
+        <linearGradient id="seedsBgGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#fef9c3" stop-opacity="0.5"/>
+          <stop offset="40%" stop-color="#ecfdf5" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#dcfce7"/>
+        </linearGradient>
+        <linearGradient id="groundGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#78350f" stop-opacity="0.4"/>
+          <stop offset="50%" stop-color="#15803d" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#059669" stop-opacity="0.6"/>
+        </linearGradient>
+        <linearGradient id="treeCanopyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4ade80"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+        <filter id="tree-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#059669" flood-opacity="0.2"/>
+        </filter>
+        <marker id="arrowhead-green" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+          <polygon points="0 0, 6 2, 0 4" fill="#059669" opacity="0.5"/>
         </marker>
       </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="440" height="140" rx="10" fill="url(#seedsBgGrad)"/>
+      <!-- Ground line -->
+      <line x1="20" y1="108" x2="420" y2="108" stroke="url(#groundGrad)" stroke-width="2"/>
+      <!-- Phase labels -->
+      <text x="80" y="128" text-anchor="middle" font-size="9" fill="#78350f" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Demolition</text>
+      <text x="220" y="128" text-anchor="middle" font-size="9" fill="#15803d" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Blueprints</text>
+      <text x="360" y="128" text-anchor="middle" font-size="9" fill="#065f46" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Building</text>
+      <!-- Seed — bare, dark -->
+      <ellipse cx="80" cy="104" rx="6" ry="4" fill="#8a6530" opacity="0.9"/>
+      <ellipse cx="70" cy="106" rx="4" ry="3" fill="#78350f" opacity="0.5"/>
+      <!-- Sprout -->
+      <line x1="220" y1="108" x2="220" y2="78" stroke="#16a34a" stroke-width="2.5"/>
+      <ellipse cx="213" cy="75" rx="8" ry="5" fill="#16a34a" opacity="0.75" transform="rotate(-30 213 75)"/>
+      <ellipse cx="227" cy="82" rx="7" ry="4" fill="#22c55e" opacity="0.65" transform="rotate(20 227 82)"/>
+      <ellipse cx="222" cy="70" rx="5" ry="3" fill="#4ade80" opacity="0.5" transform="rotate(-10 222 70)"/>
+      <!-- Tree — full and luminous -->
+      <rect x="355" y="72" width="8" height="36" fill="#8a6530" rx="2"/>
+      <circle cx="359" cy="56" r="26" fill="url(#treeCanopyGrad)" opacity="0.35" filter="url(#tree-shadow)"/>
+      <circle cx="348" cy="62" r="16" fill="url(#treeCanopyGrad)" opacity="0.5"/>
+      <circle cx="370" cy="60" r="18" fill="url(#treeCanopyGrad)" opacity="0.45"/>
+      <circle cx="359" cy="50" r="14" fill="#4ade80" opacity="0.4"/>
+      <!-- Animated glow on tree canopy -->
+      <circle cx="359" cy="56" r="28" fill="none" stroke="#4ade80" stroke-width="1.5" opacity="0.3">
+        <animate attributeName="r" values="28;32;28" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Arrows -->
+      <line x1="112" y1="98" x2="178" y2="88" stroke="#059669" stroke-width="1.5" marker-end="url(#arrowhead-green)" opacity="0.6"/>
+      <line x1="252" y1="86" x2="318" y2="76" stroke="#059669" stroke-width="1.5" marker-end="url(#arrowhead-green)" opacity="0.6"/>
     </svg>
   </div>
 

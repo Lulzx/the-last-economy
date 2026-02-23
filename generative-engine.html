@@ -9,67 +9,71 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, #2563eb, #d97706);
+  z-index: 1000; transition: width 0.1s linear;
+}
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
+.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
 .panel-spacer { height: 1rem; }
 h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; z-index: 100; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+/* ── Sticky nav with backdrop blur ── */
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; cursor: pointer; }
 .btn.secondary:hover { background: #e5e5e0; }
-
 .step-counter { font-size: 1rem; font-weight: 700; color: #2563eb; text-align: center; margin: 0.75rem 0; }
 .noise-label { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 0.5rem; }
-
-/* Denoiser grid */
 #denoiser-svg { display: block; margin: 0 auto; width: 100%; max-width: 300px; height: auto; }
-
-/* Economy mapping table */
 .mapping-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
 .mapping-table th { background: #2563eb; color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
 .mapping-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e5e0; vertical-align: top; }
 .mapping-table tr:last-child td { border-bottom: none; }
 .mapping-table tr:nth-child(even) td { background: #f5f5f3; }
-
-/* Gradient descent */
 #landscape-svg { display: block; margin: 0 auto; cursor: crosshair; width: 100%; max-width: 600px; height: auto; }
 .loss-display { text-align: center; font-size: 1.2rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
 .loss-label { font-size: 0.85rem; color: #666; text-align: center; }
-
 input[type=range] { accent-color: #2563eb; }
-
 /* Enrichment styles */
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
+.pullquote { border-left: 5px solid #2563eb; box-shadow: 0 2px 8px rgba(37,99,235,0.08); margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
-.stat-row .stat-callout { flex: 1; min-width: 180px; margin: 0; }
+.stat-row .stat-callout { flex: 1; min-width: 140px; margin: 0; }
 .historical-mirror { background: #f9fafb; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
 .historical-mirror .mirror-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; color: #1a1a1a; margin: 0 0 0.5rem 0; }
 .historical-mirror p { margin: 0; font-size: 0.95rem; color: #444; }
 .three-laws-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin: 1.5rem 0; }
 @media (min-width: 540px) { .three-laws-grid { grid-template-columns: repeat(3, 1fr); } }
-.law-card { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; text-align: center; }
+.law-card { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; text-align: center; transition: box-shadow 0.2s, transform 0.2s; }
+.law-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
 .law-card .law-icon { margin-bottom: 0.75rem; }
 .law-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
 .law-card p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.5; }
-.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s ease; }
-.panel { transition: all 0.2s ease; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; cursor: pointer; }
+.slider-row label { font-size: min(0.9rem, 14px); }
 @media (max-width: 640px) {
   .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
   .stat-row { flex-direction: column; }
+  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+}
+@media (max-width: 480px) {
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+  .btn { font-size: min(0.82rem, 13px); padding: 0.4rem 0.8rem; }
 }
 </style>
 </head>
@@ -117,33 +121,67 @@ input[type=range] { accent-color: #2563eb; }
     <p>This is not just a clever trick for making pictures. This is the fundamental algorithm for creation.</p>
   </div>
 
-  <!-- SVG illustration: Forward and Reverse Process -->
+  <!-- SVG illustration: Forward and Reverse Process — warm-to-cool gradients for generative AI theme -->
   <div class="panel" style="background: #f9fafb;">
-    <svg viewBox="0 0 600 120" style="width:100%;display:block;" aria-label="Diffusion process: forward adds noise, reverse removes it">
-      <!-- Forward arrow -->
-      <text x="300" y="16" text-anchor="middle" font-size="12" fill="#888" font-weight="600">DIFFUSION PROCESS</text>
+    <svg viewBox="0 0 600 140" style="width:100%;display:block;" aria-label="Diffusion process: forward adds noise, reverse removes it">
+      <defs>
+        <linearGradient id="diffBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f0f4ff"/>
+          <stop offset="100%" stop-color="#fff8f0"/>
+        </linearGradient>
+        <linearGradient id="orderGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="#6d28d9"/>
+        </linearGradient>
+        <linearGradient id="noiseGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </linearGradient>
+        <linearGradient id="fwdArrowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6d28d9"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </linearGradient>
+        <linearGradient id="revArrowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d97706"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </linearGradient>
+        <filter id="diff-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.15)"/>
+        </filter>
+        <marker id="diff-arrow-fwd" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#d97706"/>
+        </marker>
+        <marker id="diff-arrow-rev" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+        </marker>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="600" height="140" rx="10" fill="url(#diffBg)" opacity="0.8"/>
+      <text x="300" y="18" text-anchor="middle" font-size="11" fill="#888" font-weight="600" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">DIFFUSION PROCESS</text>
       <!-- Ordered state -->
-      <rect x="30" y="35" width="70" height="70" rx="8" fill="#2563eb" opacity="0.9"/>
-      <text x="65" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="600">Order</text>
-      <!-- Arrow forward -->
-      <line x1="115" y1="70" x2="225" y2="70" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
-      <polygon points="225,65 235,70 225,75" fill="#999"/>
-      <text x="175" y="60" text-anchor="middle" font-size="9" fill="#999">+ noise</text>
+      <rect x="30" y="30" width="74" height="74" rx="10" fill="url(#orderGrad)" filter="url(#diff-shadow)"/>
+      <text x="67" y="65" text-anchor="middle" font-size="22" fill="white" font-family="'DM Sans', system-ui, sans-serif">&#10048;</text>
+      <text x="67" y="82" text-anchor="middle" font-size="9" fill="white" font-weight="600" letter-spacing="0.04em" font-family="'DM Sans', system-ui, sans-serif">ORDER</text>
+      <!-- Arrow forward — dashed gradient -->
+      <line x1="118" y1="67" x2="228" y2="67" stroke="url(#fwdArrowGrad)" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#diff-arrow-fwd)"/>
+      <text x="173" y="57" text-anchor="middle" font-size="9" fill="#b45309" font-family="'DM Sans', system-ui, sans-serif">Forward: + noise</text>
       <!-- Noisy state -->
-      <rect x="250" y="35" width="70" height="70" rx="8" fill="#ccc" opacity="0.7"/>
-      <circle cx="270" cy="60" r="3" fill="#aaa"/><circle cx="285" cy="55" r="2" fill="#bbb"/><circle cx="298" cy="75" r="4" fill="#999"/>
-      <circle cx="275" cy="80" r="2" fill="#aaa"/><circle cx="290" cy="68" r="3" fill="#bbb"/><circle cx="305" cy="58" r="2" fill="#999"/>
-      <text x="285" y="98" text-anchor="middle" font-size="9" fill="#777">Noise</text>
+      <rect x="248" y="30" width="74" height="74" rx="10" fill="url(#noiseGrad)" opacity="0.85" filter="url(#diff-shadow)"/>
+      <circle cx="268" cy="55" r="3.5" fill="#fff" opacity="0.55"/><circle cx="283" cy="50" r="2.5" fill="#fff" opacity="0.45"/>
+      <circle cx="300" cy="70" r="4.5" fill="#fff" opacity="0.35"/><circle cx="273" cy="78" r="2.5" fill="#fff" opacity="0.5"/>
+      <circle cx="290" cy="62" r="3" fill="#fff" opacity="0.45"/><circle cx="308" cy="52" r="2" fill="#fff" opacity="0.3"/>
+      <circle cx="262" cy="68" r="2" fill="#fff" opacity="0.4"/><circle cx="295" cy="82" r="3" fill="#fff" opacity="0.3"/>
+      <text x="285" y="92" text-anchor="middle" font-size="9" fill="white" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">NOISE</text>
       <!-- Arrow reverse -->
-      <line x1="335" y1="70" x2="465" y2="70" stroke="#2563eb" stroke-width="1.5"/>
-      <polygon points="465,65 475,70 465,75" fill="#2563eb"/>
-      <text x="400" y="60" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">denoise (guided)</text>
+      <line x1="335" y1="67" x2="462" y2="67" stroke="url(#revArrowGrad)" stroke-width="2.5" marker-end="url(#diff-arrow-rev)"/>
+      <text x="398" y="57" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Reverse: denoise (guided)</text>
       <!-- Recovered state -->
-      <rect x="490" y="35" width="70" height="70" rx="8" fill="#2563eb" opacity="0.9"/>
-      <text x="525" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="600">Order</text>
+      <rect x="488" y="30" width="74" height="74" rx="10" fill="url(#orderGrad)" filter="url(#diff-shadow)"/>
+      <text x="525" y="65" text-anchor="middle" font-size="22" fill="white" font-family="'DM Sans', system-ui, sans-serif">&#10048;</text>
+      <text x="525" y="82" text-anchor="middle" font-size="9" fill="white" font-weight="600" letter-spacing="0.04em" font-family="'DM Sans', system-ui, sans-serif">ORDER</text>
       <!-- Labels -->
-      <text x="65" y="118" text-anchor="middle" font-size="8" fill="#888">Forward Process</text>
-      <text x="525" y="118" text-anchor="middle" font-size="8" fill="#888">Reverse Process</text>
+      <text x="67" y="122" text-anchor="middle" font-size="8.5" fill="#888" font-family="'Playfair Display', Georgia, serif" font-style="italic">Forward Process</text>
+      <text x="525" y="122" text-anchor="middle" font-size="8.5" fill="#888" font-family="'Playfair Display', Georgia, serif" font-style="italic">Reverse Process</text>
     </svg>
   </div>
 
@@ -216,46 +254,92 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>This generative process is not magic. It is a physical computation, and like all computations, it is subject to inviolable laws. For the economy's Generative Engine to function sustainably, it must obey three non-negotiable operating constraints. These are not assumptions &mdash; they are provable theorems that follow from Intelligence Theory. They are the manufacturer's specification for a reality that works.</p>
 
-  <!-- SVG illustration: Three Laws Tripod -->
+  <!-- SVG illustration: Three Laws Tripod — distinct gradient per node, animated pulses -->
   <div style="text-align:center;margin:2rem 0;">
-    <svg viewBox="0 0 400 260" style="width:100%;max-width:400px;" aria-label="Three Laws of a Living System forming a tripod of stability">
+    <svg viewBox="0 0 400 270" style="width:100%;max-width:400px;" aria-label="Three Laws of a Living System forming a tripod of stability">
+      <defs>
+        <linearGradient id="tripodBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f0f4ff"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
+        <radialGradient id="flowGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#93c5fd"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </radialGradient>
+        <radialGradient id="openGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#6ee7b7"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </radialGradient>
+        <radialGradient id="resilGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#c4b5fd"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </radialGradient>
+        <filter id="tripod-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.18)"/>
+        </filter>
+        <filter id="tripod-glow-blue">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="400" height="270" rx="12" fill="url(#tripodBg)" opacity="0.7"/>
       <!-- Triangle connecting the three -->
-      <polygon points="200,30 60,220 340,220" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4" opacity="0.4"/>
+      <polygon points="200,30 60,220 340,220" fill="rgba(37,99,235,0.04)" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4" opacity="0.5"/>
       <!-- Center label -->
-      <text x="200" y="150" text-anchor="middle" font-size="12" fill="#888" font-weight="600">LIVING SYSTEM</text>
-      <!-- Flow -->
-      <circle cx="200" cy="40" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-      <text x="200" y="36" text-anchor="middle" font-size="20" fill="#2563eb">&#8635;</text>
-      <text x="200" y="52" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">FLOW</text>
-      <!-- Openness -->
-      <circle cx="60" cy="220" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-      <text x="60" y="216" text-anchor="middle" font-size="20" fill="#2563eb">&#9673;</text>
-      <text x="60" y="232" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">OPENNESS</text>
-      <!-- Resilience -->
-      <circle cx="340" cy="220" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-      <text x="340" y="216" text-anchor="middle" font-size="20" fill="#2563eb">&#9851;</text>
-      <text x="340" y="232" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">RESILIENCE</text>
+      <text x="200" y="142" text-anchor="middle" font-size="10" fill="#aaa" font-weight="600" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">LIVING</text>
+      <text x="200" y="156" text-anchor="middle" font-size="10" fill="#aaa" font-weight="600" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">SYSTEM</text>
+      <!-- Flow node — blue, top -->
+      <circle cx="200" cy="40" r="34" fill="url(#flowGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="200" cy="40" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="200" cy="40" r="38" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.3">
+        <animate attributeName="r" values="38;42;38" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.08;0.3" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="200" y="34" text-anchor="middle" font-size="18" fill="white" font-family="'DM Sans', system-ui, sans-serif">&#8635;</text>
+      <text x="200" y="51" text-anchor="middle" font-size="8" fill="white" font-weight="700" letter-spacing="0.05em" font-family="'DM Sans', system-ui, sans-serif">FLOW</text>
+      <text x="200" y="16" text-anchor="middle" font-size="8.5" fill="#2563eb" font-family="'Playfair Display', Georgia, serif" font-style="italic">Law I</text>
+      <!-- Openness node — green, bottom-left -->
+      <circle cx="60" cy="220" r="34" fill="url(#openGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="60" cy="220" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="60" cy="220" r="38" fill="none" stroke="#059669" stroke-width="1" opacity="0.3">
+        <animate attributeName="r" values="38;42;38" dur="3.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.08;0.3" dur="3.6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="60" y="214" text-anchor="middle" font-size="18" fill="white" font-family="'DM Sans', system-ui, sans-serif">&#9673;</text>
+      <text x="60" y="231" text-anchor="middle" font-size="7" fill="white" font-weight="700" letter-spacing="0.05em" font-family="'DM Sans', system-ui, sans-serif">OPENNESS</text>
+      <text x="60" y="263" text-anchor="middle" font-size="8.5" fill="#059669" font-family="'Playfair Display', Georgia, serif" font-style="italic">Law II</text>
+      <!-- Resilience node — violet, bottom-right -->
+      <circle cx="340" cy="220" r="34" fill="url(#resilGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="340" cy="220" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="340" cy="220" r="38" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.3">
+        <animate attributeName="r" values="38;42;38" dur="4.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.08;0.3" dur="4.2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="340" y="214" text-anchor="middle" font-size="18" fill="white" font-family="'DM Sans', system-ui, sans-serif">&#9851;</text>
+      <text x="340" y="231" text-anchor="middle" font-size="7" fill="white" font-weight="700" letter-spacing="0.05em" font-family="'DM Sans', system-ui, sans-serif">RESILIENCE</text>
+      <text x="340" y="263" text-anchor="middle" font-size="8.5" fill="#7c3aed" font-family="'Playfair Display', Georgia, serif" font-style="italic">Law III</text>
     </svg>
   </div>
 
   <div class="three-laws-grid">
     <div class="law-card">
       <div class="law-icon">
-        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><path d="M16 24 C16 16 32 16 32 24 C32 32 16 32 16 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="#2563eb"/></svg>
+        <svg width="48" height="48" viewBox="0 0 48 48"><defs><linearGradient id="icon1Grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#icon1Grad)" stroke="#2563eb" stroke-width="2"/><path d="M16 24 C16 16 32 16 32 24 C32 32 16 32 16 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="#2563eb"/></svg>
       </div>
       <h3>1. The Law of Flow</h3>
       <p>Value must be conserved and circulated. Hoarded capital generates no new data and tests no new predictions. Flow is a physical necessity for intelligence.</p>
     </div>
     <div class="law-card">
       <div class="law-icon">
-        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><path d="M14 24h20M24 14v20" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="24" r="2" fill="#2563eb"/><circle cx="34" cy="24" r="2" fill="#2563eb"/><circle cx="24" cy="14" r="2" fill="#2563eb"/><circle cx="24" cy="34" r="2" fill="#2563eb"/></svg>
+        <svg width="48" height="48" viewBox="0 0 48 48"><defs><linearGradient id="icon2Grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#icon2Grad)" stroke="#2563eb" stroke-width="2"/><path d="M14 24h20M24 14v20" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="24" r="2" fill="#2563eb"/><circle cx="34" cy="24" r="2" fill="#2563eb"/><circle cx="24" cy="14" r="2" fill="#2563eb"/><circle cx="24" cy="34" r="2" fill="#2563eb"/></svg>
       </div>
       <h3>2. The Law of Openness</h3>
       <p>Connection fights entropy. A closed system will inevitably decay. Openness is not an ideological preference &mdash; it is a physical requirement for staving off systemic death.</p>
     </div>
     <div class="law-card">
       <div class="law-icon">
-        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><rect x="14" y="28" width="4" height="8" rx="1" fill="#2563eb" opacity="0.5"/><rect x="20" y="22" width="4" height="14" rx="1" fill="#2563eb" opacity="0.7"/><rect x="26" y="18" width="4" height="18" rx="1" fill="#2563eb" opacity="0.85"/><rect x="32" y="24" width="4" height="12" rx="1" fill="#2563eb" opacity="0.6"/></svg>
+        <svg width="48" height="48" viewBox="0 0 48 48"><defs><linearGradient id="icon3Grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient></defs><circle cx="24" cy="24" r="20" fill="url(#icon3Grad)" stroke="#2563eb" stroke-width="2"/><rect x="14" y="28" width="4" height="8" rx="1" fill="#2563eb" opacity="0.5"/><rect x="20" y="22" width="4" height="14" rx="1" fill="#2563eb" opacity="0.7"/><rect x="26" y="18" width="4" height="18" rx="1" fill="#2563eb" opacity="0.85"/><rect x="32" y="24" width="4" height="12" rx="1" fill="#2563eb" opacity="0.6"/></svg>
       </div>
       <h3>3. The Law of Resilience</h3>
       <p>Diversity creates stability. A monoculture is efficient but catastrophically fragile. Resilience through diversity is the only winning strategy against an unpredictable universe.</p>
@@ -323,6 +407,12 @@ input[type=range] { accent-color: #2563eb; }
 </div>
 
 <script>
+// ── Progress bar ──
+window.addEventListener('scroll', function(){
+  var p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // ========== Panel 1: Denoising Grid ==========
 (function() {
   const GRID = 20;
@@ -617,12 +707,6 @@ input[type=range] { accent-color: #2563eb; }
     updateBall();
   };
 })();
-</script>
-<script>
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
-});
 </script>
 </body>
 </html>

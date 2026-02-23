@@ -44,7 +44,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -55,6 +55,12 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
 @media (max-width: 640px) {
   .stat-row { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+  .panel { padding: 1rem; }
+  .slider-row label { font-size: 0.85rem; }
 }
 </style>
 </head>
@@ -90,17 +96,29 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
     <p>To understand change, we need a model that can capture the two different timescales of evolution: the fast, frantic race of the players, and the slow, tectonic drift of the game itself. This is the Dual Engine.</p>
   </div>
 
-  <!-- SVG: Red Queen illustration -->
-  <svg viewBox="0 0 600 155" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <!-- SVG: Red Queen illustration — enhanced with gradients, blur speed effect, animations -->
+  <svg viewBox="0 0 600 165" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
     <defs>
       <radialGradient id="fastGrad" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" style="stop-color:#fecaca;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#fef2f2;stop-opacity:1"/>
+        <stop offset="0%" stop-color="#fecaca"/>
+        <stop offset="100%" stop-color="#fef2f2"/>
       </radialGradient>
       <radialGradient id="slowGrad" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" style="stop-color:#bfdbfe;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#eff6ff;stop-opacity:1"/>
+        <stop offset="0%" stop-color="#bfdbfe"/>
+        <stop offset="100%" stop-color="#eff6ff"/>
       </radialGradient>
+      <linearGradient id="treadmillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#e5e5e0" stop-opacity="0"/>
+        <stop offset="10%" stop-color="#e5e5e0"/>
+        <stop offset="90%" stop-color="#e5e5e0"/>
+        <stop offset="100%" stop-color="#e5e5e0" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="fastBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3 0"/>
+      </filter>
+      <filter id="circShadow13">
+        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.18"/>
+      </filter>
       <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
         <path d="M0,0 L8,3 L0,6" fill="#dc2626"/>
       </marker>
@@ -108,37 +126,42 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
         <path d="M0,0 L8,3 L0,6" fill="#2563eb"/>
       </marker>
     </defs>
-    <rect width="600" height="155" fill="#fafaf8" rx="8"/>
+    <!-- Subtle gradient background -->
+    <rect width="600" height="165" rx="8" fill="#f8faff"/>
+    <rect x="0" y="0" width="600" height="165" rx="8" fill="none" stroke="#e5e5e0" stroke-width="1"/>
+    <!-- Speed blur trails behind Fast circle -->
+    <ellipse cx="90" cy="72" rx="35" ry="18" fill="#fecaca" opacity="0.25" filter="url(#fastBlur)"/>
+    <ellipse cx="70" cy="72" rx="25" ry="12" fill="#fecaca" opacity="0.15" filter="url(#fastBlur)"/>
     <!-- Runner 1: Fast Players -->
-    <circle cx="120" cy="72" r="28" fill="url(#fastGrad)" stroke="#dc2626" stroke-width="2.5"/>
-    <!-- Lightning bolt icon inside Fast circle -->
-    <text x="120" y="68" text-anchor="middle" font-size="16" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
-    <text x="120" y="83" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Fast Players</text>
+    <circle cx="120" cy="72" r="32" fill="url(#fastGrad)" stroke="#dc2626" stroke-width="2.5" filter="url(#circShadow13)">
+      <animate attributeName="r" values="32;34;32" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="120" y="68" text-anchor="middle" font-size="18" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
+    <text x="120" y="84" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Fast Players</text>
     <!-- Runner 2: Slow Game -->
-    <circle cx="480" cy="72" r="28" fill="url(#slowGrad)" stroke="#2563eb" stroke-width="2.5"/>
-    <!-- Clock icon inside Slow circle -->
-    <text x="480" y="68" text-anchor="middle" font-size="16" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#x1F551;</text>
-    <text x="480" y="83" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Slow Game</text>
+    <circle cx="480" cy="72" r="32" fill="url(#slowGrad)" stroke="#2563eb" stroke-width="2.5" filter="url(#circShadow13)"/>
+    <text x="480" y="68" text-anchor="middle" font-size="18" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#x1F551;</text>
+    <text x="480" y="84" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Slow Game</text>
     <!-- Arrows -->
-    <line x1="153" y1="58" x2="447" y2="58" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowR)" stroke-dasharray="5,4"/>
-    <line x1="447" y1="86" x2="153" y2="86" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowB)" stroke-dasharray="5,4"/>
-    <text x="300" y="50" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Strategies optimize for current rules</text>
-    <text x="300" y="100" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Rules evolve in response to strategies</text>
-    <!-- Treadmill line with repeating pattern -->
-    <line x1="50" y1="118" x2="550" y2="118" stroke="#e5e5e0" stroke-width="2.5"/>
-    <line x1="70" y1="118" x2="80" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="110" y1="118" x2="120" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="150" y1="118" x2="160" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="190" y1="118" x2="200" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="230" y1="118" x2="240" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="270" y1="118" x2="280" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="310" y1="118" x2="320" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="350" y1="118" x2="360" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="390" y1="118" x2="400" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="430" y1="118" x2="440" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="470" y1="118" x2="480" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <line x1="510" y1="118" x2="520" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
-    <text x="300" y="145" text-anchor="middle" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The finish line is always receding</text>
+    <line x1="156" y1="56" x2="445" y2="56" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arrowR)" stroke-dasharray="5,4"/>
+    <line x1="445" y1="88" x2="156" y2="88" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowB)" stroke-dasharray="5,4"/>
+    <text x="300" y="48" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Strategies optimize for current rules</text>
+    <text x="300" y="103" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Rules evolve in response to strategies</text>
+    <!-- Treadmill with gradient -->
+    <rect x="40" y="115" width="520" height="3" rx="1.5" fill="url(#treadmillGrad)"/>
+    <line x1="70" y1="118" x2="80" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="110" y1="118" x2="120" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="150" y1="118" x2="160" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="190" y1="118" x2="200" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="230" y1="118" x2="240" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="270" y1="118" x2="280" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="310" y1="118" x2="320" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="350" y1="118" x2="360" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="390" y1="118" x2="400" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="430" y1="118" x2="440" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="470" y1="118" x2="480" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="510" y1="118" x2="520" y2="128" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="300" y="150" text-anchor="middle" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The finish line is always receding</text>
   </svg>
 
   <hr class="section-divider">
@@ -167,17 +190,23 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>The engines are not separate. They are fundamentally coupled. The outcomes of the Fast Engine &mdash; the daily wins and losses &mdash; provide the data that slowly rewrites the code of the Slow Engine. The new code of the Slow Engine then creates a new playing field for the Fast Engine. This is the co-evolutionary dance of history.</p>
 
-  <!-- SVG: Dual Engine feedback loop -->
-  <svg viewBox="0 0 600 215" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <!-- SVG: Dual Engine feedback loop — enhanced with bezier coupling arrows and glow -->
+  <svg viewBox="0 0 600 225" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
     <defs>
       <linearGradient id="fastBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#fef2f2;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#fee2e2;stop-opacity:1"/>
+        <stop offset="0%" stop-color="#fef2f2"/>
+        <stop offset="100%" stop-color="#fee2e2"/>
       </linearGradient>
       <linearGradient id="slowBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1"/>
+        <stop offset="0%" stop-color="#eff6ff"/>
+        <stop offset="100%" stop-color="#dbeafe"/>
       </linearGradient>
+      <filter id="fastBoxGlow">
+        <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#dc2626" flood-opacity="0.2"/>
+      </filter>
+      <filter id="slowBoxGlow">
+        <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#2563eb" flood-opacity="0.2"/>
+      </filter>
       <marker id="arrowFast" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
         <path d="M0,0 L8,3 L0,6" fill="#dc2626"/>
       </marker>
@@ -185,26 +214,24 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
         <path d="M0,0 L8,3 L0,6" fill="#2563eb"/>
       </marker>
     </defs>
-    <rect width="600" height="215" fill="#fafaf8" rx="8"/>
-    <!-- Fast Engine box -->
-    <rect x="40" y="20" width="210" height="80" rx="10" fill="url(#fastBoxGrad)" stroke="#dc2626" stroke-width="2.5"/>
-    <!-- Lightning bolt icon -->
-    <text x="60" y="55" font-size="22" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
-    <text x="155" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Fast Engine</text>
-    <text x="155" y="64" text-anchor="middle" font-size="11" fill="#b91c1c" font-family="'DM Sans', system-ui, sans-serif">Prices, trades, competition</text>
-    <text x="155" y="82" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">minutes to months</text>
-    <!-- Slow Engine box -->
-    <rect x="350" y="115" width="210" height="80" rx="10" fill="url(#slowBoxGrad)" stroke="#2563eb" stroke-width="2.5"/>
-    <!-- Gear icon -->
-    <text x="370" y="152" font-size="22" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
-    <text x="455" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Slow Engine</text>
-    <text x="455" y="164" text-anchor="middle" font-size="11" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif">Norms, beliefs, institutions</text>
-    <text x="455" y="182" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">years to decades</text>
-    <!-- Connecting arrows (thicker, more elegant) -->
-    <path d="M250,65 Q350,30 360,125" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowFast)"/>
-    <text x="335" y="55" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Outcomes become data</text>
-    <path d="M350,150 Q250,185 240,95" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowSlow)"/>
-    <text x="265" y="178" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">New rules reshape play</text>
+    <rect width="600" height="225" rx="8" fill="#f8faff"/>
+    <!-- Fast Engine box with glow -->
+    <rect x="40" y="20" width="210" height="86" rx="12" fill="url(#fastBoxGrad)" stroke="#dc2626" stroke-width="2.5" filter="url(#fastBoxGlow)"/>
+    <text x="62" y="58" font-size="24" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
+    <text x="160" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626" font-family="'Playfair Display', Georgia, serif">Fast Engine</text>
+    <text x="160" y="68" text-anchor="middle" font-size="11" fill="#b91c1c" font-family="'DM Sans', system-ui, sans-serif">Prices, trades, competition</text>
+    <text x="160" y="86" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">minutes to months</text>
+    <!-- Slow Engine box with glow -->
+    <rect x="350" y="118" width="210" height="86" rx="12" fill="url(#slowBoxGrad)" stroke="#2563eb" stroke-width="2.5" filter="url(#slowBoxGlow)"/>
+    <text x="372" y="158" font-size="24" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
+    <text x="455" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb" font-family="'Playfair Display', Georgia, serif">Slow Engine</text>
+    <text x="455" y="168" text-anchor="middle" font-size="11" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif">Norms, beliefs, institutions</text>
+    <text x="455" y="186" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">years to decades</text>
+    <!-- Bezier coupling arrows -->
+    <path d="M250,63 Q360,20 360,118" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7,4" marker-end="url(#arrowFast)"/>
+    <text x="340" y="50" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Outcomes become data</text>
+    <path d="M350,155 Q240,200 240,106" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="7,4" marker-end="url(#arrowSlow)"/>
+    <text x="265" y="195" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">New rules reshape play</text>
   </svg>
 
   <!-- === Interactive: The Two Clocks === -->
@@ -305,42 +332,50 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>The <strong>Slow Engine is Training</strong>: periodically, the entire model is retrained on the vast dataset of its previous successes and failures. This is a slow, colossally expensive process that fundamentally changes the "rules" of the AI's "mind."</p>
 
-  <!-- SVG: Inference vs Training -->
-  <svg viewBox="0 0 600 175" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <!-- SVG: Inference vs Training — speed lines for inference, sine wave for training -->
+  <svg viewBox="0 0 600 185" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
     <defs>
       <linearGradient id="inferGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#fef2f2;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#fee2e2;stop-opacity:1"/>
+        <stop offset="0%" stop-color="#fef2f2"/>
+        <stop offset="100%" stop-color="#fee2e2"/>
       </linearGradient>
-      <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1"/>
-        <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1"/>
+      <linearGradient id="trainGrad13" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#eff6ff"/>
+        <stop offset="100%" stop-color="#dbeafe"/>
       </linearGradient>
+      <filter id="inferGlow">
+        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#dc2626" flood-opacity="0.18"/>
+      </filter>
+      <filter id="trainGlow13">
+        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#2563eb" flood-opacity="0.18"/>
+      </filter>
     </defs>
-    <rect width="600" height="175" fill="#fafaf8" rx="8"/>
+    <rect width="600" height="185" rx="8" fill="#f8faff"/>
     <!-- Inference column -->
-    <rect x="25" y="15" width="255" height="145" rx="10" fill="url(#inferGrad)" stroke="#dc2626" stroke-width="2.5"/>
-    <text x="152" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Inference (Fast)</text>
-    <!-- Speed indicator: fast lines -->
-    <line x1="40" y1="58" x2="80" y2="58" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
-    <line x1="40" y1="64" x2="70" y2="64" stroke="#dc2626" stroke-width="2" opacity="0.3"/>
-    <line x1="40" y1="70" x2="85" y2="70" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
-    <text x="152" y="70" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Frozen weights</text>
-    <text x="152" y="88" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Answers in seconds</text>
-    <text x="152" y="106" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Executes current strategy</text>
-    <!-- Larger emoji for visual impact -->
-    <text x="152" y="138" text-anchor="middle" font-size="30" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
+    <rect x="20" y="12" width="262" height="158" rx="12" fill="url(#inferGrad)" stroke="#dc2626" stroke-width="2.5" filter="url(#inferGlow)"/>
+    <text x="151" y="40" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="'Playfair Display', Georgia, serif">Inference (Fast)</text>
+    <!-- Speed lines fanning from left — the blur effect -->
+    <line x1="30" y1="60" x2="90" y2="60" stroke="#dc2626" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+    <line x1="30" y1="67" x2="75" y2="67" stroke="#dc2626" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+    <line x1="30" y1="74" x2="85" y2="74" stroke="#dc2626" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>
+    <line x1="30" y1="53" x2="65" y2="53" stroke="#dc2626" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+    <line x1="30" y1="81" x2="70" y2="81" stroke="#dc2626" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+    <text x="151" y="76" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Frozen weights</text>
+    <text x="151" y="96" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Answers in seconds</text>
+    <text x="151" y="116" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Executes current strategy</text>
+    <text x="151" y="152" text-anchor="middle" font-size="34" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
     <!-- Training column -->
-    <rect x="320" y="15" width="255" height="145" rx="10" fill="url(#trainGrad)" stroke="#2563eb" stroke-width="2.5"/>
-    <text x="448" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Training (Slow)</text>
-    <!-- Speed indicator: slow waves -->
-    <path d="M335,60 Q348,54 360,60 Q372,66 385,60" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
-    <path d="M335,68 Q348,62 360,68 Q372,74 385,68" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.3"/>
-    <text x="448" y="70" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Updates all weights</text>
-    <text x="448" y="88" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Weeks of computation</text>
-    <text x="448" y="106" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Rewrites the rules</text>
-    <!-- Larger emoji for visual impact -->
-    <text x="448" y="138" text-anchor="middle" font-size="30" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
+    <rect x="318" y="12" width="262" height="158" rx="12" fill="url(#trainGrad13)" stroke="#2563eb" stroke-width="2.5" filter="url(#trainGlow13)"/>
+    <text x="449" y="40" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'Playfair Display', Georgia, serif">Training (Slow)</text>
+    <!-- Slow sine wave indicators -->
+    <path d="M328,60 Q342,50 356,60 Q370,70 384,60 Q398,50 412,60 Q426,70 440,60" fill="none" stroke="#2563eb" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+    <path d="M328,72 Q342,62 356,72 Q370,82 384,72 Q398,62 412,72 Q426,82 440,72" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.35" stroke-linecap="round"/>
+    <text x="449" y="90" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Updates all weights</text>
+    <text x="449" y="108" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Weeks of computation</text>
+    <text x="449" y="126" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Rewrites the rules</text>
+    <text x="449" y="158" text-anchor="middle" font-size="34" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
+    <!-- Slow gear rotation animation hint -->
+    <animateTransform xlink:href="#trainGearAnim" attributeName="transform" type="rotate" from="0 449 152" to="360 449 152" dur="8s" repeatCount="indefinite"/>
   </svg>
 
   <div class="pullquote">

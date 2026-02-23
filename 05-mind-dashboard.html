@@ -80,7 +80,7 @@ input[type=range] { accent-color: #2563eb; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote cite { display: block; font-size: 0.85rem; color: #555; margin-top: 0.5rem; font-style: normal; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -153,24 +153,67 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Measurement evolution -->
   <div class="svg-illustration">
-    <svg width="480" height="100" viewBox="0 0 480 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="40" y1="50" x2="440" y2="50" stroke="#e5e5e0" stroke-width="2"/>
-      <circle cx="80" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="80" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Barley</text>
-      <text x="80" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Babylon</text>
-      <circle cx="190" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="190" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Floods</text>
-      <text x="190" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Egypt</text>
-      <circle cx="300" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="300" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Ships</text>
-      <text x="300" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Britain</text>
-      <circle cx="410" cy="50" r="22" fill="#2563eb" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="410" y="46" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="white" font-weight="600">MIND</text>
-      <text x="410" y="58" text-anchor="middle" font-size="8" font-family="DM Sans, system-ui" fill="white">M x I x N x D</text>
-      <text x="410" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Symbioism</text>
-      <polygon points="135,50 145,45 145,55" fill="#2563eb"/>
-      <polygon points="245,50 255,45 255,55" fill="#2563eb"/>
-      <polygon points="350,50 360,45 360,55" fill="#2563eb"/>
+    <svg width="500" height="115" viewBox="0 0 500 115" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+      <defs>
+        <linearGradient id="timelineBg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#eff6ff"/>
+          <stop offset="70%" stop-color="#ede9fe"/>
+          <stop offset="100%" stop-color="#1d4ed8"/>
+        </linearGradient>
+        <linearGradient id="mindNodeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2563eb"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient>
+        <radialGradient id="nodeCircleGrad" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#bfdbfe"/>
+        </radialGradient>
+        <filter id="mindGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background panel -->
+      <rect x="0" y="28" width="500" height="50" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <!-- Timeline track -->
+      <line x1="42" y1="53" x2="458" y2="53" stroke="url(#timelineBg)" stroke-width="2.5"/>
+
+      <!-- Babylon node -->
+      <circle cx="80" cy="53" r="20" fill="url(#nodeCircleGrad)" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="80" y="57" text-anchor="middle" font-size="10.5" font-family="'DM Sans', system-ui, sans-serif" fill="#1e40af" font-weight="700">Barley</text>
+      <text x="80" y="86" text-anchor="middle" font-size="8.5" font-family="'DM Sans', system-ui, sans-serif" fill="#6b7280">Babylon</text>
+      <text x="80" y="95" text-anchor="middle" font-size="7.5" font-family="'DM Sans', system-ui, sans-serif" fill="#9ca3af">~600 BC</text>
+
+      <!-- Arrow 1 -->
+      <polygon points="134,53 148,47 148,59" fill="#2563eb" opacity="0.7"/>
+
+      <!-- Egypt node -->
+      <circle cx="190" cy="53" r="20" fill="url(#nodeCircleGrad)" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="190" y="57" text-anchor="middle" font-size="10.5" font-family="'DM Sans', system-ui, sans-serif" fill="#1e40af" font-weight="700">Floods</text>
+      <text x="190" y="86" text-anchor="middle" font-size="8.5" font-family="'DM Sans', system-ui, sans-serif" fill="#6b7280">Egypt</text>
+      <text x="190" y="95" text-anchor="middle" font-size="7.5" font-family="'DM Sans', system-ui, sans-serif" fill="#9ca3af">~1500 BC</text>
+
+      <!-- Arrow 2 -->
+      <polygon points="244,53 258,47 258,59" fill="#2563eb" opacity="0.7"/>
+
+      <!-- Britain node -->
+      <circle cx="310" cy="53" r="20" fill="url(#nodeCircleGrad)" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="310" y="57" text-anchor="middle" font-size="10.5" font-family="'DM Sans', system-ui, sans-serif" fill="#1e40af" font-weight="700">Ships</text>
+      <text x="310" y="86" text-anchor="middle" font-size="8.5" font-family="'DM Sans', system-ui, sans-serif" fill="#6b7280">Britain</text>
+      <text x="310" y="95" text-anchor="middle" font-size="7.5" font-family="'DM Sans', system-ui, sans-serif" fill="#9ca3af">1700s</text>
+
+      <!-- Arrow 3 (larger, to MIND) -->
+      <polygon points="356,53 374,45 374,61" fill="#7c3aed" opacity="0.85"/>
+
+      <!-- MIND node — larger, gradient, glowing -->
+      <circle cx="430" cy="53" r="26" fill="url(#mindNodeGrad)" filter="url(#mindGlow)">
+        <animate attributeName="r" values="26;28;26" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="430" cy="53" r="26" fill="none" stroke="white" stroke-width="1" opacity="0.4"/>
+      <text x="430" y="48" text-anchor="middle" font-size="10" font-family="'DM Sans', system-ui, sans-serif" fill="white" font-weight="800">MIND</text>
+      <text x="430" y="62" text-anchor="middle" font-size="7.5" font-family="'DM Sans', system-ui, sans-serif" fill="rgba(255,255,255,0.85)">M×I×N×D</text>
+      <text x="430" y="92" text-anchor="middle" font-size="8.5" font-family="'DM Sans', system-ui, sans-serif" fill="#7c3aed" font-weight="600">Now</text>
     </svg>
   </div>
 
@@ -249,19 +292,43 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Multiplication vs Addition -->
   <div class="svg-illustration">
-    <svg width="400" height="120" viewBox="0 0 400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="430" height="130" viewBox="0 0 430 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+      <defs>
+        <linearGradient id="additiveBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f0fdf4"/>
+          <stop offset="100%" stop-color="#dcfce7"/>
+        </linearGradient>
+        <linearGradient id="multiplicativeBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff1f2"/>
+          <stop offset="100%" stop-color="#fee2e2"/>
+        </linearGradient>
+        <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.09"/>
+        </filter>
+      </defs>
       <!-- Additive side -->
-      <rect x="10" y="10" width="180" height="100" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
-      <text x="100" y="32" text-anchor="middle" font-size="11" font-family="DM Sans, system-ui" fill="#888" font-weight="600">ADDITIVE</text>
-      <text x="100" y="55" text-anchor="middle" font-size="12" font-family="DM Mono, monospace" fill="#1a1a1a">80 + 80 + 80 + 5</text>
-      <text x="100" y="75" text-anchor="middle" font-size="16" font-family="Playfair Display, serif" fill="#22c55e" font-weight="700">= 245 / 400 (61%)</text>
-      <text x="100" y="96" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#888">"Looks fine"</text>
+      <rect x="8" y="8" width="195" height="112" rx="12" fill="url(#additiveBg)" stroke="#22c55e" stroke-width="1.5" filter="url(#cardShadow)"/>
+      <rect x="8" y="8" width="195" height="28" rx="12" fill="#dcfce7"/>
+      <rect x="8" y="26" width="195" height="10" fill="#dcfce7"/>
+      <text x="105" y="27" text-anchor="middle" font-size="11" font-family="'DM Sans', system-ui, sans-serif" fill="#166534" font-weight="700">ADDITIVE MODEL</text>
+      <text x="105" y="52" text-anchor="middle" font-size="12" font-family="'DM Mono', monospace" fill="#1a1a1a">80 + 80 + 80 + 5</text>
+      <text x="105" y="76" text-anchor="middle" font-size="15" font-family="'Playfair Display', Georgia, serif" fill="#16a34a" font-weight="700">= 245 / 400 (61%)</text>
+      <text x="105" y="98" text-anchor="middle" font-size="10" font-family="'DM Sans', system-ui, sans-serif" fill="#15803d" font-weight="600">"Looks fine — no problem here"</text>
+      <text x="105" y="113" text-anchor="middle" font-size="9" font-family="'DM Sans', system-ui, sans-serif" fill="#86efac">Weakness hidden by the average</text>
+
+      <!-- VS badge -->
+      <circle cx="215" cy="64" r="14" fill="white" stroke="#e2e8f0" stroke-width="1.2"/>
+      <text x="215" y="69" text-anchor="middle" font-size="10" font-family="'DM Sans', system-ui, sans-serif" fill="#94a3b8" font-weight="700">VS</text>
+
       <!-- Multiplicative side -->
-      <rect x="210" y="10" width="180" height="100" rx="8" fill="white" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="300" y="32" text-anchor="middle" font-size="11" font-family="DM Sans, system-ui" fill="#dc2626" font-weight="600">MULTIPLICATIVE</text>
-      <text x="300" y="55" text-anchor="middle" font-size="12" font-family="DM Mono, monospace" fill="#1a1a1a">80 x 80 x 80 x 5</text>
-      <text x="300" y="75" text-anchor="middle" font-size="16" font-family="Playfair Display, serif" fill="#dc2626" font-weight="700">= 2.56 (0.03%)</text>
-      <text x="300" y="96" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#dc2626">"Collapse imminent"</text>
+      <rect x="228" y="8" width="195" height="112" rx="12" fill="url(#multiplicativeBg)" stroke="#dc2626" stroke-width="2" filter="url(#cardShadow)"/>
+      <rect x="228" y="8" width="195" height="28" rx="12" fill="#fee2e2"/>
+      <rect x="228" y="26" width="195" height="10" fill="#fee2e2"/>
+      <text x="325" y="27" text-anchor="middle" font-size="11" font-family="'DM Sans', system-ui, sans-serif" fill="#991b1b" font-weight="700">MULTIPLICATIVE MODEL</text>
+      <text x="325" y="52" text-anchor="middle" font-size="12" font-family="'DM Mono', monospace" fill="#1a1a1a">80 × 80 × 80 × 5</text>
+      <text x="325" y="76" text-anchor="middle" font-size="15" font-family="'Playfair Display', Georgia, serif" fill="#dc2626" font-weight="700">= 2.56 (0.03%)</text>
+      <text x="325" y="98" text-anchor="middle" font-size="10" font-family="'DM Sans', system-ui, sans-serif" fill="#dc2626" font-weight="600">"Collapse imminent"</text>
+      <text x="325" y="113" text-anchor="middle" font-size="9" font-family="'DM Sans', system-ui, sans-serif" fill="#fca5a5">Single zero = total failure</text>
     </svg>
   </div>
 

@@ -62,7 +62,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .pullquote-attr { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
@@ -74,6 +74,16 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   .stat-row { flex-direction: column; }
   .gauges { grid-template-columns: 1fr; }
   .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+}
+
+@media (max-width: 480px) {
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+  .panel { padding: 1rem; }
+  .illustration-box svg { max-width: 100%; }
+  .matrix-cell { padding: 0.6rem; min-height: 70px; }
+  .matrix-cell .cell-label { font-size: 0.8rem; }
+  .matrix-cell .cell-desc { font-size: 0.72rem; }
+  .slider-row label { font-size: 0.82rem; }
 }
 </style>
 </head>
@@ -459,10 +469,19 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>The Human-AI Symbiosis is not a partnership of equals. It is a relationship between two different kinds of intelligence, each with a critical function.</p>
 
-  <!-- SVG: Two-Layer Model -->
+  <!-- SVG: Humanity as Alignment Layer — human figures ring around AI core with glow -->
   <div class="illustration-box">
-    <svg viewBox="0 0 500 190" width="500" height="190">
+    <svg viewBox="0 0 500 260" width="500" height="260">
       <defs>
+        <radialGradient id="aiCoreGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#3b82f6"/>
+          <stop offset="60%" stop-color="#1d4ed8"/>
+          <stop offset="100%" stop-color="#1e3a8a"/>
+        </radialGradient>
+        <radialGradient id="humanRingGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#bfdbfe"/>
+        </radialGradient>
         <linearGradient id="alignLayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#dbeafe"/>
           <stop offset="100%" stop-color="#eff6ff"/>
@@ -471,6 +490,12 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
           <stop offset="0%" stop-color="#f0f0ef"/>
           <stop offset="100%" stop-color="#fafaf8"/>
         </linearGradient>
+        <filter id="aiCoreGlow">
+          <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#2563eb" flood-opacity="0.5"/>
+        </filter>
+        <filter id="humanNodeShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+        </filter>
         <filter id="layerShadow" x="-5%" y="-10%" width="110%" height="130%">
           <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(37,99,235,0.14)"/>
         </filter>
@@ -481,19 +506,62 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
           <path d="M1,1 L7,4 L1,7 Z" fill="#2563eb"/>
         </marker>
       </defs>
-      <!-- Background -->
-      <rect x="0" y="0" width="500" height="190" fill="#f8faff" rx="4"/>
-      <!-- Alignment layer -->
-      <rect x="50" y="12" width="400" height="66" rx="12" fill="url(#alignLayerGrad)" stroke="#2563eb" stroke-width="2.5" filter="url(#layerShadow)"/>
-      <text x="250" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Humanity: The Alignment Layer</text>
-      <text x="250" y="58" text-anchor="middle" font-size="11" fill="#3b5bdb" font-family="'DM Sans', system-ui, sans-serif">Values · Ethics · Purpose · Wisdom · Moral Judgment</text>
-      <!-- Arrow -->
-      <line x1="250" y1="78" x2="250" y2="108" stroke="#2563eb" stroke-width="2.5" marker-end="url(#guideArrow)"/>
-      <text x="278" y="97" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">guides</text>
-      <!-- Action layer -->
-      <rect x="50" y="112" width="400" height="66" rx="12" fill="url(#actionLayerGrad)" stroke="#374151" stroke-width="2.5" filter="url(#actionShadow)"/>
-      <text x="250" y="138" text-anchor="middle" font-size="14" font-weight="700" fill="#111827" font-family="'DM Sans', system-ui, sans-serif">AI: The Action Layer</text>
-      <text x="250" y="158" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Execution · Optimization · Infinite Scalability</text>
+      <rect x="0" y="0" width="500" height="260" rx="8" fill="#f0f6ff" opacity="0.6"/>
+      <!-- Outer glow rings for AI core -->
+      <circle cx="250" cy="130" r="70" fill="#2563eb" opacity="0.04"/>
+      <circle cx="250" cy="130" r="55" fill="#2563eb" opacity="0.06"/>
+      <circle cx="250" cy="130" r="40" fill="#2563eb" opacity="0.08"/>
+      <!-- Connection lines from human figures to AI core (drawn first/behind) -->
+      <line x1="250" y1="55" x2="250" y2="98" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="313" y1="76" x2="278" y2="107" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="340" y1="135" x2="298" y2="130" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="313" y1="194" x2="278" y2="158" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="250" y1="205" x2="250" y2="162" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="187" y1="194" x2="222" y2="158" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="160" y1="135" x2="202" y2="130" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="187" y1="76" x2="222" y2="107" stroke="#2563eb" stroke-width="1.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <!-- AI Core with animated pulse -->
+      <circle cx="250" cy="130" r="38" fill="url(#aiCoreGrad)" filter="url(#aiCoreGlow)">
+        <animate attributeName="r" values="38;42;38" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="250" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="white" font-family="'Playfair Display', Georgia, serif">AI</text>
+      <text x="250" y="140" text-anchor="middle" font-size="10" fill="#bfdbfe" font-family="'DM Sans', system-ui, sans-serif">Action Layer</text>
+      <!-- Human figure nodes in a ring (8 positions) -->
+      <!-- Helper: simple human silhouette: circle head + body lines -->
+      <!-- Position 1: top -->
+      <circle cx="250" cy="48" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="250" cy="43" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="250" y1="47" x2="250" y2="56" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 2: upper-right -->
+      <circle cx="313" cy="69" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="313" cy="64" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="313" y1="68" x2="313" y2="77" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 3: right -->
+      <circle cx="347" cy="130" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="347" cy="125" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="347" y1="129" x2="347" y2="138" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 4: lower-right -->
+      <circle cx="313" cy="191" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="313" cy="186" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="313" y1="190" x2="313" y2="199" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 5: bottom -->
+      <circle cx="250" cy="212" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="250" cy="207" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="250" y1="211" x2="250" y2="220" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 6: lower-left -->
+      <circle cx="187" cy="191" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="187" cy="186" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="187" y1="190" x2="187" y2="199" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 7: left -->
+      <circle cx="153" cy="130" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="153" cy="125" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="153" y1="129" x2="153" y2="138" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Position 8: upper-left -->
+      <circle cx="187" cy="69" r="12" fill="url(#humanRingGrad)" stroke="#2563eb" stroke-width="2" filter="url(#humanNodeShadow)"/>
+      <circle cx="187" cy="64" r="4" fill="#2563eb" opacity="0.5"/>
+      <line x1="187" y1="68" x2="187" y2="77" stroke="#2563eb" stroke-width="1.5" opacity="0.5"/>
+      <!-- Label -->
+      <text x="250" y="245" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Humanity encircles and guides the AI core</text>
     </svg>
     <div class="illustration-caption">We are the compass for the rocket ship. AI executes; humanity decides where to go.</div>
   </div>

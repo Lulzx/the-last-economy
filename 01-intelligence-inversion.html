@@ -22,7 +22,7 @@
 }
 
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 1.5rem); font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.75; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel {
   background: white;
@@ -51,7 +51,7 @@ h1 {
   margin-bottom: 1rem;
   padding-bottom: 0.25rem;
 }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 600; margin-top: 2rem; }
 h3 { font-family: 'Playfair Display', Georgia, serif; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 
@@ -125,7 +125,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 }
 .stat-number {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 3rem;
+  font-size: clamp(1.8rem, 6vw, 3rem);
   font-weight: 700;
   color: #2563eb;
   line-height: 1;
@@ -213,11 +213,11 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- Inline SVG: The Four Inversions Timeline -->
   <div class="inline-svg">
-    <svg viewBox="0 0 600 170" width="600" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 175" width="600" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- Drop shadow filter for circles -->
         <filter id="circleShadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.15)"/>
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.15)"/>
         </filter>
         <!-- Gradient for the connecting line -->
         <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
@@ -230,43 +230,79 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
         <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
           <polygon points="0 0, 10 3.5, 0 7" fill="#d97706"/>
         </marker>
+        <!-- Background gradient -->
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f3f3f0"/>
+        </linearGradient>
+        <!-- Fill gradients for circles -->
+        <radialGradient id="landCircle" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#d4a929" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#8B6914" stop-opacity="0.15"/>
+        </radialGradient>
+        <radialGradient id="laborCircle" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0.15"/>
+        </radialGradient>
+        <radialGradient id="capitalCircle" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#4ade80" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#16a34a" stop-opacity="0.15"/>
+        </radialGradient>
+        <radialGradient id="aiCircle" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#d97706" stop-opacity="0.2"/>
+        </radialGradient>
       </defs>
 
-      <!-- Warm background -->
-      <rect x="0" y="0" width="600" height="170" rx="0" fill="#fafaf8"/>
+      <!-- Background -->
+      <rect x="0" y="0" width="600" height="175" rx="10" fill="url(#bgGrad)"/>
+
+      <!-- Subtle grid lines -->
+      <line x1="20" y1="90" x2="580" y2="90" stroke="#e5e5e0" stroke-width="0.6"/>
+      <line x1="20" y1="30" x2="580" y2="30" stroke="#e5e5e0" stroke-width="0.6"/>
 
       <!-- Connecting line with gradient -->
       <line x1="75" y1="60" x2="525" y2="60" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round"/>
 
+      <!-- Connecting arcs (subtle) between eras -->
+      <path d="M 103 60 Q 150 30 197 60" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="M 253 60 Q 300 30 347 60" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="M 403 60 Q 450 28 497 60" fill="none" stroke="#d97706" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+
       <!-- Era 1: Land -->
-      <circle cx="75" cy="60" r="28" fill="#8B6914" fill-opacity="0.2" stroke="#8B6914" stroke-width="2.5" filter="url(#circleShadow)"/>
+      <circle cx="75" cy="60" r="28" fill="url(#landCircle)" stroke="#8B6914" stroke-width="2.5" filter="url(#circleShadow)"/>
       <text x="75" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="#8B6914" font-family="'DM Sans', system-ui, sans-serif">1</text>
-      <text x="75" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Land</text>
-      <text x="75" y="120" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~8000 BCE</text>
+      <text x="75" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Land</text>
+      <text x="75" y="122" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~8000 BCE</text>
 
       <!-- Era 2: Labor -->
-      <circle cx="225" cy="60" r="28" fill="#2563eb" fill-opacity="0.2" stroke="#2563eb" stroke-width="2.5" filter="url(#circleShadow)"/>
+      <circle cx="225" cy="60" r="28" fill="url(#laborCircle)" stroke="#2563eb" stroke-width="2.5" filter="url(#circleShadow)"/>
       <text x="225" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">2</text>
-      <text x="225" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Labor</text>
-      <text x="225" y="120" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~1760</text>
+      <text x="225" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Labor</text>
+      <text x="225" y="122" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~1760</text>
 
       <!-- Era 3: Capital -->
-      <circle cx="375" cy="60" r="28" fill="#16a34a" fill-opacity="0.2" stroke="#16a34a" stroke-width="2.5" filter="url(#circleShadow)"/>
+      <circle cx="375" cy="60" r="28" fill="url(#capitalCircle)" stroke="#16a34a" stroke-width="2.5" filter="url(#circleShadow)"/>
       <text x="375" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">3</text>
-      <text x="375" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Capital</text>
-      <text x="375" y="120" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~1950</text>
+      <text x="375" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Capital</text>
+      <text x="375" y="122" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~1950</text>
 
-      <!-- Era 4: Intelligence -->
-      <circle cx="525" cy="60" r="28" fill="#d97706" fill-opacity="0.2" stroke="#d97706" stroke-width="2.5" filter="url(#circleShadow)"/>
-      <text x="525" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">4</text>
-      <text x="525" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Intelligence</text>
-      <text x="525" y="120" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~2022</text>
+      <!-- Era 4: Intelligence — with animated pulse -->
+      <circle cx="525" cy="60" r="36" fill="#d97706" fill-opacity="0.06" stroke="#d97706" stroke-width="0.8" opacity="0.5">
+        <animate attributeName="r" values="36;44;36" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="525" cy="60" r="28" fill="url(#aiCircle)" stroke="#d97706" stroke-width="2.5" filter="url(#circleShadow)"/>
+      <text x="525" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">AI</text>
+      <text x="525" y="70" text-anchor="middle" font-size="9" fill="#b45309" font-family="'DM Sans', system-ui, sans-serif">NOW</text>
+      <text x="525" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Intelligence</text>
+      <text x="525" y="122" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">~2022</text>
 
       <!-- Acceleration label -->
-      <text x="300" y="148" text-anchor="middle" font-size="10" fill="#555" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Each inversion happens faster than the last</text>
+      <text x="300" y="152" text-anchor="middle" font-size="10" fill="#555" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Each inversion happens faster than the last</text>
 
-      <!-- Acceleration arrow, thicker with proper arrowhead -->
-      <line x1="120" y1="138" x2="478" y2="138" stroke="#d97706" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <!-- Acceleration arrow -->
+      <line x1="120" y1="142" x2="478" y2="142" stroke="#d97706" stroke-width="2" marker-end="url(#arrowhead)"/>
     </svg>
   </div>
 
@@ -313,7 +349,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- Inline SVG: Kodak vs Instagram -->
   <div class="inline-svg">
-    <svg viewBox="0 0 540 200" width="540" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 540 210" width="540" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="kodakGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#fef2f2"/>
@@ -323,16 +359,25 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
           <stop offset="0%" stop-color="#eff6ff"/>
           <stop offset="100%" stop-color="#dbeafe"/>
         </linearGradient>
+        <linearGradient id="kodakVsBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f3f3f0"/>
+        </linearGradient>
         <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="130%">
           <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.1)"/>
         </filter>
       </defs>
 
+      <!-- Background -->
+      <rect x="0" y="0" width="540" height="210" rx="10" fill="url(#kodakVsBg)"/>
+      <!-- Contrast label -->
+      <text x="270" y="14" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Mono', monospace" letter-spacing="0.12em">THE DEMATERIALIZATION OF CAPITAL</text>
+
       <!-- Kodak card -->
-      <rect x="25" y="20" width="195" height="160" rx="10" fill="url(#kodakGrad)" stroke="#ef4444" stroke-width="1.5" filter="url(#cardShadow)"/>
+      <rect x="25" y="22" width="195" height="165" rx="10" fill="url(#kodakGrad)" stroke="#ef4444" stroke-width="1.5" filter="url(#cardShadow)"/>
       <!-- Kodak accent line at top -->
-      <rect x="25" y="20" width="195" height="5" rx="5" fill="#ef4444"/>
-      <rect x="25" y="23" width="195" height="2" fill="#ef4444"/>
+      <rect x="25" y="22" width="195" height="5" rx="5" fill="#ef4444"/>
+      <rect x="25" y="25" width="195" height="2" fill="#ef4444"/>
 
       <!-- Kodak camera icon (simplified) -->
       <g transform="translate(34, 36)">
@@ -351,10 +396,10 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
       <text x="270" y="108" text-anchor="middle" font-size="20" font-weight="700" fill="#555" font-family="'DM Sans', system-ui, sans-serif">vs</text>
 
       <!-- Instagram card -->
-      <rect x="320" y="20" width="195" height="160" rx="10" fill="url(#instaGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#cardShadow)"/>
+      <rect x="320" y="22" width="195" height="165" rx="10" fill="url(#instaGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#cardShadow)"/>
       <!-- Instagram accent line at top -->
-      <rect x="320" y="20" width="195" height="5" rx="5" fill="#2563eb"/>
-      <rect x="320" y="23" width="195" height="2" fill="#2563eb"/>
+      <rect x="320" y="22" width="195" height="5" rx="5" fill="#2563eb"/>
+      <rect x="320" y="25" width="195" height="2" fill="#2563eb"/>
 
       <!-- Instagram lens icon (simplified) -->
       <g transform="translate(329, 36)">

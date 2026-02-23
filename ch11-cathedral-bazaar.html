@@ -66,7 +66,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
@@ -93,7 +93,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   .decade-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
   h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
   .ratio-display { font-size: 2rem; }
-  .stat-number { font-size: 2.2rem; }
+  .stat-number { font-size: clamp(1.8rem, 6vw, 3rem); }
   .year-toggle { flex-wrap: wrap; }
   .year-toggle button { flex: 1; min-width: 80px; }
 }
@@ -130,25 +130,54 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <!-- SVG: Human Computers to Electronic Computers -->
   <div class="svg-illustration">
     <svg width="400" height="120" viewBox="0 0 400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="humanCircleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0f2fe"/>
+          <stop offset="100%" stop-color="#bae6fd"/>
+        </linearGradient>
+        <linearGradient id="machineRectGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f0e7ff"/>
+          <stop offset="100%" stop-color="#ede9fe"/>
+        </linearGradient>
+        <filter id="svgShadow1">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+        </filter>
+        <linearGradient id="bgGradHuman" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f8fbff"/>
+          <stop offset="100%" stop-color="#f0f9ff"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="120" rx="8" fill="url(#bgGradHuman)" opacity="0.7"/>
       <!-- Human computer side -->
-      <circle cx="60" cy="50" r="20" stroke="#0891b2" stroke-width="2" fill="#f0f9ff"/>
-      <circle cx="60" cy="38" r="8" fill="#0891b2" opacity="0.3"/>
+      <circle cx="60" cy="50" r="22" fill="url(#humanCircleGrad)" stroke="#0891b2" stroke-width="2" filter="url(#svgShadow1)"/>
+      <circle cx="60" cy="38" r="8" fill="#0891b2" opacity="0.45"/>
       <line x1="60" y1="46" x2="60" y2="65" stroke="#0891b2" stroke-width="2"/>
       <line x1="50" y1="55" x2="70" y2="55" stroke="#0891b2" stroke-width="2"/>
-      <text x="60" y="90" text-anchor="middle" font-size="11" fill="#555">Human Computer</text>
-      <text x="60" y="105" text-anchor="middle" font-size="9" fill="#888">1950s NASA</text>
+      <text x="60" y="90" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Human Computer</text>
+      <text x="60" y="105" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">1950s NASA</text>
       <!-- Arrow -->
-      <line x1="120" y1="50" x2="270" y2="50" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4"/>
+      <defs>
+        <linearGradient id="arrowGrad11" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#0891b2"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </linearGradient>
+      </defs>
+      <line x1="120" y1="50" x2="270" y2="50" stroke="url(#arrowGrad11)" stroke-width="2" stroke-dasharray="6,4"/>
       <polygon points="270,44 282,50 270,56" fill="#2563eb"/>
-      <text x="196" y="40" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">IBM 7090 arrives</text>
+      <text x="196" y="40" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">IBM 7090 arrives</text>
       <!-- Electronic computer side -->
-      <rect x="300" y="30" width="60" height="40" rx="4" stroke="#7c3aed" stroke-width="2" fill="#f5f3ff"/>
-      <rect x="310" y="38" width="40" height="20" rx="2" fill="#7c3aed" opacity="0.15"/>
-      <circle cx="315" cy="48" r="2" fill="#7c3aed"/>
-      <circle cx="323" cy="48" r="2" fill="#7c3aed"/>
-      <circle cx="331" cy="48" r="2" fill="#7c3aed"/>
-      <text x="330" y="90" text-anchor="middle" font-size="11" fill="#555">Electronic Computer</text>
-      <text x="330" y="105" text-anchor="middle" font-size="9" fill="#888">Faster by orders of magnitude</text>
+      <rect x="298" y="28" width="64" height="44" rx="6" fill="url(#machineRectGrad)" stroke="#7c3aed" stroke-width="2" filter="url(#svgShadow1)"/>
+      <rect x="308" y="36" width="44" height="22" rx="3" fill="#7c3aed" opacity="0.18"/>
+      <circle cx="315" cy="47" r="2.5" fill="#7c3aed"/>
+      <circle cx="323" cy="47" r="2.5" fill="#7c3aed"/>
+      <circle cx="331" cy="47" r="2.5" fill="#7c3aed"/>
+      <text x="330" y="90" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Electronic Computer</text>
+      <text x="330" y="105" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Faster by orders of magnitude</text>
+      <!-- Pulsing dot on electronic computer -->
+      <circle cx="330" cy="47" r="5" fill="#7c3aed" opacity="0.6">
+        <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
     </svg>
   </div>
 
@@ -170,6 +199,106 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The second is the <strong>Market.</strong> It is a decentralized network of competing and cooperating agents. It has no leader, no plan, no central command. It is a swarm, a process of emergent discovery. In the market, resources flow by the emergent signals of price and opportunity. It is a bazaar, chaotic and vibrant, where order arises from the bottom up.</p>
 
   <p>For a century, the great battle of economic ideologies was a battle between these two minds. Both sides were wrong because they thought it was a battle. <strong>It was never a battle. It is a dance.</strong></p>
+
+  <!-- SVG: Cathedral vs Bazaar — enhanced architectural silhouette vs organic network -->
+  <div class="svg-illustration">
+    <svg width="500" height="220" viewBox="0 0 500 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cathedralStoneGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#334155"/>
+        </linearGradient>
+        <linearGradient id="cathedralSkyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e0e7ff"/>
+          <stop offset="100%" stop-color="#f0f4ff"/>
+        </linearGradient>
+        <radialGradient id="bazaarNodeGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f0e7ff"/>
+          <stop offset="100%" stop-color="#c4b5fd"/>
+        </radialGradient>
+        <radialGradient id="bazaarCenterGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ede9fe"/>
+          <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.3"/>
+        </radialGradient>
+        <filter id="cathedralShadow">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#334155" flood-opacity="0.25"/>
+        </filter>
+        <filter id="bazaarGlow">
+          <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#7c3aed" flood-opacity="0.35"/>
+        </filter>
+        <filter id="nodeShadowCB">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+
+      <!-- Sky background for cathedral side -->
+      <rect x="0" y="0" width="240" height="220" rx="10" fill="url(#cathedralSkyGrad)"/>
+      <!-- Night background for bazaar side -->
+      <rect x="260" y="0" width="240" height="220" rx="10" fill="#1e1b4b" opacity="0.07"/>
+      <rect x="260" y="0" width="240" height="220" rx="10" fill="#f5f3ff"/>
+
+      <!-- CATHEDRAL architectural silhouette -->
+      <!-- Main body -->
+      <rect x="60" y="100" width="120" height="100" fill="url(#cathedralStoneGrad)" filter="url(#cathedralShadow)"/>
+      <!-- Central nave arch -->
+      <path d="M90,100 L90,60 Q120,30 150,60 L150,100 Z" fill="url(#cathedralStoneGrad)" filter="url(#cathedralShadow)"/>
+      <!-- Left tower -->
+      <rect x="55" y="80" width="30" height="120" fill="#475569"/>
+      <!-- Left spire -->
+      <polygon points="55,80 70,45 85,80" fill="#334155"/>
+      <!-- Right tower -->
+      <rect x="155" y="80" width="30" height="120" fill="#475569"/>
+      <!-- Right spire -->
+      <polygon points="155,80 170,45 185,80" fill="#334155"/>
+      <!-- Center spire -->
+      <polygon points="100,60 120,15 140,60" fill="#1e293b"/>
+      <!-- Windows: arched -->
+      <path d="M108,120 Q120,108 132,120 L132,145 L108,145 Z" fill="#bfdbfe" opacity="0.7"/>
+      <rect x="107" y="145" width="26" height="10" fill="#bfdbfe" opacity="0.5"/>
+      <!-- Door arch -->
+      <path d="M106,200 Q120,180 134,200" fill="#1e293b"/>
+      <rect x="106" y="195" width="28" height="5" fill="#1e293b"/>
+      <!-- Cathedral label -->
+      <text x="120" y="212" text-anchor="middle" font-size="11" fill="#334155" font-weight="700" font-family="'Playfair Display', Georgia, serif">The Cathedral</text>
+      <text x="120" y="8" text-anchor="middle" font-size="9" fill="#475569" font-family="'DM Sans', system-ui, sans-serif">Hierarchy &bull; Command &bull; Blueprint</text>
+
+      <!-- Divider -->
+      <line x1="248" y1="20" x2="248" y2="200" stroke="#e5e5e0" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <text x="249" y="114" text-anchor="middle" font-size="9" fill="#aaa" font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90 249 114)">vs</text>
+
+      <!-- BAZAAR: organic radial node network -->
+      <!-- Outer glow ring -->
+      <circle cx="380" cy="110" r="70" fill="#7c3aed" opacity="0.05" filter="url(#bazaarGlow)"/>
+      <!-- Connection lines first (drawn behind nodes) -->
+      <line x1="380" y1="110" x2="330" y2="65" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="380" y1="110" x2="430" y2="65" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="380" y1="110" x2="440" y2="120" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="380" y1="110" x2="420" y2="165" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="380" y1="110" x2="340" y2="165" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="380" y1="110" x2="320" y2="120" stroke="#7c3aed" stroke-width="1.5" opacity="0.3"/>
+      <line x1="330" y1="65" x2="430" y2="65" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <line x1="430" y1="65" x2="440" y2="120" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <line x1="440" y1="120" x2="420" y2="165" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <line x1="420" y1="165" x2="340" y2="165" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <line x1="340" y1="165" x2="320" y2="120" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <line x1="320" y1="120" x2="330" y2="65" stroke="#c4b5fd" stroke-width="1" opacity="0.2"/>
+      <!-- Peripheral nodes with colorful gradients -->
+      <circle cx="330" cy="65" r="12" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <circle cx="430" cy="65" r="12" fill="#dcfce7" stroke="#059669" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <circle cx="440" cy="120" r="10" fill="#fce7f3" stroke="#db2777" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <circle cx="420" cy="165" r="11" fill="#dbeafe" stroke="#2563eb" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <circle cx="340" cy="165" r="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <circle cx="320" cy="120" r="12" fill="#f0e7ff" stroke="#7c3aed" stroke-width="2" filter="url(#nodeShadowCB)"/>
+      <!-- Center pulsing hub -->
+      <circle cx="380" cy="110" r="22" fill="url(#bazaarCenterGrad)" stroke="#7c3aed" stroke-width="2.5" filter="url(#bazaarGlow)">
+        <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="380" cy="110" r="10" fill="#7c3aed" opacity="0.7"/>
+      <!-- Bazaar label -->
+      <text x="380" y="212" text-anchor="middle" font-size="11" fill="#5b21b6" font-weight="700" font-family="'Playfair Display', Georgia, serif">The Bazaar</text>
+      <text x="380" y="8" text-anchor="middle" font-size="9" fill="#6d28d9" font-family="'DM Sans', system-ui, sans-serif">Network &bull; Discovery &bull; Emergence</text>
+    </svg>
+  </div>
 
   <div class="panel" style="--i: 1;">
     <h2>The Two Minds</h2>
@@ -239,41 +368,55 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- SVG: Market (parallel) vs Firm (serial) processing -->
   <div class="svg-illustration">
-    <svg width="440" height="160" viewBox="0 0 440 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="440" height="170" viewBox="0 0 440 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="marketBg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f5f3ff"/>
+          <stop offset="100%" stop-color="#ede9fe"/>
+        </linearGradient>
+        <linearGradient id="firmBg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0f2fe"/>
+          <stop offset="100%" stop-color="#bae6fd"/>
+        </linearGradient>
+        <filter id="parallelShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="440" height="170" rx="8" fill="#fafaf8" opacity="0.7"/>
       <!-- Market: parallel paths -->
-      <text x="110" y="16" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="600">Market: Parallel Discovery</text>
-      <circle cx="30" cy="80" r="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
-      <text x="30" y="84" text-anchor="middle" font-size="8" fill="#7c3aed">IN</text>
-      <!-- Multiple parallel lines -->
-      <line x1="42" y1="68" x2="170" y2="35" stroke="#7c3aed" stroke-width="1.5" opacity="0.5"/>
-      <line x1="42" y1="75" x2="170" y2="60" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
-      <line x1="42" y1="80" x2="170" y2="80" stroke="#7c3aed" stroke-width="1.5" opacity="0.7"/>
-      <line x1="42" y1="85" x2="170" y2="100" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
-      <line x1="42" y1="92" x2="170" y2="125" stroke="#7c3aed" stroke-width="1.5" opacity="0.5"/>
+      <text x="110" y="16" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Market: Parallel Discovery</text>
+      <circle cx="30" cy="90" r="14" fill="url(#marketBg)" stroke="#7c3aed" stroke-width="2" filter="url(#parallelShadow)"/>
+      <text x="30" y="94" text-anchor="middle" font-size="8" fill="#7c3aed" font-family="'DM Sans', system-ui, sans-serif">IN</text>
+      <!-- Multiple parallel lines with varying opacity to show divergence -->
+      <line x1="44" y1="75" x2="168" y2="38" stroke="#7c3aed" stroke-width="1.5" opacity="0.4"/>
+      <line x1="44" y1="82" x2="168" y2="65" stroke="#7c3aed" stroke-width="1.5" opacity="0.55"/>
+      <line x1="44" y1="90" x2="168" y2="90" stroke="#7c3aed" stroke-width="2" opacity="0.75"/>
+      <line x1="44" y1="98" x2="168" y2="115" stroke="#7c3aed" stroke-width="1.5" opacity="0.55"/>
+      <line x1="44" y1="105" x2="168" y2="142" stroke="#7c3aed" stroke-width="1.5" opacity="0.4"/>
       <!-- Nodes at end -->
-      <circle cx="175" cy="35" r="5" fill="#7c3aed" opacity="0.4"/>
-      <circle cx="175" cy="60" r="5" fill="#7c3aed" opacity="0.5"/>
-      <circle cx="175" cy="80" r="7" fill="#7c3aed" opacity="0.8"/>
-      <circle cx="175" cy="100" r="5" fill="#7c3aed" opacity="0.5"/>
-      <circle cx="175" cy="125" r="5" fill="#7c3aed" opacity="0.4"/>
-      <text x="110" y="150" text-anchor="middle" font-size="9" fill="#888">Many paths explored simultaneously</text>
+      <circle cx="175" cy="38" r="6" fill="#7c3aed" opacity="0.35" filter="url(#parallelShadow)"/>
+      <circle cx="175" cy="65" r="6" fill="#7c3aed" opacity="0.5" filter="url(#parallelShadow)"/>
+      <circle cx="175" cy="90" r="9" fill="#7c3aed" opacity="0.85" filter="url(#parallelShadow)"/>
+      <circle cx="175" cy="115" r="6" fill="#7c3aed" opacity="0.5" filter="url(#parallelShadow)"/>
+      <circle cx="175" cy="142" r="6" fill="#7c3aed" opacity="0.35" filter="url(#parallelShadow)"/>
+      <text x="110" y="162" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Many paths explored simultaneously</text>
 
       <!-- Divider -->
-      <line x1="220" y1="20" x2="220" y2="140" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="220" y1="25" x2="220" y2="150" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4,3"/>
 
       <!-- Firm: serial path -->
-      <text x="340" y="16" text-anchor="middle" font-size="12" fill="#0891b2" font-weight="600">Firm: Serial Execution</text>
-      <circle cx="260" cy="80" r="12" fill="#f0f9ff" stroke="#0891b2" stroke-width="1.5"/>
-      <text x="260" y="84" text-anchor="middle" font-size="8" fill="#0891b2">IN</text>
-      <line x1="272" y1="80" x2="300" y2="80" stroke="#0891b2" stroke-width="2.5"/>
-      <rect x="300" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.2" stroke="#0891b2" stroke-width="1.5"/>
-      <line x1="320" y1="80" x2="345" y2="80" stroke="#0891b2" stroke-width="2.5"/>
-      <rect x="345" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.3" stroke="#0891b2" stroke-width="1.5"/>
-      <line x1="365" y1="80" x2="390" y2="80" stroke="#0891b2" stroke-width="2.5"/>
-      <rect x="390" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.5" stroke="#0891b2" stroke-width="1.5"/>
-      <polygon points="415,74 425,80 415,86" fill="#0891b2"/>
-      <text x="340" y="115" text-anchor="middle" font-size="9" fill="#888">One path refined with focus</text>
-      <text x="340" y="150" text-anchor="middle" font-size="9" fill="#888">Ruthless efficiency on a narrow problem</text>
+      <text x="340" y="16" text-anchor="middle" font-size="12" fill="#0891b2" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Firm: Serial Execution</text>
+      <circle cx="260" cy="90" r="14" fill="url(#firmBg)" stroke="#0891b2" stroke-width="2" filter="url(#parallelShadow)"/>
+      <text x="260" y="94" text-anchor="middle" font-size="8" fill="#0891b2" font-family="'DM Sans', system-ui, sans-serif">IN</text>
+      <line x1="274" y1="90" x2="302" y2="90" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="302" y="79" width="22" height="22" rx="4" fill="#0891b2" opacity="0.2" stroke="#0891b2" stroke-width="1.5" filter="url(#parallelShadow)"/>
+      <line x1="324" y1="90" x2="348" y2="90" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="348" y="79" width="22" height="22" rx="4" fill="#0891b2" opacity="0.35" stroke="#0891b2" stroke-width="1.5" filter="url(#parallelShadow)"/>
+      <line x1="370" y1="90" x2="394" y2="90" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="394" y="79" width="22" height="22" rx="4" fill="#0891b2" opacity="0.55" stroke="#0891b2" stroke-width="1.5" filter="url(#parallelShadow)"/>
+      <polygon points="418,83 428,90 418,97" fill="#0891b2"/>
+      <text x="344" y="128" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">One path refined with focus</text>
+      <text x="344" y="145" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Ruthless efficiency on a narrow problem</text>
     </svg>
   </div>
 
@@ -340,49 +483,79 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>The future belongs to a new kind of institution that blurs the line between the firm and the market, the cathedral and the bazaar. It is an architecture that combines the execution focus of the firm with the discovery power of the market. <strong>A community.</strong></p>
 
-  <!-- SVG: Evolution from Corporation to Community -->
+  <!-- SVG: Evolution from Corporation to Community — enhanced with gradients and depth -->
   <div class="svg-illustration">
-    <svg width="440" height="150" viewBox="0 0 440 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="480" height="165" viewBox="0 0 480 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pyramidFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fee2e2"/>
+          <stop offset="100%" stop-color="#fca5a5"/>
+        </linearGradient>
+        <radialGradient id="networkNodeGreen11" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#bbf7d0"/>
+          <stop offset="100%" stop-color="#059669" stop-opacity="0.5"/>
+        </radialGradient>
+        <filter id="corpShadow11">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+        </filter>
+        <linearGradient id="bgFade11" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#fff5f5"/>
+          <stop offset="50%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f0fdf4"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="480" height="165" rx="8" fill="url(#bgFade11)"/>
+
       <!-- Old: Pyramid -->
-      <text x="80" y="16" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">Corporation (Pyramid)</text>
-      <polygon points="80,30 20,110 140,110" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.6"/>
-      <circle cx="80" cy="50" r="5" fill="#dc2626" opacity="0.7"/>
-      <circle cx="60" cy="75" r="4" fill="#dc2626" opacity="0.4"/>
-      <circle cx="100" cy="75" r="4" fill="#dc2626" opacity="0.4"/>
-      <circle cx="40" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
-      <circle cx="65" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
-      <circle cx="90" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
-      <circle cx="115" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
-      <text x="80" y="130" text-anchor="middle" font-size="9" fill="#888">Hierarchical. Rigid.</text>
-      <text x="80" y="143" text-anchor="middle" font-size="9" fill="#888">Evolutionary dead end.</text>
+      <text x="82" y="15" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Corporation (Pyramid)</text>
+      <polygon points="82,30 18,118 146,118" fill="url(#pyramidFill)" stroke="#dc2626" stroke-width="1.5" opacity="0.7" filter="url(#corpShadow11)"/>
+      <circle cx="82" cy="50" r="6" fill="#dc2626" opacity="0.8"/>
+      <circle cx="62" cy="78" r="5" fill="#dc2626" opacity="0.5"/>
+      <circle cx="102" cy="78" r="5" fill="#dc2626" opacity="0.5"/>
+      <circle cx="40" cy="104" r="4" fill="#dc2626" opacity="0.3"/>
+      <circle cx="65" cy="104" r="4" fill="#dc2626" opacity="0.3"/>
+      <circle cx="90" cy="104" r="4" fill="#dc2626" opacity="0.3"/>
+      <circle cx="115" cy="104" r="4" fill="#dc2626" opacity="0.3"/>
+      <text x="82" y="136" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Hierarchical. Rigid.</text>
+      <text x="82" y="150" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Evolutionary dead end.</text>
 
-      <!-- Arrow -->
-      <line x1="160" y1="70" x2="270" y2="70" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4"/>
-      <polygon points="270,64 282,70 270,76" fill="#2563eb"/>
-      <text x="221" y="60" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">Evolves into</text>
+      <!-- Arrow with gradient -->
+      <defs>
+        <linearGradient id="arrowGrad11b" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#dc2626"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+      </defs>
+      <line x1="168" y1="75" x2="280" y2="75" stroke="url(#arrowGrad11b)" stroke-width="2" stroke-dasharray="6,4"/>
+      <polygon points="280,69 292,75 280,81" fill="#059669"/>
+      <text x="230" y="63" text-anchor="middle" font-size="10" fill="#555" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Evolves into</text>
 
-      <!-- New: Network/Community -->
-      <text x="360" y="16" text-anchor="middle" font-size="11" fill="#16a34a" font-weight="600">Community (Network)</text>
-      <circle cx="360" cy="70" r="6" fill="#16a34a" opacity="0.7"/>
-      <circle cx="320" cy="45" r="5" fill="#16a34a" opacity="0.5"/>
-      <circle cx="400" cy="45" r="5" fill="#16a34a" opacity="0.5"/>
-      <circle cx="310" cy="85" r="5" fill="#16a34a" opacity="0.5"/>
-      <circle cx="410" cy="85" r="5" fill="#16a34a" opacity="0.5"/>
-      <circle cx="340" cy="105" r="4.5" fill="#16a34a" opacity="0.4"/>
-      <circle cx="380" cy="105" r="4.5" fill="#16a34a" opacity="0.4"/>
+      <!-- New: Network/Community — glowing hub-and-spoke -->
+      <text x="380" y="15" text-anchor="middle" font-size="11" fill="#059669" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Community (Network)</text>
+      <!-- Center glow -->
+      <circle cx="380" cy="75" r="20" fill="#059669" opacity="0.1">
+        <animate attributeName="r" values="20;24;20" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="380" cy="75" r="8" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="2" filter="url(#corpShadow11)"/>
+      <!-- Spokes -->
+      <circle cx="340" cy="48" r="6" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5" filter="url(#corpShadow11)"/>
+      <circle cx="420" cy="48" r="6" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5" filter="url(#corpShadow11)"/>
+      <circle cx="328" cy="90" r="6" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5" filter="url(#corpShadow11)"/>
+      <circle cx="432" cy="90" r="6" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5" filter="url(#corpShadow11)"/>
+      <circle cx="356" cy="115" r="5.5" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5"/>
+      <circle cx="404" cy="115" r="5.5" fill="url(#networkNodeGreen11)" stroke="#059669" stroke-width="1.5"/>
       <!-- Connection lines -->
-      <line x1="360" y1="70" x2="320" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="360" y1="70" x2="400" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="360" y1="70" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="360" y1="70" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="320" y1="45" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
-      <line x1="400" y1="45" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
-      <line x1="340" y1="105" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
-      <line x1="380" y1="105" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
-      <line x1="340" y1="105" x2="380" y2="105" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
-      <line x1="320" y1="45" x2="400" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.15"/>
-      <text x="360" y="130" text-anchor="middle" font-size="9" fill="#888">Distributed. Adaptive.</text>
-      <text x="360" y="143" text-anchor="middle" font-size="9" fill="#888">Symbiotic intelligence.</text>
+      <line x1="380" y1="75" x2="340" y2="48" stroke="#059669" stroke-width="1.2" opacity="0.45"/>
+      <line x1="380" y1="75" x2="420" y2="48" stroke="#059669" stroke-width="1.2" opacity="0.45"/>
+      <line x1="380" y1="75" x2="328" y2="90" stroke="#059669" stroke-width="1.2" opacity="0.45"/>
+      <line x1="380" y1="75" x2="432" y2="90" stroke="#059669" stroke-width="1.2" opacity="0.45"/>
+      <line x1="340" y1="48" x2="328" y2="90" stroke="#059669" stroke-width="1" opacity="0.25"/>
+      <line x1="420" y1="48" x2="432" y2="90" stroke="#059669" stroke-width="1" opacity="0.25"/>
+      <line x1="356" y1="115" x2="328" y2="90" stroke="#059669" stroke-width="1" opacity="0.25"/>
+      <line x1="404" y1="115" x2="432" y2="90" stroke="#059669" stroke-width="1" opacity="0.25"/>
+      <line x1="356" y1="115" x2="404" y2="115" stroke="#059669" stroke-width="1" opacity="0.2"/>
+      <text x="380" y="140" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Distributed. Adaptive.</text>
+      <text x="380" y="154" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Symbiotic intelligence.</text>
     </svg>
   </div>
 
@@ -448,17 +621,20 @@ function updateTCViz() {
   // Labels
   svg.append('text').attr('x', bx / 2).attr('y', h / 2 + 5)
     .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#7c3aed').attr('font-weight', 600)
+    .attr('font-family', "'DM Sans', system-ui, sans-serif")
     .text('Bazaar Territory');
 
   if (w - bx > 60) {
     svg.append('text').attr('x', bx + (w - bx) / 2).attr('y', h / 2 + 5)
       .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#0891b2').attr('font-weight', 600)
+      .attr('font-family', "'DM Sans', system-ui, sans-serif")
       .text('Cathedral Territory');
   }
 
   // Boundary label
   svg.append('text').attr('x', bx).attr('y', 14)
     .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#555')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif")
     .text('Firm boundary');
 
   const coase = document.getElementById('coase-text');
@@ -497,7 +673,9 @@ requestAnimationFrame(() => {
   svg.append('path').datum(genData).attr('d', genLine)
     .attr('fill','none').attr('stroke','#16a34a').attr('stroke-width',2.5).attr('opacity',0.8);
   svg.append('text').attr('x', w - 22).attr('y', yS(0.3 + 0.6) - 8)
-    .attr('font-size',10).attr('fill','#16a34a').attr('text-anchor','end').text('Adaptive Newcomer');
+    .attr('font-size',10).attr('fill','#16a34a').attr('text-anchor','end')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif")
+    .text('Adaptive Newcomer');
 
   // Overfit line (wiggly - passes through all pts)
   const overData = d3.range(0, 1.01, 0.02).map(x => {
@@ -509,7 +687,9 @@ requestAnimationFrame(() => {
   svg.append('path').datum(overData).attr('d', overLine)
     .attr('fill','none').attr('stroke','#dc2626').attr('stroke-width',2).attr('stroke-dasharray','5,3').attr('opacity',0.7);
   svg.append('text').attr('x', xS(0.5)).attr('y', 12)
-    .attr('font-size',10).attr('fill','#dc2626').attr('text-anchor','middle').text('Incumbent (overfitted to old reality)');
+    .attr('font-size',10).attr('fill','#dc2626').attr('text-anchor','middle')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif")
+    .text('Incumbent (overfitted to old reality)');
 
   // Data points
   svg.selectAll('.pt').data(pts).join('circle').attr('class','pt')
@@ -518,7 +698,9 @@ requestAnimationFrame(() => {
 
   // Label
   svg.append('text').attr('x', xS(0.05)).attr('y', h - 3)
-    .attr('font-size',9).attr('fill','#888').text('Time / Environmental Change \u2192');
+    .attr('font-size',9).attr('fill','#888')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif")
+    .text('Time / Environmental Change \u2192');
 });
 
 // --- Sort Game ---

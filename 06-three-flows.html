@@ -25,7 +25,7 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .pullquote-attr { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
@@ -118,28 +118,93 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
   <p>In ancient India, six blind scholars were brought before an elephant. The first, touching the trunk, declared, "An elephant is like a thick snake!" The second, feeling a leg, insisted, "No, it is like a mighty tree!" The third, grasping the tail, proclaimed, "You are both fools, it is clearly a rope!" Each scholar gave a perfect, empirically verifiable description of the part they touched. Each was completely right about their piece, catastrophically wrong about the whole, and ready to die defending their partial truth.</p>
 
   <!-- SVG: Blind scholars and elephant -->
-  <svg class="elephant-svg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" aria-label="Blind scholars touching different parts of an elephant">
+  <svg class="elephant-svg" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="Blind scholars touching different parts of an elephant" style="max-width:420px;width:100%;height:auto;">
+    <defs>
+      <radialGradient id="elephantBodyGrad" cx="45%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#e7e5e4"/>
+        <stop offset="100%" stop-color="#a8a29e"/>
+      </radialGradient>
+      <radialGradient id="elephantHeadGrad" cx="40%" cy="35%" r="60%">
+        <stop offset="0%" stop-color="#e7e5e4"/>
+        <stop offset="100%" stop-color="#a8a29e"/>
+      </radialGradient>
+      <linearGradient id="elephantBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fafafa"/>
+        <stop offset="100%" stop-color="#f5f5f4"/>
+      </linearGradient>
+      <filter id="elephantShadow" x="-5%" y="-5%" width="110%" height="110%">
+        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.12"/>
+      </filter>
+      <!-- Highlight circles for each schema color -->
+      <radialGradient id="blueHighlight" cx="50%" cy="30%" r="50%">
+        <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="tealHighlight" cx="50%" cy="30%" r="50%">
+        <stop offset="0%" stop-color="#5eead4" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#0d9488" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="stoneHighlight" cx="50%" cy="30%" r="50%">
+        <stop offset="0%" stop-color="#d6d3d1" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#78716c" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="420" height="240" rx="14" fill="url(#elephantBg)" stroke="#e7e5e4" stroke-width="1"/>
+
+    <!-- Elephant shadow -->
+    <ellipse cx="205" cy="215" rx="115" ry="10" fill="#78716c" opacity="0.12"/>
+
+    <!-- Elephant legs -->
+    <rect x="128" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
+    <rect x="168" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
+    <rect x="248" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
+    <rect x="283" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
+
     <!-- Elephant body -->
-    <ellipse cx="200" cy="120" rx="110" ry="60" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <!-- Head -->
-    <ellipse cx="310" cy="100" rx="40" ry="35" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <!-- Trunk -->
-    <path d="M340 115 Q360 140 345 170 Q340 178 335 170 Q348 142 330 120" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <!-- Legs -->
-    <rect x="130" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <rect x="170" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <rect x="245" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <rect x="280" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
-    <!-- Tail -->
-    <path d="M90 115 Q60 110 55 130" fill="none" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- Eye -->
-    <circle cx="325" cy="92" r="4" fill="#1a1a1a"/>
+    <ellipse cx="205" cy="122" rx="115" ry="62" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.8" filter="url(#elephantShadow)"/>
+
     <!-- Ear -->
-    <ellipse cx="295" cy="85" rx="18" ry="25" fill="#c8c4bf" stroke="#78716c" stroke-width="1.5"/>
-    <!-- Scholar labels -->
-    <text x="345" y="185" font-size="11" fill="#3b82f6" font-family="DM Sans, sans-serif" font-weight="600">Snake!</text>
-    <text x="125" y="215" font-size="11" fill="#0d9488" font-family="DM Sans, sans-serif" font-weight="600">Tree!</text>
-    <text x="30" y="140" font-size="11" fill="#78716c" font-family="DM Sans, sans-serif" font-weight="600">Rope!</text>
+    <ellipse cx="298" cy="88" rx="20" ry="28" fill="#c8c4bf" stroke="#78716c" stroke-width="1.5" opacity="0.9"/>
+
+    <!-- Head -->
+    <ellipse cx="316" cy="103" rx="42" ry="37" fill="url(#elephantHeadGrad)" stroke="#78716c" stroke-width="1.8"/>
+
+    <!-- Eye -->
+    <circle cx="330" cy="94" r="5" fill="#1c1917"/>
+    <circle cx="332" cy="92" r="1.5" fill="white" opacity="0.5"/>
+
+    <!-- Trunk -->
+    <path d="M345 118 Q366 145 350 174 Q344 183 338 173 Q352 145 335 122" fill="url(#elephantHeadGrad)" stroke="#78716c" stroke-width="1.8"/>
+
+    <!-- Tail -->
+    <path d="M92 118 Q64 113 58 134" fill="none" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Tail tuft -->
+    <circle cx="58" cy="134" r="4" fill="#a8a29e"/>
+
+    <!-- Scholar glow highlights (showing which part each "sees") -->
+    <!-- Trunk region highlight (blue — "Snake") -->
+    <ellipse cx="347" cy="148" rx="22" ry="28" fill="url(#blueHighlight)" opacity="0.8"/>
+    <!-- Left legs highlight (teal — "Tree") -->
+    <ellipse cx="150" cy="185" rx="28" ry="20" fill="url(#tealHighlight)" opacity="0.8"/>
+    <!-- Tail highlight (stone — "Rope") -->
+    <ellipse cx="65" cy="128" rx="18" ry="14" fill="url(#stoneHighlight)" opacity="0.8"/>
+
+    <!-- Scholar label tags -->
+    <!-- Blue: Snake! (trunk) -->
+    <rect x="348" y="190" width="56" height="20" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+    <text x="376" y="204" text-anchor="middle" font-size="11" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Snake! 🐍</text>
+    <line x1="360" y1="175" x2="365" y2="190" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3 2"/>
+
+    <!-- Teal: Tree! (legs) -->
+    <rect x="120" y="220" width="50" height="20" rx="5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.2"/>
+    <text x="145" y="234" text-anchor="middle" font-size="11" fill="#0f766e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Tree! 🌳</text>
+
+    <!-- Stone: Rope! (tail) -->
+    <rect x="12" y="118" width="54" height="20" rx="5" fill="#f5f5f4" stroke="#78716c" stroke-width="1.2"/>
+    <text x="39" y="132" text-anchor="middle" font-size="11" fill="#57534e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Rope! 🪢</text>
+    <line x1="58" y1="128" x2="66" y2="128" stroke="#78716c" stroke-width="1" stroke-dasharray="3 2"/>
   </svg>
 
   <p>This is the secret history of economic thought. For three centuries, brilliant minds have been grappling with different parts of the same beast in a dark room, mistaking anatomy for ideology.</p>
@@ -240,20 +305,112 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
   <p>The fragmentation of economics into warring schools was a historical accident. Each blind scholar felt their part of the elephant and declared it the whole truth.</p>
 
   <!-- SVG: Three flows braided together -->
-  <svg class="synthesis-svg" viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" aria-label="Three economic flows braiding together">
-    <!-- Gradient stream -->
-    <path d="M30 40 Q125 80 250 40 Q375 0 470 40" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-    <text x="475" y="44" font-size="12" fill="#3b82f6" font-family="DM Sans, sans-serif" font-weight="600">Gradient</text>
-    <!-- Circular stream -->
-    <path d="M30 80 Q125 40 250 80 Q375 120 470 80" fill="none" stroke="#0d9488" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-    <text x="475" y="84" font-size="12" fill="#0d9488" font-family="DM Sans, sans-serif" font-weight="600">Circular</text>
-    <!-- Harmonic stream -->
-    <path d="M30 120 Q125 120 250 120 Q375 120 470 120" fill="none" stroke="#78716c" stroke-width="4" stroke-linecap="round" opacity="0.6" stroke-dasharray="8 4"/>
-    <text x="475" y="124" font-size="12" fill="#78716c" font-family="DM Sans, sans-serif" font-weight="600">Harmonic</text>
-    <!-- Labels -->
-    <text x="10" y="16" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Smith</text>
-    <text x="10" y="76" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Marx</text>
-    <text x="10" y="140" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Hayek</text>
+  <svg class="synthesis-svg" viewBox="0 0 530 185" xmlns="http://www.w3.org/2000/svg" aria-label="Three economic flows braiding together" style="max-width:530px;width:100%;height:auto;">
+    <defs>
+      <!-- Gradient flow gradient (blue, directional) -->
+      <linearGradient id="gradientFlowGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#93c5fd"/>
+        <stop offset="50%" stop-color="#2563eb"/>
+        <stop offset="100%" stop-color="#1d4ed8"/>
+      </linearGradient>
+      <!-- Circular flow gradient (teal, cycling) -->
+      <linearGradient id="circularFlowGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5eead4"/>
+        <stop offset="50%" stop-color="#0d9488"/>
+        <stop offset="100%" stop-color="#0f766e"/>
+      </linearGradient>
+      <!-- Harmonic flow gradient (stone, solid) -->
+      <linearGradient id="harmonicFlowGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#d6d3d1"/>
+        <stop offset="50%" stop-color="#78716c"/>
+        <stop offset="100%" stop-color="#57534e"/>
+      </linearGradient>
+      <!-- Background gradient -->
+      <linearGradient id="synthesisBg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f8fafc"/>
+        <stop offset="100%" stop-color="#f1f5f9"/>
+      </linearGradient>
+      <!-- Arrow markers for each flow -->
+      <marker id="arrowGradient" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+      </marker>
+      <marker id="arrowCircular" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#0d9488"/>
+      </marker>
+      <marker id="arrowHarmonic" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#78716c"/>
+      </marker>
+      <!-- Glow filters for each flow -->
+      <filter id="blueFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="tealFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="530" height="185" rx="14" fill="url(#synthesisBg)" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- Title -->
+    <text x="265" y="18" text-anchor="middle" font-size="12" fill="#374151" font-family="'Playfair Display', Georgia, serif" font-weight="700">The Three Flows: Braided Together</text>
+
+    <!-- Left origin label box -->
+    <rect x="8" y="28" width="60" height="132" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" opacity="0.8"/>
+    <text x="38" y="60" text-anchor="middle" font-size="9.5" fill="#3b82f6" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Smith</text>
+    <text x="38" y="72" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Gradient</text>
+    <text x="38" y="100" text-anchor="middle" font-size="9.5" fill="#0d9488" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Marx</text>
+    <text x="38" y="112" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Circular</text>
+    <text x="38" y="140" text-anchor="middle" font-size="9.5" fill="#78716c" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Hayek</text>
+    <text x="38" y="152" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Harmonic</text>
+
+    <!-- === GRADIENT FLOW: wavy, arrows, blue (top) === -->
+    <!-- Shadow path -->
+    <path d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" opacity="0.25"/>
+    <!-- Main path with animated dashoffset to simulate flow -->
+    <path id="gradPath" d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="url(#gradientFlowGrad)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 5" marker-end="url(#arrowGradient)" filter="url(#blueFlowGlow)">
+      <animate attributeName="stroke-dashoffset" values="0;-52" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <!-- Arrow markers at mid-points -->
+    <circle cx="168" cy="78" r="3" fill="#2563eb" opacity="0.6"/>
+    <circle cx="295" cy="50" r="3" fill="#2563eb" opacity="0.6"/>
+    <!-- End label -->
+    <rect x="492" y="38" width="30" height="16" rx="4" fill="#dbeafe"/>
+    <text x="507" y="50" text-anchor="middle" font-size="9" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Grad.</text>
+    <!-- Annotation below line -->
+    <text x="230" y="100" text-anchor="middle" font-size="8.5" fill="#3b82f6" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">price signals → equilibrium</text>
+
+    <!-- === CIRCULAR FLOW: oscillating loops, teal (mid) === -->
+    <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="#5eead4" stroke-width="6" stroke-linecap="round" opacity="0.25"/>
+    <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="url(#circularFlowGrad)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6" marker-end="url(#arrowCircular)" filter="url(#tealFlowGlow)">
+      <animate attributeName="stroke-dashoffset" values="0;-64" dur="3.5s" repeatCount="indefinite"/>
+    </path>
+    <!-- Loop indicators -->
+    <circle cx="168" cy="62" r="3" fill="#0d9488" opacity="0.6"/>
+    <circle cx="398" cy="132" r="3" fill="#0d9488" opacity="0.6"/>
+    <!-- Eddy at the loops (animated pulse) -->
+    <ellipse cx="168" cy="62" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
+      <animate attributeName="opacity" values="0.15;0.55;0.15" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="398" cy="132" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
+      <animate attributeName="opacity" values="0.55;0.15;0.55" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- End label -->
+    <rect x="492" y="85" width="30" height="16" rx="4" fill="#ccfbf1"/>
+    <text x="507" y="97" text-anchor="middle" font-size="9" fill="#0f766e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Circ.</text>
+    <text x="295" y="148" text-anchor="middle" font-size="8.5" fill="#0d9488" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">self-reinforcing loops → accumulation</text>
+
+    <!-- === HARMONIC FLOW: steady, stone, dashed (bottom) === -->
+    <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="#a8a29e" stroke-width="5" stroke-linecap="round" opacity="0.25"/>
+    <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="url(#harmonicFlowGrad)" stroke-width="3.8" stroke-linecap="round" stroke-dasharray="10 5" marker-end="url(#arrowHarmonic)"/>
+    <!-- End label -->
+    <rect x="492" y="131" width="30" height="16" rx="4" fill="#f5f5f4"/>
+    <text x="507" y="143" text-anchor="middle" font-size="9" fill="#57534e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Harm.</text>
+    <text x="230" y="168" text-anchor="middle" font-size="8.5" fill="#78716c" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">persistent structures → institutional order</text>
   </svg>
 
   <p>The Keynesians studied what happens when the system gets stuck in "entropy wells." The Behavioralists documented the heuristics we use to navigate this multi-flow landscape. They were all right. They just did not know they were all right about the same thing.</p>

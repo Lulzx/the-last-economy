@@ -63,14 +63,14 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
 input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .slider-row { margin: 0.75rem 0; }
-.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
-.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.slider-row label { font-size: min(0.9rem, 14px); font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: min(0.85rem, 14px); color: #555; }
 .stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
 
@@ -119,9 +119,9 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .stat-row .stat-callout { flex: 1; min-width: 140px; }
 
@@ -133,10 +133,12 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
   .gauges { grid-template-columns: 1fr !important; }
   h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
   .ratio-display { font-size: 2rem; }
-  .stat-number { font-size: 2.2rem; }
+  .sorter-container { flex-direction: column; }
 }
 @media (max-width: 480px) {
   .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+  .btn { font-size: min(0.82rem, 13px); padding: 0.4rem 0.8rem; }
+  .sort-column { min-width: 100%; }
 }
 </style>
 </head>
@@ -225,8 +227,12 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <!-- SVG: Opportunity Cost Inversion -->
   <div class="panel" style="padding:1rem; text-align:center;">
-    <svg viewBox="0 0 600 210" style="width:100%;max-width:560px;display:block;margin:0 auto;">
+    <svg viewBox="0 0 600 220" style="width:100%;max-width:560px;display:block;margin:0 auto;">
       <defs>
+        <linearGradient id="oppBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff0f0"/>
+          <stop offset="100%" stop-color="#eff6ff"/>
+        </linearGradient>
         <linearGradient id="oldWorldGrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#fee2e2"/>
           <stop offset="100%" stop-color="#fca5a5"/>
@@ -235,33 +241,40 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
           <stop offset="0%" stop-color="#dbeafe"/>
           <stop offset="100%" stop-color="#bfdbfe"/>
         </linearGradient>
+        <linearGradient id="aiArrowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#dc2626"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </linearGradient>
         <filter id="opp-shadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.12)"/>
         </filter>
         <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="#888"/>
+          <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
         </marker>
       </defs>
-      <rect x="0" y="0" width="600" height="210" rx="8" fill="#fafaf8"/>
-      <!-- Old world -->
-      <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Old World</text>
-      <rect x="50" y="35" width="200" height="60" rx="8" fill="url(#oldWorldGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#opp-shadow)"/>
+      <rect x="0" y="0" width="600" height="220" rx="10" fill="url(#oppBg)"/>
+      <!-- Old world header -->
+      <text x="150" y="26" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b" letter-spacing="0.06em" font-family="'Playfair Display', Georgia, serif">Old World</text>
+      <rect x="40" y="34" width="220" height="68" rx="10" fill="url(#oldWorldGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#opp-shadow)"/>
       <text x="150" y="60" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Time scarcity</text>
-      <text x="150" y="78" text-anchor="middle" font-size="10" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">Every "yes" = a million "no"s</text>
-      <!-- Arrow -->
-      <line x1="270" y1="65" x2="330" y2="65" stroke="#888" stroke-width="2" marker-end="url(#arrowhead)"/>
-      <text x="300" y="55" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">AI</text>
-      <!-- New world -->
-      <text x="450" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">New World</text>
-      <rect x="350" y="35" width="200" height="60" rx="8" fill="url(#newWorldGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#opp-shadow)"/>
+      <text x="150" y="78" text-anchor="middle" font-size="9.5" fill="#7f1d1d" font-family="'DM Sans', system-ui, sans-serif">Every "yes" = a million "no"s</text>
+      <!-- Transition arrow with gradient -->
+      <line x1="272" y1="68" x2="328" y2="68" stroke="url(#aiArrowGrad)" stroke-width="3" marker-end="url(#arrowhead)"/>
+      <text x="300" y="57" text-anchor="middle" font-size="9" fill="#555" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">AI</text>
+      <!-- New world header -->
+      <text x="450" y="26" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af" letter-spacing="0.06em" font-family="'Playfair Display', Georgia, serif">New World</text>
+      <rect x="340" y="34" width="220" height="68" rx="10" fill="url(#newWorldGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#opp-shadow)"/>
       <text x="450" y="60" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Attention scarcity</text>
-      <text x="450" y="78" text-anchor="middle" font-size="10" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">What am I choosing to experience?</text>
+      <text x="450" y="78" text-anchor="middle" font-size="9.5" fill="#1e3a8a" font-family="'DM Sans', system-ui, sans-serif">What am I choosing to experience?</text>
       <!-- Bottom labels -->
-      <text x="150" y="122" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">"What could I be producing?"</text>
-      <text x="450" y="122" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">"What consciousness am I cultivating?"</text>
-      <!-- Dividing insight -->
-      <rect x="60" y="140" width="480" height="44" rx="6" fill="#f0f9ff" stroke="#bfdbfe" stroke-width="1"/>
-      <text x="300" y="166" text-anchor="middle" font-size="11" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The real opportunity cost of mindless scrolling is consciousness left uncultivated.</text>
+      <text x="150" y="124" text-anchor="middle" font-size="10.5" fill="#555" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">"What could I be producing?"</text>
+      <text x="450" y="124" text-anchor="middle" font-size="10.5" fill="#555" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">"What consciousness am I cultivating?"</text>
+      <!-- Insight strip -->
+      <rect x="40" y="142" width="520" height="52" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <text x="300" y="162" text-anchor="middle" font-size="10" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The real opportunity cost of mindless scrolling</text>
+      <text x="300" y="178" text-anchor="middle" font-size="10" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">is consciousness left uncultivated.</text>
+      <!-- Title -->
+      <text x="300" y="210" text-anchor="middle" font-size="8.5" fill="#aaa" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">OPPORTUNITY COST INVERSION</text>
     </svg>
   </div>
 
@@ -280,56 +293,89 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>When economic necessity ends, human necessity begins. The &ldquo;jobs&rdquo; of the future are not jobs at all. They are the roles humans have always filled when not distracted by the Sisyphean task of rolling the economic rock up the hill. They are not professions. They are <em>arts</em>. The arts of being human.</p>
 
-  <!-- SVG: Four Arts Compass -->
+  <!-- SVG: Four Arts Compass — with gradients, drop shadows, animated rings, and background -->
   <div style="text-align:center; margin: 2rem 0;">
     <svg viewBox="0 0 340 340" style="width:100%;max-width:320px;">
       <defs>
-        <radialGradient id="attentionGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#bfdbfe"/>
+        <radialGradient id="compassBg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f8faff"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
         </radialGradient>
-        <radialGradient id="relationGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#dcfce7"/>
-          <stop offset="100%" stop-color="#bbf7d0"/>
+        <radialGradient id="attentionGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#93c5fd"/>
+          <stop offset="100%" stop-color="#2563eb"/>
         </radialGradient>
-        <radialGradient id="meaningGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#fef9c3"/>
-          <stop offset="100%" stop-color="#fde68a"/>
+        <radialGradient id="relationGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#6ee7b7"/>
+          <stop offset="100%" stop-color="#059669"/>
         </radialGradient>
-        <radialGradient id="realityGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#fee2e2"/>
-          <stop offset="100%" stop-color="#fca5a5"/>
+        <radialGradient id="meaningGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#fde68a"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </radialGradient>
+        <radialGradient id="realityGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#fca5a5"/>
+          <stop offset="100%" stop-color="#dc2626"/>
         </radialGradient>
         <filter id="compass-shadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+          <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="rgba(0,0,0,0.18)"/>
         </filter>
+        <linearGradient id="compassSpoke" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e5e5e0"/>
+          <stop offset="100%" stop-color="#e5e5e0" stop-opacity="0"/>
+        </linearGradient>
       </defs>
-      <circle cx="170" cy="170" r="150" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4 4"/>
-      <circle cx="170" cy="170" r="80" fill="none" stroke="#e5e5e0" stroke-width="1"/>
-      <!-- Attention - top -->
-      <circle cx="170" cy="40" r="30" fill="url(#attentionGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#compass-shadow)"/>
-      <text x="170" y="37" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Attention</text>
-      <text x="170" y="48" text-anchor="middle" font-size="7.5" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Architects</text>
-      <!-- Connection - right -->
-      <circle cx="300" cy="170" r="30" fill="url(#relationGrad)" stroke="#16a34a" stroke-width="1.5" filter="url(#compass-shadow)"/>
-      <text x="300" y="167" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Relationship</text>
-      <text x="300" y="178" text-anchor="middle" font-size="7.5" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Weavers</text>
-      <!-- Meaning - bottom -->
-      <circle cx="170" cy="300" r="30" fill="url(#meaningGrad)" stroke="#d97706" stroke-width="1.5" filter="url(#compass-shadow)"/>
-      <text x="170" y="297" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
-      <text x="170" y="308" text-anchor="middle" font-size="7.5" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">Makers</text>
-      <!-- Embodiment - left -->
-      <circle cx="40" cy="170" r="30" fill="url(#realityGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#compass-shadow)"/>
-      <text x="40" y="167" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Reality</text>
-      <text x="40" y="178" text-anchor="middle" font-size="7.5" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">Anchors</text>
-      <!-- Center label -->
-      <text x="170" y="167" text-anchor="middle" font-size="10" fill="#888" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">The Arts</text>
-      <text x="170" y="180" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">of Being Human</text>
-      <!-- Connecting lines -->
-      <line x1="170" y1="70" x2="170" y2="90" stroke="#e5e5e0" stroke-width="1.5"/>
-      <line x1="170" y1="250" x2="170" y2="270" stroke="#e5e5e0" stroke-width="1.5"/>
-      <line x1="70" y1="170" x2="90" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
-      <line x1="250" y1="170" x2="270" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
+      <!-- Background -->
+      <rect x="0" y="0" width="340" height="340" rx="16" fill="url(#compassBg)"/>
+      <!-- Outer orbit ring -->
+      <circle cx="170" cy="170" r="148" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4 6"/>
+      <!-- Inner ring -->
+      <circle cx="170" cy="170" r="76" fill="none" stroke="#e5e5e0" stroke-width="1"/>
+      <!-- Center hub -->
+      <circle cx="170" cy="170" r="44" fill="white" stroke="#e5e5e0" stroke-width="1.5" filter="url(#compass-shadow)"/>
+      <text x="170" y="166" text-anchor="middle" font-size="9.5" fill="#888" font-weight="600" letter-spacing="0.04em" font-family="'DM Sans', system-ui, sans-serif">The Arts</text>
+      <text x="170" y="180" text-anchor="middle" font-size="8.5" fill="#aaa" font-family="'DM Sans', system-ui, sans-serif">of Being Human</text>
+      <!-- Spokes -->
+      <line x1="170" y1="126" x2="170" y2="70" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="170" y1="214" x2="170" y2="270" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="94" y1="170" x2="40" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="246" y1="170" x2="300" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
+      <!-- Attention node — blue, top -->
+      <circle cx="170" cy="40" r="30" fill="url(#attentionGrad)" filter="url(#compass-shadow)"/>
+      <circle cx="170" cy="40" r="30" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="170" cy="40" r="34" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.35">
+        <animate attributeName="r" values="34;38;34" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0.08;0.35" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="170" y="36" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Attention</text>
+      <text x="170" y="47" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.85)" font-family="'DM Sans', system-ui, sans-serif">Architects</text>
+      <!-- Relationship node — green, right -->
+      <circle cx="300" cy="170" r="30" fill="url(#relationGrad)" filter="url(#compass-shadow)"/>
+      <circle cx="300" cy="170" r="30" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="300" cy="170" r="34" fill="none" stroke="#059669" stroke-width="1" opacity="0.35">
+        <animate attributeName="r" values="34;38;34" dur="3.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0.08;0.35" dur="3.8s" repeatCount="indefinite"/>
+      </circle>
+      <text x="300" y="166" text-anchor="middle" font-size="7.5" fill="white" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Relationship</text>
+      <text x="300" y="177" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.85)" font-family="'DM Sans', system-ui, sans-serif">Weavers</text>
+      <!-- Meaning node — amber, bottom -->
+      <circle cx="170" cy="300" r="30" fill="url(#meaningGrad)" filter="url(#compass-shadow)"/>
+      <circle cx="170" cy="300" r="30" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="170" cy="300" r="34" fill="none" stroke="#d97706" stroke-width="1" opacity="0.35">
+        <animate attributeName="r" values="34;38;34" dur="4.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0.08;0.35" dur="4.4s" repeatCount="indefinite"/>
+      </circle>
+      <text x="170" y="296" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
+      <text x="170" y="307" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.85)" font-family="'DM Sans', system-ui, sans-serif">Makers</text>
+      <!-- Reality node — red, left -->
+      <circle cx="40" cy="170" r="30" fill="url(#realityGrad)" filter="url(#compass-shadow)"/>
+      <circle cx="40" cy="170" r="30" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="40" cy="170" r="34" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.35">
+        <animate attributeName="r" values="34;38;34" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.35;0.08;0.35" dur="5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="40" y="166" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Reality</text>
+      <text x="40" y="177" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.85)" font-family="'DM Sans', system-ui, sans-serif">Anchors</text>
     </svg>
   </div>
 
@@ -420,45 +466,59 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>As we step into this new world, we must finally confront the nature of the intelligence that has reshaped it. For we have discovered that &ldquo;intelligence&rdquo; is not one thing, but two.</p>
 
-  <!-- SVG: Computation vs Consciousness -->
+  <!-- SVG: Computation vs Consciousness — with background, drop shadows, and visual depth -->
   <div style="text-align:center; margin: 2rem 0;">
-    <svg viewBox="0 0 500 180" style="width:100%;max-width:480px;">
+    <svg viewBox="0 0 500 200" style="width:100%;max-width:480px;">
       <defs>
+        <linearGradient id="ccBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#eff6ff"/>
+          <stop offset="100%" stop-color="#f0fdf4"/>
+        </linearGradient>
         <linearGradient id="compGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#bfdbfe"/>
+          <stop offset="0%" stop-color="#93c5fd"/>
+          <stop offset="100%" stop-color="#2563eb"/>
         </linearGradient>
         <linearGradient id="consGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#dcfce7"/>
-          <stop offset="100%" stop-color="#bbf7d0"/>
+          <stop offset="0%" stop-color="#6ee7b7"/>
+          <stop offset="100%" stop-color="#059669"/>
         </linearGradient>
         <filter id="comp-shadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+          <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="rgba(0,0,0,0.15)"/>
         </filter>
       </defs>
-      <!-- Computation side -->
-      <rect x="10" y="15" width="210" height="150" rx="10" fill="url(#compGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#comp-shadow)"/>
-      <text x="115" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Computation</text>
-      <text x="115" y="62" text-anchor="middle" font-size="10" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Syntactic &middot; Data &middot; Optimization</text>
-      <line x1="40" y1="72" x2="190" y2="72" stroke="#bfdbfe" stroke-width="1"/>
-      <text x="115" y="92" text-anchor="middle" font-size="11" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Answers "How?"</text>
-      <text x="115" y="110" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to design a protein</text>
-      <text x="115" y="124" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to optimize a supply chain</text>
-      <text x="115" y="138" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to win a game</text>
-      <text x="115" y="156" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Power: effectively infinite</text>
-      <!-- Consciousness side -->
-      <rect x="280" y="15" width="210" height="150" rx="10" fill="url(#consGrad)" stroke="#16a34a" stroke-width="1.5" filter="url(#comp-shadow)"/>
-      <text x="385" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">Consciousness</text>
-      <text x="385" y="62" text-anchor="middle" font-size="10" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Semantic &middot; Experience &middot; Meaning</text>
-      <line x1="310" y1="72" x2="460" y2="72" stroke="#bbf7d0" stroke-width="1"/>
-      <text x="385" y="92" text-anchor="middle" font-size="11" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Answers "Why?"</text>
-      <text x="385" y="110" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why is this beautiful?</text>
-      <text x="385" y="124" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why is this just?</text>
-      <text x="385" y="138" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why does this matter?</text>
-      <text x="385" y="156" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Supply: finite and precious</text>
-      <!-- Center connector -->
-      <line x1="225" y1="90" x2="275" y2="90" stroke="#888" stroke-width="2" stroke-dasharray="4 3"/>
-      <text x="250" y="82" text-anchor="middle" font-size="8" fill="#888" font-family="'DM Sans', system-ui, sans-serif">unbundled</text>
+      <!-- Background -->
+      <rect x="0" y="0" width="500" height="200" rx="12" fill="url(#ccBg)"/>
+      <!-- Title -->
+      <text x="250" y="18" text-anchor="middle" font-size="9.5" fill="#aaa" font-weight="600" letter-spacing="0.1em" font-family="'DM Sans', system-ui, sans-serif">THE GREAT UNBUNDLING</text>
+      <!-- Computation panel -->
+      <rect x="10" y="26" width="216" height="158" rx="10" fill="white" fill-opacity="0.7" stroke="#2563eb" stroke-width="1.5" filter="url(#comp-shadow)"/>
+      <!-- Computation header strip -->
+      <rect x="10" y="26" width="216" height="34" rx="10" fill="url(#compGrad)"/>
+      <rect x="10" y="46" width="216" height="14" fill="url(#compGrad)"/>
+      <text x="118" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="white" font-family="'Playfair Display', Georgia, serif">Computation</text>
+      <text x="118" y="70" text-anchor="middle" font-size="9" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Syntactic &middot; Data &middot; Optimization</text>
+      <line x1="30" y1="80" x2="206" y2="80" stroke="#dbeafe" stroke-width="1.5"/>
+      <text x="118" y="98" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Answers "How?"</text>
+      <text x="118" y="116" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">How to design a protein</text>
+      <text x="118" y="130" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">How to optimize a supply chain</text>
+      <text x="118" y="144" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">How to win a game</text>
+      <text x="118" y="174" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Power: effectively infinite</text>
+      <!-- Consciousness panel -->
+      <rect x="274" y="26" width="216" height="158" rx="10" fill="white" fill-opacity="0.7" stroke="#059669" stroke-width="1.5" filter="url(#comp-shadow)"/>
+      <!-- Consciousness header strip -->
+      <rect x="274" y="26" width="216" height="34" rx="10" fill="url(#consGrad)"/>
+      <rect x="274" y="46" width="216" height="14" fill="url(#consGrad)"/>
+      <text x="382" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="white" font-family="'Playfair Display', Georgia, serif">Consciousness</text>
+      <text x="382" y="70" text-anchor="middle" font-size="9" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Semantic &middot; Experience &middot; Meaning</text>
+      <line x1="294" y1="80" x2="470" y2="80" stroke="#d1fae5" stroke-width="1.5"/>
+      <text x="382" y="98" text-anchor="middle" font-size="11" fill="#059669" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Answers "Why?"</text>
+      <text x="382" y="116" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">Why is this beautiful?</text>
+      <text x="382" y="130" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">Why is this just?</text>
+      <text x="382" y="144" text-anchor="middle" font-size="9" fill="#444" font-family="'DM Sans', system-ui, sans-serif">Why does this matter?</text>
+      <text x="382" y="174" text-anchor="middle" font-size="9" fill="#059669" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Supply: finite and precious</text>
+      <!-- Center unbundled connector -->
+      <line x1="230" y1="105" x2="270" y2="105" stroke="#aaa" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="250" y="96" text-anchor="middle" font-size="7.5" fill="#999" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">unbundled</text>
     </svg>
   </div>
 
@@ -521,43 +581,70 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>The future looks like the deep past. Humans gathering in small groups to create meaning, beauty, and connection. Not because we have to, but because that is what humans do when freed from the fiction of necessary labor. We are not advancing into something new. We are returning to something essential.</p>
 
-  <!-- SVG: The Great Return -->
+  <!-- SVG: The Great Return — enhanced timeline with background, animated endpoints, arc -->
   <div style="text-align:center; margin: 2rem 0;">
-    <svg viewBox="0 0 500 130" style="width:100%;max-width:480px;">
+    <svg viewBox="0 0 500 150" style="width:100%;max-width:480px;">
       <defs>
+        <linearGradient id="returnBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f0fdf4"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
         <linearGradient id="returnLineGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#16a34a"/>
           <stop offset="50%" stop-color="#d97706"/>
           <stop offset="100%" stop-color="#16a34a"/>
         </linearGradient>
+        <radialGradient id="meaningNodeGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#6ee7b7"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </radialGradient>
+        <radialGradient id="nowNodeGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#fde68a"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </radialGradient>
         <filter id="return-shadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.15)"/>
         </filter>
       </defs>
-      <!-- Timeline -->
-      <line x1="30" y1="50" x2="470" y2="50" stroke="#e5e5e0" stroke-width="2"/>
-      <!-- Deep Past -->
-      <circle cx="60" cy="50" r="8" fill="#16a34a" filter="url(#return-shadow)"/>
-      <text x="60" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Deep Past</text>
-      <text x="60" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
-      <!-- Agriculture -->
-      <circle cx="160" cy="50" r="6" fill="#888"/>
-      <text x="160" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Agriculture</text>
-      <!-- Industrial -->
-      <circle cx="260" cy="50" r="6" fill="#888"/>
-      <text x="260" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Industrial Era</text>
-      <text x="260" y="36" text-anchor="middle" font-size="8" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Value = Output</text>
-      <!-- Now -->
-      <circle cx="360" cy="50" r="6" fill="#d97706"/>
-      <text x="360" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">AI Revolution</text>
-      <text x="360" y="36" text-anchor="middle" font-size="8" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">Unbundling</text>
-      <!-- After Economics -->
-      <circle cx="450" cy="50" r="8" fill="#16a34a" filter="url(#return-shadow)"/>
-      <text x="450" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">After Economics</text>
-      <text x="450" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
-      <!-- Return arc -->
-      <path d="M 60 42 Q 250 -10 450 42" fill="none" stroke="url(#returnLineGrad)" stroke-width="2" stroke-dasharray="4 3"/>
-      <text x="255" y="12" text-anchor="middle" font-size="8.5" fill="#16a34a" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The Great Return</text>
+      <!-- Background -->
+      <rect x="0" y="0" width="500" height="150" rx="12" fill="url(#returnBg)"/>
+      <!-- Title -->
+      <text x="250" y="18" text-anchor="middle" font-size="9.5" fill="#aaa" font-weight="600" letter-spacing="0.1em" font-family="'DM Sans', system-ui, sans-serif">HISTORICAL TIMELINE</text>
+      <!-- Timeline baseline -->
+      <line x1="30" y1="80" x2="470" y2="80" stroke="#d1d5db" stroke-width="2"/>
+      <!-- Deep Past node — green -->
+      <circle cx="60" cy="80" r="10" fill="url(#meaningNodeGrad)" filter="url(#return-shadow)"/>
+      <circle cx="60" cy="80" r="13" fill="none" stroke="#059669" stroke-width="1" opacity="0.4">
+        <animate attributeName="r" values="13;16;13" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="60" y="100" text-anchor="middle" font-size="8.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Deep Past</text>
+      <text x="60" y="62" text-anchor="middle" font-size="8" fill="#059669" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
+      <!-- Agriculture node -->
+      <circle cx="165" cy="80" r="6" fill="#9ca3af" filter="url(#return-shadow)"/>
+      <text x="165" y="100" text-anchor="middle" font-size="8.5" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Agriculture</text>
+      <!-- Industrial Era node — red tint -->
+      <circle cx="265" cy="80" r="7" fill="#dc2626" opacity="0.7" filter="url(#return-shadow)"/>
+      <text x="265" y="100" text-anchor="middle" font-size="8.5" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Industrial Era</text>
+      <text x="265" y="63" text-anchor="middle" font-size="8" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Value = Output</text>
+      <!-- AI Revolution node — amber -->
+      <circle cx="365" cy="80" r="8" fill="url(#nowNodeGrad)" filter="url(#return-shadow)"/>
+      <text x="365" y="100" text-anchor="middle" font-size="8.5" fill="#666" font-family="'DM Sans', system-ui, sans-serif">AI Revolution</text>
+      <text x="365" y="62" text-anchor="middle" font-size="8" fill="#d97706" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Unbundling</text>
+      <!-- After Economics node — green, pulsing -->
+      <circle cx="450" cy="80" r="10" fill="url(#meaningNodeGrad)" filter="url(#return-shadow)"/>
+      <circle cx="450" cy="80" r="13" fill="none" stroke="#059669" stroke-width="1" opacity="0.4">
+        <animate attributeName="r" values="13;17;13" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="450" y="100" text-anchor="middle" font-size="8.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">After Economics</text>
+      <text x="450" y="62" text-anchor="middle" font-size="8" fill="#059669" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
+      <!-- The Great Return arc above timeline -->
+      <path d="M 60 68 Q 255 20 450 68" fill="none" stroke="url(#returnLineGrad)" stroke-width="2.5" stroke-dasharray="6 3"/>
+      <text x="255" y="30" text-anchor="middle" font-size="9" fill="#059669" font-style="italic" font-family="'Playfair Display', Georgia, serif">The Great Return</text>
+      <!-- Endpoint connectors -->
+      <line x1="60" y1="68" x2="60" y2="70" stroke="#059669" stroke-width="1.5" opacity="0.5"/>
+      <line x1="450" y1="68" x2="450" y2="70" stroke="#059669" stroke-width="1.5" opacity="0.5"/>
     </svg>
   </div>
 
