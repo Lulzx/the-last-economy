@@ -59,6 +59,17 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .tag-s { background: #dcfce7; color: #16a34a; }
 .tag-st { background: #fef3c7; color: #d97706; }
 
+/* --- Enrichment styles --- */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.svg-illustration { display: flex; justify-content: center; margin: 2rem 0; }
+
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -67,6 +78,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 @media (max-width: 600px) {
   .two-col { grid-template-columns: 1fr; }
   .sort-area { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -81,15 +93,67 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 11</div>
   <h1>The Cathedral and the Bazaar 2.0</h1>
 
-  <p>Every economy runs two operating systems simultaneously: the Cathedral (firms — hierarchical, efficient, planned) and the Bazaar (markets — chaotic, exploratory, emergent). AI is rewriting the code of both.</p>
+  <div class="pullquote">
+    <p>"The best way to have a good idea is to have a lot of ideas."</p>
+    <div class="pullquote-attr">&mdash; Linus Pauling</div>
+  </div>
 
-  <p>The original framing comes from Eric Raymond's 1999 essay about open-source software. But the deeper insight is economic: transaction costs determine the boundary between planning and markets. AI changes transaction costs so radically that this boundary is dissolving entirely.</p>
+  <!-- ====== Section: The First Knowledge Workers ====== -->
+  <h2>The First Knowledge Workers</h2>
+
+  <p>Before a "computer" was a machine, it was a job title.</p>
+
+  <p>At NASA's Langley Research Center in the 1950s, rooms full of brilliant women, known as "human computers," performed the complex calculations for the space race. They were the original knowledge workers, the human processors at the heart of the most advanced enterprise on Earth. Then, the IBM 7090 arrived. In a single afternoon, the electronic computer could perform more calculations than a human could in a lifetime. The job title of "computer" vanished overnight.</p>
+
+  <!-- SVG: Human Computers to Electronic Computers -->
+  <div class="svg-illustration">
+    <svg width="400" height="120" viewBox="0 0 400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Human computer side -->
+      <circle cx="60" cy="50" r="20" stroke="#0891b2" stroke-width="2" fill="#f0f9ff"/>
+      <circle cx="60" cy="38" r="8" fill="#0891b2" opacity="0.3"/>
+      <line x1="60" y1="46" x2="60" y2="65" stroke="#0891b2" stroke-width="2"/>
+      <line x1="50" y1="55" x2="70" y2="55" stroke="#0891b2" stroke-width="2"/>
+      <text x="60" y="90" text-anchor="middle" font-size="11" fill="#555">Human Computer</text>
+      <text x="60" y="105" text-anchor="middle" font-size="9" fill="#888">1950s NASA</text>
+      <!-- Arrow -->
+      <line x1="120" y1="50" x2="270" y2="50" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4"/>
+      <polygon points="270,44 282,50 270,56" fill="#2563eb"/>
+      <text x="196" y="40" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">IBM 7090 arrives</text>
+      <!-- Electronic computer side -->
+      <rect x="300" y="30" width="60" height="40" rx="4" stroke="#7c3aed" stroke-width="2" fill="#f5f3ff"/>
+      <rect x="310" y="38" width="40" height="20" rx="2" fill="#7c3aed" opacity="0.15"/>
+      <circle cx="315" cy="48" r="2" fill="#7c3aed"/>
+      <circle cx="323" cy="48" r="2" fill="#7c3aed"/>
+      <circle cx="331" cy="48" r="2" fill="#7c3aed"/>
+      <text x="330" y="90" text-anchor="middle" font-size="11" fill="#555">Electronic Computer</text>
+      <text x="330" y="105" text-anchor="middle" font-size="9" fill="#888">Faster by orders of magnitude</text>
+    </svg>
+  </div>
+
+  <p>This story is not just a historical curiosity; it is a preview. The knowledge workers of today, sitting in their open-plan offices, are the direct descendants of those women. And their IBM 7090 has arrived.</p>
+
+  <div class="pullquote">
+    <p>To understand the future of the firm, we must first understand the two minds of the economy.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== Section: The Two Minds of the Economy ====== -->
+  <h2>The Two Minds of the Economy</h2>
+
+  <p>If the economy is a vast, distributed computer, then it has two different kinds of processors. Two ways of thinking.</p>
+
+  <p>The first is the <strong>Firm.</strong> It is a pocket of planned order in a sea of chaos. It is a hierarchy, a command structure, an island of conscious design. Inside a company, resources flow by a manager's decree. The firm is a cathedral, built according to a deliberate blueprint.</p>
+
+  <p>The second is the <strong>Market.</strong> It is a decentralized network of competing and cooperating agents. It has no leader, no plan, no central command. It is a swarm, a process of emergent discovery. In the market, resources flow by the emergent signals of price and opportunity. It is a bazaar, chaotic and vibrant, where order arises from the bottom up.</p>
+
+  <p>For a century, the great battle of economic ideologies was a battle between these two minds. Both sides were wrong because they thought it was a battle. <strong>It was never a battle. It is a dance.</strong></p>
 
   <div class="panel" style="--i: 1;">
     <h2>The Two Minds</h2>
     <div class="two-col">
       <div class="mind-col cathedral">
-        <div class="mind-icon">🏛</div>
+        <div class="mind-icon">&#x1F3DB;</div>
         <div class="mind-title">The Cathedral</div>
         <div style="font-size:0.85rem;color:#888;margin-bottom:0.75rem;">Firm / Hierarchy</div>
         <div class="mind-row">Command &amp; Control</div>
@@ -98,7 +162,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
         <div class="mind-row">Coase: internalize transactions</div>
       </div>
       <div class="mind-col bazaar">
-        <div class="mind-icon">🏪</div>
+        <div class="mind-icon">&#x1F3EA;</div>
         <div class="mind-title">The Bazaar</div>
         <div style="font-size:0.85rem;color:#888;margin-bottom:0.75rem;">Market / Network</div>
         <div class="mind-row">Distributed Discovery</div>
@@ -123,6 +187,104 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
     </div>
   </div>
 
+  <hr class="section-divider">
+
+  <!-- ====== Section: A New Answer for a New Age ====== -->
+  <h2>A New Answer for a New Age</h2>
+
+  <p>In 1937, Ronald Coase asked why firms exist at all. His answer was <strong>transaction costs</strong>: the friction of using the market. A firm is a bubble of hierarchy where the messy haggling of the market is replaced by the simpler logic of command. This was a brilliant insight for the old economy of atoms. The new economy of bits requires a deeper explanation.</p>
+
+  <p>In the framework of Intelligent Economics, the firm and the market are different architectures for processing information.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">II</div>
+      <div class="stat-label">Processing architectures in any economy: the Market (parallel) and the Firm (serial)</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">1937</div>
+      <div class="stat-label">Year Coase published "The Nature of the Firm"</div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>The Market is a massively parallel, distributed computing system. It is brilliant at exploring a vast possibility space. The market is an engine for discovery.</p>
+  </div>
+
+  <p>The Firm is a serial, hierarchical computing system. It is designed to take a single, promising idea discovered in the market and exploit it with ruthless efficiency. It concentrates intelligence on a narrow problem. The firm is an engine for execution.</p>
+
+  <p><strong>The market discovers. The firm executes. A healthy economy needs both.</strong></p>
+
+  <!-- SVG: Market (parallel) vs Firm (serial) processing -->
+  <div class="svg-illustration">
+    <svg width="440" height="160" viewBox="0 0 440 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Market: parallel paths -->
+      <text x="110" y="16" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="600">Market: Parallel Discovery</text>
+      <circle cx="30" cy="80" r="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="30" y="84" text-anchor="middle" font-size="8" fill="#7c3aed">IN</text>
+      <!-- Multiple parallel lines -->
+      <line x1="42" y1="68" x2="170" y2="35" stroke="#7c3aed" stroke-width="1.5" opacity="0.5"/>
+      <line x1="42" y1="75" x2="170" y2="60" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
+      <line x1="42" y1="80" x2="170" y2="80" stroke="#7c3aed" stroke-width="1.5" opacity="0.7"/>
+      <line x1="42" y1="85" x2="170" y2="100" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
+      <line x1="42" y1="92" x2="170" y2="125" stroke="#7c3aed" stroke-width="1.5" opacity="0.5"/>
+      <!-- Nodes at end -->
+      <circle cx="175" cy="35" r="5" fill="#7c3aed" opacity="0.4"/>
+      <circle cx="175" cy="60" r="5" fill="#7c3aed" opacity="0.5"/>
+      <circle cx="175" cy="80" r="7" fill="#7c3aed" opacity="0.8"/>
+      <circle cx="175" cy="100" r="5" fill="#7c3aed" opacity="0.5"/>
+      <circle cx="175" cy="125" r="5" fill="#7c3aed" opacity="0.4"/>
+      <text x="110" y="150" text-anchor="middle" font-size="9" fill="#888">Many paths explored simultaneously</text>
+
+      <!-- Divider -->
+      <line x1="220" y1="20" x2="220" y2="140" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- Firm: serial path -->
+      <text x="340" y="16" text-anchor="middle" font-size="12" fill="#0891b2" font-weight="600">Firm: Serial Execution</text>
+      <circle cx="260" cy="80" r="12" fill="#f0f9ff" stroke="#0891b2" stroke-width="1.5"/>
+      <text x="260" y="84" text-anchor="middle" font-size="8" fill="#0891b2">IN</text>
+      <line x1="272" y1="80" x2="300" y2="80" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="300" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.2" stroke="#0891b2" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="345" y2="80" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="345" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.3" stroke="#0891b2" stroke-width="1.5"/>
+      <line x1="365" y1="80" x2="390" y2="80" stroke="#0891b2" stroke-width="2.5"/>
+      <rect x="390" y="70" width="20" height="20" rx="3" fill="#0891b2" opacity="0.5" stroke="#0891b2" stroke-width="1.5"/>
+      <polygon points="415,74 425,80 415,86" fill="#0891b2"/>
+      <text x="340" y="115" text-anchor="middle" font-size="9" fill="#888">One path refined with focus</text>
+      <text x="340" y="150" text-anchor="middle" font-size="9" fill="#888">Ruthless efficiency on a narrow problem</text>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== Section: Ghosts of a Frictionless World ====== -->
+  <h2>The Ghosts of a Frictionless World</h2>
+
+  <p>The old economics was haunted by beautiful theories that only worked in a perfect, frictionless world. The Coase Theorem argued that in a world with zero transaction costs, property rights do not matter. The Modigliani-Miller Theorem argued that in a perfect market, a firm's mix of debt and equity does not matter.</p>
+
+  <p>These elegant proofs fail in the real world for the same geometric reason. They assume a flat, frictionless economic manifold. On such a surface, all paths are direct and costless. In the real, curved world, these choices are fundamental acts of topology engineering.</p>
+
+  <div class="pullquote">
+    <p>Assigning a property right is not a starting position in the game; it is the design of the game board itself.</p>
+  </div>
+
+  <p>A firm's capital structure is not a simple financing choice; it is a choice about its navigability on a volatile landscape. Debt creates geometric rigidity &mdash; it locks the firm into a fixed path, making it fast but brittle. Equity provides geometric flexibility &mdash; it acts as a ballast, allowing the firm to absorb shocks. These are not imperfections in a perfect model. They are the central, strategic negotiations with the geometry of reality.</p>
+
+  <hr class="section-divider">
+
+  <!-- ====== Section: The Innovator's Dilemma ====== -->
+  <h2>The Innovator's Dilemma: When Execution Kills Discovery</h2>
+
+  <p>This brings us to the great tragedy of the intelligent firm. The very qualities that make it a brilliant execution engine also make it a terrible discovery engine. The firm's success creates an algorithm optimized for solving a specific problem. But when the problem changes, that finely tuned algorithm becomes a cage.</p>
+
+  <p>In the 1970s, Xerox PARC invented the modern personal computer, the graphical user interface, the mouse, and the Ethernet. They invented the future. Their parent company, Xerox, ignored all of it. Why? The Xerox Corporation was an execution engine perfectly optimized for leasing copiers and selling toner. The personal computer did not fit their model. It was a prediction error they could not process. So they let a young man named Steve Jobs take their ideas for free and build Apple.</p>
+
+  <div class="pullquote">
+    <p>Xerox's execution engine was so perfect it executed itself.</p>
+  </div>
+
+  <p>In machine learning, this is called <strong>"overfitting."</strong> A model trained too perfectly on past data becomes brittle, incapable of handling a future that looks even slightly different. Successful firms are masters of overfitting.</p>
+
   <div class="panel" style="--i: 2;">
     <h2>The Overfitting Trap</h2>
     <p style="font-size:0.9rem;color:#555;">Firms are trained on competitive environments. The best firms become perfectly adapted to their environment — and perfectly unable to adapt to a new one. This is overfitting: high accuracy on the training set, catastrophic failure on new data.</p>
@@ -146,6 +308,73 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
       </div>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- ====== Section: The Final Form ====== -->
+  <h2>The Final Form: From Corporation to Community</h2>
+
+  <p>The traditional firm, a hierarchical pyramid of human components, is an evolutionary dead end. This is the "slow AI" we have been building for centuries. The Factory School was the brilliant, terrifying system designed to produce the standardized, compliant human fuel for this corporate machine. The school trained the cogs; the corporation put them to work. It was a perfect, self-reinforcing system of social domestication. And it is now obsolete.</p>
+
+  <p>The future belongs to a new kind of institution that blurs the line between the firm and the market, the cathedral and the bazaar. It is an architecture that combines the execution focus of the firm with the discovery power of the market. <strong>A community.</strong></p>
+
+  <!-- SVG: Evolution from Corporation to Community -->
+  <div class="svg-illustration">
+    <svg width="440" height="150" viewBox="0 0 440 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Old: Pyramid -->
+      <text x="80" y="16" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">Corporation (Pyramid)</text>
+      <polygon points="80,30 20,110 140,110" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="80" cy="50" r="5" fill="#dc2626" opacity="0.7"/>
+      <circle cx="60" cy="75" r="4" fill="#dc2626" opacity="0.4"/>
+      <circle cx="100" cy="75" r="4" fill="#dc2626" opacity="0.4"/>
+      <circle cx="40" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
+      <circle cx="65" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
+      <circle cx="90" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
+      <circle cx="115" cy="98" r="3.5" fill="#dc2626" opacity="0.25"/>
+      <text x="80" y="130" text-anchor="middle" font-size="9" fill="#888">Hierarchical. Rigid.</text>
+      <text x="80" y="143" text-anchor="middle" font-size="9" fill="#888">Evolutionary dead end.</text>
+
+      <!-- Arrow -->
+      <line x1="160" y1="70" x2="270" y2="70" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4"/>
+      <polygon points="270,64 282,70 270,76" fill="#2563eb"/>
+      <text x="221" y="60" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">Evolves into</text>
+
+      <!-- New: Network/Community -->
+      <text x="360" y="16" text-anchor="middle" font-size="11" fill="#16a34a" font-weight="600">Community (Network)</text>
+      <circle cx="360" cy="70" r="6" fill="#16a34a" opacity="0.7"/>
+      <circle cx="320" cy="45" r="5" fill="#16a34a" opacity="0.5"/>
+      <circle cx="400" cy="45" r="5" fill="#16a34a" opacity="0.5"/>
+      <circle cx="310" cy="85" r="5" fill="#16a34a" opacity="0.5"/>
+      <circle cx="410" cy="85" r="5" fill="#16a34a" opacity="0.5"/>
+      <circle cx="340" cy="105" r="4.5" fill="#16a34a" opacity="0.4"/>
+      <circle cx="380" cy="105" r="4.5" fill="#16a34a" opacity="0.4"/>
+      <!-- Connection lines -->
+      <line x1="360" y1="70" x2="320" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="360" y1="70" x2="400" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="360" y1="70" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="360" y1="70" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="320" y1="45" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
+      <line x1="400" y1="45" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
+      <line x1="340" y1="105" x2="310" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
+      <line x1="380" y1="105" x2="410" y2="85" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
+      <line x1="340" y1="105" x2="380" y2="105" stroke="#16a34a" stroke-width="1" opacity="0.2"/>
+      <line x1="320" y1="45" x2="400" y2="45" stroke="#16a34a" stroke-width="1" opacity="0.15"/>
+      <text x="360" y="130" text-anchor="middle" font-size="9" fill="#888">Distributed. Adaptive.</text>
+      <text x="360" y="143" text-anchor="middle" font-size="9" fill="#888">Symbiotic intelligence.</text>
+    </svg>
+  </div>
+
+  <p>Consider <strong>Linux</strong>. Is it a firm or a market? It is both and neither. It has a core group of maintainers who provide hierarchical control (like a firm), but it is developed by a global network of volunteers operating in a decentralized bazaar (like a market).</p>
+
+  <p>Or consider <strong>Wikipedia</strong>. It has a foundation that acts like a firm, managing servers and legal issues. But the content itself is created by a chaotic, distributed market of millions of editors.</p>
+
+  <p>These are the new models. They are not a rigid choice between firm and market, but a fluid dance between them. They are architectures for symbiotic intelligence.</p>
+
+  <div class="pullquote">
+    <p>The traditional, hierarchical firm tried to create a single, unified "corporate consciousness" &mdash; a top-down cathedral of thought. But real intelligence, both in our brains and in our economies, is more like a bazaar: a chaotic, parallel process of discovery from which a fragile, temporary coherence emerges.</p>
+  </div>
+
+  <p>The legacy corporations are like the dinosaurs: large, powerful, and running on a tiny, centralized brain. The new symbiotic communities are like the mammals that succeeded them: smaller, more adaptable, and with a new, more distributed and powerful form of intelligence. We know how that story ended. It is about to begin again.</p>
 
   <div class="panel" style="--i: 3;">
     <h2>The New Synthesis</h2>

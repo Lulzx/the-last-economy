@@ -38,6 +38,74 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 input[type="range"] { width: 100%; accent-color: #2563eb; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
 .cost-breakdown { font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
+
+/* Enrichment styles */
+.pullquote {
+  border-left: 4px solid #2563eb;
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+}
+.pullquote p {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #1e40af;
+  margin: 0;
+}
+.pullquote cite {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.5rem;
+  font-style: normal;
+}
+.stat-callout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.stat-number {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+.stat-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.stat-row .stat-callout {
+  flex: 1;
+  min-width: 180px;
+}
+.section-divider {
+  border: none;
+  border-top: 1px solid #e5e5e0;
+  margin: 3rem 0;
+}
+.inline-svg {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.inline-svg svg {
+  max-width: 100%;
+  height: auto;
+}
 </style>
 </head>
 <body>
@@ -51,11 +119,67 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 1</div>
   <h1>The Intelligence Inversion</h1>
 
-  <p>Four times in history, civilization reorganized around a new value engine. Agricultural surplus &rarr; Artisan skill &rarr; Industrial machines &rarr; Information networks &rarr; and now: Machine intelligence.</p>
+  <blockquote class="pullquote">
+    <p>"A new scientific truth does not triumph by convincing its opponents and making them see the light, but rather because its opponents eventually die, and a new generation grows up that is familiar with it."</p>
+    <cite>-- Max Planck</cite>
+  </blockquote>
 
-  <p>This fifth transition is different. Every previous pivot created new roles for displaced workers. But when cognition itself is automated, there is no next rung on the ladder. We are in the year
+  <h2>The Pattern That Breaks the World</h2>
+
+  <p>In 1811, workers gathered in the dead of night near Nottingham. Their faces blackened with coal, their identities hidden, they moved with the precision of soldiers. These were the original Luddites. Contrary to the cartoon history we have been fed, they were not idiots afraid of progress. They were skilled artisans who understood exactly what was happening. The machinery was not just taking their jobs; it was making their entire way of being human obsolete.</p>
+
+  <p>They smashed the frames not from ignorance but from clarity. They could see what the factory owners could not or would not. This was not just a new means of production. It was the end of the craftsman and the birth of the interchangeable worker. They were right about everything except the timeline. It took two hundred years, but the machines finally came for the mind.</p>
+
+  <p>Four times in the last ten thousand years, the foundational source of economic value has inverted. Each time, the world did not just change. It broke and reformed into something unrecognizable. Civilizations that understood the shift thrived. Those that clung to the old rules became archaeological layers, cautionary tales told in business schools that themselves will not exist in a decade.</p>
+
+  <p>We are living through the fourth and final inversion right now. It is happening one hundred times faster than any that came before. And unlike the others, this one offers no retreat.</p>
+
+  <p>This is the year
     <span class="scrub" data-value="2026" data-min="2020" data-max="2030" data-step="1" data-update="updateYear">2026</span>,
     now <span id="years-into">2</span> years into a transition with no historical precedent.</p>
+
+  <!-- Inline SVG: The Four Inversions Timeline -->
+  <div class="inline-svg">
+    <svg viewBox="0 0 600 170" width="600" xmlns="http://www.w3.org/2000/svg">
+      <!-- Connecting line -->
+      <line x1="75" y1="60" x2="525" y2="60" stroke="#e5e5e0" stroke-width="2"/>
+      <!-- Era 1: Land -->
+      <circle cx="75" cy="60" r="22" fill="#8B6914" opacity="0.15" stroke="#8B6914" stroke-width="2"/>
+      <text x="75" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#8B6914">1</text>
+      <text x="75" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Land</text>
+      <text x="75" y="112" text-anchor="middle" font-size="9" fill="#888">10,000 yrs</text>
+      <!-- Arrow -->
+      <text x="140" y="65" text-anchor="middle" font-size="16" fill="#ccc">&rarr;</text>
+      <!-- Era 2: Labor -->
+      <circle cx="225" cy="60" r="22" fill="#2563eb" opacity="0.15" stroke="#2563eb" stroke-width="2"/>
+      <text x="225" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">2</text>
+      <text x="225" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Labor</text>
+      <text x="225" y="112" text-anchor="middle" font-size="9" fill="#888">~200 yrs</text>
+      <!-- Arrow -->
+      <text x="300" y="65" text-anchor="middle" font-size="16" fill="#ccc">&rarr;</text>
+      <!-- Era 3: Capital -->
+      <circle cx="375" cy="60" r="22" fill="#16a34a" opacity="0.15" stroke="#16a34a" stroke-width="2"/>
+      <text x="375" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a">3</text>
+      <text x="375" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Capital</text>
+      <text x="375" y="112" text-anchor="middle" font-size="9" fill="#888">~50 yrs</text>
+      <!-- Arrow -->
+      <text x="450" y="65" text-anchor="middle" font-size="16" fill="#ccc">&rarr;</text>
+      <!-- Era 4: Intelligence -->
+      <circle cx="525" cy="60" r="22" fill="#d97706" opacity="0.15" stroke="#d97706" stroke-width="2"/>
+      <text x="525" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706">4</text>
+      <text x="525" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Intelligence</text>
+      <text x="525" y="112" text-anchor="middle" font-size="9" fill="#888">~5 yrs?</text>
+      <!-- Acceleration label -->
+      <text x="300" y="145" text-anchor="middle" font-size="10" fill="#555" font-style="italic">Each inversion happens faster than the last</text>
+      <!-- Acceleration arrow -->
+      <line x1="120" y1="135" x2="480" y2="135" stroke="#d97706" stroke-width="1" marker-end="url(#arrowhead)"/>
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#d97706"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
 
   <div class="panel">
     <h2>The Five Eras</h2>
@@ -63,11 +187,114 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
     <div class="info-box" id="timeline-info">Drag the marker across the timeline to explore each era.</div>
   </div>
 
+  <h2>The First Inversion: When Land Stopped Being Everything</h2>
+
+  <p>For ten millennia, the engine of civilization ran on a simple, brutal logic: control the land, control the world. Every empire from Sumer to Spain built itself on this equation. Land meant food. Food meant survival. Survival meant power. The Pharaohs measured their might in flood plains, the Romans in wheat fields.</p>
+
+  <p>This was the age of <strong>Land Dominance</strong>. It created a specific kind of human. Peasants were literally tied to the land, serfs whose value was calculated in the acres they could work. The nobility were not just rich; they were ontologically different, their blood somehow transmuted by deed and title into something finer than the mud-covered masses.</p>
+
+  <p>The first crack appeared in Venice, a city with no agricultural land to speak of. Instead, it became the richest city in Europe by realizing that controlling the <em>flow</em> of goods mattered more than controlling the land that produced them. Then, around 1750, everything accelerated. A Scottish instrument maker named James Watt added a separate condenser to a steam engine, a seemingly minor improvement that ended a world.</p>
+
+  <blockquote class="pullquote">
+    <p>"A brilliant merchant without land was now powerful; a foolish king with fertile fields was merely quaint."</p>
+  </blockquote>
+
+  <p>In Manchester, the future announced itself in smoke and suffering. Life expectancy in working-class neighborhoods dropped to seventeen years. But the mills produced more cloth in a day than a hundred villages in a year. The equation had inverted. The source of value had shifted from what you owned to what you could organize. From acres to factories, from soil to systems.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Second Inversion: When Hands Became Obsolete</h2>
+
+  <p>The age of <strong>Labor Dominance</strong> lasted two centuries, long enough to seem permanent. Unions formed. Rights were won. The eight-hour day, the weekend, the very concept that workers were humans rather than inputs. It seemed like a stable equilibrium.</p>
+
+  <p>But even as the labor movement celebrated its victories, the ground was shifting again. In 1947, Bell Labs invented the transistor. By 1970, a computer could run a production line.</p>
+
+  <div class="stat-callout">
+    <span class="stat-number">100,000 &rarr; 6,000</span>
+    <span class="stat-label">Ford's River Rouge workforce: 1930 vs. 1990 &mdash; same output, 94% fewer humans</span>
+  </div>
+
+  <p>The missing 94,000 did not find better jobs. They found no jobs. The machines did not just assist human labor; they replaced it. This was the age of <strong>Capital Dominance</strong>. A single engineer at Microsoft, leveraging the capital of software, could create more value than a thousand workers on an assembly line. Returns flowed not to those who worked hardest but to those who owned the means of production.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Third Inversion: When Capital Itself Became Ephemeral</h2>
+
+  <p>The transition from Labor to Capital was traumatic but comprehensible. You could see a factory. You could touch a machine. But around the year 2000, something stranger began happening. Capital itself began to dematerialize.</p>
+
+  <!-- Inline SVG: Kodak vs Instagram -->
+  <div class="inline-svg">
+    <svg viewBox="0 0 500 180" width="500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Kodak side -->
+      <rect x="30" y="20" width="180" height="140" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="120" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Kodak (1998)</text>
+      <!-- People icons (grid of dots) -->
+      <g transform="translate(50, 60)">
+        <text x="70" y="12" text-anchor="middle" font-size="36" font-weight="800" fill="#ef4444" font-family="'Playfair Display', Georgia, serif">170,000</text>
+        <text x="70" y="32" text-anchor="middle" font-size="10" fill="#555">employees</text>
+        <text x="70" y="56" text-anchor="middle" font-size="14" fill="#888">Worth $31B</text>
+        <text x="70" y="74" text-anchor="middle" font-size="10" fill="#aaa">factories, labs, inventory</text>
+      </g>
+      <!-- VS -->
+      <text x="250" y="100" text-anchor="middle" font-size="18" font-weight="700" fill="#ccc">vs</text>
+      <!-- Instagram side -->
+      <rect x="290" y="20" width="180" height="140" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="380" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif">Instagram (2012)</text>
+      <g transform="translate(310, 60)">
+        <text x="70" y="12" text-anchor="middle" font-size="36" font-weight="800" fill="#2563eb" font-family="'Playfair Display', Georgia, serif">13</text>
+        <text x="70" y="32" text-anchor="middle" font-size="10" fill="#555">employees</text>
+        <text x="70" y="56" text-anchor="middle" font-size="14" fill="#888">Sold for $1B</text>
+        <text x="70" y="74" text-anchor="middle" font-size="10" fill="#aaa">no factories, no inventory</text>
+      </g>
+    </svg>
+  </div>
+
+  <p>In 1998, Kodak employed 170,000 people and was worth thirty-one billion dollars. In 2012, Facebook bought Instagram for one billion dollars. Instagram had thirteen employees. No factories. No inventory. No physical products. Just the ability to organize human attention at scale.</p>
+
+  <p>The entire photography industry evaporated in less than a decade. Not because people stopped taking pictures, but because they started taking infinite pictures. The scarcity that gave photos value vanished. WhatsApp sold for nineteen billion dollars with fifty-five employees, obliterating the global SMS industry and its hundreds of thousands of workers. Value had transformed into something new: not a thing to be sold, not a process to be repeated, but the invisible <strong>structure of the network itself.</strong></p>
+
+  <hr class="section-divider">
+
+  <h2>The Fourth Inversion: The Intelligence Event</h2>
+
+  <p>Now we arrive at the present. The final inversion. The one from which there is no retreat.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <span class="stat-number">5 days</span>
+      <span class="stat-label">to reach 1 million users</span>
+    </div>
+    <div class="stat-callout">
+      <span class="stat-number">100M</span>
+      <span class="stat-label">users within 2 months</span>
+    </div>
+  </div>
+
+  <p>On November 30, 2022, everything changed. OpenAI released ChatGPT to the public. The fastest adoption of any technology in human history. But the speed is not what matters. What matters is what it means. For all of human history, intelligence was a form of labor, scarce and locked inside human skulls. Now, for the first time, intelligence has become a form of capital. It can be copied infinitely. It improves recursively.</p>
+
+  <blockquote class="pullquote">
+    <p>"When the marginal cost of high-quality text approaches zero, the economics built for scarcity start to buckle."</p>
+  </blockquote>
+
+  <p>In early 2023, a typical U.S. writer earned about $35 an hour. API access to large models let you generate a 750-word draft for about six cents. That is not a productivity improvement. It is a new price regime for cognition.</p>
+
   <div class="panel">
     <h2>The Cost Cliff</h2>
     <div id="cost-chart"></div>
     <div class="info-box" id="cost-info"></div>
   </div>
+
+  <h2>The Metabolic Rift</h2>
+
+  <p>But the most profound change is not just that AI replaces the mind. It is that it introduces a new form of labor into the world with a completely different physical basis.</p>
+
+  <p>For ten thousand years, all labor was performed by metabolic engines called human beings. We require sustenance, shelter, rest, and a complex social structure to function. Our economic value was inextricably tied to our biology. AI and robotics are <strong>non-metabolic labor</strong>. They require only electricity. They have no biology to support.</p>
+
+  <blockquote class="pullquote">
+    <p>"When our minds are out-competed by a form of labor that does not need to eat, sleep, or live, there is nowhere left to pivot."</p>
+  </blockquote>
+
+  <p>This is why this fourth inversion is final. When hands became obsolete, we pivoted to our minds. But when our minds are out-competed by a form of labor that does not need to eat, sleep, or live, there is nowhere left to pivot. We are not just facing a more efficient competitor; we are facing a different category of economic life.</p>
 
   <div class="panel">
     <h2>Metabolic Cost Calculator</h2>
@@ -89,9 +316,55 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
     <div class="ratio-sub">cheaper per unit of cognitive output</div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The Mathematics of Obsolescence</h2>
+
+  <p>Here is the brutal math that no politician will speak aloud: for a growing majority of cognitive tasks, the economic value of a human is not just lower than an AI. It is negative.</p>
+
+  <p>Consider the total cost of a knowledge worker: salary, benefits, office space, management overhead, training time, sick days, turnover risk. Now consider the cost of an AI: API fees and electricity. The AI works twenty-four seven at consistent quality. It never interprets your instructions as personal criticism. It does not need motivation. It does not form factions. It does not leave for better offers.</p>
+
+  <div class="stat-callout">
+    <span class="stat-number">13 years &rarr; pennies</span>
+    <span class="stat-label">A radiologist trains for 13 years at $400K/year. AI diagnoses many cancers more accurately &mdash; for pennies per scan.</span>
+  </div>
+
+  <p>The AI gets better and cheaper. The human just gets tired. The S&amp;P 500 companies have already figured this out. That is why their revenues keep rising while their employee counts fall. They are not waiting for economic conditions to improve. They are waiting for the AI to get just a little bit better before they do not need you at all.</p>
+
+  <hr class="section-divider">
+
   <h2>The Pivot Wall</h2>
-  <p>Every previous economic transition had a cognitive escape hatch. When farming mechanized, displaced workers moved into factories — physical labor replaced by physical labor. When factories automated, workers moved into offices — routine replaced by routine. When offshoring claimed offices, workers moved into services — rote tasks replaced by interpersonal ones. Each time, the new role required a <em>different kind</em> of thinking, one machines couldn't yet replicate.</p>
-  <p>This time, every arrow hits a wall. The escape hatch from cognitive automation is... more cognition. There is no sixth era waiting patiently in the wings. For the first time, humanity must design the next economy deliberately, rather than stumble into it.</p>
+
+  <p>Previous inversions always left humans somewhere to retreat. When land became less important than labor, humans became laborers. When labor became less important than capital, humans became knowledge workers. When knowledge work becomes less important than AI, humans become what?</p>
+
+  <p>The standard answer is "creatives and caretakers." But last month, an AI-generated song topped the streaming charts. AI therapists report higher patient satisfaction than human ones in blind studies. The refuges keep shrinking. The more sophisticated answer is "AI trainers and supervisors." But this is transitional at best. AI systems are already training other AI systems.</p>
+
+  <blockquote class="pullquote">
+    <p>"Our children will find our economics as quaint as we find feudalism."</p>
+  </blockquote>
+
+  <p>The honest answer is that we do not know. For the first time in economic history, we face an inversion with no obvious landing place. We are the generation that will live through the discontinuity. The last humans to remember when human thought had economic value. The first to discover what comes after.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Choice Hidden in the Crisis</h2>
+
+  <p>We stand at a unique moment in history. We can see both shores: the old world we are leaving and the new world being born. We are the last generation that will remember scarcity as the fundamental economic fact. The last to equate work with worth. The last to believe that intelligence is inherently human.</p>
+
+  <p>But we are also the first generation that gets to build what comes next. The first to imagine economics beyond scarcity. The first to define human value beyond economic utility. The first to ask not "How do we work?" but "Why do we exist?"</p>
+
+  <p>That is the real inversion. Not just of economic systems but of existential assumptions. The machines have not just taken our jobs. They have freed us from the lie that we are our jobs.</p>
+
+  <p>The Intelligence Inversion is not like the others. It is not just faster and more comprehensive. It is final. There will be no fifth inversion because there is nothing left to invert. When intelligence itself becomes abundant, and the labor that wields it becomes non-metabolic, the very concept of scarcity-based economics loses its meaning.</p>
+
+  <blockquote class="pullquote">
+    <p>"The Luddites were right to see clearly what was happening to their world. They were wrong to think destruction could stop the future. We have the chance to be both clear-eyed and constructive."</p>
+  </blockquote>
+
+  <p>But to do that, we must first understand the deep physics of the forces at play. We must see the different kinds of value flow that have shaped our past and will define our future. We must learn the language of the dying paradigm so we can recognize its lies.</p>
+
+  <p>Time to shatter them all.</p>
+
 </div>
 
 <script>

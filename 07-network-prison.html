@@ -35,6 +35,16 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
 .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: transform 0.3s; }
 .toggle.on::after { transform: translateX(24px); }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0; }
+.stat-row .stat-callout { flex: 1; min-width: 180px; margin: 0; }
+.illustration { display: flex; justify-content: center; margin: 2rem 0; }
 </style>
 </head>
 <body>
@@ -48,7 +58,71 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 10</div>
   <h1>The Network Prison</h1>
 
-  <p>Individual talent matters far less than where you sit in the network. This has always been true. AI makes it absolute. The network topology &mdash; not your skills &mdash; determines your economic fate.</p>
+  <div class="pullquote">
+    <p>"The rich have markets, the poor have bureaucrats."</p>
+    <div class="attribution">&mdash; William Easterly</div>
+  </div>
+
+  <h2>The Lie of the Level Playing Field</h2>
+
+  <p>We are raised on a powerful myth: the economy is a level playing field where talent and hard work are rewarded. It is the story we tell ourselves to make inequality bearable. The lone genius in the garage. The immigrant who arrives with nothing and builds an empire.</p>
+
+  <p>These stories are not entirely false. They happen just often enough to sustain the myth. But they are the exceptions that prove the rule, and the rule is this: your economic fate is determined less by your individual attributes than by your position in the network. You are not a player on a level field. You are a node in a web, and the structure of that web matters more than anything you do within it.</p>
+
+  <div class="pullquote">
+    <p>This is not cynicism. This is topology. And in the age of intelligence, topology is destiny.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The Mathematics of Inequality</h2>
+
+  <p>Real world networks are not democratic grids. They follow power laws, a mathematical pattern so universal it might as well be a law of nature. A tiny number of nodes have vast connections. The vast majority have few. This is not a bug. It is the emergent result of how networks grow.</p>
+
+  <p>The core idea that you may never be more than six connections away from anyone in the world is not just a cute theory; it is a mathematical inevitability. From a topological view, this "small-world" reality is driven by powerful network effects, where a growing network becomes exponentially denser, making short connection paths the norm.</p>
+
+  <!-- SVG: Preferential Attachment illustration -->
+  <div class="illustration">
+    <svg width="400" height="160" viewBox="0 0 400 160" style="max-width:100%;">
+      <!-- Left: equal nodes -->
+      <text x="80" y="15" text-anchor="middle" font-size="11" fill="#888">Equal Network</text>
+      <circle cx="40" cy="80" r="10" fill="#93c5fd" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="80" cy="50" r="10" fill="#93c5fd" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="120" cy="80" r="10" fill="#93c5fd" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="80" cy="110" r="10" fill="#93c5fd" stroke="#2563eb" stroke-width="1.5"/>
+      <line x1="40" y1="80" x2="80" y2="50" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="80" y1="50" x2="120" y2="80" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="120" y1="80" x2="80" y2="110" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="80" y1="110" x2="40" y2="80" stroke="#c5d5f0" stroke-width="1.5"/>
+      <text x="80" y="145" text-anchor="middle" font-size="10" fill="#aaa">Myth</text>
+      <!-- Arrow -->
+      <text x="200" y="85" text-anchor="middle" font-size="22" fill="#2563eb">&rarr;</text>
+      <text x="200" y="105" text-anchor="middle" font-size="10" fill="#888">Preferential</text>
+      <text x="200" y="117" text-anchor="middle" font-size="10" fill="#888">Attachment</text>
+      <!-- Right: power law -->
+      <text x="320" y="15" text-anchor="middle" font-size="11" fill="#888">Real Network</text>
+      <circle cx="320" cy="80" r="22" fill="#2563eb" opacity="0.85"/>
+      <circle cx="270" cy="55" r="8" fill="#93c5fd" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="365" cy="60" r="6" fill="#93c5fd" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="280" cy="115" r="5" fill="#93c5fd" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="355" cy="110" r="5" fill="#93c5fd" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="260" cy="85" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1"/>
+      <circle cx="375" cy="85" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1"/>
+      <line x1="320" y1="80" x2="270" y2="55" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="365" y2="60" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="280" y2="115" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="355" y2="110" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="260" y2="85" stroke="#c5d5f0" stroke-width="1.5"/>
+      <line x1="320" y1="80" x2="375" y2="85" stroke="#c5d5f0" stroke-width="1.5"/>
+      <text x="320" y="145" text-anchor="middle" font-size="10" fill="#aaa">Reality</text>
+    </svg>
+  </div>
+
+  <p>In 2003, Mark Zuckerberg was a Harvard sophomore with programming skills. Thousands could code better. But he was at Harvard, surrounded by the kids who would run the world. When he needed funding, Peter Thiel was two connections away. When he needed to scale, Silicon Valley was a zip code away.</p>
+
+  <p>Now, imagine Rajesh, a superior programmer in Mumbai at the same time. His connections led to local businesses, not venture capitalists. His code was better; his position was worse. Guess who is worth over $100 billion?</p>
+
+  <p>The mechanism is simple: preferential attachment. New nodes are more likely to connect to nodes that already have many connections. The rich get richer, not through moral failing but through mathematical inevitability.</p>
 
   <!-- Panel 1: Network Builder -->
   <div class="panel">
@@ -63,6 +137,111 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
     </div>
     <p class="caption">No one commanded this hierarchy. Physics created it.</p>
   </div>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">1%</div>
+      <div class="stat-label">of users generate ~90% of content</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">0.1%</div>
+      <div class="stat-label">of startups receive 41% of all funding</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">50%</div>
+      <div class="stat-label">of all stocks held by top 1%</div>
+    </div>
+  </div>
+
+  <p>This is not a market failing. It is the network working as intended. To ask for equality here is to ask for water to flow uphill. The topology forbids it.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Physics of r &gt; g</h2>
+
+  <p>This network dynamic provides the first true physical explanation for the central problem of modern capitalism, identified by Thomas Piketty: the tendency for the rate of return on capital (<em>r</em>) to exceed the rate of economic growth (<em>g</em>).</p>
+
+  <!-- SVG: r > g illustration -->
+  <div class="illustration">
+    <svg width="360" height="180" viewBox="0 0 360 180" style="max-width:100%;">
+      <text x="180" y="16" text-anchor="middle" font-size="12" fill="#888">Capital Returns vs. Economic Growth</text>
+      <!-- Axes -->
+      <line x1="50" y1="155" x2="340" y2="155" stroke="#ccc" stroke-width="1"/>
+      <line x1="50" y1="155" x2="50" y2="25" stroke="#ccc" stroke-width="1"/>
+      <text x="195" y="175" text-anchor="middle" font-size="10" fill="#aaa">Time</text>
+      <!-- g: linear -->
+      <line x1="50" y1="140" x2="330" y2="90" stroke="#93c5fd" stroke-width="2.5" stroke-dasharray="6,3"/>
+      <text x="335" y="88" font-size="11" fill="#93c5fd" font-weight="600">g</text>
+      <!-- r: exponential -->
+      <path d="M50,145 Q150,135 220,110 T330,35" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <text x="335" y="33" font-size="11" fill="#2563eb" font-weight="600">r</text>
+      <!-- Label -->
+      <text x="220" y="70" font-size="10" fill="#2563eb">Exponential capital returns</text>
+      <text x="220" y="120" font-size="10" fill="#93c5fd">Linear wage growth</text>
+    </svg>
+  </div>
+
+  <p><em>g</em> represents the linear growth of the Gradient Flow economy &mdash; the world of rivalrous goods and human labor. <em>r</em> represents the exponential, self-amplifying growth of the Circular Flow economy &mdash; the world of non-rival capital, networks, and now, intelligence. The nodes at the center of the network capture the compounding returns of <em>r</em>, while the nodes at the periphery are confined to the linear world of <em>g</em>.</p>
+
+  <div class="pullquote">
+    <p>Piketty brilliantly documented the symptom. The physics of network topology reveals the disease: a fundamental mismatch between the linear world of human effort and the exponential world of non-rival capital.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The Three Topologies of Power</h2>
+
+  <p>Your economic fate depends largely on which network structure you inhabit. There are three fundamental patterns, each with its own physics of success and failure.</p>
+
+  <!-- SVG: Three Topology Sketches -->
+  <div class="illustration">
+    <svg width="480" height="160" viewBox="0 0 480 160" style="max-width:100%;">
+      <!-- Hub & Spoke -->
+      <text x="80" y="15" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600">Hub &amp; Spoke</text>
+      <text x="80" y="150" text-anchor="middle" font-size="9" fill="#888">Extraction</text>
+      <circle cx="80" cy="80" r="14" fill="#2563eb"/>
+      <circle cx="40" cy="45" r="5" fill="#ccc"/><line x1="80" y1="80" x2="40" y2="45" stroke="#ddd" stroke-width="1"/>
+      <circle cx="120" cy="45" r="5" fill="#ccc"/><line x1="80" y1="80" x2="120" y2="45" stroke="#ddd" stroke-width="1"/>
+      <circle cx="35" cy="90" r="5" fill="#ccc"/><line x1="80" y1="80" x2="35" y2="90" stroke="#ddd" stroke-width="1"/>
+      <circle cx="125" cy="90" r="5" fill="#ccc"/><line x1="80" y1="80" x2="125" y2="90" stroke="#ddd" stroke-width="1"/>
+      <circle cx="50" cy="120" r="5" fill="#ccc"/><line x1="80" y1="80" x2="50" y2="120" stroke="#ddd" stroke-width="1"/>
+      <circle cx="110" cy="120" r="5" fill="#ccc"/><line x1="80" y1="80" x2="110" y2="120" stroke="#ddd" stroke-width="1"/>
+      <!-- Small World -->
+      <text x="240" y="15" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600">Small World</text>
+      <text x="240" y="150" text-anchor="middle" font-size="9" fill="#888">Innovation</text>
+      <circle cx="210" cy="55" r="7" fill="#60a5fa"/><circle cx="240" cy="45" r="7" fill="#60a5fa"/><circle cx="270" cy="55" r="7" fill="#60a5fa"/>
+      <line x1="210" y1="55" x2="240" y2="45" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="240" y1="45" x2="270" y2="55" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="210" y1="55" x2="270" y2="55" stroke="#bfdbfe" stroke-width="1"/>
+      <circle cx="215" cy="105" r="7" fill="#93c5fd"/><circle cx="245" cy="115" r="7" fill="#93c5fd"/><circle cx="265" cy="100" r="7" fill="#93c5fd"/>
+      <line x1="215" y1="105" x2="245" y2="115" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="245" y1="115" x2="265" y2="100" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="270" y1="55" x2="265" y2="100" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,2"/>
+      <line x1="210" y1="55" x2="215" y2="105" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,2"/>
+      <!-- Mesh -->
+      <text x="400" y="15" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600">Distributed Mesh</text>
+      <text x="400" y="150" text-anchor="middle" font-size="9" fill="#888">Resilience</text>
+      <circle cx="375" cy="50" r="6" fill="#93c5fd"/><circle cx="425" cy="50" r="6" fill="#93c5fd"/>
+      <circle cx="365" cy="85" r="6" fill="#93c5fd"/><circle cx="435" cy="85" r="6" fill="#93c5fd"/>
+      <circle cx="375" cy="120" r="6" fill="#93c5fd"/><circle cx="425" cy="120" r="6" fill="#93c5fd"/>
+      <line x1="375" y1="50" x2="425" y2="50" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="375" y1="50" x2="365" y2="85" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="425" y1="50" x2="435" y2="85" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="365" y1="85" x2="375" y2="120" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="435" y1="85" x2="425" y2="120" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="375" y1="120" x2="425" y2="120" stroke="#bfdbfe" stroke-width="1.5"/>
+      <line x1="375" y1="50" x2="435" y2="85" stroke="#dbe8fe" stroke-width="1"/>
+      <line x1="425" y1="50" x2="365" y2="85" stroke="#dbe8fe" stroke-width="1"/>
+      <line x1="365" y1="85" x2="425" y2="120" stroke="#dbe8fe" stroke-width="1"/>
+      <line x1="435" y1="85" x2="375" y2="120" stroke="#dbe8fe" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <p><strong>Hub and Spoke</strong> is the topology of extraction. Amazon Marketplace is a perfect specimen: three million sellers connect to customers only through Amazon. The sellers do the work. Amazon sets the rules, takes the cut, and owns the customer. It is digital sharecropping.</p>
+
+  <p><strong>Small World</strong> is the topology of innovation. Ideas percolate within clusters, then jump between them via long-range bridges, creating unexpected combinations. Silicon Valley is a small world network made physical. The catch: being inside the right cluster makes you wealthy; being outside makes you irrelevant.</p>
+
+  <p><strong>Distributed Mesh</strong> is the topology of resilience. Bitcoin is a pure mesh network. No central bank. No controlling entity. Destroy half the network and it continues functioning. The tradeoff is efficiency &mdash; meshes are terrible at concentrating capital but excellent at surviving shocks.</p>
 
   <!-- Panel 2: Three Topology Switcher -->
   <div class="panel">
@@ -81,6 +260,12 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
     </div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>Position Is Destiny</h2>
+
+  <p>Your ZIP code matters more than your IQ because ZIP codes determine initial network position. The strategic imperative is to find and position yourself on the shortest paths, leveraging the network's inherent structure for maximum influence and reach.</p>
+
   <!-- Panel 3: Position Slider -->
   <div class="panel">
     <h2>Position Slider</h2>
@@ -91,6 +276,21 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
     <div class="slider-label"><span>Periphery</span><span>Center</span></div>
     <input type="range" id="pos-slider" min="0" max="100" value="10">
     <div id="pos-stat" class="stat" style="font-size:1.1rem; text-align:center;"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The AI Amplification</h2>
+
+  <p>If network effects were powerful before, AI makes them absolute. The reason is recursive improvement. In traditional businesses, getting bigger often meant getting slower. AI inverts this. The bigger the network, the more data. The more data, the better the AI. The better the AI, the more users it attracts. It is not just a virtuous cycle. It is an accelerating spiral that approaches singularity.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">8.5B</div>
+    <div class="stat-label">daily Google searches &mdash; each one training data that makes the next search better. Competitors cannot catch up because they cannot access the data that comes from having already won.</div>
+  </div>
+
+  <div class="pullquote">
+    <p>This is not market competition. It is gravitational collapse. Once a network reaches critical mass in the AI age, it becomes a black hole.</p>
   </div>
 
   <!-- Panel 4: AI Amplification -->
@@ -107,6 +307,83 @@ input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
     <div id="ai-stats" class="stat" style="text-align:center; font-size:1.1rem;"></div>
     <p class="caption">AI amplifies existing network advantages. Topology becomes destiny.</p>
   </div>
+
+  <hr class="section-divider">
+
+  <h2>The Great Exclusion</h2>
+
+  <p>Here is the darkest truth about network topology. We are not just being outcompeted. We are being structurally excluded. The economic network is rewiring itself to remove humans from the center.</p>
+
+  <p>In the old economy, value flowed from human to human through companies. You had relationships. In the network economy, value flows from AI to AI through platforms. Humans are increasingly just data sources, not participants. Businesses no longer integrate with each other; their APIs do. Entire transactions happen machine to machine.</p>
+
+  <!-- SVG: Human exclusion illustration -->
+  <div class="illustration">
+    <svg width="400" height="140" viewBox="0 0 400 140" style="max-width:100%;">
+      <!-- Left: old economy -->
+      <text x="100" y="15" text-anchor="middle" font-size="11" fill="#888">Old Economy</text>
+      <circle cx="60" cy="70" r="12" fill="#2563eb" opacity="0.8"/>
+      <text x="60" y="74" text-anchor="middle" font-size="8" fill="white">H</text>
+      <circle cx="100" cy="45" r="12" fill="#2563eb" opacity="0.8"/>
+      <text x="100" y="49" text-anchor="middle" font-size="8" fill="white">H</text>
+      <circle cx="140" cy="70" r="12" fill="#2563eb" opacity="0.8"/>
+      <text x="140" y="74" text-anchor="middle" font-size="8" fill="white">H</text>
+      <circle cx="100" cy="100" r="12" fill="#2563eb" opacity="0.8"/>
+      <text x="100" y="104" text-anchor="middle" font-size="8" fill="white">H</text>
+      <line x1="60" y1="70" x2="100" y2="45" stroke="#93c5fd" stroke-width="2"/>
+      <line x1="100" y1="45" x2="140" y2="70" stroke="#93c5fd" stroke-width="2"/>
+      <line x1="140" y1="70" x2="100" y2="100" stroke="#93c5fd" stroke-width="2"/>
+      <line x1="100" y1="100" x2="60" y2="70" stroke="#93c5fd" stroke-width="2"/>
+      <text x="100" y="130" text-anchor="middle" font-size="9" fill="#555">Humans at center</text>
+      <!-- Arrow -->
+      <text x="200" y="75" text-anchor="middle" font-size="22" fill="#888">&rarr;</text>
+      <!-- Right: new economy -->
+      <text x="310" y="15" text-anchor="middle" font-size="11" fill="#888">Network Economy</text>
+      <circle cx="280" cy="65" r="14" fill="#2563eb"/>
+      <text x="280" y="69" text-anchor="middle" font-size="8" fill="white">AI</text>
+      <circle cx="340" cy="65" r="14" fill="#2563eb"/>
+      <text x="340" y="69" text-anchor="middle" font-size="8" fill="white">AI</text>
+      <line x1="280" y1="65" x2="340" y2="65" stroke="#2563eb" stroke-width="3"/>
+      <circle cx="260" cy="110" r="6" fill="#ccc" opacity="0.5"/>
+      <text x="260" y="113" text-anchor="middle" font-size="6" fill="#999">H</text>
+      <circle cx="310" cy="115" r="6" fill="#ccc" opacity="0.5"/>
+      <text x="310" y="118" text-anchor="middle" font-size="6" fill="#999">H</text>
+      <circle cx="360" cy="110" r="6" fill="#ccc" opacity="0.5"/>
+      <text x="360" y="113" text-anchor="middle" font-size="6" fill="#999">H</text>
+      <line x1="260" y1="110" x2="280" y2="65" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <line x1="310" y1="115" x2="310" y2="80" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <line x1="360" y1="110" x2="340" y2="65" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <text x="310" y="130" text-anchor="middle" font-size="9" fill="#555">Humans at periphery</text>
+    </svg>
+  </div>
+
+  <div class="pullquote">
+    <p>We are not just becoming economically irrelevant. We are becoming topologically irrelevant. Pushed to the edges of networks that no longer need us.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>Breaking the Prison</h2>
+
+  <p>The network prison is real, but it is not absolute. You do not beat a network by competing within it. You beat it by building a different one.</p>
+
+  <p>The Protestant Reformation broke the Catholic Church's network monopoly by creating alternate nodes of authority. The Internet broke the media monopoly by creating a new topology where anyone could publish. The pattern is clear: you do not fight the network. You route around it.</p>
+
+  <p>Avoiding our fate as peripheral nodes requires conscious topology construction. We need to build networks that center human agency, distribute power, and value the resilience of the mesh over the extraction of the hub.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Topology of Thought</h2>
+
+  <p>The ultimate irony is that these network structures are not just external to us. They are reflections of how intelligence itself is organized.</p>
+
+  <p>A traditional corporation, with its rigid hierarchy, is a Hub and Spoke network &mdash; efficient at execution but brittle and unintelligent. A modern AI like a Transformer is a Small World network, where its "attention" mechanism allows every node to create bridges to every other node. The human brain itself is a masterpiece of Distributed Mesh architecture &mdash; countless redundant connections, no single point of failure, less efficient than a chip but infinitely more resilient.</p>
+
+  <div class="pullquote">
+    <p>The great project of the next century is not just to build new economic networks. It is to ensure that those networks reflect the best of our own intelligence: the innovative power of the small world and the resilient, distributed consciousness of the mesh, rather than the brittle, extractive logic of the hub.</p>
+  </div>
+
+  <p>The topology of our economy will, in the end, be a mirror of our collective soul. The network prison only holds those who do not understand they are in it.</p>
+
 </div>
 
 <script>

@@ -19,6 +19,17 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; color: #6b7280; font-style: normal; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
+.stat-row .stat-callout { flex: 1; margin: 0; }
+
 /* Puzzle cards */
 .puzzle-grid { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
 .puzzle-card { border: 1px solid #e5e5e0; border-radius: 8px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
@@ -70,6 +81,8 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   .scenario-btn { text-align: center; }
   .score-bar { gap: 0.4rem; }
   .product-num { font-size: 1.8rem; }
+  .stat-row { flex-direction: column; }
+  .stat-number { font-size: 2.2rem; }
 }
 </style>
 </head>
@@ -84,6 +97,46 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <div class="chapter-num">Chapter 20</div>
   <h1>Intelligent Macroeconomics</h1>
 
+  <div class="pullquote">
+    <p>&ldquo;The whole of science is nothing more than a refinement of everyday thinking.&rdquo;</p>
+    <div class="attribution">&mdash; Albert Einstein</div>
+  </div>
+
+  <!-- Section: The Birth of the Second Mind -->
+  <h2>The Birth of the Second Mind</h2>
+
+  <p>On December 31, 1600, Queen Elizabeth I signed a charter that gave birth to a new kind of life on Earth. She called it the East India Company. It was not human. It was an artificial being, a &ldquo;corporate person,&rdquo; capable of living forever and pursuing a single, simple objective: profit. It was our first, slow, mechanical attempt at artificial intelligence.</p>
+
+  <!-- SVG: Timeline of corporate evolution -->
+  <svg viewBox="0 0 680 100" style="width:100%;margin:1.5rem 0;" aria-label="Timeline from corporation to AI">
+    <line x1="40" y1="50" x2="640" y2="50" stroke="#e5e5e0" stroke-width="2"/>
+    <circle cx="80" cy="50" r="8" fill="#2563eb"/>
+    <text x="80" y="80" text-anchor="middle" font-size="11" fill="#555">1600</text>
+    <text x="80" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Corporation</text>
+    <circle cx="260" cy="50" r="8" fill="#2563eb" opacity="0.7"/>
+    <text x="260" y="80" text-anchor="middle" font-size="11" fill="#555">1900s</text>
+    <text x="260" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Industrial GDP</text>
+    <circle cx="440" cy="50" r="8" fill="#2563eb" opacity="0.85"/>
+    <text x="440" y="80" text-anchor="middle" font-size="11" fill="#555">1970s</text>
+    <text x="440" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Wage Decoupling</text>
+    <circle cx="600" cy="50" r="10" fill="#2563eb"/>
+    <text x="600" y="80" text-anchor="middle" font-size="11" fill="#555">2020s</text>
+    <text x="600" y="35" text-anchor="middle" font-size="10" font-weight="700" fill="#2563eb">Fast AI</text>
+    <!-- Arrow tips -->
+    <polygon points="640,50 632,45 632,55" fill="#e5e5e0"/>
+  </svg>
+
+  <p>For the last four hundred years, the entire story of macroeconomics has been the story of us &mdash; the slow, complex, biological minds &mdash; trying to understand and control the behavior of these strange, powerful, and increasingly alien corporate minds we had created. We built a science of ghosts, chasing phantom aggregates like &ldquo;total output,&rdquo; because we were trying to understand the weather of a world inhabited by these new gods, without ever understanding the gods themselves.</p>
+
+  <p>Intelligent Macroeconomics is not a better model for this world. It is a better science because it finally gives us the tools to see these entities for what they are: <strong>intelligent agents competing in a portfolio game of MIND capitals</strong>. With this lens, the great mysteries of the last century do not just become solvable; they become simple.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">400+</div>
+    <div class="stat-label">Years of &ldquo;slow AI&rdquo; &mdash; the corporate mind &mdash; shaping macroeconomics</div>
+  </div>
+
+  <hr class="section-divider">
+
   <p>The great economic mysteries of the 20th century become simple when you use the right instrument. The Solow Residual, wage stagnation, financial crises &mdash; each one dissolves when you measure the right capitals. GDP saw noise. MIND sees signal.</p>
 
   <!-- Panel 1: The Macro Puzzle Explainer -->
@@ -92,6 +145,122 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
     <p style="font-size:0.9rem;color:#666;margin-top:0">Click each puzzle to reveal why conventional economics was stumped &mdash; and how MIND capitals dissolve the mystery.</p>
     <div class="puzzle-grid" id="puzzle-grid"></div>
   </div>
+
+  <!-- Prose: The Puzzle of Growth -->
+  <h2>The Puzzle of Growth</h2>
+
+  <p>The first great mystery was growth itself. After World War II, economies grew at a rate that defied explanation. The Nobel laureate Robert Solow found that most of this growth was a &ldquo;residual&rdquo; he attributed to a generic &ldquo;technology.&rdquo; It was like crediting a bountiful harvest to &ldquo;good weather&rdquo; without understanding the sun.</p>
+
+  <div class="pullquote">
+    <p>The &ldquo;ghost in the machine&rdquo; of growth was the explosive, unmeasured accumulation of Intelligence Capital and Network Capital within corporate beings. The Solow Residual was the shadow cast by invisible capitals on the low-resolution dashboard of GDP.</p>
+  </div>
+
+  <!-- Prose: The Puzzle of Wages -->
+  <h2>The Broken Bargain of Wages</h2>
+
+  <p>For a generation, the bargain held: as corporate beings grew more productive, so did their human components. Then, around 1973, the link shattered. Productivity continued its climb, but wages for the median worker flatlined.</p>
+
+  <!-- SVG: Productivity vs Wages divergence -->
+  <svg viewBox="0 0 680 180" style="width:100%;margin:1.5rem 0;" aria-label="Productivity vs wages divergence since 1973">
+    <text x="340" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">The Third Economic Inversion</text>
+    <!-- Axes -->
+    <line x1="60" y1="150" x2="640" y2="150" stroke="#ccc" stroke-width="1"/>
+    <line x1="60" y1="30" x2="60" y2="150" stroke="#ccc" stroke-width="1"/>
+    <!-- Productivity line (rising) -->
+    <polyline points="60,140 180,120 300,100 420,70 540,40 640,30" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="645" y="32" font-size="10" fill="#2563eb" font-weight="600">Productivity</text>
+    <!-- Wages line (flat after 1973) -->
+    <polyline points="60,140 180,120 300,118 420,116 540,114 640,112" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="645" y="114" font-size="10" fill="#ef4444" font-weight="600">Wages</text>
+    <!-- 1973 marker -->
+    <line x1="180" y1="30" x2="180" y2="150" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,4"/>
+    <text x="180" y="165" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="600">1973</text>
+    <!-- Axis labels -->
+    <text x="60" y="170" font-size="9" fill="#888">1950</text>
+    <text x="640" y="170" font-size="9" fill="#888" text-anchor="end">2020</text>
+  </svg>
+
+  <p>The chasm was the direct accounting trace of the <strong>Third Economic Inversion</strong>. The corporate beings discovered that the most effective way to grow was no longer by enhancing rivalrous human labor, but by investing in non-rivalrous, infinitely scalable capital like software. The &ldquo;Productivity-Pay Gap&rdquo; was the sound of the corporate mind decoupling its fate from the fate of its human parts.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">1973</div>
+      <div class="stat-label">Year the productivity-wage link shattered</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:2.2rem;">&#8734;</div>
+      <div class="stat-label">Scalability of non-rivalrous software capital</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Prose: Stability and Inflation -->
+  <h2>The Lost Map of Inflation</h2>
+
+  <p>The central bankers believed they had found a magic map: the Phillips Curve, a stable trade-off between inflation and unemployment. Then, in the 1970s, the map burst into flames with &ldquo;stagflation.&rdquo;</p>
+
+  <p>Inflation is not primarily a monetary problem. It is a structural one. It is a symptom of a critical lack of <strong>Diversity Capital (D)</strong>. The &ldquo;Great Moderation&rdquo; was a period where corporate minds optimized their supply chains for maximum efficiency, stripping out every redundancy. The inflation of the 2020s was the predictable fever of this low-diversity system when struck by a series of shocks.</p>
+
+  <!-- Prose: Finance -->
+  <h2>The Tail Wags the Dog</h2>
+
+  <p>As the 20th century closed, the financial sector became the dominant mind itself. The puzzle was the <strong>Equity Premium</strong>: why did the returns on owning shares in corporate beings so vastly outperform the returns on lending to the governments that chartered them?</p>
+
+  <div class="pullquote">
+    <p>Stocks and bonds are claims on entirely different parts of the corporate mind. A government bond is a claim on a nation&rsquo;s stable Harmonic Flow. A stock is a claim on a company&rsquo;s ability to generate explosive Circular Flow. The equity premium is the market&rsquo;s rational price for the difference between linear stability and non-linear, exponential creation.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Prose: New Puzzles of the Intelligent Age -->
+  <h2>New Puzzles of the Intelligent Age</h2>
+
+  <p>These puzzles defined the macroeconomic landscape of the world built by the &ldquo;slow AI&rdquo; of the corporation. But the arrival of true, &ldquo;fast AI&rdquo; does not just solve these old riddles; it creates a set of new, even stranger ones that will define the 21st century.</p>
+
+  <!-- SVG: Three new puzzles -->
+  <svg viewBox="0 0 680 220" style="width:100%;margin:1.5rem 0;" aria-label="Three new puzzles of the intelligent age">
+    <!-- Deflationary Spiral -->
+    <rect x="10" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
+    <text x="110" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb">Deflationary Spiral</text>
+    <line x1="40" y1="52" x2="180" y2="52" stroke="#eff6ff" stroke-width="1"/>
+    <!-- Downward spiral icon -->
+    <path d="M110,70 Q140,80 130,100 Q120,120 90,110 Q70,100 80,85 Q90,70 110,75" fill="none" stroke="#2563eb" stroke-width="2"/>
+    <polygon points="108,77 116,73 112,81" fill="#2563eb"/>
+    <text x="110" y="140" text-anchor="middle" font-size="9.5" fill="#555">
+      <tspan x="110" dy="0">AI drives the cost of</tspan>
+      <tspan x="110" dy="14">intelligence toward zero.</tspan>
+      <tspan x="110" dy="14">What becomes of price?</tspan>
+    </text>
+    <!-- Negative Value Worker -->
+    <rect x="240" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
+    <text x="340" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#ef4444">Negative Value Worker</text>
+    <line x1="270" y1="52" x2="410" y2="52" stroke="#fef2f2" stroke-width="1"/>
+    <!-- Person with minus -->
+    <circle cx="340" cy="80" r="12" fill="none" stroke="#ef4444" stroke-width="2"/>
+    <line x1="332" y1="80" x2="348" y2="80" stroke="#ef4444" stroke-width="2.5"/>
+    <line x1="340" y1="96" x2="340" y2="120" stroke="#ef4444" stroke-width="2"/>
+    <text x="340" y="145" text-anchor="middle" font-size="9.5" fill="#555">
+      <tspan x="340" dy="0">When hiring a human</tspan>
+      <tspan x="340" dy="14">introduces more cost than</tspan>
+      <tspan x="340" dy="14">benefit. Labor as liability.</tspan>
+    </text>
+    <!-- Evaporating Assets -->
+    <rect x="470" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
+    <text x="570" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">Evaporating Assets</text>
+    <line x1="500" y1="52" x2="640" y2="52" stroke="#fffbeb" stroke-width="1"/>
+    <!-- Dissolving blocks icon -->
+    <rect x="545" y="70" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.9"/>
+    <rect x="570" y="80" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.6"/>
+    <rect x="555" y="95" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.3"/>
+    <text x="570" y="140" text-anchor="middle" font-size="9.5" fill="#555">
+      <tspan x="570" dy="0">A software update can</tspan>
+      <tspan x="570" dy="14">render a factory worthless</tspan>
+      <tspan x="570" dy="14">overnight. Capital in flux.</tspan>
+    </text>
+  </svg>
+
+  <hr class="section-divider">
 
   <!-- Panel 2: MIND Capital Allocation Game -->
   <div class="panel">
@@ -138,6 +307,48 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       <div class="product-verdict" id="product-verdict"></div>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- Prose: The New Goal -->
+  <h2>Taming the Second and Third Minds</h2>
+
+  <p>The task of the old macroeconomics was to understand the &ldquo;Second Mind&rdquo; of the corporation. The task of Intelligent Macroeconomics is twofold. First, it must act as the steward of the ecosystem in which these now-AI-powered corporate beings operate, using the tools of geometry engineering to create a landscape where the health of the corporation and the health of the society are realigned.</p>
+
+  <p>But its second, and more profound, task is to prepare for the emergence of the <strong>&ldquo;Third Mind&rdquo;</strong>: the autonomous, non-human, machine-to-machine economy itself. How do you conduct monetary policy in an economy run by algorithms? How do you ensure financial stability when the most important financial actors are non-conscious agent swarms?</p>
+
+  <!-- SVG: Three Minds evolution -->
+  <svg viewBox="0 0 680 130" style="width:100%;margin:1.5rem 0;" aria-label="Evolution from First to Third Mind">
+    <!-- First Mind: Human -->
+    <circle cx="110" cy="55" r="35" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="110" y="50" text-anchor="middle" font-size="22" fill="#2563eb">&#x1D5A8;</text>
+    <text x="110" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb">Human</text>
+    <text x="110" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">First Mind</text>
+    <text x="110" y="122" text-anchor="middle" font-size="9" fill="#888">Biological</text>
+    <!-- Arrow 1 -->
+    <line x1="155" y1="55" x2="225" y2="55" stroke="#ccc" stroke-width="1.5"/>
+    <polygon points="225,55 218,50 218,60" fill="#ccc"/>
+    <!-- Second Mind: Corporation -->
+    <circle cx="290" cy="55" r="35" fill="#faf5ff" stroke="#6d28d9" stroke-width="1.5"/>
+    <text x="290" y="52" text-anchor="middle" font-size="18" fill="#6d28d9">&#x25B2;</text>
+    <text x="290" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#6d28d9">Corp</text>
+    <text x="290" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">Second Mind</text>
+    <text x="290" y="122" text-anchor="middle" font-size="9" fill="#888">Slow AI (1600)</text>
+    <!-- Arrow 2 -->
+    <line x1="335" y1="55" x2="405" y2="55" stroke="#ccc" stroke-width="1.5"/>
+    <polygon points="405,55 398,50 398,60" fill="#ccc"/>
+    <!-- Third Mind: Machine Economy -->
+    <circle cx="470" cy="55" r="35" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="470" y="55" text-anchor="middle" font-size="16" fill="#ef4444">&#x2731;&#x2731;</text>
+    <text x="470" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#ef4444">M2M</text>
+    <text x="470" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">Third Mind</text>
+    <text x="470" y="122" text-anchor="middle" font-size="9" fill="#888">Fast AI (2020s)</text>
+  </svg>
+
+  <div class="pullquote">
+    <p>This is the new frontier. It is the science of managing not just a national portfolio of MIND capitals, but of stewarding a planetary transition between two different forms of intelligence.</p>
+  </div>
+
 </div>
 
 <script>

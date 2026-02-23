@@ -42,8 +42,18 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 .scenario-log { background: #f5f5f3; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.88rem; min-height: 3rem; margin-top: 0.75rem; line-height: 1.6; }
 input[type=range] { accent-color: #2563eb; }
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
 @media (max-width: 600px) {
   .transform-wrap { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -56,14 +66,84 @@ input[type=range] { accent-color: #2563eb; }
 
 <div class="prose">
   <div class="chapter-num">Chapter 17</div>
-  <h1>The Symbiotic State</h1>
+  <h1>The Symbiotic State: Governance as Geometry Engineering</h1>
 
-  <p>The nation-state was designed to control territory and tax transactions. It was built for a physical world of atoms. In a world of bits and AI, governance must reinvent itself — from extractor to gardener, from commander to cultivator.</p>
+  <div class="pullquote">
+    <p>"Ask not what your country can do for you, ask what your country can <em>be</em> for you."</p>
+    <div class="attribution">&mdash; A 21st Century Revision</div>
+  </div>
 
-  <p>The extractive state asks: what can we take? The symbiotic state asks: what conditions enable flourishing? This is not idealism — it is thermodynamics. An organism that only extracts from its ecosystem eventually destroys the conditions of its own existence. The state faces the same logic.</p>
+  <!-- SVG: The Obsolete Machine -->
+  <svg viewBox="0 0 680 140" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="From fortress state to network state">
+    <!-- Old fortress state -->
+    <rect x="40" y="30" width="100" height="80" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="55" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
+    <rect x="77" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
+    <rect x="99" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
+    <line x1="40" y1="50" x2="140" y2="50" stroke="#d97706" stroke-width="1" opacity="0.5"/>
+    <text x="90" y="78" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600">Fortress</text>
+    <text x="90" y="93" text-anchor="middle" font-size="10" fill="#92400e">State</text>
+    <!-- Arrow -->
+    <line x1="170" y1="70" x2="280" y2="70" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <polygon points="280,65 295,70 280,75" fill="#888"/>
+    <text x="225" y="58" text-anchor="middle" font-size="9" fill="#888">obsolescence</text>
+    <!-- Forces flowing through -->
+    <g opacity="0.6">
+      <circle cx="200" cy="40" r="3" fill="#2563eb"/><circle cx="220" cy="95" r="3" fill="#2563eb"/>
+      <circle cx="240" cy="50" r="3" fill="#2563eb"/><circle cx="260" cy="85" r="3" fill="#2563eb"/>
+      <text x="230" y="118" text-anchor="middle" font-size="8" fill="#2563eb">capital, data, ideas flow through walls</text>
+    </g>
+    <!-- New network state -->
+    <circle cx="400" cy="55" r="8" fill="#2563eb" opacity="0.8"/>
+    <circle cx="440" cy="35" r="8" fill="#16a34a" opacity="0.8"/>
+    <circle cx="460" cy="75" r="8" fill="#2563eb" opacity="0.8"/>
+    <circle cx="420" cy="90" r="8" fill="#16a34a" opacity="0.8"/>
+    <circle cx="380" cy="80" r="8" fill="#2563eb" opacity="0.8"/>
+    <circle cx="490" cy="55" r="6" fill="#16a34a" opacity="0.6"/>
+    <circle cx="360" cy="50" r="6" fill="#16a34a" opacity="0.6"/>
+    <line x1="400" y1="55" x2="440" y2="35" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+    <line x1="440" y1="35" x2="460" y2="75" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+    <line x1="460" y1="75" x2="420" y2="90" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+    <line x1="420" y1="90" x2="380" y2="80" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+    <line x1="380" y1="80" x2="400" y2="55" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+    <line x1="490" y1="55" x2="460" y2="75" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+    <line x1="360" y1="50" x2="380" y2="80" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+    <line x1="360" y1="50" x2="400" y2="55" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+    <line x1="490" y1="55" x2="440" y2="35" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+    <text x="425" y="118" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">Symbiotic Network State</text>
+    <!-- Right side: question -->
+    <text x="580" y="55" text-anchor="middle" font-size="10" fill="#555">Corporate</text>
+    <text x="580" y="68" text-anchor="middle" font-size="10" fill="#555">subsidiary?</text>
+    <text x="580" y="88" text-anchor="middle" font-size="10" fill="#555">Or evolved</text>
+    <text x="580" y="101" text-anchor="middle" font-size="10" fill="#555">gardener?</text>
+  </svg>
+
+  <h2>The Obsolete Machine</h2>
+
+  <p>The nation-state was the most successful political technology of the industrial age. It was a machine perfectly designed to forge a common identity, mobilize national resources, field armies, and manage industrial economies. For three hundred years, it was the most powerful actor on the world stage.</p>
+
+  <p>Now, that machine is obsolete.</p>
+
+  <p>The forces of the Intelligence Inversion &mdash; global networks, dematerialized capital, and algorithmic power &mdash; are making the traditional state irrelevant. It is too slow, its jurisdiction too territorial, its tools too clumsy. It is a fortress designed for a world of invading armies, now besieged by forces that flow through its walls as if they were not there. Capital flees to the lowest tax jurisdiction at the speed of light. Information, true and false, ignores borders. The greatest challenges we face, from climate change to AI alignment, are fundamentally global, mocking the very idea of national solutions.</p>
+
+  <div class="pullquote">
+    <p>To cling to the old model of the state is to cling to a cart in the age of rockets. The question is not whether the state will change, but what it will become.</p>
+  </div>
+
+  <p>Will it be a corporate subsidiary in Digital Feudalism, or a paranoid fortress in the Great Fragmentation? Or can it evolve? This chapter is a charter for that evolution. It is a blueprint for the <strong>Symbiotic State.</strong></p>
+
+  <hr class="section-divider">
+
+  <h2>From Extractor to Gardener</h2>
+
+  <p>The traditional state had two primary functions: extraction and control. It extracted resources through taxation and controlled its population through regulation and borders. In the industrial age, this worked. Capital was physical, tied to factories and land. People were relatively immobile.</p>
+
+  <p>In the intelligent economy, this model is a recipe for failure. The most valuable forms of capital &mdash; intelligence and networks &mdash; are intangible and fluid. Trying to tax them is like trying to build a dam on a cloud. A state that defines its purpose as extraction and control will find it has nothing left to extract and nothing left to control.</p>
+
+  <p>The Symbiotic State has a different purpose. It evolves from an extractor of value to a cultivator of a generative ecosystem. Its primary function is not to command the economy, but to create the fertile conditions from which a healthy economy can emerge. It is no longer a factory manager. <strong>It is a gardener.</strong> It is an engineer of economic geometry.</p>
 
   <div class="panel">
-    <h2>From Extractor to Gardener</h2>
+    <h2 style="margin-top:0;">From Extractor to Gardener</h2>
     <div class="transform-wrap">
       <div class="transform-side extractive">
         <div class="transform-title" style="color:#92400e;">The Extractive State</div>
@@ -99,9 +179,84 @@ input[type=range] { accent-color: #2563eb; }
     </div>
   </div>
 
+  <h2>The Death of Comparative Advantage</h2>
+
+  <p>This shift requires abandoning the foundational theory of industrial-age national strategy: comparative advantage. Ricardo's elegant idea that nations should specialize based on their unique, geographically-determined efficiencies was the gospel of globalization. But it is a gospel for a world of atoms and muscles.</p>
+
+  <div class="pullquote">
+    <p>When the most productive "worker" is an AI model that can be deployed in any data center on Earth, the idea of a national "advantage" in cognitive tasks becomes meaningless.</p>
+  </div>
+
+  <p>The new, durable advantage is not based on what your population can <em>do</em>, but on the quality of your national MIND portfolio. The critical questions become: How cheap and green is your energy? How open is your data? How trusted are your networks? How diverse are your ideas?</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">4</div>
+      <div class="stat-label">MIND Capitals to steward</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">300</div>
+      <div class="stat-label">Years of the nation-state model</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">&infin;</div>
+      <div class="stat-label">Speed of capital flight (digital)</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>Policy as Geometry Engineering: The New Toolkit</h2>
+
+  <p>The old policy toolkit &mdash; the mechanistic pushing of levers and pulling of dials &mdash; is useless on the new economic landscape. The Symbiotic State wields a more subtle and powerful set of instruments, designed to reshape the landscape itself so that desirable outcomes emerge as the natural path of least resistance.</p>
+
+  <p>Its method is Policy as Geometry Engineering. It does not command; it cultivates. It does not force; it guides.</p>
+
+  <!-- SVG: Geometry Engineering Principles -->
+  <svg viewBox="0 0 680 160" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="Five principles of geometry engineering">
+    <!-- Valley (incentives) -->
+    <g transform="translate(68,20)">
+      <path d="M-30,60 Q0,90 30,60" fill="none" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="0" cy="82" r="4" fill="#2563eb"/>
+      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Create valleys</text>
+      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(incentives)</text>
+    </g>
+    <!-- Defaults -->
+    <g transform="translate(204,20)">
+      <rect x="-20" y="50" width="40" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="0" y="70" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">ON</text>
+      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Change defaults</text>
+      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(nudge design)</text>
+    </g>
+    <!-- Channels (infrastructure) -->
+    <g transform="translate(340,20)">
+      <line x1="-25" y1="55" x2="25" y2="55" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
+      <line x1="-25" y1="65" x2="25" y2="65" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
+      <line x1="-25" y1="75" x2="25" y2="75" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
+      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Carve channels</text>
+      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(infrastructure)</text>
+    </g>
+    <!-- Pruning (remove barriers) -->
+    <g transform="translate(476,20)">
+      <line x1="-15" y1="55" x2="15" y2="80" stroke="#dc2626" stroke-width="2"/>
+      <line x1="15" y1="55" x2="-15" y2="80" stroke="#dc2626" stroke-width="2"/>
+      <rect x="-20" y="50" width="40" height="35" rx="2" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Prune deadwood</text>
+      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(deregulate)</text>
+    </g>
+    <!-- Consensus -->
+    <g transform="translate(612,20)">
+      <circle cx="-8" cy="62" r="6" fill="#16a34a" opacity="0.6"/>
+      <circle cx="8" cy="62" r="6" fill="#2563eb" opacity="0.6"/>
+      <circle cx="0" cy="75" r="6" fill="#d97706" opacity="0.6"/>
+      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Build consensus</text>
+      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(political will)</text>
+    </g>
+  </svg>
+
   <div class="panel">
-    <h2>Policy as Geometry Engineering</h2>
-    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">The state's job is to shape the economic landscape so that cooperation is the path of least resistance. Watch how each policy tool reshapes the terrain — and how agents (dots) roll toward the valleys.</p>
+    <h2 style="margin-top:0;">Policy as Geometry Engineering</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">The state's job is to shape the economic landscape so that cooperation is the path of least resistance. Watch how each policy tool reshapes the terrain &mdash; and how agents (dots) roll toward the valleys.</p>
 
     <div class="landscape-controls">
       <button class="btn" onclick="applyPolicy('incentivize')">Incentivize Cooperation</button>
@@ -112,11 +267,85 @@ input[type=range] { accent-color: #2563eb; }
     </div>
 
     <svg id="landscape-svg" style="width:100%;max-width:600px;" height="200"></svg>
-    <div class="landscape-log" id="landscape-log">The economic landscape shapes behavior. Agents follow the path of least resistance — always rolling downhill.</div>
+    <div class="landscape-log" id="landscape-log">The economic landscape shapes behavior. Agents follow the path of least resistance &mdash; always rolling downhill.</div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The New Social Contract: The State as MIND Steward</h2>
+
+  <p>What is the new purpose of the state? The only legitimate role of the 21st century state is to be the steward of the nation's collective MIND Capitals. This is its new social contract &mdash; the very reason for its existence.</p>
+
+  <p><strong>Cultivating M &mdash; Material Capital:</strong> The state's role is not to own industry, but to be the ultimate steward of the ecological commons. It uses the tools of Geometry Engineering to price externalities like carbon and fund the transition to a circular economy, ensuring the physical foundation of the nation is not liquidated for short-term profit.</p>
+
+  <p><strong>Cultivating I &mdash; Intelligence Capital:</strong> The state acts as the primary funder of fundamental, blue-sky research. It protects and expands the digital commons, ensuring that core AI models and critical datasets are public goods, not private fiefdoms.</p>
+
+  <p><strong>Cultivating N &mdash; Network Capital:</strong> This is its most important role. The state is the ultimate underwriter of social trust. It does this not just through laws, but by building systems of radical transparency and investing in the physical and digital infrastructure that allow trust and commerce to flow.</p>
+
+  <p><strong>Cultivating D &mdash; Diversity Capital:</strong> The state has a strategic interest in preventing the monocultures that efficiency-seeking markets naturally create. It acts as a venture capitalist for the nation's resilience, funding a portfolio of diverse solutions in energy, supply chains, and institutional models.</p>
+
+  <hr class="section-divider">
+
+  <h2>Redefining Sovereignty: From Territory to Topology</h2>
+
+  <p>Traditional sovereignty is based on territorial control. A wall, an army, a border guard. This is becoming meaningless.</p>
+
+  <div class="pullquote">
+    <p>Sovereignty in the 21st century is topological, not territorial. A nation is "sovereign" if it is a critical, trusted, and highly connected node in the global network.</p>
+  </div>
+
+  <p>A nation is a vassal if it is a peripheral, low-trust, and easily disconnected node. Under this new definition, the most sovereign nations will not be the ones with the biggest armies. They will be the ones with the highest Network Capital &mdash; the countries whose legal systems are most trusted, whose universities produce the most foundational research, whose infrastructure is the most resilient.</p>
+
+  <!-- SVG: Sovereignty comparison -->
+  <svg viewBox="0 0 680 130" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="Territorial vs topological sovereignty">
+    <!-- Territorial -->
+    <g transform="translate(0,10)">
+      <rect x="40" y="15" width="120" height="80" rx="2" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6,3"/>
+      <text x="100" y="50" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600">Territorial</text>
+      <text x="100" y="66" text-anchor="middle" font-size="9" fill="#92400e">Walls &amp; borders</text>
+      <text x="100" y="80" text-anchor="middle" font-size="9" fill="#92400e">Static, brittle</text>
+    </g>
+    <!-- Arrow -->
+    <line x1="190" y1="65" x2="280" y2="65" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <polygon points="280,60 295,65 280,70" fill="#888"/>
+    <!-- Topological -->
+    <g transform="translate(320,10)">
+      <circle cx="80" cy="40" r="10" fill="#2563eb" opacity="0.8"/>
+      <circle cx="130" cy="30" r="7" fill="#16a34a" opacity="0.7"/>
+      <circle cx="50" cy="60" r="7" fill="#16a34a" opacity="0.7"/>
+      <circle cx="110" cy="70" r="7" fill="#16a34a" opacity="0.7"/>
+      <circle cx="160" cy="60" r="5" fill="#2563eb" opacity="0.5"/>
+      <circle cx="30" cy="35" r="5" fill="#2563eb" opacity="0.5"/>
+      <line x1="80" y1="40" x2="130" y2="30" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
+      <line x1="80" y1="40" x2="50" y2="60" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
+      <line x1="80" y1="40" x2="110" y2="70" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
+      <line x1="130" y1="30" x2="160" y2="60" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="50" y1="60" x2="30" y2="35" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="110" y1="70" x2="160" y2="60" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <line x1="50" y1="60" x2="110" y2="70" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+      <text x="95" y="100" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">Topological</text>
+      <text x="95" y="114" text-anchor="middle" font-size="9" fill="#1e40af">Trusted nodes, open flows</text>
+    </g>
+  </svg>
+
+  <p>In this world, building a wall is an act of sovereign suicide. Isolationism is the fastest possible path to irrelevance. The most powerful nations will be those that are the most <strong>radically open.</strong></p>
+
+  <hr class="section-divider">
+
+  <h2>The Guardian Lattice: A New Nervous System for Governance</h2>
+
+  <p>The old state was a rigid skeleton. The Symbiotic State is an adaptive nervous system. Its implementation is the Guardian Lattice.</p>
+
+  <p>It is not a government of men, but a system of laws encoded in a transparent, decentralized network. Imagine a distributed web of AI oracles, each tasked with monitoring one aspect of the landscape's health based on the MIND dashboard. When they detect a bubble forming, the protocol might automatically increase the "friction" in that sector. When they detect a "poverty trap" forming, the protocol can automatically smooth the landscape by increasing the local flow of <strong>Culture Credits</strong>.</p>
+
+  <div class="pullquote">
+    <p>The algorithm proposes; humanity disposes.</p>
+  </div>
+
+  <p>Human wisdom is not replaced; it is elevated. Imagine an <strong>Oracle Council</strong> &mdash; not of experts or politicians, but of a randomly selected jury of citizens: a nurse from Ohio, a farmer from Iowa, a programmer from California. Their task is not to debate legislation, but to deliberate on the fundamental values that guide the system. The AI oracles can calculate the most efficient path, but only this human council can decide if the destination is a place we truly want to go.</p>
+
   <div class="panel">
-    <h2>The Guardian Lattice</h2>
+    <h2 style="margin-top:0;">The Guardian Lattice</h2>
     <div class="network-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> AI Monitoring Oracle</div>
       <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Citizen Jury Member</div>
@@ -127,6 +356,42 @@ input[type=range] { accent-color: #2563eb; }
     </div>
     <div class="scenario-log" id="scenario-log">Click "Run Scenario" to simulate the Guardian Lattice in action.</div>
   </div>
+
+  <hr class="section-divider">
+
+  <h2>The State as Garden</h2>
+
+  <p>This is the state as a garden. A system that does not command the flowers to grow, but which assiduously cultivates the soil, ensures the water flows, and pulls the weeds &mdash; creating the conditions for a million different flowers, some planned, some gloriously unexpected, to bloom of their own accord.</p>
+
+  <p>It is a state that understands that its ultimate purpose is not to produce value, but to cultivate the conditions for life itself to flourish.</p>
+
+  <!-- SVG: Garden metaphor -->
+  <svg viewBox="0 0 680 120" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="The state as garden">
+    <!-- Ground -->
+    <rect x="40" y="80" width="600" height="30" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="340" y="100" text-anchor="middle" font-size="10" fill="#166534">fertile conditions: trust, commons, diversity, intelligence</text>
+    <!-- Flowers growing -->
+    <g opacity="0.8">
+      <line x1="100" y1="80" x2="100" y2="50" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="100" cy="44" r="8" fill="#2563eb" opacity="0.7"/>
+      <line x1="200" y1="80" x2="200" y2="40" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="200" cy="34" r="10" fill="#d97706" opacity="0.7"/>
+      <line x1="300" y1="80" x2="300" y2="55" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="300" cy="49" r="7" fill="#dc2626" opacity="0.5"/>
+      <line x1="400" y1="80" x2="400" y2="35" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="400" cy="29" r="9" fill="#16a34a" opacity="0.6"/>
+      <line x1="500" y1="80" x2="500" y2="48" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="500" cy="42" r="8" fill="#7c3aed" opacity="0.6"/>
+      <line x1="560" y1="80" x2="560" y2="58" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="560" cy="52" r="6" fill="#2563eb" opacity="0.5"/>
+      <line x1="150" y1="80" x2="150" y2="60" stroke="#16a34a" stroke-width="1.5"/>
+      <circle cx="150" cy="55" r="5" fill="#f59e0b" opacity="0.6"/>
+      <line x1="450" y1="80" x2="450" y2="52" stroke="#16a34a" stroke-width="1.5"/>
+      <circle cx="450" cy="47" r="6" fill="#ec4899" opacity="0.5"/>
+    </g>
+    <!-- Label -->
+    <text x="340" y="22" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600">A million different flowers</text>
+  </svg>
 
 </div>
 

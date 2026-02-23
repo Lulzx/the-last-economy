@@ -19,6 +19,15 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
 
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+
 .river-wrap { width: 100%; overflow: hidden; border-radius: 6px; background: #0a1628; }
 .river-tooltip { font-size: 0.85rem; color: #ccc; text-align: center; min-height: 1.5em; padding: 0.5rem; background: #0a1628; border-radius: 0 0 6px 6px; }
 
@@ -54,11 +63,15 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .cap-bar { flex: 1; height: 14px; background: #e5e5e0; border-radius: 7px; overflow: hidden; }
 .cap-bar-fill { height: 100%; border-radius: 7px; transition: width 0.3s, background 0.3s; }
 
+.elephant-svg { display: block; margin: 2rem auto; max-width: 400px; }
+.synthesis-svg { display: block; margin: 2rem auto; max-width: 500px; }
+
 @media (max-width: 600px) {
   .tx-grid { grid-template-columns: 1fr; }
   .coercion-container { flex-direction: column; }
   .coercion-slider-wrap { flex-direction: row; width: 100%; }
   .coercion-slider { writing-mode: horizontal-tb; direction: ltr; width: 100%; height: 24px; }
+  .stat-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -71,9 +84,80 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 <div class="prose">
   <div class="chapter-num">Chapter 9</div>
   <h1>The Three Flows</h1>
-  <p>Adam Smith saw markets efficiently distributing surplus. Karl Marx saw capital accumulating in self-reinforcing loops. Friedrich Hayek saw distributed knowledge flowing through price signals. They were all right. They were each describing a different layer of the same river.</p>
+  <p><em>The Blind Scholars and the Elephant</em></p>
 
+  <div class="pullquote">
+    <p>"We can be blind to the obvious, and we are also blind to our blindness."</p>
+    <div class="pullquote-attr">&mdash; Daniel Kahneman</div>
+  </div>
+
+  <!-- ===== The Elephant in the Dark Room ===== -->
+  <h2>The Elephant in the Dark Room</h2>
+  <p>In ancient India, six blind scholars were brought before an elephant. The first, touching the trunk, declared, "An elephant is like a thick snake!" The second, feeling a leg, insisted, "No, it is like a mighty tree!" The third, grasping the tail, proclaimed, "You are both fools, it is clearly a rope!" Each scholar gave a perfect, empirically verifiable description of the part they touched. Each was completely right about their piece, catastrophically wrong about the whole, and ready to die defending their partial truth.</p>
+
+  <!-- SVG: Blind scholars and elephant -->
+  <svg class="elephant-svg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" aria-label="Blind scholars touching different parts of an elephant">
+    <!-- Elephant body -->
+    <ellipse cx="200" cy="120" rx="110" ry="60" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <!-- Head -->
+    <ellipse cx="310" cy="100" rx="40" ry="35" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <!-- Trunk -->
+    <path d="M340 115 Q360 140 345 170 Q340 178 335 170 Q348 142 330 120" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <!-- Legs -->
+    <rect x="130" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <rect x="170" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <rect x="245" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <rect x="280" y="165" width="22" height="45" rx="6" fill="#d6d3d1" stroke="#78716c" stroke-width="2"/>
+    <!-- Tail -->
+    <path d="M90 115 Q60 110 55 130" fill="none" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Eye -->
+    <circle cx="325" cy="92" r="4" fill="#1a1a1a"/>
+    <!-- Ear -->
+    <ellipse cx="295" cy="85" rx="18" ry="25" fill="#c8c4bf" stroke="#78716c" stroke-width="1.5"/>
+    <!-- Scholar labels -->
+    <text x="345" y="185" font-size="11" fill="#3b82f6" font-family="DM Sans, sans-serif" font-weight="600">Snake!</text>
+    <text x="125" y="215" font-size="11" fill="#0d9488" font-family="DM Sans, sans-serif" font-weight="600">Tree!</text>
+    <text x="30" y="140" font-size="11" fill="#78716c" font-family="DM Sans, sans-serif" font-weight="600">Rope!</text>
+  </svg>
+
+  <p>This is the secret history of economic thought. For three centuries, brilliant minds have been grappling with different parts of the same beast in a dark room, mistaking anatomy for ideology.</p>
+
+  <p>Adam Smith, the father of Capitalism, felt the steady pulse of commerce and declared the elephant's nature was competitive exchange. Karl Marx witnessed industrial exploitation and grasped the elephant's recursive spiral of accumulation. Friedrich Hayek touched the deep, invisible structures of tradition and proclaimed the elephant was a benevolent, spontaneous order. They fought like the blind scholars, each defending their glimpse of truth. Centuries of blood spilled over a false dichotomy.</p>
+
+  <div class="pullquote">
+    <p>Today, we turn on the lights.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== The Mathematics of Reality ===== -->
+  <h2>The Mathematics of Reality</h2>
+  <p>The economy is a river. Value flows. And just like a river, all economic activity naturally organizes into exactly three types of flow. Not four. Not two. <strong>Three.</strong> This is not a convenient classification. It is a mathematical necessity, as inevitable as two plus two equals four.</p>
+
+  <p>The <strong>Hodge Decomposition theorem</strong>, a crown jewel of 20th-century mathematics, proves that any flow on any surface can be uniquely and orthogonally broken down into exactly three components:</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:2rem; color:#3b82f6;">1</div>
+      <div class="stat-label"><strong>Gradient Flow</strong><br>High to low potential, driven by scarcity</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:2rem; color:#0d9488;">2</div>
+      <div class="stat-label"><strong>Circular Flow</strong><br>Self-reinforcing loops, driven by abundance</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:2rem; color:#78716c;">3</div>
+      <div class="stat-label"><strong>Harmonic Flow</strong><br>Persistent channels, driven by structure</div>
+    </div>
+  </div>
+
+  <p>This is not a model of economics. This is the deep structure of economic reality.</p>
+
+  <hr class="section-divider">
+
+  <!-- ===== River Visualization (preserved) ===== -->
   <h2>The River Visualization</h2>
+  <p>Below, three rivers flow simultaneously. Each layer represents a different type of economic flow. Hover to explore.</p>
   <div class="panel" style="padding:0;overflow:hidden;">
     <div class="river-wrap">
       <svg id="riverSvg" style="width:100%;display:block;" height="300" preserveAspectRatio="none"></svg>
@@ -81,7 +165,43 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
     <div class="river-tooltip" id="riverTooltip">Hover over a layer to explore</div>
   </div>
 
+  <hr class="section-divider">
+
+  <!-- ===== Gradient Flow: Smith ===== -->
+  <h2>Gradient Flow: The Gospel of Adam Smith</h2>
+  <p>Gradient flows follow potential differences and, in doing so, eliminate them. This is the economics of loss and rivalry. When a baker sells a loaf, they have one less, the buyer has one more. The potential difference -- the baker's surplus and the buyer's hunger -- is exhausted.</p>
+
+  <p>Adam Smith was the prophet of this flow. When he described the "invisible hand," he was providing a beautiful metaphor for what a physicist calls the negative gradient operator. Individual agents, each following their local gradient of self-interest, collectively guide the system to an efficient equilibrium.</p>
+
+  <div class="pullquote">
+    <p>In a pure gradient system, all flows must eventually cease. If this were all there was to economics, every economy would be a stagnant pond.</p>
+  </div>
+
+  <!-- ===== Circular Flow: Marx ===== -->
+  <h2>Circular Flow: The Ghost of Karl Marx</h2>
+  <p>Circular flows do not seek equilibrium; they create self-reinforcing, accumulative loops. This is the economics of abundance and non-rivalry. When an idea is shared, the recipient gains everything and the originator loses nothing. The more it is used, the more valuable it becomes.</p>
+
+  <p>Marx's formula for capital, M-C-M', is a perfect description of a circular flow. He saw that certain economic activities did not exhaust themselves but amplified themselves, concentrating value and power in an accelerating spiral. Network effects and the compounding of capital are all manifestations of this flow.</p>
+
+  <div class="pullquote">
+    <p>Marx correctly identified the accumulative nature of circular flows but misdiagnosed the cause. He saw the elephant's trunk but thought it was made of human sweat alone. In truth, all non-rival goods naturally follow this dynamic.</p>
+  </div>
+
+  <!-- ===== Harmonic Flow: Hayek ===== -->
+  <h2>Harmonic Flow: The Wisdom of Friedrich Hayek</h2>
+  <p>Harmonic flows are the strangest. They neither deplete sources nor spin in loops. They are the persistent channels determined by the shape of economic space itself -- the riverbeds that guide the river. This is the economics of structure, trust, and institutions.</p>
+
+  <p>Hayek's "spontaneous order" is the emergence of harmonic flows: the unwritten rules, cultural norms, and shared trust that allow a complex society to coordinate.</p>
+
+  <div class="pullquote">
+    <p>The Austrians were so awestruck by the emergence of these structures that they worshipped them as divine creation, failing to see that humans can and must engineer the environment.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== Flow Toggles (preserved) ===== -->
   <h2>Flow Toggles</h2>
+  <p>Toggle each flow on and off to see what happens when parts of the economic system go missing.</p>
   <div class="panel">
     <div class="flow-toggles">
       <button class="flow-toggle active" data-flow="harmonic">Harmonic</button>
@@ -91,13 +211,97 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
     <div class="flow-desc" id="flowDesc">Healthy economy: all three flows active and reinforcing each other.</div>
   </div>
 
+  <hr class="section-divider">
+
+  <!-- ===== The Great Synthesis ===== -->
+  <h2>The Great Synthesis</h2>
+  <p>The fragmentation of economics into warring schools was a historical accident. Each blind scholar felt their part of the elephant and declared it the whole truth.</p>
+
+  <!-- SVG: Three flows braided together -->
+  <svg class="synthesis-svg" viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" aria-label="Three economic flows braiding together">
+    <!-- Gradient stream -->
+    <path d="M30 40 Q125 80 250 40 Q375 0 470 40" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <text x="475" y="44" font-size="12" fill="#3b82f6" font-family="DM Sans, sans-serif" font-weight="600">Gradient</text>
+    <!-- Circular stream -->
+    <path d="M30 80 Q125 40 250 80 Q375 120 470 80" fill="none" stroke="#0d9488" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <text x="475" y="84" font-size="12" fill="#0d9488" font-family="DM Sans, sans-serif" font-weight="600">Circular</text>
+    <!-- Harmonic stream -->
+    <path d="M30 120 Q125 120 250 120 Q375 120 470 120" fill="none" stroke="#78716c" stroke-width="4" stroke-linecap="round" opacity="0.6" stroke-dasharray="8 4"/>
+    <text x="475" y="124" font-size="12" fill="#78716c" font-family="DM Sans, sans-serif" font-weight="600">Harmonic</text>
+    <!-- Labels -->
+    <text x="10" y="16" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Smith</text>
+    <text x="10" y="76" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Marx</text>
+    <text x="10" y="140" font-size="11" fill="#888" font-family="DM Sans, sans-serif">Hayek</text>
+  </svg>
+
+  <p>The Keynesians studied what happens when the system gets stuck in "entropy wells." The Behavioralists documented the heuristics we use to navigate this multi-flow landscape. They were all right. They just did not know they were all right about the same thing.</p>
+
+  <div class="pullquote">
+    <p>The economy is not a market, a class struggle, or a spontaneous order. It is a dynamic, braided interplay of all three flows.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== The Old World as a Special Case ===== -->
+  <h2>The Old World as a Special Case</h2>
+  <p>The neoclassical framework is not wrong. It is a special, frictionless limit case of a more general theory. If we set information costs to zero, forbid self-amplifying Circular Flows, and assume institutional Harmonic Flows are static and perfect, the entire rich, curved geometry collapses into a flat Euclidean plane.</p>
+
+  <p>On that plane, the old laws emerge as corollaries. General Equilibrium is what happens in a world with only Gradient Flow. This is no different than how Einstein's relativity contains Newton's laws as a special case at low speeds.</p>
+
+  <div class="pullquote">
+    <p>The neoclassical economists gave us a perfect map of a world that does not exist.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== The Three Flows of a Single Day ===== -->
+  <h2>The Three Flows of a Single Day</h2>
+  <p>This framework is not just for analyzing civilizations. It is the operating system of your own life. Consider the flow of value in a single day:</p>
+
+  <p>When you <strong>buy a coffee</strong>, that is Gradient Flow. You have a need, the barista has a supply. Money and coffee are exchanged. The transaction is complete and zero-sum at the level of the goods. <em>Smith's River.</em></p>
+  <p>When you <strong>learn a new skill</strong> from an online video and share it with a colleague, that is Circular Flow. The knowledge is not consumed. It is replicated. <em>Marx's Whirlpool.</em></p>
+  <p>When you <strong>speak English</strong> with the barista or your colleague, you are using Harmonic Flow. Language is the invisible, persistent infrastructure that makes both the transaction and the knowledge sharing possible. <em>Hayek's Riverbed.</em></p>
+
+  <hr class="section-divider">
+
+  <!-- ===== Transaction Labeler (preserved) ===== -->
   <h2>Transaction Labeler</h2>
+  <p>Can you identify which flow each transaction belongs to? Click each card to reveal the answer.</p>
   <div class="panel">
     <p style="font-size:0.9rem;color:#888;margin-top:0;">Click each card to reveal which flow it operates in.</p>
     <div class="tx-grid" id="txGrid"></div>
   </div>
 
+  <hr class="section-divider">
+
+  <!-- ===== The AI Tsunami ===== -->
+  <h2>The AI Tsunami</h2>
+  <p>This unified understanding is not an academic luxury. It is a survival imperative. Because artificial intelligence is a tsunami that amplifies all three flows at once, to an unprecedented degree.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number" style="color:#3b82f6;">&darr;</div>
+      <div class="stat-label"><strong>Gradient</strong><br>Algorithmic trading flattens price differences in microseconds</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="color:#0d9488;">&circlearrowright;</div>
+      <div class="stat-label"><strong>Circular</strong><br>AI network effects create winner-take-all dynamics</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="color:#78716c;">&equiv;</div>
+      <div class="stat-label"><strong>Harmonic</strong><br>AI designs new protocols that lock in new economic riverbeds overnight</div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>An economic theory that sees only one of these flows is like a coastal engineer who understands tides but not waves or currents. You will be drowned by the forces you failed to see.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== Coercion Drain (preserved) ===== -->
   <h2>The Coercion Drain</h2>
+  <p>Coercion is not a separate category but a pathological form of Gradient Flow -- an entropy pump. A coercive transaction destroys the source node's freedom, community, and potential. The net change in global value is negative. Drag the slider to see how coercion hollows out an economy.</p>
   <div class="panel">
     <div class="coercion-container">
       <div class="coercion-slider-wrap">
@@ -116,6 +320,24 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
       </div>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== Conclusion ===== -->
+  <h2>The End of Ideology</h2>
+  <p>The great ideological battles of the 20th century -- Capitalism versus Communism -- are revealed to be dangerously simplistic. They were arguments about whether the elephant was all leg or all trunk.</p>
+
+  <p>The real task of 21st-century economics is not to choose an ideology. It is to become a master plumber of a multi-dimensional system. We must design systems that:</p>
+  <ul>
+    <li>Allow <strong>Gradient Flows</strong> to efficiently distribute scarce, rivalrous goods.</li>
+    <li>Cultivate <strong>Circular Flows</strong> that share abundant, non-rivalrous goods for collective benefit.</li>
+    <li>Consciously build <strong>Harmonic Flows</strong> -- institutions of trust and transparency -- that create a stable and just landscape for the other flows.</li>
+  </ul>
+
+  <div class="pullquote">
+    <p>The blind scholars of economics each held a piece of the truth. For centuries, their heirs have been fighting. That fight is over. Value flows in three ways. Our job is to learn to see the whole elephant, and then to become wise stewards of its flourishing.</p>
+  </div>
+
 </div>
 
 <script>

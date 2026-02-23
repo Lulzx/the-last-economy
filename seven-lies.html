@@ -19,6 +19,23 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; cursor: pointer; }
 
+/* Pullquote */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; display: block; }
+
+/* Stat callout */
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+
+/* Stat row for side-by-side stats */
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+@media (max-width: 480px) { .stat-row { grid-template-columns: 1fr; } }
+
+/* Section divider */
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+
 /* Seven Lies Cards */
 .lies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
 .lie-card { perspective: 600px; min-height: 180px; cursor: pointer; }
@@ -32,6 +49,18 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .lie-back { background: white; border: 1px solid #e5e5e0; transform: rotateY(180deg); }
 .lie-back p { font-size: 0.82rem; margin: 0; line-height: 1.5; color: #333; }
 .lie-back .lie-label { font-size: 0.7rem; color: #ef4444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+/* Expansion panels below each lie */
+.lie-expansion { display: none; background: #f9fafb; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1rem 0 2rem 0; animation: slideDown 0.3s ease; }
+.lie-expansion.open { display: block; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.lie-expansion h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; color: #1a1a1a; margin: 0 0 0.75rem 0; }
+.lie-expansion .myth-label { font-size: 0.75rem; color: #ef4444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.lie-expansion .reality-label { font-size: 0.75rem; color: #16a34a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1rem; }
+.lie-expansion .fatal-label { font-size: 0.75rem; color: #2563eb; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1rem; }
+.lie-expansion p { font-size: 0.95rem; line-height: 1.65; margin: 0.5rem 0; }
+.lie-expansion .lie-question { font-style: italic; color: #2563eb; margin: 0.75rem 0; font-size: 0.95rem; }
+.lie-expansion .close-btn { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: #888; cursor: pointer; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -42,30 +71,152 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 </nav>
 <div class="prose">
   <div class="chapter-num">Chapter 3</div>
-  <h1>The Seven Fatal Lies</h1>
-  <p>Economics is a house built on sand. The foundational assumptions that govern our lives are no longer just wrong &mdash; they have become the precise opposite of reality. Click each card to reveal the reality behind the assumption.</p>
+  <h1>The Seven Fatal Lies of a Dying Paradigm</h1>
+
+  <div class="pullquote">
+    <p>&ldquo;It ain&rsquo;t what you don&rsquo;t know that gets you into trouble. It&rsquo;s what you know for sure that just ain&rsquo;t so.&rdquo;</p>
+    <span class="pullquote-attr">&mdash; Attributed to Mark Twain</span>
+  </div>
+
+  <p>Economics is a house built on sand. Not ordinary sand, but sand that is turning to water beneath our feet. The foundational assumptions of the economic theory that governs our lives are no longer just wrong &mdash; they have become the precise opposite of reality.</p>
+
+  <p>These are not minor theoretical errors to be patched with better models. They are the load-bearing lies of a dying paradigm, the fatal fictions that prevent us from seeing what is actually happening. Like a GPS system that has not been updated since the continents shifted, they do not just fail to guide us &mdash; they lead us directly into the chasm.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Factory School</h2>
+
+  <p>To understand why we cling so desperately to these lies, we must first understand the system that indoctrinated us. Before we could think critically, we were enrolled in the <strong>Factory School</strong> &mdash; a system designed not for education, but for compliance. Imported from Prussia in the 19th century to create obedient soldiers and workers, its hidden curriculum was the real one: sit still, follow bells, ask for permission, and accept that your worth can be reduced to a letter grade.</p>
+
+  <p>This educational system prepared us to believe a set of economic lies because those lies were the operating system of the industrial world. They coordinated behavior, motivated effort, and justified suffering. But that world is dead, and the lies that lubricated its gears are now seizing up the engine of progress.</p>
+
+  <p><strong>Let us perform the autopsy.</strong></p>
+
+  <hr class="section-divider">
 
   <!-- Seven Lies panel -->
   <div class="panel">
-    <h2>The Seven Fatal Assumptions</h2>
-    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to reveal the reality behind the assumption. Click again or press Escape to close.</p>
+    <h2 style="margin-top:0">The Seven Fatal Assumptions</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to flip it. Then click <strong>&ldquo;Read more&rdquo;</strong> on the back for the full story.</p>
     <div class="lies-grid" id="lies-grid"></div>
   </div>
+
+  <!-- Expansion panels rendered by JS below the grid -->
+  <div id="lie-expansions"></div>
+
+  <hr class="section-divider">
+
+  <h2>The Bonfire of the Verities</h2>
+
+  <p>These are not seven separate lies. They are seven faces of a single, massive delusion: that an economic system built for a world of scarce atoms, human labor, and stable markets can function in a world of abundant bits, AI labor, and winner-take-all dynamics.</p>
+
+  <div class="pullquote">
+    <p>It cannot. It will not. It is not.</p>
+  </div>
+
+  <p>What dies with these lies is an entire way of understanding ourselves. The Protestant work ethic. The American dream. The meritocratic ideal. These were useful fictions that turned humans into productive units. But that machine is being scrapped, and the lies that lubricated it are seizing up.</p>
+
+  <p>What remains is the terrifying, liberating truth that we need new stories. Better stories. Stories aligned with abundance, not scarcity; with being, not doing; with cultivating human consciousness, not just human capital.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">99.99%</div>
+      <div class="stat-label">Cost reduction in cognitive labor since 2020</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">1.7x</div>
+      <div class="stat-label">Earths consumed per year at current extraction rate</div>
+    </div>
+  </div>
+
+  <p>The old lies were about turning humans into better machines. The new truth must be about allowing humans to become more fully human. And to write those new stories, we must first understand the true physics of value &mdash; not measured in GDP, but in the <strong>MIND capitals</strong> that make civilization possible, and in the <strong>Three Flows</strong> of value our current system is blind to.</p>
+
 </div>
 <script>
-// ── Seven Lies ──
+// ── Seven Lies with full MDX prose ──
 (function() {
   const lies = [
-    { front: 'Scarcity is fundamental', back: 'AI reduced GPT query cost from $36/hr equivalent to $0.00015 each. Abundance is the new default for information goods.' },
-    { front: 'Markets clear efficiently', back: '40M US adults cannot afford healthcare. Markets fail catastrophically at necessities. Efficiency assumes equal access.' },
-    { front: 'Competition drives innovation', back: 'Bell Labs, CERN, the Internet: most transformative innovations came from non-competitive, publicly-funded environments.' },
-    { front: 'Growth is always good', back: 'UK: GDP +150% since 1990, median real wages +12%. Growth accrued almost entirely to the top 1%.' },
-    { front: 'Value = Price', back: 'Wikipedia: $0 price, ~$3.6B replacement cost. Nature\'s ecosystem services: $125T/year. GDP counts $0 for both.' },
-    { front: 'Infinite growth is possible', back: 'Earth\'s biomass capacity is finite. Current extraction rate: 1.7 Earths/year. Physics does not negotiate.' },
-    { front: 'Distribution follows contribution', back: 'US productivity +246% since 1973, median wages +115%. The gap is pure extraction, not earned surplus.' }
+    {
+      front: 'Scarcity is Fundamental',
+      back: 'AI reduced cognitive labor cost from ~$36/hr to $0.00015 per query &mdash; a 99.99% collapse. Abundance is the new default.',
+      myth: 'Economics is the study of how societies allocate scarce resources. This is the first sentence of every textbook, the prime directive from which all else flows. Without scarcity, we are told, economics has no reason to exist.',
+      reality: 'A single AI model can now write a million legal briefs, create a billion architectural plans, or compose infinite symphonies. It does not get tired. The marginal cost of the millionth query approaches zero. We are not approaching post-scarcity in the domain of intelligence &mdash; we have arrived. Consider the price of a professional human mind in 2020: roughly $36 per hour. Today, a superior AI mind performs the same cognitive work for as low as 0.015 cents per query. This is not a productivity gain. It is the annihilation of an entire economic category.',
+      question: 'What is the price of an infinitely replicable idea?',
+      fatal: 'Scarcity is not a variable in our economic models; it is the reason the models exist. Trying to run economics without scarcity is like trying to run astronomy without space. When AI makes expert knowledge free, our GDP metric sees only the collapse of industries &mdash; not the explosion of human capability.'
+    },
+    {
+      front: 'Human Labor Has Value',
+      back: 'Previous automation replaced muscle. AI replaces the mind. There is nowhere left to pivot.',
+      myth: 'The dignity of work is the bedrock of our civilization. The Factory School trained you for a job, and that job gives you both income and identity. The equation seems eternal: Work = Worth.',
+      reality: 'Previous automation replaced human muscle; we pivoted to using our minds. AI replaces the mind itself. There is nowhere left to pivot. The brutal truth no politician will speak is that for a growing majority of cognitive tasks, the economic value of a human is now negative. A human is not just more expensive than an AI; a human is a liability &mdash; they get sick, they have moods, they quit at inconvenient times.',
+      question: 'What is the salary for a skill that a machine can perform for free?',
+      fatal: 'By clinging to the fiction that all humans can be &ldquo;reskilled&rdquo; for new jobs, we are preparing for the wrong future. We are building lifeboats for a storm when the sea level itself is rising. This lie prevents the necessary, terrifying conversation about a world where human worth must be permanently decoupled from economic production.'
+    },
+    {
+      front: 'Growth Requires Resources',
+      back: 'Once trained, an AI model serves a billion users without depleting. Intelligence is decoupled from material consumption.',
+      myth: 'Economic growth means making more physical stuff using more physical resources. The production function &mdash; Output = f(Capital, Labor, Resources) &mdash; is a law of nature. To grow, a nation must consume more of the planet.',
+      reality: 'The digital economy already strained this assumption. The AI economy shatters it completely. Once trained, an AI model can serve a billion users without depleting, generate infinite unique outputs, and improve through use. It is like a factory that produces infinite goods, gets better with every unit made, and can be replicated for free.',
+      question: 'How do you measure growth when the most valuable factory has no physical form?',
+      fatal: 'This lie has led us to systematically liquidate our planet&rsquo;s natural capital and call it &ldquo;growth.&rdquo; By measuring only the throughput of materials, we have created an economic system blind to its own self-destruction. Future value will come not from extracting more atoms, but from better arranging bits.'
+    },
+    {
+      front: 'Markets Find Equilibrium',
+      back: 'Google: 91% of search. Meta: 74% of social. Digital markets don&rsquo;t self-correct &mdash; they self-amplify.',
+      myth: 'Leave markets alone, and the &ldquo;invisible hand&rdquo; will guide them to a stable price where supply meets demand. Competition erodes excess profits. The system is self-correcting.',
+      reality: 'Digital markets are not self-correcting; they are self-amplifying. Network effects create monopolies as naturally as gravity creates black holes. Google has 91% of search. Meta has 74% of social media. These are not temporary advantages &mdash; they are the permanent, stable state of markets where the product is connections, not commodities. AI makes this absolute.',
+      question: 'What does equilibrium mean in a market designed for exponential acceleration?',
+      fatal: 'Believing in equilibrium leads to dangerously passive policy. We wait for competition to emerge in markets structurally designed to prevent it. We apply antitrust laws designed for 19th-century railroads to 21st-century data monopolies. We are waiting for a pendulum to swing back to center, unaware that we are in a rocket ship that only accelerates.'
+    },
+    {
+      front: 'Money Measures Value',
+      back: 'Wikipedia: 20B free pages/month. GDP contribution? Negative &mdash; it destroyed the $1,400 encyclopedia industry.',
+      myth: 'GDP, the sum of all monetary transactions, tells us how well we are doing. If the number goes up, society is improving. Money is the universal translator that makes all values comparable.',
+      reality: 'Wikipedia provides twenty billion pages of free knowledge monthly. Its contribution to human flourishing is incalculable. Its contribution to GDP is negative &mdash; because it destroyed the encyclopedia industry, where a single set of Britannica once cost $1,400. Our economic dashboard registers the creation of immense public value as a loss, while counting human tragedies as positive growth.',
+      question: 'If the best things in life are free, why is our economy designed to measure only the things that cost money?',
+      fatal: 'Our measurement system is not just flawed; it is perfectly backwards. It literally cannot see abundance. When knowledge becomes free, it registers as economic collapse. We are achieving the liberation from scarcity that every prophet dreamed of, and our instruments are screaming &ldquo;Depression!&rdquo;'
+    },
+    {
+      front: 'Rational Agents Optimize',
+      back: 'We are biological creatures with predictable biases, living in an environment engineered to exploit them for profit.',
+      myth: 'Humans are &ldquo;rational actors&rdquo; who make calculated decisions to maximize their own well-being. <em>Homo economicus</em> is the hero of every economic model.',
+      reality: 'We are not rational actors in an impartial environment. We are biological creatures with predictable cognitive biases, living in an environment perfectly engineered to exploit those biases for profit. Every tech platform is an addiction machine, using variable-ratio reinforcement and social validation loops to hijack our dopamine systems. We are not optimizing the system &mdash; the system is optimizing us.',
+      question: 'Who is the rational actor in a battle between a human mind and an algorithm that knows it better than it knows itself?',
+      fatal: 'In the age of AI, this asymmetry becomes absolute. AI can model our individual psychology, predict our desires, and generate personalized content to manipulate behavior with superhuman effectiveness. The &ldquo;rational actor&rdquo; is not just a fiction; it is a defenseless target. Any theory based on consumer sovereignty is now obsolete and dangerous.'
+    },
+    {
+      front: 'Distribution Follows Contribution',
+      back: 'US productivity +246% since 1973, wages only +115%. The gap is pure extraction, not earned surplus.',
+      myth: 'In a market economy, rewards flow to those who create value. The CEO earns 350x the median worker because they create 350x the value. This is the moral foundation of capitalism: you get what you deserve.',
+      reality: 'From 1973 to 2023, worker productivity in the U.S. increased by 246%, while wages increased by only 115%. The link was not weakened &mdash; it was severed. In an economy where value comes from owning platforms, networks, and algorithms, distribution follows ownership, not effort. The AI economy is the final act of this decoupling.',
+      question: 'When a machine does all the work, who deserves the rewards?',
+      fatal: 'This lie prevents us from facing the true challenge of the 21st century &mdash; not a problem of production, but of distribution. It keeps us trapped in debates about &ldquo;skills gaps&rdquo; when we should be designing new protocols for distributing immense, machine-generated wealth. It is the lie that will allow unprecedented abundance and unprecedented poverty to exist side by side.'
+    }
   ];
 
   const grid = document.getElementById('lies-grid');
+  const expansionContainer = document.getElementById('lie-expansions');
+
+  // Build expansion panels
+  lies.forEach((lie, i) => {
+    const panel = document.createElement('div');
+    panel.className = 'lie-expansion';
+    panel.id = 'lie-expand-' + i;
+    panel.innerHTML = `
+      <h3>Lie #${i + 1}: ${lie.front}</h3>
+      <div class="myth-label">The Myth</div>
+      <p>${lie.myth}</p>
+      <div class="reality-label">The Reality Check</div>
+      <p>${lie.reality}</p>
+      <p class="lie-question">${lie.question}</p>
+      <div class="fatal-label">Why the Lie is Fatal</div>
+      <p>${lie.fatal}</p>
+      <span class="close-btn" data-index="${i}">Close &uarr;</span>
+    `;
+    expansionContainer.appendChild(panel);
+  });
+
+  // Build flip cards
   lies.forEach((lie, i) => {
     const card = document.createElement('div');
     card.className = 'lie-card';
@@ -78,17 +229,43 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
         <div class="lie-back">
           <div class="lie-label">The Reality</div>
           <p>${lie.back}</p>
+          <div style="margin-top:auto;padding-top:0.5rem;font-size:0.75rem;color:#2563eb;cursor:pointer;" class="read-more" data-index="${i}">Read more &darr;</div>
         </div>
       </div>
     `;
-    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('read-more')) return;
+      card.classList.toggle('flipped');
+    });
     grid.appendChild(card);
   });
 
-  // Escape key closes all flipped cards
+  // Read-more buttons open expansion panels
+  document.querySelectorAll('.read-more').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = btn.getAttribute('data-index');
+      // close all other panels
+      document.querySelectorAll('.lie-expansion.open').forEach(p => p.classList.remove('open'));
+      const panel = document.getElementById('lie-expand-' + idx);
+      panel.classList.add('open');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Close buttons
+  document.querySelectorAll('.lie-expansion .close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.getAttribute('data-index');
+      document.getElementById('lie-expand-' + idx).classList.remove('open');
+    });
+  });
+
+  // Escape key closes all flipped cards and expansion panels
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.lie-card.flipped').forEach(c => c.classList.remove('flipped'));
+      document.querySelectorAll('.lie-expansion.open').forEach(p => p.classList.remove('open'));
     }
   });
 })();

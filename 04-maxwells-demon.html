@@ -45,10 +45,23 @@ canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; m
 .house-panel h3 { font-size: 1rem; margin-bottom: 0.5rem; }
 .cost-row { display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.9rem; }
 
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+
+.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
+.stat-row .stat-callout { flex: 1; }
+
+.concept-svg { display: block; margin: 1.5rem auto; }
+
 @media (max-width: 600px) {
   .speed-result { grid-template-columns: 1fr; }
   .house-container { grid-template-columns: 1fr; }
   .cost-row { flex-direction: column; gap: 0.5rem; }
+  .stat-row { flex-direction: column; }
 }
 </style>
 </head>
@@ -60,8 +73,61 @@ canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; m
 </nav>
 <div class="prose">
   <div class="chapter-num">Chapter 6</div>
-  <h1>Maxwell's Demon and the Physics of Value</h1>
-  <p>James Clerk Maxwell imagined a demon who could sort fast and slow molecules — creating temperature differences from uniform chaos. Value creation, it turns out, is exactly this: intelligence maintaining low entropy against the universe's constant tendency toward disorder. This isn't a metaphor. It's thermodynamics.</p>
+  <h1>The Engine of Order: Intelligence Against Entropy</h1>
+
+  <div class="pullquote">
+    <p>"The whole of science is nothing more than a refinement of everyday thinking." &mdash;Albert Einstein</p>
+  </div>
+
+  <h2>The Universe's Only Law That Matters</h2>
+
+  <p>There is a law that governs the universe, a rule so fundamental and inescapable that the physicist Arthur Eddington called it "the supreme law of Nature." It is the Second Law of Thermodynamics. It states, with brutal simplicity, that <strong>everything falls apart</strong>.</p>
+
+  <p>Every star will burn out. Every mountain will crumble to dust. Every complex system, left to itself, will inevitably decay into a state of useless, random chaos. This relentless march toward disorder is called entropy. It is the universe's default setting. It is the ultimate tax on existence, and it is always due.</p>
+
+  <!-- SVG: Entropy Arrow Illustration -->
+  <svg class="concept-svg" viewBox="0 0 500 100" style="width:100%;max-width:500px;height:auto;">
+    <defs>
+      <marker id="arrowHead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+      </marker>
+    </defs>
+    <!-- Ordered dots on left -->
+    <rect x="20" y="20" width="80" height="60" rx="8" fill="none" stroke="#ccc" stroke-width="1"/>
+    <circle cx="40" cy="40" r="4" fill="#2563eb"/><circle cx="60" cy="40" r="4" fill="#2563eb"/>
+    <circle cx="80" cy="40" r="4" fill="#2563eb"/><circle cx="40" cy="60" r="4" fill="#2563eb"/>
+    <circle cx="60" cy="60" r="4" fill="#2563eb"/><circle cx="80" cy="60" r="4" fill="#2563eb"/>
+    <text x="60" y="95" text-anchor="middle" font-size="11" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Order</text>
+    <!-- Arrow -->
+    <line x1="120" y1="50" x2="370" y2="50" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowHead)"/>
+    <text x="245" y="40" text-anchor="middle" font-size="11" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Entropy increases</text>
+    <!-- Disordered dots on right -->
+    <rect x="390" y="20" width="90" height="60" rx="8" fill="none" stroke="#ccc" stroke-width="1"/>
+    <circle cx="408" cy="33" r="4" fill="#ef4444"/><circle cx="440" cy="28" r="4" fill="#7c3aed"/>
+    <circle cx="462" cy="55" r="4" fill="#2563eb"/><circle cx="415" cy="65" r="4" fill="#22c55e"/>
+    <circle cx="450" cy="42" r="4" fill="#f59e0b"/><circle cx="425" cy="50" r="4" fill="#ef4444"/>
+    <text x="435" y="95" text-anchor="middle" font-size="11" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Disorder</text>
+  </svg>
+
+  <p>For centuries, economics blissfully ignored this law. It built models of perpetual growth and perfect equilibrium, assuming that order was natural and decay was a temporary glitch. This was its original sin.</p>
+
+  <p>Because the most interesting question in the universe is not "Why do things fall apart?" but <strong>"Why does anything exist at all?"</strong> In a cosmos ruled by entropy, the existence of a star, a living cell, or a functioning economy is the ultimate anomaly. Each is a pocket of astonishing order in a sea of encroaching chaos. Each is a temporary victory against the inevitable.</p>
+
+  <p>To build a new economics, we must start not with human wants or rational actors, but with this fundamental struggle. We must ask: how is order created and maintained in a universe that is trying to tear it down?</p>
+
+  <hr class="section-divider">
+
+  <h2>Maxwell's Ghost: The Source of Value Creation</h2>
+
+  <p>In 1867, as Karl Marx was publishing <em>Das Kapital</em>, the physicist James Clerk Maxwell imagined a thought experiment that has haunted science ever since. Picture a box filled with gas, all at a uniform temperature &mdash; a system at maximum entropy, perfectly disordered. Now, imagine a tiny, intelligent being, a "demon" as it came to be known, who guards a tiny door in a wall that divides the box.</p>
+
+  <p>This intelligent agent observes the gas molecules. When a fast-moving (hot) molecule approaches from the left, it opens the door and lets it pass to the right. When a slow-moving (cold) molecule approaches from the right, it lets it pass to the left. Over time, through this simple act of sorting, the being achieves a miracle: the right side becomes hot, the left side becomes cold. It has created a temperature gradient. It has created <strong>order from chaos</strong>.</p>
+
+  <div class="pullquote">
+    <p>This is not just a physics puzzle. This is the secret of all value creation.</p>
+  </div>
+
+  <p>Every act of economic value is an act of sorting. The entrepreneur is this intelligent agent. The "box of gas" is the chaotic market of dispersed resources, random events, and human needs. The entrepreneur does not create anything from nothing. They <em>sort</em>. They see the "fast molecules" &mdash; undervalued assets, unmet needs, inefficient processes &mdash; and move them to one side. The result is a company: a pocket of incredible low entropy, a gradient of value maintained against the chaos of the broader market.</p>
 
   <h2>Particle Simulator</h2>
   <div class="panel">
@@ -74,8 +140,92 @@ canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; m
       <span>Right temp: <strong id="rightTemp">50</strong></span>
       <span>System entropy: <strong id="entropy">1.00</strong></span>
     </div>
-    <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">The demon must remember each particle state — information has a thermodynamic cost (Landauer's principle).</p>
+    <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">Toggle the demon to watch it sort fast (hot) molecules to one side and slow (cold) to the other &mdash; creating order from uniform chaos.</p>
   </div>
+
+  <hr class="section-divider">
+
+  <h2>The Sorter's Price: The Physics of Information</h2>
+
+  <p>For a century, Maxwell's thought experiment seemed to be a genuine paradox. But physicists eventually found the hidden cost. The sorting agent cannot operate without <em>information</em>. It must measure the speed of each molecule, remember that measurement, and decide whether to open the door. This act of thinking is not free.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">1961</div>
+    <div class="stat-label">The year Rolf Landauer proved every irreversible act of computation has a thermodynamic cost</div>
+  </div>
+
+  <p>Landauer, an IBM physicist, finally proved that every irreversible act of computation &mdash; like erasing a bit of information from memory &mdash; dissipates a tiny amount of heat into the environment. The final accounting is perfect: the decrease in entropy inside the box is always less than or equal to the increase in entropy in the agent's memory and its surroundings. The Second Law is saved.</p>
+
+  <div class="pullquote">
+    <p>Profit is the temporary surplus of low entropy an intelligent agent can create before the cost of its own thinking catches up.</p>
+  </div>
+
+  <p>But in saving it, we discover the most profound truth for our new economics: <strong>Intelligence is a physical process with a real, unavoidable cost.</strong></p>
+
+  <hr class="section-divider">
+
+  <h2>The Persistence Bridge</h2>
+
+  <p><strong>The Observation:</strong> Complex, ordered systems like firms, markets, and institutions <em>persist</em>. Against all odds, in a universe that wants to tear them down, they survive and even grow over long horizons.</p>
+
+  <p><strong>The Bridge:</strong> How can we explain this persistence? A skeptic might argue this is simply survivorship bias &mdash; perhaps we are merely talking to the lucky gambler who has not gone bust yet.</p>
+
+  <p>This intelligent critique misunderstands the nature of time and information. Consider two systems: System A, the "Lucky Gambler," navigating randomly, and System B, the "Dumb Clockmaker," using a simple but non-random model. In a single contest, the Gambler might win. But over a million contests? The Clockmaker's predictive model always prevails. <strong>Time is the engine that separates luck from competence.</strong></p>
+
+  <!-- SVG: Luck vs Competence over Time -->
+  <svg class="concept-svg" viewBox="0 0 500 180" style="width:100%;max-width:500px;height:auto;">
+    <text x="250" y="16" text-anchor="middle" font-size="12" fill="#888" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Persistence over Time</text>
+    <!-- Axes -->
+    <line x1="60" y1="150" x2="470" y2="150" stroke="#ccc" stroke-width="1"/>
+    <line x1="60" y1="150" x2="60" y2="30" stroke="#ccc" stroke-width="1"/>
+    <text x="265" y="172" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Time (contests)</text>
+    <text x="15" y="90" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,15,90)">Success</text>
+    <!-- Lucky Gambler line (noisy, declining) -->
+    <polyline points="60,80 120,60 180,95 240,110 300,85 360,120 420,135 470,145" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="475" y="145" font-size="10" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">Gambler</text>
+    <!-- Clockmaker line (steady, rising) -->
+    <polyline points="60,130 120,118 180,105 240,90 300,78 360,65 420,52 470,42" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="475" y="42" font-size="10" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Clockmaker</text>
+  </svg>
+
+  <p>The persistent systems we observe &mdash; DNA, brains, books &mdash; are not just lucky. They are <em>learners</em>. They are structures that compound information, ratchets that prevent knowledge from slipping away. Any evolutionary process that selects for persistence is implicitly selecting for a single, underlying meta-capability: the ability to create maximum predictive order for a minimum thermodynamic cost.</p>
+
+  <hr class="section-divider">
+
+  <h2>Intelligence Theory: The Sorter's Law</h2>
+
+  <p>This bridge allows us to propose the single, solid foundation upon which our new economics can be built. We will no longer assume "rational actors" or "utility." We will found our science on a single, physically grounded principle.</p>
+
+  <div class="panel" style="background: #f8f8ff; border-color: #2563eb;">
+    <h3 style="margin-top:0; color: #2563eb;">Intelligence Theory (IT)</h3>
+    <p style="font-size: 1.1rem; font-style: italic;">The economy, as a complex adaptive system, evolves to favor configurations that are most efficient at creating predictive models of their environment.</p>
+  </div>
+
+  <p>The "goal" of any persistent system is to minimize a total computational cost &mdash; the sorter's total effort. This cost has three irreducible components:</p>
+
+  <h2>Three Costs Triangle</h2>
+  <div class="panel">
+    <svg id="triangleSvg" class="triangle-svg" viewBox="0 0 500 420" style="width:100%;height:auto;"></svg>
+    <div class="zone-label" id="zoneLabel">Drag the point inside the triangle</div>
+    <div class="zone-desc" id="zoneDesc"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Predictive Error &mdash; the cost of being wrong</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">2</div>
+      <div class="stat-label">Model Complexity &mdash; the cost of thinking</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Update Cost &mdash; the cost of learning</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
 
   <h2>Sorting Speed = Competitive Advantage</h2>
   <div class="panel">
@@ -90,12 +240,59 @@ canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; m
     <p style="font-size:0.9rem;margin-top:1rem;"><strong>Key insight:</strong> Speed advantage is temporary. The structural advantage is owning the sorted state.</p>
   </div>
 
-  <h2>Three Costs Triangle</h2>
-  <div class="panel">
-    <svg id="triangleSvg" class="triangle-svg" viewBox="0 0 500 420" style="width:100%;height:auto;"></svg>
-    <div class="zone-label" id="zoneLabel">Drag the point inside the triangle</div>
-    <div class="zone-desc" id="zoneDesc"></div>
+  <hr class="section-divider">
+
+  <h2>AI: The Perfect Sorting Machine</h2>
+
+  <p>For millennia, the only intelligent agents we had were biological brains. They were slow, inefficient, and mortal. The economic order they could create was limited by their own physical constraints.</p>
+
+  <p>Then, starting with the calculating machines of Babbage, continuing through the code-breaking engines of Turing, and culminating in the neural networks of the 21st century, we have been painstakingly building a new class of sorting agents in silicon.</p>
+
+  <!-- SVG: AI vs Human Agent Comparison -->
+  <svg class="concept-svg" viewBox="0 0 500 200" style="width:100%;max-width:500px;height:auto;">
+    <text x="250" y="18" text-anchor="middle" font-size="12" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif" font-weight="600">Biological vs Silicon Agent</text>
+    <!-- Human side -->
+    <rect x="30" y="35" width="200" height="150" rx="8" fill="#fff8f0" stroke="#e5e5e0"/>
+    <text x="130" y="55" text-anchor="middle" font-size="11" fill="#888" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Human Brain</text>
+    <text x="50" y="78" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Power: 20 watts</text>
+    <text x="50" y="98" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Evolved: 4 billion years</text>
+    <text x="50" y="118" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Copies: 1 per lifetime</text>
+    <text x="50" y="138" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Architecture: Fixed</text>
+    <rect x="50" y="150" width="160" height="8" rx="4" fill="#e5e5e0"/>
+    <rect x="50" y="150" width="25" height="8" rx="4" fill="#f59e0b"/>
+    <text x="50" y="172" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Capped intelligence</text>
+    <!-- AI side -->
+    <rect x="270" y="35" width="200" height="150" rx="8" fill="#f0f0ff" stroke="#e5e5e0"/>
+    <text x="370" y="55" text-anchor="middle" font-size="11" fill="#888" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Silicon Agent</text>
+    <text x="290" y="78" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Power: Scalable</text>
+    <text x="290" y="98" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Designed: Decades</text>
+    <text x="290" y="118" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Copies: Billions at ~$0</text>
+    <text x="290" y="138" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Architecture: Recursive</text>
+    <rect x="290" y="150" width="160" height="8" rx="4" fill="#e5e5e0"/>
+    <rect x="290" y="150" width="140" height="8" rx="4" fill="#2563eb"/>
+    <text x="290" y="172" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Uncapped intelligence</text>
+  </svg>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">20W</div>
+      <div class="stat-label">Power consumption of the human brain</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">10<sup style="font-size:1.2rem">12</sup>x</div>
+      <div class="stat-label">Efficiency gain per logical operation in silicon vs biology</div>
+    </div>
   </div>
+
+  <p>But the most profound difference is this: the biological agent's intelligence is <strong>capped</strong>. The human brain took billions of years to evolve, and its cognitive architecture is fixed. The silicon agent's intelligence is <strong>uncapped</strong>. Its processing power is limited only by the energy we can feed it. It is subject to recursive self-improvement; each generation of AI helps design a more intelligent successor.</p>
+
+  <div class="pullquote">
+    <p>The arrival of AI is not just another technological shift. It is a phase transition in the efficiency of entropy reduction.</p>
+  </div>
+
+  <p>We have, for the first time, created an intelligence that can break free of the biological constraints that have governed the creation of order on this planet for four billion years.</p>
+
+  <hr class="section-divider">
 
   <h2>Intelligence vs Entropy</h2>
   <div class="panel">
@@ -115,6 +312,22 @@ canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; m
       <span>Replacement cost: <strong id="replaceCost">$250,000</strong></span>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <h2>The End of Scarcity, The Beginning of Physics</h2>
+
+  <p>The entire edifice of scarcity economics was built without ever asking where value came from. It assumed a world of pre-existing, scarce goods and focused only on their allocation. It was a science of dividing the spoils, with no theory of the hunt.</p>
+
+  <p>Intelligence Theory provides that foundation. <strong>Value is not a pre-existing substance. It is a state of low entropy</strong> &mdash; a temporary victory against chaos, achieved by intelligent agents sorting their environment.</p>
+
+  <p>The failure of the old economics was its blindness to physics. It tried to understand the patterns in the box without understanding the agent that was creating them. Now, that agent is no longer a metaphor. It is code running on a server farm, and it is getting better at its job every microsecond.</p>
+
+  <div class="pullquote">
+    <p>The question for humanity is no longer how to be better sorters. That game is over. The question is, in a world sorted to near perfection by our own creation, what is our purpose?</p>
+  </div>
+
+  <p>Answering that requires us to understand the world the new intelligence is building. For the agent does not just sort; in the act of sorting, it creates structures. It carves flows. It establishes the very geometry of our new reality. It is to this emergent architecture that we now must turn.</p>
 </div>
 
 <script>

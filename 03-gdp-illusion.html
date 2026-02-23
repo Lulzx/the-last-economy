@@ -22,6 +22,17 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.svg-illustration { display: flex; justify-content: center; margin: 2rem 0; }
+
 /* GDP Paradox Cards */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
 .event-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; min-height: 160px; display: flex; flex-direction: column; }
@@ -59,21 +70,215 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
 <div class="prose">
   <div class="chapter-num">Chapter 4</div>
-  <h1>The GDP Illusion</h1>
+  <h1>The Dashboard for Insanity</h1>
 
-  <p>GDP is the wrong instrument for measuring civilizational health. It rewards destruction, ignores abundance, and penalizes everything that actually matters. Meet your civilization's insane dashboard.</p>
+  <div class="pullquote">
+    <p>"Not everything that can be counted counts, and not everything that counts can be counted."</p>
+    <div class="pullquote-attr">&mdash; William Bruce Cameron</div>
+  </div>
+
+  <p>Imagine you are piloting a Boeing 747 through a violent storm. The wings are on fire and the plane is in a nosedive. But you remain calm. You point to the instrument panel. "Do not worry," you say reassuringly. "The cabin pressure is stable, and the in-flight movie is playing perfectly. According to our dashboard, everything is fine."</p>
+
+  <p>This is the state of modern economics. We are flying a civilization through the storm of the century, guided by a dashboard that is not just broken, but criminally insane. That dashboard is called <strong>Gross Domestic Product</strong>.</p>
+
+  <!-- SVG: Broken Dashboard Illustration -->
+  <div class="svg-illustration">
+    <svg viewBox="0 0 400 200" width="400" height="200" role="img" aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
+      <!-- Cockpit frame -->
+      <rect x="20" y="20" width="360" height="160" rx="12" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+      <!-- Dashboard panel -->
+      <rect x="40" y="40" width="320" height="120" rx="8" fill="#222"/>
+      <!-- Gauge 1: GDP - green, "all good" -->
+      <circle cx="110" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
+      <path d="M110 100 L110 65" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="110" cy="100" r="4" fill="#16a34a"/>
+      <text x="110" y="150" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">GDP</text>
+      <text x="110" y="73" text-anchor="middle" fill="#16a34a" font-size="8">GREAT</text>
+      <!-- Gauge 2: Wellbeing - red, critical -->
+      <circle cx="200" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
+      <path d="M200 100 L230 120" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="200" cy="100" r="4" fill="#ef4444"/>
+      <text x="200" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">Wellbeing</text>
+      <text x="218" y="128" text-anchor="start" fill="#ef4444" font-size="7">CRISIS</text>
+      <!-- Gauge 3: Planet - red, critical -->
+      <circle cx="290" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
+      <path d="M290 100 L318 115" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="290" cy="100" r="4" fill="#ef4444"/>
+      <text x="290" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">Planet</text>
+      <text x="306" y="122" text-anchor="start" fill="#ef4444" font-size="7">CRISIS</text>
+      <!-- Warning lights -->
+      <circle cx="55" cy="55" r="5" fill="#ef4444" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="345" cy="55" r="5" fill="#ef4444" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.9;0.3" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+
+  <p>GDP is our economic north star. It is the number that rules the world. Every government chases it, every policy targets it, every news report breathlessly announces its quarterly change. Simon Kuznets, the man who invented the metric in the 1930s, spent the rest of his life warning us not to use it as a measure of a nation's wellbeing. We ignored him completely.</p>
+
+  <p>The result is a world where every metric that matters shows crisis, while the one metric we track shows success.</p>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- The Perversity Gallery            -->
+  <!-- ═════════════════════════════════ -->
+  <h2>The Perversity Gallery</h2>
+  <p>Let me show you through the hall of mirrors that is modern economic measurement. Each exhibit is more grotesque than the last, and each one is counted as "growth."</p>
 
   <!-- Panel 1: GDP Paradox Calculator -->
   <div class="panel">
-    <h2>The GDP Paradox Calculator</h2>
+    <h2 style="margin-top:0">The GDP Paradox Calculator</h2>
     <p style="font-size:0.9rem;color:#666;margin-top:0">For each event, guess: does GDP go UP or DOWN?</p>
     <div class="card-grid" id="paradox-grid"></div>
     <div class="tally" id="tally"></div>
   </div>
 
-  <!-- Panel 2: Wage-Productivity Gap -->
+  <p><strong>The Hurricane Economy.</strong> When a hurricane devastates a city, it is a human tragedy. But for GDP, it is a stimulus package. The destruction itself does not register. But the frantic activity that follows &mdash; the rebuilding, the insurance payouts, the emergency services &mdash; is a multi-billion-dollar windfall. By GDP logic, the best possible year would involve every city being destroyed and then rebuilt.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">$425K</div>
+    <div class="stat-label">GDP "gain" from a single cancer diagnosis &mdash; diagnostic tests, surgery, chemotherapy, hospital stays, and medications</div>
+  </div>
+
+  <p><strong>The Cancer Boom.</strong> A healthy person contributes little to the healthcare economy. But a person diagnosed with lung cancer? That is a windfall for GDP. By this logic, carcinogens are economic stimulants. We have built an economy that is structurally incentivized to manage sickness, not to create health. Prevention is an economic loss; a cure would be an economic catastrophe.</p>
+
+  <p><strong>The Divorce Industrial Complex.</strong> A happy, stable family that raises its own children and supports its community contributes almost nothing to GDP. But when that family breaks apart, the economy booms. Two households instead of one, doubling the consumption. Therapists are hired. Lawyers are paid.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">$50B+</div>
+    <div class="stat-label">Added to US GDP by divorce lawyers alone last year. The human tragedy of a broken home is a net positive on the national ledger.</div>
+  </div>
+
+  <p><strong>The Planned Obsolescence Museum.</strong> Your phone could be built to last a decade. Apple ensures it will not. Each forced upgrade, each battery that mysteriously degrades, each software update that slows your old device is a victory for GDP. Building products that endure is economic sabotage. Building products designed to be replaced is growth.</p>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- Goodhart's Law / Observer Effect  -->
+  <!-- ═════════════════════════════════ -->
+  <h2>When Measurement Destroys Reality</h2>
+
+  <!-- SVG: Goodhart's Law feedback loop -->
+  <div class="svg-illustration">
+    <svg viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
+      <!-- Arrows forming a cycle -->
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+        </marker>
+      </defs>
+      <!-- Box 1: Measure -->
+      <rect x="20" y="55" width="100" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="70" y="77" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600">Measure</text>
+      <text x="70" y="93" text-anchor="middle" fill="#1e40af" font-size="9">chosen</text>
+      <!-- Arrow 1->2 -->
+      <line x1="120" y1="70" x2="148" y2="50" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <!-- Box 2: Target -->
+      <rect x="150" y="15" width="100" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="200" y="37" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600">Becomes</text>
+      <text x="200" y="53" text-anchor="middle" fill="#1e40af" font-size="9">a target</text>
+      <!-- Arrow 2->3 -->
+      <line x1="250" y1="50" x2="278" y2="70" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <!-- Box 3: Distorts -->
+      <rect x="280" y="55" width="100" height="50" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="330" y="77" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="600">Distorts</text>
+      <text x="330" y="93" text-anchor="middle" fill="#ef4444" font-size="9">behavior</text>
+      <!-- Arrow 3->4 -->
+      <line x1="330" y1="105" x2="250" y2="125" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <!-- Box 4: Corrupts -->
+      <rect x="150" y="110" width="100" height="50" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="200" y="132" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="600">Corrupts</text>
+      <text x="200" y="148" text-anchor="middle" fill="#ef4444" font-size="9">the measure</text>
+      <!-- Arrow 4->1 (closing the loop) -->
+      <line x1="150" y1="125" x2="120" y2="100" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+    </svg>
+  </div>
+
+  <p>The true insanity is not just that GDP counts the wrong things. It is that the very act of counting them changes our reality for the worse. This is <strong>Goodhart's Law</strong>: "When a measure becomes a target, it ceases to be a good measure." In economics, this is not a bug; it is the central operating principle.</p>
+
+  <div class="pullquote">
+    <p>We targeted engagement and destroyed connection. The dashboard did not just report the weather; it created it.</p>
+  </div>
+
+  <p>Consider the <strong>Engagement Trap</strong>. Social media platforms chose "engagement" as their success metric. The algorithms quickly learned that nothing drives engagement like outrage. Anger is sticky. Fear is addictive. And so, in the name of hitting a metric, the platforms became rage machines, tearing apart the social fabric to optimize a number on a spreadsheet.</p>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- The Abundance Paradox             -->
+  <!-- ═════════════════════════════════ -->
+  <h2>The Abundance Paradox</h2>
+  <p>Our dashboard's most fatal flaw is its complete inability to process good news. Our system is designed to measure transactions involving scarce goods. It is therefore structurally blind to abundance. When something becomes abundant and free, our dashboard does not just fail to see its value; it registers its arrival as a <em>negative event</em>.</p>
+
+  <!-- SVG: Abundance vs GDP -->
+  <div class="svg-illustration">
+    <svg viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="As real value rises through abundance, GDP registers it as decline">
+      <!-- Axes -->
+      <line x1="60" y1="150" x2="370" y2="150" stroke="#ccc" stroke-width="1"/>
+      <line x1="60" y1="150" x2="60" y2="20" stroke="#ccc" stroke-width="1"/>
+      <text x="215" y="175" text-anchor="middle" fill="#888" font-size="10">Time</text>
+      <text x="15" y="85" text-anchor="middle" fill="#888" font-size="10" transform="rotate(-90,15,85)">Value</text>
+      <!-- Real value curve (rising) -->
+      <path d="M60 130 Q150 120 200 90 Q260 55 360 30" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="362" y="25" fill="#16a34a" font-size="10" font-weight="600">Real value</text>
+      <!-- GDP curve (declining) -->
+      <path d="M60 130 Q150 132 200 135 Q260 140 360 145" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="362" y="148" fill="#ef4444" font-size="10" font-weight="600">GDP</text>
+      <!-- Annotation -->
+      <text x="200" y="115" text-anchor="middle" fill="#888" font-size="9" font-style="italic">The better things get, the worse GDP looks</text>
+    </svg>
+  </div>
+
+  <p>The Human Genome Project cost billions and took over a decade. By making the resulting data a public good, it unleashed an estimated <strong>trillion dollars</strong> in new economic and scientific value. Its contribution to GDP? <em>Negative</em>. It made genetic information cheap, undermining business models based on proprietary data.</p>
+
+  <div class="pullquote">
+    <p>An AI engineer would call this using the wrong "loss function." We have trained our civilization on a flawed loss function, and we are producing a blurry gray world.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- The Meaning Crisis                -->
+  <!-- ═════════════════════════════════ -->
+  <h2>The Meaning Crisis</h2>
+  <p>The most devastating consequence of our dashboard is not economic but spiritual. For a century, we have managed our society to maximize GDP. In doing so, we have created a world that is rich in transactions and impoverished in meaning.</p>
+
+  <p><strong>The Friendship Recession.</strong> Deep friendship is a GDP black hole; it produces no transactions. So, our economy has systematically replaced it with monetized substitutes. We have more "friends" on social media than ever and fewer people we can call in a crisis.</p>
+
+  <p><strong>The Purpose Vacuum.</strong> A huge percentage of modern, high-paying jobs are roles that the employees themselves know make no meaningful contribution to the world. We pay handsomely for shuffling papers in a corporate bureaucracy while paying subsistence wages to teachers and caregivers.</p>
+
+  <p><strong>The Attention Annihilation.</strong> An entire trillion-dollar industry has been built to capture and monetize human attention. The result is a population neurologically incapable of deep thought. We are strip-mining human minds and calling it progress.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">47%</div>
+      <div class="stat-label">of Americans say they are worse off than their parents</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">+30%</div>
+      <div class="stat-label">increase in mental health prescriptions since 2020</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">1.6</div>
+      <div class="stat-label">births per woman &mdash; below replacement rate, signaling civilizational decline</div>
+    </div>
+  </div>
+
+  <p>While the official story speaks of prosperity, the human story is written in a different ledger. It is told not in stock prices but in the quiet desperation of those who feel left behind: 52 percent of recent college graduates are forced into jobs that do not require their degrees, and trust in our core institutions has fallen to the lowest levels ever recorded.</p>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- Panel 2: Wage-Productivity Gap    -->
+  <!-- ═════════════════════════════════ -->
+  <h2>Where Did the Money Go?</h2>
+  <p>If productivity has tripled since the 1970s but wages have barely budged, the surplus went <em>somewhere</em>. Use the chart below to explore the gap, then adjust the sliders to model your theory of where the value was captured.</p>
+
   <div class="panel">
-    <h2>The Wage-Productivity Gap</h2>
+    <h2 style="margin-top:0">The Wage-Productivity Gap</h2>
     <div id="gap-chart" style="width:100%;max-width:640px;"></div>
     <div style="margin-top:1.5rem;">
       <p style="font-size:0.9rem;color:#666;margin:0 0 0.75rem">What explains the gap? Adjust the sliders (must sum to 100%):</p>
@@ -99,6 +304,25 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       </div>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- ═════════════════════════════════ -->
+  <!-- Flying Blind Closing              -->
+  <!-- ═════════════════════════════════ -->
+  <h2>Flying Blind into the Future</h2>
+  <p>This is the dashboard that will guide our response to the Intelligence Inversion.</p>
+
+  <p>When AI automates legal research and makes legal advice nearly free, the dashboard will show the legal sector collapsing, and we will panic. When AI tutors provide world-class, personalized education to every child on Earth for free, the dashboard will show the education sector imploding, and we will try to "save" it. When AI-driven preventative medicine leads to a healthier population, the dashboard will show the healthcare sector shrinking, and we will declare a recession.</p>
+
+  <div class="pullquote">
+    <p>We are flying a 747 into a storm with instruments from a hot air balloon. The better our technology makes the world, the worse our gauges will look.</p>
+  </div>
+
+  <p>Clinging to GDP is no longer just an academic error; it is a civilization-level suicide pact. The first step to recovery is admitting the dashboard is not just wrong but insane. The second is to build new instruments &mdash; instruments designed not to measure the speed at which we consume the world, but to track our capacity to regenerate it.</p>
+
+  <p style="font-weight:600; color:#2563eb; font-size:1.1rem;">It is time to build the MIND Dashboard.</p>
+
 </div>
 
 <script>

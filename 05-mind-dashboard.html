@@ -72,6 +72,21 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .reset-row { text-align: center; margin-top: 1rem; }
 
 input[type=range] { accent-color: #2563eb; }
+
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote cite { display: block; font-size: 0.85rem; color: #555; margin-top: 0.5rem; font-style: normal; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.capital-card { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; margin: 0.75rem 0; }
+.capital-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; margin: 0 0 0.5rem 0; }
+.capital-card .lesson { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.capital-card .lesson strong { color: #1a1a1a; }
+.svg-illustration { text-align: center; margin: 2rem 0; }
 </style>
 </head>
 <body>
@@ -82,10 +97,102 @@ input[type=range] { accent-color: #2563eb; }
 </nav>
 <div class="prose">
   <div class="chapter-num">Chapter 8</div>
-  <h1>The MIND Dashboard</h1>
-  <p>Civilizational health cannot be measured by adding up its parts. It is a product &mdash; Material capital &times; Intellectual capital &times; Natural capital &times; Democratic capital. Zero in any single dimension, and the entire system collapses. Not "weakens." Collapses.</p>
+  <h1>The MIND of a Civilization</h1>
+
+  <div class="pullquote">
+    <p>"Civilization is a movement and not a condition, a voyage and not a harbor."</p>
+    <cite>&mdash; Arnold J. Toynbee</cite>
+  </div>
+
+  <h2>The Search for Sanity</h2>
+  <p>The Babylonians measured wealth in barley. The Egyptians measured flood levels of the Nile. The British Empire measured in naval tonnage. We measure in dollars.</p>
+  <p>Each civilization's measurement system perfectly captures what matters to it, right before it kills them. The Babylonians' granaries could not measure the iron weapons of their conquerors. The Egyptians' flood markers could not predict the arrival of the Sea Peoples. The British counted battleships while America was inventing a new form of capitalism. We count transactions while the world reinvents value itself.</p>
+  <p>The search for what to measure is the search for what matters. And what matters is not what moves through the system but what allows the system to persist. Not the water in the river, but the health of the riverbed that shapes its flow. Not the transactions, but the capacity for transformation.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Discovery in Costa Rica</h2>
+  <p>In 1948, Costa Rica did something unprecedented. They abolished their military. The generals said they were committing suicide. The economists said they were wasting resources. Instead, something strange happened. The money that would have bought tanks bought teachers. The energy that would have trained soldiers trained doctors. The land that would have been military bases became national parks.</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">1948</div>
+      <div class="stat-label">Year Costa Rica abolished its military</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">1990</div>
+      <div class="stat-label">First tropical country to reverse deforestation</div>
+    </div>
+  </div>
+
+  <p>They began to measure different things: literacy rates, forest coverage, health outcomes, biodiversity. By 1990, Costa Rica had reversed deforestation &mdash; the first tropical country to do so. A standing forest providing watershed services, ecotourism, and carbon sequestration was worth more than lumber &mdash; but only if you measured the right things.</p>
+  <p>They discovered that a civilization's health depends on a balanced portfolio of different kinds of wealth. Ignore any one of them, and you are flying blind.</p>
+
+  <!-- SVG: Measurement evolution -->
+  <div class="svg-illustration">
+    <svg width="480" height="100" viewBox="0 0 480 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="50" x2="440" y2="50" stroke="#e5e5e0" stroke-width="2"/>
+      <circle cx="80" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="80" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Barley</text>
+      <text x="80" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Babylon</text>
+      <circle cx="190" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="190" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Floods</text>
+      <text x="190" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Egypt</text>
+      <circle cx="300" cy="50" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="300" y="55" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#2563eb" font-weight="600">Ships</text>
+      <text x="300" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Britain</text>
+      <circle cx="410" cy="50" r="22" fill="#2563eb" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="410" y="46" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="white" font-weight="600">MIND</text>
+      <text x="410" y="58" text-anchor="middle" font-size="8" font-family="DM Sans, system-ui" fill="white">M x I x N x D</text>
+      <text x="410" y="82" text-anchor="middle" font-size="9" font-family="DM Sans, system-ui" fill="#888">Symbioism</text>
+      <polygon points="135,50 145,45 145,55" fill="#2563eb"/>
+      <polygon points="245,50 255,45 255,55" fill="#2563eb"/>
+      <polygon points="350,50 360,45 360,55" fill="#2563eb"/>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The Four Capitals Revealed</h2>
+  <p>This framework emerged not from theory but from observing what actually allows systems to persist. Every thriving civilization, every resilient ecosystem, every antifragile organization maintains four distinct but interdependent forms of capital. They are the direct, measurable expressions of the Three Laws of a Living System.</p>
+
+  <div class="capital-card" style="border-left: 4px solid #ef4444;">
+    <h3 style="color: #ef4444;">M &mdash; Material Capital: The Physical Foundation</h3>
+    <p>The organized matter and available energy that form the substrate of existence. Not just "stuff," but stuff in useful configurations. A pile of silicon is material; a microchip is Material Capital. A forest is material; a sustainably managed watershed is Material Capital.</p>
+    <div class="lesson"><strong>The Incan Lesson:</strong> Their agricultural terraces turned vertical mountainsides into productive land that lasted for centuries, still feeding people today. They measured not in acres but in production potential.</div>
+    <div class="lesson"><strong>The Modern Mistake:</strong> We measure the depletion of oil reserves as an increase in GDP. We confuse the liquidation of our planet's balance sheet with income.</div>
+  </div>
+
+  <div class="capital-card" style="border-left: 4px solid #2563eb;">
+    <h3 style="color: #2563eb;">I &mdash; Intelligence Capital: The Pattern Library</h3>
+    <p>The accumulated ability to solve problems, recognize patterns, and create value. It includes everything from scientific knowledge to cultural wisdom, from technical skills to artistic traditions. It is the only form of capital that grows when shared.</p>
+    <div class="lesson"><strong>The Alexandrian Lesson:</strong> The Library of Alexandria did not just collect scrolls; they built the ancient world's Google. When it burned, humanity forgot how to make concrete for a thousand years.</div>
+    <div class="lesson"><strong>The Modern Mistake:</strong> We are drowning in data while starving for wisdom. The real measure is not how much you know, but how well you can learn and adapt.</div>
+  </div>
+
+  <div class="capital-card" style="border-left: 4px solid #22c55e;">
+    <h3 style="color: #22c55e;">N &mdash; Network Capital: The Connection Infrastructure</h3>
+    <p>The trust, relationships, and communication channels that allow all other capitals to flow. High Network Capital means low transaction costs, rapid information spread, and collective resilience.</p>
+    <div class="lesson"><strong>The Venetian Lesson:</strong> The Venetians built an empire on Network Capital. A merchant's word in Cairo was as good as gold because breaking it meant exclusion from the network &mdash; a fate worse than death.</div>
+    <div class="lesson"><strong>The Modern Mistake:</strong> We build "social networks" that are actually attention extraction machines, designed to create engagement through outrage, which systematically destroys the social trust that constitutes real Network Capital.</div>
+  </div>
+
+  <div class="capital-card" style="border-left: 4px solid #f59e0b;">
+    <h3 style="color: #f59e0b;">D &mdash; Diversity Capital: The Option Portfolio</h3>
+    <p>The variety of approaches, perspectives, and possibilities maintained by the system. Not diversity for its own sake but diversity as insurance against uncertainty. This is the capital of what Nassim Nicholas Taleb calls antifragility: the quality of a system that gains from disorder.</p>
+    <div class="lesson"><strong>The Incan Lesson, Revisited:</strong> While the global banana industry collapsed with its single fragile variety, the Inca cultivated three thousand varieties of potato in the Andes. When one failed, others survived. They optimized not for global export but for persistence.</div>
+    <div class="lesson"><strong>The Modern Mistake:</strong> We have created a global monoculture in the name of efficiency and act surprised when it proves catastrophically fragile.</div>
+  </div>
+
+  <div class="stat-callout">
+    <div class="stat-number">3,000</div>
+    <div class="stat-label">Varieties of potato cultivated by the Inca &mdash; diversity as antifragility</div>
+  </div>
+
+  <hr class="section-divider">
 
   <h2>The Four Capital Dials</h2>
+  <p>Drag the dials below to explore how each capital dimension affects civilizational vitality. Watch what happens when any single dimension approaches zero.</p>
   <div class="panel" id="dialsPanel">
     <div class="dials-grid">
       <div class="dial-wrap"><svg id="dialM" width="160" height="160"></svg><div class="dial-label" id="labelM">Material Capital</div><div class="dial-value" id="valM">70</div></div>
@@ -95,7 +202,7 @@ input[type=range] { accent-color: #2563eb; }
     </div>
     <div class="vitality-display">
       <div class="vitality-num" id="vitalityNum">2,401</div>
-      <div class="vitality-formula" id="vitalityFormula">70 × 70 × 70 × 70 / 10⁶ = 2,401</div>
+      <div class="vitality-formula" id="vitalityFormula">70 &times; 70 &times; 70 &times; 70 / 10&#x2076; = 2,401</div>
       <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
       <div class="collapse-warn" id="collapseWarn"></div>
       <div class="multiplicative-collapse-banner" id="collapseBanner">Warning: Multiplicative collapse risk detected</div>
@@ -105,7 +212,40 @@ input[type=range] { accent-color: #2563eb; }
     </div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The Multiplication Principle</h2>
+  <p>Here is the crucial insight that changes everything. These four capitals do not add. They <strong>multiply</strong>.</p>
+
+  <div class="pullquote">
+    <p>M &times; I &times; N &times; D = Civilizational Vitality. A zero in any category equals total system failure, regardless of the other three.</p>
+  </div>
+
+  <p>The multiplication forces balance. The Soviet Union had massive Material Capital and impressive Intelligence Capital. But their Network Capital was poisoned by mistrust and their Diversity Capital was systematically eliminated by central planning. The multiplication by near-zero doomed them.</p>
+  <p>This framework is not an ideology. It is a diagnostic tool. It allows us to look at any system &mdash; from a person to a planet &mdash; and ask four simple questions: Is it regenerating its material base? Is it learning and sharing knowledge? Is it strengthening its connections? Is it maintaining its options?</p>
+
+  <!-- SVG: Multiplication vs Addition -->
+  <div class="svg-illustration">
+    <svg width="400" height="120" viewBox="0 0 400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Additive side -->
+      <rect x="10" y="10" width="180" height="100" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
+      <text x="100" y="32" text-anchor="middle" font-size="11" font-family="DM Sans, system-ui" fill="#888" font-weight="600">ADDITIVE</text>
+      <text x="100" y="55" text-anchor="middle" font-size="12" font-family="DM Mono, monospace" fill="#1a1a1a">80 + 80 + 80 + 5</text>
+      <text x="100" y="75" text-anchor="middle" font-size="16" font-family="Playfair Display, serif" fill="#22c55e" font-weight="700">= 245 / 400 (61%)</text>
+      <text x="100" y="96" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#888">"Looks fine"</text>
+      <!-- Multiplicative side -->
+      <rect x="210" y="10" width="180" height="100" rx="8" fill="white" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="300" y="32" text-anchor="middle" font-size="11" font-family="DM Sans, system-ui" fill="#dc2626" font-weight="600">MULTIPLICATIVE</text>
+      <text x="300" y="55" text-anchor="middle" font-size="12" font-family="DM Mono, monospace" fill="#1a1a1a">80 x 80 x 80 x 5</text>
+      <text x="300" y="75" text-anchor="middle" font-size="16" font-family="Playfair Display, serif" fill="#dc2626" font-weight="700">= 2.56 (0.03%)</text>
+      <text x="300" y="96" text-anchor="middle" font-size="10" font-family="DM Sans, system-ui" fill="#dc2626">"Collapse imminent"</text>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
   <h2>Historical Civilizations</h2>
+  <p>Select a civilization to load its capital profile into the dials above. Notice how the multiplicative model reveals vulnerabilities that a simple sum would hide.</p>
   <div class="panel">
     <div class="civ-btns">
       <button class="civ-btn" data-civ="venice">Venice 1400</button>
@@ -119,6 +259,7 @@ input[type=range] { accent-color: #2563eb; }
   </div>
 
   <h2>Sum vs Product Model</h2>
+  <p>Toggle between the additive and multiplicative models to see how each evaluates the current dial settings. The additive model hides fragility; the multiplicative model exposes it.</p>
   <div class="panel">
     <div class="model-toggle">
       <span style="font-weight:600">Additive</span>
@@ -133,7 +274,20 @@ input[type=range] { accent-color: #2563eb; }
     <p style="font-size:0.9rem;text-align:center;color:#888;" id="modelInsight">The additive model hides single-point failures by averaging away collapse risks.</p>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The Portfolio of a Flourishing Human</h2>
+  <p>This framework is not just for civilizations. It is a guide for life. Consider the state of your own vitality through this lens.</p>
+  <p>A person focused only on Material Capital ends up with a large house full of possessions but with decaying health, no new skills, and few true friends. A person focused only on Intelligence Capital becomes the brilliant academic, celebrated but physically unhealthy, socially isolated, and incapable of adapting. A person focused only on Network Capital is the ultimate socialite, knowing everyone but having no deep skills or material stability. A person focused only on Diversity Capital is the dilettante, dabbling in everything but mastering nothing.</p>
+
+  <div class="pullquote">
+    <p>A flourishing human, like a flourishing civilization, does not maximize one capital. They cultivate a balanced portfolio. The multiplication principle is unforgiving. A zero in any category leads to a life that, despite its apparent successes, feels fundamentally broken.</p>
+  </div>
+
+  <p>The search for meaning, connection, and growth is the subjective experience of a thriving MIND portfolio.</p>
+
   <h2>Personal Scale</h2>
+  <p>Toggle between the civilization and individual views. The same multiplicative logic applies at every scale &mdash; zero your health, zero your relationships, and everything else becomes meaningless.</p>
   <div class="panel">
     <div class="scale-toggle">
       <span style="font-weight:600" id="scaleLeft">Civilization</span>
@@ -142,6 +296,9 @@ input[type=range] { accent-color: #2563eb; }
     </div>
     <p id="scaleNote" style="font-size:0.9rem;color:#555;text-align:center;">The same multiplicative logic applies at every scale. Zero your health, zero your relationships &mdash; everything else becomes meaningless.</p>
   </div>
+
+  <hr class="section-divider">
+  <p style="font-size:0.9rem; color:#888; text-align:center;">A system that can answer <em>yes</em> to all four questions is a system built to last. A system that cannot is a system already dying. It just has not read its own autopsy report yet.</p>
 </div>
 
 <script>

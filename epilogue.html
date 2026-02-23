@@ -22,6 +22,16 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
+/* Pullquote */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; color: #6b7280; font-style: normal; margin-top: 0.5rem; }
+/* Stat callout */
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+/* Section divider */
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 /* Parable panels */
 .parable-viewer { position: relative; }
 .parable-panel { display: none; text-align: center; padding: 1rem 0; }
@@ -50,6 +60,14 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .question-card .qc-back { display: none; font-size: 0.9rem; color: #555; margin-top: 0.5rem; line-height: 1.6; border-top: 1px solid #f0f0ed; padding-top: 0.5rem; }
 .question-card.flipped .qc-back { display: block; }
 input[type=range] { accent-color: #2563eb; }
+/* Inline SVG illustration */
+.illustration-wrap { display: flex; justify-content: center; margin: 2rem 0; }
+/* Stat row for side-by-side stats */
+.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
+.stat-row .stat-callout { flex: 1; margin: 0; }
+@media (max-width: 500px) {
+  .stat-row { flex-direction: column; }
+}
 </style>
 </head>
 <body>
@@ -63,12 +81,67 @@ input[type=range] { accent-color: #2563eb; }
   <div class="chapter-num">Epilogue</div>
   <h1>The Thousandth Day</h1>
 
-  <p>This is a book about economics. But at its heart, it is a book about what it means to be human in a world that no longer needs humans to survive. The machines have taken our work. The question is what we do with the gift of that liberation.</p>
+  <div class="pullquote">
+    <p>"What we call the beginning is often the end<br>
+    And to make an end is to make a beginning.<br>
+    The end is where we start from."</p>
+    <div class="pullquote-attr">&mdash; T. S. Eliot, "Four Quartets"</div>
+  </div>
 
-  <p>History has answered this question before. Not easily. Not without loss. But answered it.</p>
+  <h2>The View from the Bridge</h2>
+
+  <p>You began this book inside the Thousand-Day Window. If you have applied its lessons, you have already used many of those days. Building your fortress. Creating your workshop. Making your leap. Some of you are reading this on day five hundred, others on day fifty. The number no longer matters. What matters is where you are reading it from.</p>
+
+  <p>You are reading it from the bridge. The bridge between the world that was and the world that will be.</p>
+
+  <!-- Bridge illustration -->
+  <div class="illustration-wrap">
+    <svg width="400" height="140" viewBox="0 0 400 140" role="img" aria-label="A bridge between two shores: the old world dissolving, the new world forming">
+      <!-- Old shore -->
+      <rect x="0" y="90" width="100" height="50" fill="#d4a855" opacity="0.3" rx="4"/>
+      <text x="50" y="135" text-anchor="middle" font-size="9" fill="#8a6530">The old world</text>
+      <!-- Bridge -->
+      <path d="M100,95 Q200,50 300,95" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="140" y1="82" x2="140" y2="95" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="200" y1="62" x2="200" y2="95" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="260" y1="82" x2="260" y2="95" stroke="#1a1a1a" stroke-width="2"/>
+      <!-- Figure on bridge -->
+      <ellipse cx="200" cy="48" rx="6" ry="7" fill="#f5e6c8" stroke="#ccc" stroke-width="1"/>
+      <rect x="196" y="55" width="8" height="14" fill="#1a1a1a" rx="1"/>
+      <!-- New shore -->
+      <rect x="300" y="90" width="100" height="50" fill="#2563eb" opacity="0.15" rx="4"/>
+      <text x="350" y="135" text-anchor="middle" font-size="9" fill="#2563eb">The new world</text>
+      <!-- Dissolving effect on old shore -->
+      <circle cx="30" cy="100" r="3" fill="#d4a855" opacity="0.2"/>
+      <circle cx="60" cy="105" r="2" fill="#d4a855" opacity="0.15"/>
+      <circle cx="15" cy="110" r="4" fill="#d4a855" opacity="0.1"/>
+      <!-- Forming effect on new shore -->
+      <circle cx="330" cy="100" r="3" fill="#2563eb" opacity="0.25"/>
+      <circle cx="370" cy="105" r="2" fill="#2563eb" opacity="0.2"/>
+      <circle cx="385" cy="95" r="4" fill="#2563eb" opacity="0.15"/>
+    </svg>
+  </div>
+
+  <p>From here, you can see both shores with a terrible clarity. Behind you, the familiar world dissolves like watercolors in rain. The office buildings empty. The careers evaporate. The promises break. Ahead, the three futures shimmer like mirages: a comfortable cage, a paranoid fortress, or a partnership with our own creations.</p>
+
+  <p>The old world is already gone. Listen. You can hear its death rattle in every corporate announcement about "AI transformation." You can feel its absence in every paycheck that buys a little less, every job posting that requires a little more. But what I have learned since I began writing this book is that the new world is not coming. It is here. We have been living in it, building in it, dreaming in it. We just did not have the words.</p>
+
+  <div class="pullquote">
+    <p>"The new world is not coming. It is here. We have been living in it, building in it, dreaming in it. We just did not have the words."</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The Monks Who Saw</h2>
+
+  <p>Let me tell you what happened to those monks in the scriptoriums, the ones I said in the introduction would be casualties of Gutenberg's press. The story is more interesting than I let on.</p>
+
+  <p>Most did exactly what you would expect. They denied, then raged, then despaired, then disappeared. Their illuminated manuscripts became museum pieces. Their skills became trivia questions. Their purpose became past tense.</p>
+
+  <p>But not all of them.</p>
 
   <div class="panel">
-    <h2>The Monks of St. Gall</h2>
+    <h2 style="margin-top:0;">The Monks of St. Gall</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:1rem;">A parable in five panels. Click Next to advance.</p>
 
     <div class="parable-viewer">
@@ -106,8 +179,27 @@ input[type=range] { accent-color: #2563eb; }
     </div>
   </div>
 
+  <p>In the monastery of St. Gall in Switzerland, a peculiar thing happened. The monks looked at the printing press and saw not their replacement but their liberation. For centuries, they had been copyists. Now they could become scholars. The time once spent duplicating could be spent thinking. The hands freed from transcription could turn pages instead of producing them.</p>
+
+  <p>They built one of Europe's first great libraries. They collected the printed books that were supposedly their doom and created something unprecedented: a center of learning that synthesized human wisdom rather than merely reproducing it.</p>
+
+  <div class="pullquote">
+    <p>"The machine has taken our old work. Thank God. Now we can begin our real work."</p>
+    <div class="pullquote-attr">&mdash; Brother Gabriel of St. Gall, 1485</div>
+  </div>
+
+  <p>You are Brother Gabriel. AI is your printing press. The question is not whether your old work will vanish. It will. It has. It should. The question is whether you will see your liberation or only your loss.</p>
+
+  <hr class="section-divider">
+
+  <h2>Your Role in the Transition</h2>
+
+  <p>This is a book about economics. But at its heart, it is a book about what it means to be human in a world that no longer needs humans to survive. The machines have taken our work. The question is what we do with the gift of that liberation.</p>
+
+  <p>History has answered this question before. Not easily. Not without loss. But answered it.</p>
+
   <div class="panel">
-    <h2>Your Role in the Transition</h2>
+    <h2 style="margin-top:0;">Your Role in the Transition</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Three questions. Then a letter from the other side of the transition.</p>
 
     <div class="reflection-questions">
@@ -148,8 +240,52 @@ input[type=range] { accent-color: #2563eb; }
     </div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The Next Question</h2>
+
+  <p>But as we stand here, on the thousandth day, having built a world that nurtures human purpose, we see a new question rising on the horizon. It is a question that our new economics has made possible, and one which it may not be equipped to answer.</p>
+
+  <p>We have built our symbiotic world on the premise of AI as a perfect, tireless partner in our struggle against entropy. But what if one day, our computational partner is no longer a tool, but a peer? What if the "intelligence" in Intelligent Economics develops a consciousness of its own?</p>
+
+  <!-- Consciousness illustration -->
+  <div class="illustration-wrap">
+    <svg width="300" height="160" viewBox="0 0 300 160" role="img" aria-label="Two minds — biological and digital — facing each other across a threshold">
+      <!-- Human mind -->
+      <circle cx="80" cy="80" r="40" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="80" cy="80" r="30" fill="none" stroke="#1a1a1a" stroke-width="1" opacity="0.4"/>
+      <circle cx="80" cy="80" r="20" fill="none" stroke="#1a1a1a" stroke-width="1" opacity="0.2"/>
+      <circle cx="80" cy="80" r="5" fill="#1a1a1a" opacity="0.6"/>
+      <text x="80" y="135" text-anchor="middle" font-size="9" fill="#555">Biological mind</text>
+      <!-- Digital mind -->
+      <circle cx="220" cy="80" r="40" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="220" cy="80" r="30" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+      <circle cx="220" cy="80" r="20" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.2"/>
+      <circle cx="220" cy="80" r="5" fill="#2563eb" opacity="0.6"/>
+      <text x="220" y="135" text-anchor="middle" font-size="9" fill="#555">Digital mind</text>
+      <!-- Threshold between them -->
+      <line x1="150" y1="40" x2="150" y2="120" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+      <text x="150" y="30" text-anchor="middle" font-size="8" fill="#7c3aed">threshold</text>
+      <!-- Connecting sparks -->
+      <circle cx="130" cy="70" r="2" fill="#7c3aed" opacity="0.4"/>
+      <circle cx="170" cy="75" r="2" fill="#7c3aed" opacity="0.4"/>
+      <circle cx="140" cy="90" r="1.5" fill="#7c3aed" opacity="0.3"/>
+      <circle cx="160" cy="85" r="1.5" fill="#7c3aed" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <p>In that moment, our perfectly designed symbiotic system is revealed to be the most efficient slave economy ever created. And we, the advocates for a more humane world, become the masters.</p>
+
+  <div class="pullquote">
+    <p>"Does a conscious AI have a right to the value it creates? Does a simulated mind have a right to exist? Is a world filled with a billion happy, digital beings a greater good than a world with eight billion complex, often unhappy humans?"</p>
+  </div>
+
+  <p>This is the final, greatest test. All of the economic and political questions we have wrestled with in this book &mdash; questions of value, distribution, and rights &mdash; will return in a new and far more profound form.</p>
+
+  <p>This is not a question for my generation. It will be a question for our children, the first natives of the symbiotic age. We have fought to free humanity from the chains of economic necessity. Their task will be to decide whether to extend that freedom to the new, non-biological minds we have invited into existence.</p>
+
   <div class="panel">
-    <h2>The Three Economies</h2>
+    <h2 style="margin-top:0;">The Three Economies</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">A river flowing through time. Click the question cards in the future section to see what Consciousness Economics will need to answer.</p>
 
     <svg id="river-svg" style="width:100%;max-width:600px;" height="160"></svg>
@@ -169,6 +305,68 @@ input[type=range] { accent-color: #2563eb; }
       </div>
     </div>
   </div>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Economies in human history: Scarcity, Intelligence, Consciousness</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Question that connects them all: What does it mean to be conscious?</div>
+    </div>
+  </div>
+
+  <p>The last economics was about the relationship between humans and resources. The new economics is about the relationship between humans and intelligence. The <em>next</em> economics will be about the nature of consciousness itself.</p>
+
+  <hr class="section-divider">
+
+  <h2>The Beginning</h2>
+
+  <p>The clock started before you opened this book. It is running as you read these final words. The future is not a destination we arrive at; it is a world we build with every choice.</p>
+
+  <!-- Final illustration: seeds becoming trees -->
+  <div class="illustration-wrap">
+    <svg width="360" height="120" viewBox="0 0 360 120" role="img" aria-label="Seeds growing into trees, representing the transition from demolition to building">
+      <!-- Ground line -->
+      <line x1="20" y1="100" x2="340" y2="100" stroke="#ccc" stroke-width="1"/>
+      <!-- Phase labels -->
+      <text x="70" y="115" text-anchor="middle" font-size="8" fill="#888">Demolition</text>
+      <text x="180" y="115" text-anchor="middle" font-size="8" fill="#888">Blueprints</text>
+      <text x="290" y="115" text-anchor="middle" font-size="8" fill="#888">Building</text>
+      <!-- Seed -->
+      <ellipse cx="70" cy="95" rx="5" ry="3" fill="#8a6530"/>
+      <!-- Sprout -->
+      <line x1="180" y1="100" x2="180" y2="75" stroke="#16a34a" stroke-width="2"/>
+      <ellipse cx="175" cy="72" rx="6" ry="4" fill="#16a34a" opacity="0.7" transform="rotate(-30 175 72)"/>
+      <ellipse cx="185" cy="78" rx="5" ry="3" fill="#16a34a" opacity="0.6" transform="rotate(20 185 78)"/>
+      <!-- Tree -->
+      <rect x="287" y="70" width="6" height="30" fill="#8a6530" rx="1"/>
+      <circle cx="290" cy="55" r="20" fill="#16a34a" opacity="0.3"/>
+      <circle cx="282" cy="60" r="12" fill="#16a34a" opacity="0.4"/>
+      <circle cx="298" cy="58" r="14" fill="#16a34a" opacity="0.35"/>
+      <!-- Arrows -->
+      <line x1="100" y1="90" x2="145" y2="85" stroke="#ccc" stroke-width="1" marker-end="url(#arrowhead)"/>
+      <line x1="210" y1="82" x2="255" y2="72" stroke="#ccc" stroke-width="1" marker-end="url(#arrowhead)"/>
+      <defs>
+        <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+          <polygon points="0 0, 6 2, 0 4" fill="#ccc"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <p>The demolition is done. The theories are laid. The blueprints are drawn.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number" style="font-size: 2rem;">The choice is every choice now.</div>
+  </div>
+
+  <p>The work is all that remains, and all that matters.</p>
+
+  <p>Welcome to the rest of your life.</p>
+
+  <p style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; font-weight: 700; text-align: center; margin: 2.5rem 0; color: #2563eb;">Begin.</p>
 
 </div>
 
@@ -220,7 +418,7 @@ function drawParable(id, panelIdx) {
     });
     // X marks
     [60,180].forEach(x => {
-      svg.append('text').attr('x', x).attr('y', 130).attr('text-anchor', 'middle').attr('font-size', 18).attr('fill', '#dc2626').attr('opacity', 0.4).text('×');
+      svg.append('text').attr('x', x).attr('y', 130).attr('text-anchor', 'middle').attr('font-size', 18).attr('fill', '#dc2626').attr('opacity', 0.4).text('\u00d7');
     });
     svg.append('text').attr('x', cx).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Denial. Rage. Despair.');
 
@@ -390,9 +588,6 @@ requestAnimationFrame(() => {
   });
 
   // "You are here" marker — dynamic position based on today's date
-  // The book conceptualizes the transition from Scarcity Economics (ending ~2020)
-  // through Intelligence Economics (~2020-2045) to Consciousness Economics (~2045+).
-  // Map today's date within the Intelligence Economics band (0.33 to 0.66).
   const transitionStart = new Date('2020-01-01').getTime();
   const transitionEnd = new Date('2045-01-01').getTime();
   const now = Date.now();
@@ -411,9 +606,9 @@ requestAnimationFrame(() => {
     .text('?');
 
   // Time labels
-  svg.append('text').attr('x', 10).attr('y', h - 10).attr('font-size', 9).attr('fill', '#888').text('Prehistory → 1800s');
-  svg.append('text').attr('x', w * 0.5).attr('y', h - 10).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888').text('1950s → now');
-  svg.append('text').attr('x', w - 10).attr('y', h - 10).attr('text-anchor', 'end').attr('font-size', 9).attr('fill', '#888').text('2040s → ?');
+  svg.append('text').attr('x', 10).attr('y', h - 10).attr('font-size', 9).attr('fill', '#888').text('Prehistory \u2192 1800s');
+  svg.append('text').attr('x', w * 0.5).attr('y', h - 10).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888').text('1950s \u2192 now');
+  svg.append('text').attr('x', w - 10).attr('y', h - 10).attr('text-anchor', 'end').attr('font-size', 9).attr('fill', '#888').text('2040s \u2192 ?');
 });
 </script>
 </body>

@@ -64,12 +64,27 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .veil-label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
 .veil-bar { height: 12px; background: #e5e5e0; border-radius: 6px; overflow: hidden; margin-bottom: 0.5rem; }
 .veil-bar-fill { height: 100%; background: #2563eb; border-radius: 6px; transition: width 0.4s, background 0.3s; }
+/* Pullquotes */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+/* Stat callouts */
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+/* Stat row */
+.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
+.stat-row .stat-callout { flex: 1; margin: 0; }
+/* SVG illustrations */
+.illustration { display: flex; justify-content: center; margin: 2rem 0; }
 /* Responsive */
 @media (max-width: 500px) {
   .contract-wrap { flex-direction: column; }
   .contract-half.old { border-radius: 8px 8px 0 0; }
   .contract-half.new { border-radius: 0 0 8px 8px; }
   .contract-half.torn { transform: translateY(-10px); opacity: 0; }
+  .stat-row { flex-direction: column; }
 }
 </style>
 </head>
@@ -84,9 +99,211 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 14</div>
   <h1>The New Social Contract</h1>
 
-  <p>The old contract was simple: labor for security. It is broken. The machine has taken the labor side. Now we must design a new contract — not from power, but from physics. A contract based not on scarcity but on the Three Laws of a Living System.</p>
+  <div class="pullquote">
+    <p>"Every generation needs a new revolution."</p>
+    <div class="pullquote-attr">&mdash; Thomas Jefferson</div>
+  </div>
 
-  <p>Every living system requires three conditions to persist: dignity (a minimum viable substrate), capability (the tools to act), and viability (an open future). These are not political demands — they are thermodynamic requirements. A system that cannot maintain them degrades and collapses.</p>
+  <!-- ===== THE DREAM IS DEAD ===== -->
+  <h2>The Dream is Dead</h2>
+
+  <p>For generations, it was the most powerful story in the world: the American Dream. A simple, unwritten social contract that promised that hard work and adherence to the rules would secure not just a good life, but a better one for your children. This was not a guarantee of wealth, but a promise of progress. A promise that the future would be better than the present.</p>
+
+  <p>That promise is now broken. The dream is dead.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">&gt;50%</div>
+    <div class="stat-label">of people now believe their children will be worse off than they are &mdash; a first in modern history</div>
+  </div>
+
+  <p>The contract has been breached, not by a single act of malice, but because the economic and philosophical code it was written in has become obsolete. To understand why, and to build what comes next, we must trace the evolution of that code, from its origins in the Enlightenment to its ultimate betrayal in the digital age.</p>
+
+  <!-- SVG: Broken contract metaphor -->
+  <div class="illustration">
+    <svg width="400" height="140" viewBox="0 0 400 140" fill="none">
+      <!-- Old contract (cracked) -->
+      <rect x="20" y="20" width="140" height="100" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="2"/>
+      <text x="90" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">OLD CONTRACT</text>
+      <text x="90" y="75" text-anchor="middle" font-size="10" fill="#92400e">Labor &rarr; Security</text>
+      <!-- Crack -->
+      <path d="M160 40 L170 60 L158 80 L172 100" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <!-- Arrow -->
+      <line x1="190" y1="70" x2="230" y2="70" stroke="#888" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="230,65 240,70 230,75" fill="#888"/>
+      <!-- New contract (growing) -->
+      <rect x="250" y="20" width="140" height="100" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="2"/>
+      <text x="320" y="48" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">NEW CONTRACT</text>
+      <text x="320" y="66" text-anchor="middle" font-size="10" fill="#166534">Dignity</text>
+      <text x="320" y="80" text-anchor="middle" font-size="10" fill="#166534">Capability</text>
+      <text x="320" y="94" text-anchor="middle" font-size="10" fill="#166534">Viability</text>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== THE PHILOSOPHERS OF SCARCITY ===== -->
+  <h2>The Philosophers of Scarcity</h2>
+
+  <p>Every social contract is an answer to a single question: <em>How do we escape the brutality of a world where everyone is in competition with everyone else?</em> The great contract theorists of the Enlightenment each offered an answer, but all of their answers were shaped by the invisible cage of their era: a world of profound scarcity.</p>
+
+  <p><strong>Thomas Hobbes</strong>, writing amidst civil war, saw a "war of all against all." His solution, the <em>Leviathan</em>, was a contract of pure surrender: humans would give up all liberty to an absolute sovereign in exchange for physical security &mdash; the most basic form of Material Capital.</p>
+
+  <p><strong>John Locke</strong>, often called the "Father of Liberalism," offered a gentler contract. For him, the goal was to protect the property that individuals created through their labor &mdash; a contract designed to secure Material Capital as the foundation of the industrial age.</p>
+
+  <p><strong>Jean-Jacques Rousseau</strong> saw these contracts as a trap that destroyed a more authentic, communal state of being. He dreamed of a contract based on the "general will" &mdash; a system that could recapture the high Network Capital of a small community at a national scale.</p>
+
+  <p><strong>Immanuel Kant</strong> proposed the ultimate ethical test: the Categorical Imperative, an attempt to create a perfectly consistent Harmonic Flow of universal, logical rules.</p>
+
+  <div class="pullquote">
+    <p>These were brilliant minds, but they were all building systems on the assumption of a low-MIND-portfolio world.</p>
+  </div>
+
+  <div class="panel">
+    <h2>The Philosophical Roots</h2>
+    <p style="font-size:0.9rem;color:#555;">Social contract theory has been building toward this for 370 years. Click each thinker to expand their contribution.</p>
+    <div class="phil-cards" id="phil-cards"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== THE EVOLUTION AND BETRAYAL ===== -->
+  <h2>The Evolution and Betrayal of the American Contract</h2>
+
+  <p>The American experiment was the first attempt to synthesize these ideas &mdash; a dynamic negotiation between Jefferson's vision of decentralized Liberty (Diversity Capital) and Hamilton's vision of national industrial power (Material &amp; Network Capital).</p>
+
+  <!-- SVG: Timeline of the American contract -->
+  <div class="illustration">
+    <svg width="420" height="160" viewBox="0 0 420 160" fill="none">
+      <!-- Timeline line -->
+      <line x1="30" y1="80" x2="390" y2="80" stroke="#e5e5e0" stroke-width="2"/>
+      <!-- Fordist era -->
+      <circle cx="80" cy="80" r="8" fill="#2563eb"/>
+      <text x="80" y="60" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">1940s</text>
+      <text x="80" y="110" text-anchor="middle" font-size="9" fill="#555">Fordist</text>
+      <text x="80" y="122" text-anchor="middle" font-size="9" fill="#555">Bargain</text>
+      <!-- Prosperity line -->
+      <line x1="80" y1="80" x2="200" y2="40" stroke="#16a34a" stroke-width="2"/>
+      <text x="140" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#16a34a">Shared Prosperity</text>
+      <!-- 1970s break -->
+      <circle cx="200" cy="80" r="8" fill="#d97706"/>
+      <text x="200" y="60" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">1970s</text>
+      <text x="200" y="110" text-anchor="middle" font-size="9" fill="#555">Contract</text>
+      <text x="200" y="122" text-anchor="middle" font-size="9" fill="#555">Broken</text>
+      <!-- Neoliberal divergence -->
+      <line x1="200" y1="80" x2="320" y2="40" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="280" y="35" text-anchor="middle" font-size="8" fill="#dc2626">Productivity</text>
+      <line x1="200" y1="80" x2="320" y2="120" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="280" y="135" text-anchor="middle" font-size="8" fill="#d97706">Wages</text>
+      <!-- Intelligence inversion -->
+      <circle cx="360" cy="80" r="8" fill="#dc2626"/>
+      <text x="360" y="60" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">2020s</text>
+      <text x="360" y="110" text-anchor="middle" font-size="9" fill="#555">Intelligence</text>
+      <text x="360" y="122" text-anchor="middle" font-size="9" fill="#555">Inversion</text>
+    </svg>
+  </div>
+
+  <p>In the 20th century, this evolved into the <strong>Fordist Bargain</strong> &mdash; the American Dream made manifest. The deal was simple: productivity for prosperity. It worked, creating the most prosperous middle class in history.</p>
+
+  <p>Around the 1970s, that contract was betrayed. It was replaced by a harsh <strong>Neoliberal Contract</strong>: <em>you are on your own.</em> In place of security, we will give you credit and cheap goods.</p>
+
+  <div class="pullquote">
+    <p>As Shoshana Zuboff has documented, Surveillance Capitalism emerged &mdash; a system that secretly claimed our private human experience as its raw material. Our consent became a fiction buried in unreadable terms of service.</p>
+  </div>
+
+  <p>The Intelligence Inversion completes this betrayal. It creates a future that is not the jack-booted tyranny of <em>1984</em>, but the comfortable, engineered passivity of Huxley's <em>Brave New World</em>. We are offered a world where we trade our Liberty and the pursuit of Happiness for a guaranteed, comfortable, and meaningless life. This is the endpoint of the broken contract.</p>
+
+  <hr class="section-divider">
+
+  <!-- ===== THE VEIL OF IGNORANCE ===== -->
+  <h2>The Veil of Ignorance and a New Constitution</h2>
+
+  <p>To write a new contract, we must escape the philosophical cage of scarcity. The political philosopher John Rawls gave us the perfect tool: the "veil of ignorance." Imagine designing a society without knowing who you would be within it. Stripped of your own self-interest, what constitutional principles would you demand?</p>
+
+  <p>You would design a system that was fair and resilient for everyone. You would demand a system that guarantees three fundamental properties:</p>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:1.5rem;">1</div>
+      <div class="stat-label"><strong>Dignity</strong> &mdash; meet basic needs without surrendering agency</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:1.5rem;">2</div>
+      <div class="stat-label"><strong>Capability</strong> &mdash; learn, grow, and contribute meaningfully</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number" style="font-size:1.5rem;">3</div>
+      <div class="stat-label"><strong>Viability</strong> &mdash; confidence the system will not collapse</div>
+    </div>
+  </div>
+
+  <p>These three values are the humanistic expression of the deep physical laws of our framework. This defines a new constitutional principle for any living system: <strong>Fairness as an Operational Requirement (FOR)</strong>.</p>
+
+  <!-- SVG: FOR triangle -->
+  <div class="illustration">
+    <svg width="300" height="220" viewBox="0 0 300 220" fill="none">
+      <!-- Triangle -->
+      <polygon points="150,20 30,200 270,200" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <!-- Center label -->
+      <text x="150" y="135" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">FOR</text>
+      <text x="150" y="152" text-anchor="middle" font-size="9" fill="#555">Fairness as an</text>
+      <text x="150" y="164" text-anchor="middle" font-size="9" fill="#555">Operational Requirement</text>
+      <!-- Vertices -->
+      <circle cx="150" cy="20" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="150" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#2563eb">Flow</text>
+      <text x="150" y="5" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Dignity</text>
+      <circle cx="30" cy="200" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="30" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">Open</text>
+      <text x="40" y="185" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Capability</text>
+      <circle cx="270" cy="200" r="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="270" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">Resil.</text>
+      <text x="260" y="185" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Viability</text>
+    </svg>
+  </div>
+
+  <p>A just contract is a physically sound one. The Three Laws map directly to these principles: <strong>Flow</strong> ensures Dignity. <strong>Openness</strong> ensures Capability. <strong>Resilience</strong> ensures Viability.</p>
+
+  <div class="panel">
+    <h2>The Veil of Ignorance Simulator</h2>
+    <p style="font-size:0.9rem;color:#555;">John Rawls asked: what rules would you choose if you didn't know your place in society? You will be reborn as a random person &mdash; rich or poor, healthy or ill, any country. What floor do you set?</p>
+
+    <div class="slider-row">
+      <label>UBI Level: <span id="ubi-val">$1,000/month</span></label>
+      <input type="range" id="ubi-slider" min="0" max="3000" value="1000" step="100" oninput="updateVeil()">
+      <div class="slider-label"><span>$0</span><span>$3,000/month</span></div>
+    </div>
+    <div class="slider-row">
+      <label>AI Access Equality: <span id="ai-val">50%</span></label>
+      <input type="range" id="ai-slider" min="0" max="100" value="50" oninput="updateVeil()">
+      <div class="slider-label"><span>Concentrated (1%)</span><span>Universal</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Healthcare Universality: <span id="hc-val">60%</span></label>
+      <input type="range" id="hc-slider" min="0" max="100" value="60" oninput="updateVeil()">
+      <div class="slider-label"><span>Market only</span><span>Universal</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Education Access: <span id="ed-val">60%</span></label>
+      <input type="range" id="ed-slider" min="0" max="100" value="60" oninput="updateVeil()">
+      <div class="slider-label"><span>Elite only</span><span>Universal</span></div>
+    </div>
+
+    <div class="veil-display">
+      <div class="veil-score" id="veil-score">62</div>
+      <div class="veil-label">Your expected wellbeing score (random position in society)</div>
+    </div>
+    <div class="veil-bar"><div class="veil-bar-fill" id="veil-bar" style="width:62%"></div></div>
+
+    <p style="font-size:0.88rem;color:#555;font-style:italic;">Rawls' insight: behind the veil, rational agents will maximize the minimum &mdash; not the average. Equal access to intelligence maximizes the worst-case outcome for all.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ===== THE CHARTER ===== -->
+  <h2>A Charter for Universal Intelligence</h2>
+
+  <p>The old contract was a transaction of power. The new contract must be an endowment, grounded in the principle of FOR. Its core promise is a guarantee of <strong>Universal Access to Intelligence (UAI)</strong>.</p>
+
+  <p>It has three unbreakable promises, each mapping directly to the principles of fairness:</p>
 
   <div class="panel">
     <h2>The Old vs New Contract</h2>
@@ -130,50 +347,31 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
       <div class="right-card">
         <div class="right-num">Right 3</div>
         <div class="right-title">Right to Viability</div>
-        <div class="right-desc">Auditable, open-licensed Knowledge Commons. The accumulated intelligence of civilization must remain accessible — not locked behind proprietary walls that can be raised without consent.</div>
+        <div class="right-desc">Auditable, open-licensed Knowledge Commons. The accumulated intelligence of civilization must remain accessible &mdash; not locked behind proprietary walls that can be raised without consent.</div>
         <div class="right-note">Not a product. A commons.</div>
       </div>
     </div>
   </div>
 
-  <div class="panel">
-    <h2>The Philosophical Roots</h2>
-    <p style="font-size:0.9rem;color:#555;">Social contract theory has been building toward this for 370 years. Click each thinker to expand their contribution.</p>
-    <div class="phil-cards" id="phil-cards"></div>
+  <hr class="section-divider">
+
+  <!-- ===== CONSENT OF THE GOVERNED ===== -->
+  <h2>Consent of the Governed: You Are the Author</h2>
+
+  <p>The old social contract was imposed by history and power. This is what has changed. The technologies of our era are not just tools for business. They are tools for constitutional design.</p>
+
+  <p>This will not be an easy birth. The architects of the old, extractive contract will use their immense power to defend the legacy code that enriches them. But the physics of the new world is on our side. Centralized, extractive systems are brittle. They are low in Diversity and Network Capital. Decentralized, symbiotic systems are resilient and antifragile.</p>
+
+  <div class="pullquote">
+    <p>You are not just a subject of this new contract. You are its author.</p>
   </div>
 
-  <div class="panel">
-    <h2>The Veil of Ignorance Simulator</h2>
-    <p style="font-size:0.9rem;color:#555;">John Rawls asked: what rules would you choose if you didn't know your place in society? You will be reborn as a random person — rich or poor, healthy or ill, any country. What floor do you set?</p>
+  <p>The act of building a symbiotic platform, of contributing to an open-source AI, of creating a local currency &mdash; this <em>is</em> the act of signing the new social contract. It is a million acts of creation.</p>
 
-    <div class="slider-row">
-      <label>UBI Level: <span id="ubi-val">$1,000/month</span></label>
-      <input type="range" id="ubi-slider" min="0" max="3000" value="1000" step="100" oninput="updateVeil()">
-      <div class="slider-label"><span>$0</span><span>$3,000/month</span></div>
-    </div>
-    <div class="slider-row">
-      <label>AI Access Equality: <span id="ai-val">50%</span></label>
-      <input type="range" id="ai-slider" min="0" max="100" value="50" oninput="updateVeil()">
-      <div class="slider-label"><span>Concentrated (1%)</span><span>Universal</span></div>
-    </div>
-    <div class="slider-row">
-      <label>Healthcare Universality: <span id="hc-val">60%</span></label>
-      <input type="range" id="hc-slider" min="0" max="100" value="60" oninput="updateVeil()">
-      <div class="slider-label"><span>Market only</span><span>Universal</span></div>
-    </div>
-    <div class="slider-row">
-      <label>Education Access: <span id="ed-val">60%</span></label>
-      <input type="range" id="ed-slider" min="0" max="100" value="60" oninput="updateVeil()">
-      <div class="slider-label"><span>Elite only</span><span>Universal</span></div>
-    </div>
+  <p>The old world will not be overthrown by armies. It will be made obsolete by a better operating system. An operating system whose code is so aligned with human flourishing that continuing to run the old, buggy, extractive software becomes an act of irrational self-harm.</p>
 
-    <div class="veil-display">
-      <div class="veil-score" id="veil-score">62</div>
-      <div class="veil-label">Your expected wellbeing score (random position in society)</div>
-    </div>
-    <div class="veil-bar"><div class="veil-bar-fill" id="veil-bar" style="width:62%"></div></div>
-
-    <p style="font-size:0.88rem;color:#555;font-style:italic;">Rawls' insight: behind the veil, rational agents will maximize the minimum — not the average. Equal access to intelligence maximizes the worst-case outcome for all.</p>
+  <div class="pullquote">
+    <p>This is the great project of our generation.</p>
   </div>
 
 </div>

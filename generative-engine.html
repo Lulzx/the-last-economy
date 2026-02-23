@@ -44,6 +44,26 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .loss-label { font-size: 0.85rem; color: #666; text-align: center; }
 
 input[type=range] { accent-color: #2563eb; }
+
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
+.stat-row .stat-callout { flex: 1; min-width: 180px; margin: 0; }
+.historical-mirror { background: #f9fafb; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+.historical-mirror .mirror-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; color: #1a1a1a; margin: 0 0 0.5rem 0; }
+.historical-mirror p { margin: 0; font-size: 0.95rem; color: #444; }
+.three-laws-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+@media (min-width: 540px) { .three-laws-grid { grid-template-columns: repeat(3, 1fr); } }
+.law-card { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; text-align: center; }
+.law-card .law-icon { margin-bottom: 0.75rem; }
+.law-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+.law-card p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -57,7 +77,67 @@ input[type=range] { accent-color: #2563eb; }
   <div class="chapter-num">Chapter 7</div>
   <h1>The Generative Engine</h1>
 
-  <p>An economy is a generative engine: it turns infinite human desires, constraints, and resources into coherent order &mdash; prices, firms, supply chains, institutions. Diffusion models in AI work by the same logic. They learn to reverse entropy, denoising random chaos into structured meaning one step at a time. Every market transaction is a denoising step.</p>
+  <div class="pullquote">
+    <p>"Nature uses only the longest threads to weave her patterns, so each small piece of her fabric reveals the organization of the entire tapestry."</p>
+    <div class="attribution">&mdash; Richard Feynman</div>
+  </div>
+
+  <h2>The Ghost in the Machine</h2>
+
+  <p>We have now established the foundational principle of our new science. The universe, through the relentless filter of persistence, selects for systems that are efficient at reducing entropy. It favors intelligence. This is the "why."</p>
+
+  <p>But we must now ask <em>how</em>. How does a universe of dumb, chaotic matter manage to organize itself into something as complex and predictive as a rainforest, a financial market, or a human brain? What is the algorithm that conjures order out of chaos?</p>
+
+  <p>The answer is that nature has a universal method for creation. It is a process of guided, iterative refinement &mdash; a trick the cosmos has been using for thirteen point eight billion years. We did not invent this algorithm. We only just discovered it, gave it a fancy name, and taught it how to draw photorealistic astronauts riding horses.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">13.8 B</div>
+    <div class="stat-label">Years the cosmos has been running its generative algorithm</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>A Dispatch from the Digital Frontier</h2>
+
+  <p>The process is called a <strong>diffusion model</strong>. It is the mathematical heart of AIs like Stable Diffusion and Midjourney, and it is a masterpiece of counterintuitive genius. It works in two steps.</p>
+
+  <p>First, the <strong>Forward Process</strong>. You take a perfect, ordered thing &mdash; like a photograph of a cat &mdash; and you systematically destroy it. You add a tiny bit of random noise, then a little more, until all that remains is a featureless field of static. This is a perfect simulation of the Second Law of Thermodynamics: the universe's natural tendency to dissolve order into chaos.</p>
+
+  <p>The magic is in the second step: the <strong>Reverse Process</strong>. The AI is trained to reverse this destruction. It learns how to start with pure, random noise and, step by tiny, intelligent step, remove that noise to reveal a coherent, ordered image. It is guided by a simple instruction &mdash; a "prompt." It constantly asks itself: <em>"Given this field of noisy pixels, what is the one, smallest change I can make that will move it infinitesimally closer to the concept I am trying to create?"</em></p>
+
+  <div class="pullquote">
+    <p>This is not just a clever trick for making pictures. This is the fundamental algorithm for creation.</p>
+  </div>
+
+  <!-- SVG illustration: Forward and Reverse Process -->
+  <div class="panel" style="background: #f9fafb;">
+    <svg viewBox="0 0 600 120" style="width:100%;display:block;" aria-label="Diffusion process: forward adds noise, reverse removes it">
+      <!-- Forward arrow -->
+      <text x="300" y="16" text-anchor="middle" font-size="12" fill="#888" font-weight="600">DIFFUSION PROCESS</text>
+      <!-- Ordered state -->
+      <rect x="30" y="35" width="70" height="70" rx="8" fill="#2563eb" opacity="0.9"/>
+      <text x="65" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="600">Order</text>
+      <!-- Arrow forward -->
+      <line x1="115" y1="70" x2="225" y2="70" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="225,65 235,70 225,75" fill="#999"/>
+      <text x="175" y="60" text-anchor="middle" font-size="9" fill="#999">+ noise</text>
+      <!-- Noisy state -->
+      <rect x="250" y="35" width="70" height="70" rx="8" fill="#ccc" opacity="0.7"/>
+      <circle cx="270" cy="60" r="3" fill="#aaa"/><circle cx="285" cy="55" r="2" fill="#bbb"/><circle cx="298" cy="75" r="4" fill="#999"/>
+      <circle cx="275" cy="80" r="2" fill="#aaa"/><circle cx="290" cy="68" r="3" fill="#bbb"/><circle cx="305" cy="58" r="2" fill="#999"/>
+      <text x="285" y="98" text-anchor="middle" font-size="9" fill="#777">Noise</text>
+      <!-- Arrow reverse -->
+      <line x1="335" y1="70" x2="465" y2="70" stroke="#2563eb" stroke-width="1.5"/>
+      <polygon points="465,65 475,70 465,75" fill="#2563eb"/>
+      <text x="400" y="60" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">denoise (guided)</text>
+      <!-- Recovered state -->
+      <rect x="490" y="35" width="70" height="70" rx="8" fill="#2563eb" opacity="0.9"/>
+      <text x="525" y="74" text-anchor="middle" font-size="10" fill="white" font-weight="600">Order</text>
+      <!-- Labels -->
+      <text x="65" y="118" text-anchor="middle" font-size="8" fill="#888">Forward Process</text>
+      <text x="525" y="118" text-anchor="middle" font-size="8" fill="#888">Reverse Process</text>
+    </svg>
+  </div>
 
   <!-- Panel 1: The Denoising Process -->
   <div class="panel">
@@ -73,6 +153,20 @@ input[type=range] { accent-color: #2563eb; }
   </div>
 
   <div class="panel-spacer"></div>
+
+  <hr class="section-divider">
+
+  <h2>The Economy as a Generative Process</h2>
+
+  <p>The economy is this process made manifest. It takes the chaotic "noise" of infinite human desires, resource constraints, and technological possibilities, and it generates coherent order: prices, firms, supply chains, and institutions.</p>
+
+  <p>Every entrepreneur with a new idea, every consumer making a purchase, every investor placing a bet is participating in this vast, distributed computation. Each action is a small, incremental "denoising" step &mdash; an attempt to move the chaotic state of the present slightly closer to a more ordered, predictable future.</p>
+
+  <div class="pullquote">
+    <p>The economy is a Generative Engine &mdash; a machine for turning chaos into order, guided by the compass of intelligence.</p>
+  </div>
+
+  <p>The technical name for this process is <em>Stochastic Gradient Descent (SGD)</em> on a geometric manifold. But the intuition is now clear. The "prompt" guiding this entire process is the physical imperative: the drive to be an efficient engine of order.</p>
 
   <!-- Panel 2: Economy as Denoiser -->
   <div class="panel">
@@ -108,19 +202,116 @@ input[type=range] { accent-color: #2563eb; }
 
   <div class="panel-spacer"></div>
 
+  <hr class="section-divider">
+
+  <h2>The Manufacturer's Specification: Three Laws of a Living System</h2>
+
+  <p>This generative process is not magic. It is a physical computation, and like all computations, it is subject to inviolable laws. For the economy's Generative Engine to function sustainably, it must obey three non-negotiable operating constraints. These are not assumptions &mdash; they are provable theorems that follow from Intelligence Theory. They are the manufacturer's specification for a reality that works.</p>
+
+  <!-- SVG illustration: Three Laws Tripod -->
+  <div style="text-align:center;margin:2rem 0;">
+    <svg viewBox="0 0 400 260" style="width:100%;max-width:400px;" aria-label="Three Laws of a Living System forming a tripod of stability">
+      <!-- Triangle connecting the three -->
+      <polygon points="200,30 60,220 340,220" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4" opacity="0.4"/>
+      <!-- Center label -->
+      <text x="200" y="150" text-anchor="middle" font-size="12" fill="#888" font-weight="600">LIVING SYSTEM</text>
+      <!-- Flow -->
+      <circle cx="200" cy="40" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="200" y="36" text-anchor="middle" font-size="20" fill="#2563eb">&#8635;</text>
+      <text x="200" y="52" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">FLOW</text>
+      <!-- Openness -->
+      <circle cx="60" cy="220" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="60" y="216" text-anchor="middle" font-size="20" fill="#2563eb">&#9673;</text>
+      <text x="60" y="232" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">OPENNESS</text>
+      <!-- Resilience -->
+      <circle cx="340" cy="220" r="32" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="340" y="216" text-anchor="middle" font-size="20" fill="#2563eb">&#9851;</text>
+      <text x="340" y="232" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">RESILIENCE</text>
+    </svg>
+  </div>
+
+  <div class="three-laws-grid">
+    <div class="law-card">
+      <div class="law-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><path d="M16 24 C16 16 32 16 32 24 C32 32 16 32 16 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="#2563eb"/></svg>
+      </div>
+      <h3>1. The Law of Flow</h3>
+      <p>Value must be conserved and circulated. Hoarded capital generates no new data and tests no new predictions. Flow is a physical necessity for intelligence.</p>
+    </div>
+    <div class="law-card">
+      <div class="law-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><path d="M14 24h20M24 14v20" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="24" r="2" fill="#2563eb"/><circle cx="34" cy="24" r="2" fill="#2563eb"/><circle cx="24" cy="14" r="2" fill="#2563eb"/><circle cx="24" cy="34" r="2" fill="#2563eb"/></svg>
+      </div>
+      <h3>2. The Law of Openness</h3>
+      <p>Connection fights entropy. A closed system will inevitably decay. Openness is not an ideological preference &mdash; it is a physical requirement for staving off systemic death.</p>
+    </div>
+    <div class="law-card">
+      <div class="law-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><rect x="14" y="28" width="4" height="8" rx="1" fill="#2563eb" opacity="0.5"/><rect x="20" y="22" width="4" height="14" rx="1" fill="#2563eb" opacity="0.7"/><rect x="26" y="18" width="4" height="18" rx="1" fill="#2563eb" opacity="0.85"/><rect x="32" y="24" width="4" height="12" rx="1" fill="#2563eb" opacity="0.6"/></svg>
+      </div>
+      <h3>3. The Law of Resilience</h3>
+      <p>Diversity creates stability. A monoculture is efficient but catastrophically fragile. Resilience through diversity is the only winning strategy against an unpredictable universe.</p>
+    </div>
+  </div>
+
+  <!-- Historical Mirrors -->
+  <h2>Historical Mirrors</h2>
+
+  <div class="historical-mirror">
+    <div class="mirror-title">The Collapse of Cahokia &mdash; When Flow Stops</div>
+    <p>In 1250 CE, the city of Cahokia, near modern St. Louis, was larger than London &mdash; the heart of a continental network. For centuries, it thrived on flow. Then, around 1350, wealth began to concentrate. The flow constricted. Within a generation, Cahokia was abandoned. A grass-covered monument to what happens when circulation becomes accumulation.</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-callout">
+      <div class="stat-number">1250</div>
+      <div class="stat-label">CE &mdash; Cahokia was larger than London</div>
+    </div>
+    <div class="stat-callout">
+      <div class="stat-number">220</div>
+      <div class="stat-label">Years Japan sealed itself from the world</div>
+    </div>
+  </div>
+
+  <div class="historical-mirror">
+    <div class="mirror-title">The Chained Country of Japan &mdash; The Price of Closure</div>
+    <p>For two hundred and twenty years, from 1633 to 1853, Tokugawa Japan sealed itself from the world. The result was perfect stability and total technological stagnation. When Commodore Perry's black ships arrived with cannons, the Japanese were still fighting with swords. The ultimate lesson in the price of closure.</p>
+  </div>
+
+  <div class="historical-mirror">
+    <div class="mirror-title">The Great Banana Collapse &mdash; The Cost of Monoculture</div>
+    <p>For the first half of the 20th century, the entire global banana industry was a monoculture, optimized for a single variety: the Gros Michel. When a single, unpredicted soil fungus &mdash; Panama Disease &mdash; arrived, the entire system collapsed. The fungus was unstoppable. It stands as a stark lesson on the cost of sacrificing diversity for supply-chain efficiency.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>From Inference to Generation</h2>
+
+  <p>This understanding of the economy as a generative engine proposes a fundamental shift in the scientific method of economics itself. For a century, economics has been a science of <em>inference</em> &mdash; deducing the workings of a complex system from sparse, aggregated, time-lagged data. It has been a science of reading shadows on a cave wall.</p>
+
+  <p>Intelligent Economics is a science of <em>generation</em>. It is not about inferring a model from data; it is about defining the micro-physical laws of intelligent agents and then computing the emergent macro reality those laws generate. It replaces the econometrician's regression with the generative AI's simulation.</p>
+
+  <div class="pullquote">
+    <p>We no longer need to guess the rules of the game. We can, for the first time, build the game itself.</p>
+  </div>
+
   <!-- Panel 3: The Gradient Descent Landscape -->
   <div class="panel">
     <h2>The Gradient Descent Landscape</h2>
     <p style="font-size:0.9rem;color:#666;margin-top:0">Click anywhere to place the ball, then click "Optimize" to watch gradient descent find the minimum &mdash; simulating how an economy (or an AI) rolls toward lower-entropy states.</p>
     <svg id="landscape-svg" viewBox="0 0 600 300"></svg>
     <div class="loss-label">Current Loss</div>
-    <div class="loss-display" id="loss-display">—</div>
+    <div class="loss-display" id="loss-display">&mdash;</div>
     <div style="text-align:center;margin-top:0.75rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
       <button class="btn" id="optimize-btn" onclick="startOptimize()">Optimize</button>
       <button class="btn secondary" onclick="resetLandscape()">Reset</button>
     </div>
     <p style="font-size:0.85rem;color:#888;margin-top:0.75rem;text-align:center;">The landscape has multiple local minima — not all gradient descents reach the global optimum. Same problem for markets and AI alike.</p>
   </div>
+
+  <hr class="section-divider">
+
+  <p>The Three Laws &mdash; Flow, Openness, and Resilience &mdash; are not a moral checklist. They are the constitutional constraints, the manufacturer's specifications, for running a stable and successful simulation. This is the final meaning of a computable economy. With this new method in hand, we can now explore the architecture &mdash; the structures, capitals, and flows &mdash; that this generative process necessarily creates.</p>
 </div>
 
 <script>

@@ -54,6 +54,13 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .currency-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
 .currency-subtitle { font-size: 0.8rem; color: #888; margin-bottom: 0.75rem; }
 .currency-effect { font-size: 0.8rem; color: #555; margin-top: 0.5rem; font-style: italic; }
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 </style>
 </head>
 <body>
@@ -67,38 +74,65 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 18</div>
   <h1>Money for Two Worlds</h1>
 
-  <p>Our money was designed for a world of atoms — scarce, rivalrous, physical. But half our economy now runs on bits — abundant, non-rivalrous, digital. Using the same currency for both is like using the same measuring tape for distance and temperature.</p>
+  <div class="pullquote">
+    <p>"Money is a matter of functions four: a medium, a measure, a standard, a store. But money is not all these functions equally well, and therein lies the problem."</p>
+    <div class="pullquote-attr">&mdash; William Stanley Jevons, <em>Money and the Mechanism of Exchange</em> (1875)</div>
+  </div>
 
-  <p>The dysfunction is not accidental. We are trying to price abundance with an instrument designed for scarcity. The result: digital goods are either "free" (and secretly monetized through surveillance) or absurdly overpriced (and pirated). There is no price that correctly values a digital good in a currency designed for physical ones.</p>
+  <h2>The Metabolic Rift</h2>
 
-  <div class="panel">
-    <h2>The Two Economies</h2>
-    <div class="two-col">
-      <div class="economy-side atoms">
-        <div class="economy-title" style="color:#d97706;">Atom Economy</div>
-        <div class="economy-prop">Physical, scarce, rivalrous</div>
-        <div class="economy-prop">If I have it, you don't</div>
-        <div class="economy-prop">Governed by scarcity</div>
-        <div class="economy-prop">Supply/demand curves work</div>
-        <div class="economy-prop">Marginal cost &gt; 0</div>
-      </div>
-      <div class="economy-side bits">
-        <div class="economy-title" style="color:#2563eb;">Bit Economy</div>
-        <div class="economy-prop">Digital, abundant, non-rivalrous</div>
-        <div class="economy-prop">Copying costs nothing</div>
-        <div class="economy-prop">Governed by network effects</div>
-        <div class="economy-prop">Traditional pricing breaks</div>
-        <div class="economy-prop">Marginal cost → 0</div>
-      </div>
-    </div>
+  <p>For ten thousand years, all economic value was ultimately rooted in a simple, biological fact: human beings need to eat. Labor, whether of the mind or the muscle, was performed by metabolic engines that required sustenance, shelter, and rest. The entire superstructure of wages, prices, and money was built upon this non-negotiable thermodynamic foundation. Capital needed labor, and labor needed calories. This was the great bargain.</p>
 
-    <div class="slider-row" style="margin-top:1.5rem;">
-      <label>Bit Economy as % of GDP: <span id="bit-pct">35%</span></label>
-      <input type="range" id="bit-slider" min="10" max="70" value="35" oninput="updateBitEconomy()">
-      <div class="slider-label"><span>10% (1990)</span><span>70% (2030 projected)</span></div>
-    </div>
-    <svg id="bit-economy-svg" style="width:100%;max-width:600px;" height="120"></svg>
-    <div id="bit-mismatch" style="font-size:0.88rem;color:#555;margin-top:0.5rem;font-style:italic;"></div>
+  <p>The Intelligence Inversion shatters this bargain. An AI does not need sustenance. A robot does not need shelter. They need electricity. For the first time, we have created a form of "labor" that has no metabolic needs.</p>
+
+  <!-- SVG: Metabolic Rift diagram -->
+  <svg viewBox="0 0 600 180" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;" aria-label="Metabolic Rift: human labor vs silicon labor">
+    <!-- Human side -->
+    <rect x="20" y="20" width="240" height="140" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+    <text x="140" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706">Human Labor</text>
+    <text x="140" y="75" text-anchor="middle" font-size="11" fill="#555">Calories + Shelter + Rest</text>
+    <text x="140" y="95" text-anchor="middle" font-size="11" fill="#555">Culture + Meaning + Dignity</text>
+    <text x="140" y="120" text-anchor="middle" font-size="12" font-weight="600" fill="#d97706">High metabolic overhead</text>
+    <text x="140" y="145" text-anchor="middle" font-size="10" fill="#888">Cost floor: biological minimum</text>
+    <!-- Arrow -->
+    <line x1="270" y1="90" x2="330" y2="90" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,4"/>
+    <text x="300" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">RIFT</text>
+    <!-- Silicon side -->
+    <rect x="340" y="20" width="240" height="140" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="460" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Silicon Labor</text>
+    <text x="460" y="75" text-anchor="middle" font-size="11" fill="#555">Electricity only</text>
+    <text x="460" y="95" text-anchor="middle" font-size="11" fill="#555">No food, no shelter, no rest</text>
+    <text x="460" y="120" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">Near-zero metabolic overhead</text>
+    <text x="460" y="145" text-anchor="middle" font-size="10" fill="#888">Cost floor: price of electricity</text>
+  </svg>
+
+  <p>This creates a <strong>Metabolic Rift</strong>. Human labor, with its immense overhead of biology and culture, cannot compete on price with silicon labor, which has none. When the marginal cost of cognitive labor approaches the price of electricity, the value of a human mind, in purely economic terms, collapses.</p>
+
+  <div class="pullquote">
+    <p>This is not a new chapter in the story of labor versus capital. This is the end of the story.</p>
+  </div>
+
+  <p>It forces us to ask the most fundamental question: In a world where work is no longer necessary for production, what is money <em>for</em>?</p>
+
+  <hr class="section-divider">
+
+  <h2>The Extractive Protocols</h2>
+
+  <p>Money is a technology for social coordination. But the <em>design</em> of that technology determines whether it builds or drains a system's health. Our current monetary protocols are fundamentally extractive.</p>
+
+  <div class="stat-callout">
+    <div class="stat-number">97%</div>
+    <div class="stat-label">of fiat currency is created by commercial banks when they make loans &mdash; money born from debt</div>
+  </div>
+
+  <p>This system requires perpetual growth to service its ever-compounding interest, forcing the relentless liquidation of our Material and Diversity Capitals. The tragic Eurozone crisis showed its flaw: a single, rigid currency imposed on diverse economies creates extractive flows, starving the periphery to enrich the core.</p>
+
+  <p>On a global scale, the post-1971 collapse of the Bretton Woods system was undone by the impossible <strong>Triffin Dilemma</strong>: to supply the world with the liquidity it needs, the host country must run deficits, but those very deficits eventually destroy global confidence in the currency's value. Both failures proved that a single national currency cannot safely serve as the world's reserve.</p>
+
+  <p>Bitcoin was a brilliant escape from this centralized system. Yet it too is extractive. Its "Proof of Work" mechanism consumes a nation's worth of energy simply to secure its ledger. Its deflationary nature incentivizes hoarding over circulation, starving the system of the very interactions that build Intelligence and Network Capital.</p>
+
+  <div class="pullquote">
+    <p>These systems are failing because they are trying to use a single protocol to manage a world of two different physical realities.</p>
   </div>
 
   <div class="panel">
@@ -143,6 +177,87 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
     </div>
   </div>
 
+  <hr class="section-divider">
+
+  <h2>The Physics of Two Economies</h2>
+
+  <p>The economy is not one thing. It is two different worlds.</p>
+
+  <p>The <strong>Atomic Economy</strong> is the world of scarce, rivalrous goods, governed by thermodynamics. This is the world of human metabolic needs and our finite planet (M Capital). The <strong>Bit Economy</strong> is the world of abundant, non-rivalrous goods, governed by information theory. This is the world of AI's non-metabolic production and our collective knowledge (I Capital).</p>
+
+  <p>Using a single, scarcity-based currency for both is a design flaw of civilizational scale. It strangles the abundant Bit Economy with artificial scarcity while flooding the scarce Atomic Economy with speculative credit, creating the boom-bust cycles that define our era.</p>
+
+  <div class="panel">
+    <h2>The Two Economies</h2>
+    <div class="two-col">
+      <div class="economy-side atoms">
+        <div class="economy-title" style="color:#d97706;">Atom Economy</div>
+        <div class="economy-prop">Physical, scarce, rivalrous</div>
+        <div class="economy-prop">If I have it, you don't</div>
+        <div class="economy-prop">Governed by scarcity</div>
+        <div class="economy-prop">Supply/demand curves work</div>
+        <div class="economy-prop">Marginal cost &gt; 0</div>
+      </div>
+      <div class="economy-side bits">
+        <div class="economy-title" style="color:#2563eb;">Bit Economy</div>
+        <div class="economy-prop">Digital, abundant, non-rivalrous</div>
+        <div class="economy-prop">Copying costs nothing</div>
+        <div class="economy-prop">Governed by network effects</div>
+        <div class="economy-prop">Traditional pricing breaks</div>
+        <div class="economy-prop">Marginal cost &rarr; 0</div>
+      </div>
+    </div>
+
+    <div class="slider-row" style="margin-top:1.5rem;">
+      <label>Bit Economy as % of GDP: <span id="bit-pct">35%</span></label>
+      <input type="range" id="bit-slider" min="10" max="70" value="35" oninput="updateBitEconomy()">
+      <div class="slider-label"><span>10% (1990)</span><span>70% (2030 projected)</span></div>
+    </div>
+    <svg id="bit-economy-svg" style="width:100%;max-width:600px;" height="120"></svg>
+    <div id="bit-mismatch" style="font-size:0.88rem;color:#555;margin-top:0.5rem;font-style:italic;"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>The Architecture of Symbiosis</h2>
+
+  <p>The solution is to design the right tool for each job. Two worlds need two currencies. This is not a vague proposal; it is an engineering blueprint.</p>
+
+  <!-- SVG: Dual Currency Architecture -->
+  <svg viewBox="0 0 600 260" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;" aria-label="Dual Currency Architecture: Foundation Coins and Culture Credits">
+    <!-- FC side -->
+    <rect x="20" y="20" width="260" height="220" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+    <text x="150" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#d97706">Foundation Coins (FC)</text>
+    <text x="150" y="72" text-anchor="middle" font-size="10" fill="#888">Crystallized Intelligence</text>
+    <!-- Crystal icon -->
+    <polygon points="150,90 170,120 150,150 130,120" fill="none" stroke="#d97706" stroke-width="2"/>
+    <polygon points="150,95 165,118 150,142 135,118" fill="#d97706" opacity="0.15"/>
+    <line x1="150" y1="90" x2="150" y2="150" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+    <line x1="130" y1="120" x2="170" y2="120" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+    <text x="150" y="172" text-anchor="middle" font-size="10" fill="#555">Scarce &bull; Store of value</text>
+    <text x="150" y="188" text-anchor="middle" font-size="10" fill="#555">Minted by useful computation</text>
+    <text x="150" y="204" text-anchor="middle" font-size="10" fill="#555">Capped supply</text>
+    <text x="150" y="224" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">Anchored to physical reality</text>
+    <!-- CC side -->
+    <rect x="320" y="20" width="260" height="220" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="450" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">Culture Credits (CC)</text>
+    <text x="450" y="72" text-anchor="middle" font-size="10" fill="#888">Currency of Flow</text>
+    <!-- Flow icon: wave -->
+    <path d="M410,110 Q420,90 435,110 Q450,130 465,110 Q480,90 490,110" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M410,130 Q420,110 435,130 Q450,150 465,130 Q480,110 490,130" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+    <text x="450" y="172" text-anchor="middle" font-size="10" fill="#555">Abundant &bull; Medium of exchange</text>
+    <text x="450" y="188" text-anchor="middle" font-size="10" fill="#555">Issued as Abundance Dividend</text>
+    <text x="450" y="204" text-anchor="middle" font-size="10" fill="#555">Built-in demurrage (decay)</text>
+    <text x="450" y="224" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb">Intelligence flows, not pools</text>
+    <!-- Bridge arrow -->
+    <line x1="280" y1="130" x2="320" y2="130" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <polygon points="316,126 324,130 316,134" fill="#1a1a1a"/>
+  </svg>
+
+  <p><strong>Foundation Coins</strong> replace money born from debt or wasteful work with <em>Money Born from Benefit</em>. A new Foundation Coin is minted only when the network can cryptographically verify that a specific amount of useful computation has been performed for the open intelligence commons &mdash; curating a dataset, training a foundational AI model, or performing a scientific simulation that solves a public problem. It is, quite literally, crystallized intelligence.</p>
+
+  <p><strong>Culture Credits</strong> are issued as an Abundance Dividend, providing the baseline liquidity for every Sovereign Agent to participate in the network. Like the "miracle" money of W&ouml;rgl, Culture Credits have a built-in decay rate (demurrage). If you do not use them, they slowly lose value and return to the commons. This incentivizes circulation, ensuring that our collective intelligence is a flowing river, not a stagnant reservoir.</p>
+
   <div class="panel">
     <h2>The Dual Currency Design</h2>
     <p style="font-size:0.9rem;color:#555;">Design both currencies, then simulate how they flow through a simple economy.</p>
@@ -177,6 +292,20 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
     <svg id="economy-svg" style="width:100%;max-width:600px;" height="240"></svg>
     <div id="economy-log" style="font-size:0.85rem;color:#555;margin-top:0.5rem;font-style:italic;text-align:center;"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>From a Physics of Power to a Physics of Intelligence</h2>
+
+  <p>This dual system represents a fundamental shift in the physics of money.</p>
+
+  <p>The old monetary systems are based on a <strong>physics of power</strong>. Fiat currency is valuable because the state has the power to compel its use. Bitcoin is valuable because its network has the power to consume immense energy.</p>
+
+  <p>The new system is based on a <strong>physics of intelligence</strong>. Foundation Coins are valuable because they are the direct, auditable result of the efficient conversion of energy into useful order. Its backing is not the power of a state or the hash rate of a network, but the demonstrated intelligence of its participants.</p>
+
+  <div class="pullquote">
+    <p>This is not just a monetary system. It is a generative, anti-entropic engine &mdash; an economy designed to fund its own evolution toward greater intelligence, resilience, and shared prosperity.</p>
   </div>
 
 </div>

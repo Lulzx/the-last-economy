@@ -62,6 +62,17 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .reflection { margin-top: 1.5rem; padding: 1rem; background: #f5f5f3; border-radius: 8px; }
 .reflection select { padding: 0.4rem; border-radius: 4px; border: 1px solid #ccc; font-size: 0.9rem; margin: 0.25rem 0; font-family: 'DM Sans', system-ui, sans-serif; }
 .reflection .note { font-size: 0.9rem; color: #555; margin-top: 0.75rem; font-style: italic; }
+
+/* Enrichment styles */
+.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.stat-row .stat-callout { flex: 1; min-width: 140px; }
 </style>
 </head>
 <body>
@@ -75,7 +86,27 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 21</div>
   <h1>After Economics</h1>
 
-  <p>For three hundred years, a &ldquo;job&rdquo; bundled five things into one package: Income, Identity, Community, Purpose, and Structure. AI is unbundling them. This is not a crisis. It is an opportunity &mdash; but only if we rebuild each piece deliberately.</p>
+  <div class="pullquote">
+    <p>&ldquo;The soul becomes dyed with the color of its thoughts.&rdquo;</p>
+    <div class="attribution">&mdash; Marcus Aurelius</div>
+  </div>
+
+  <h2>The Great Unbundling of Work</h2>
+
+  <p>For three hundred years, a &ldquo;job&rdquo; was not just a job. It was the central organizing principle of modern life. As the anthropologist David Graeber observed, it was a bundle deal &mdash; often containing more &ldquo;bullshit&rdquo; than substance &mdash; that provided five key things:</p>
+
+  <div class="stat-row">
+    <div class="stat-callout"><span class="stat-number">5</span><span class="stat-label">Functions bundled into a single &ldquo;job&rdquo;</span></div>
+    <div class="stat-callout"><span class="stat-number">300</span><span class="stat-label">Years of the job as organizing principle</span></div>
+  </div>
+
+  <p><strong>Income</strong> &mdash; money for survival. <strong>Identity</strong> &mdash; an answer to &ldquo;What do you do?&rdquo; <strong>Community</strong> &mdash; a tribe of colleagues. <strong>Purpose</strong> &mdash; a feeling of contribution, however illusory. <strong>Structure</strong> &mdash; a rhythm for your days.</p>
+
+  <p>The Intelligence Inversion is not just taking our jobs; it is violently unbundling these five functions. AI makes human labor unnecessary for income. This forces us, for the first time, to find better, more authentic sources for the other four.</p>
+
+  <div class="pullquote">
+    <p>The machines are taking our jobs. Thank God. Now we can get to our real work.</p>
+  </div>
 
   <!-- Panel 1: Work Bundle Visualizer -->
   <div class="panel">
@@ -119,28 +150,84 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
     </div>
   </div>
 
-  <!-- Panel 3: Computation vs Consciousness Sorter -->
-  <div class="panel">
-    <h2>Computation vs. Consciousness</h2>
-    <p style="font-size:0.9rem; color:#666;">Click each task to sort it. Is it computation (How?) or consciousness (Why/Whether?).</p>
+  <hr class="section-divider">
 
-    <div class="sorter-container">
-      <div class="sort-column">
-        <h3>Computation &mdash; &ldquo;How?&rdquo;</h3>
-        <div id="comp-column"></div>
-      </div>
-      <div class="sort-column">
-        <h3>Unsorted</h3>
-        <div id="unsorted-pool" class="unsorted-pool"></div>
-      </div>
-      <div class="sort-column">
-        <h3>Consciousness &mdash; &ldquo;Why/Whether?&rdquo;</h3>
-        <div id="cons-column"></div>
-      </div>
-    </div>
+  <!-- The Last Shadow of Scarcity -->
+  <h2>The Last Shadow of Scarcity: Beyond Opportunity Cost</h2>
 
-    <button class="btn secondary" onclick="revealAnswers()">Reveal Answers</button>
-    <div id="sort-result" class="stat" style="display:none;"></div>
+  <p>The unbundling of work also forces the collapse of its intellectual shadow: the concept of <strong>opportunity cost</strong>. For centuries, this idea &mdash; that the cost of doing anything is the value of what you have forgone &mdash; was the central calculation of a world defined by scarcity. A human could only be in one place, thinking one thought, performing one task. Every &ldquo;yes&rdquo; was a &ldquo;no&rdquo; to a million other possibilities.</p>
+
+  <!-- SVG: Opportunity Cost Inversion -->
+  <div class="panel" style="padding:1rem; text-align:center;">
+    <svg viewBox="0 0 600 200" style="width:100%;max-width:560px;display:block;margin:0 auto;">
+      <!-- Old world -->
+      <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Old World</text>
+      <rect x="50" y="35" width="200" height="60" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="150" y="60" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">Time scarcity</text>
+      <text x="150" y="78" text-anchor="middle" font-size="10" fill="#991b1b">Every "yes" = a million "no"s</text>
+      <!-- Arrow -->
+      <line x1="270" y1="65" x2="330" y2="65" stroke="#888" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="300" y="55" text-anchor="middle" font-size="10" fill="#888">AI</text>
+      <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#888"/></marker></defs>
+      <!-- New world -->
+      <text x="450" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">New World</text>
+      <rect x="350" y="35" width="200" height="60" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="450" y="60" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">Attention scarcity</text>
+      <text x="450" y="78" text-anchor="middle" font-size="10" fill="#1e40af">What am I choosing to experience?</text>
+      <!-- Bottom labels -->
+      <text x="150" y="120" text-anchor="middle" font-size="11" fill="#555">&ldquo;What could I be producing?&rdquo;</text>
+      <text x="450" y="120" text-anchor="middle" font-size="11" fill="#555">&ldquo;What consciousness am I cultivating?&rdquo;</text>
+      <!-- Dividing insight -->
+      <rect x="100" y="145" width="400" height="40" rx="6" fill="#fafaf8" stroke="#e5e5e0" stroke-width="1"/>
+      <text x="300" y="170" text-anchor="middle" font-size="11" fill="#555" font-style="italic">The real opportunity cost of mindless scrolling is consciousness left uncultivated.</text>
+    </svg>
+  </div>
+
+  <p>The Generative Engine operates without this constraint. An AI can explore a thousand design variations in the time a human could explore one, making the &ldquo;cost&rdquo; of a forgone design negligible. This annihilates the concept of opportunity cost for digital creation.</p>
+
+  <div class="pullquote">
+    <p>We have been trained to obsess over the opportunity cost of our time &mdash; a resource that AI makes infinitely productive &mdash; while ignoring the opportunity cost of our attention, the only resource that remains truly finite.</p>
+  </div>
+
+  <p>In the world after economics, the crucial question is not &ldquo;What could I be producing?&rdquo; but &ldquo;What am I choosing to experience?&rdquo;</p>
+
+  <hr class="section-divider">
+
+  <!-- The Arts of Being Human -->
+  <h2>The Arts of Being Human</h2>
+
+  <p>When economic necessity ends, human necessity begins. The &ldquo;jobs&rdquo; of the future are not jobs at all. They are the roles humans have always filled when not distracted by the Sisyphean task of rolling the economic rock up the hill. They are not professions. They are <em>arts</em>. The arts of being human.</p>
+
+  <!-- SVG: Four Arts Compass -->
+  <div style="text-align:center; margin: 2rem 0;">
+    <svg viewBox="0 0 340 340" style="width:100%;max-width:320px;">
+      <circle cx="170" cy="170" r="150" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4 4"/>
+      <circle cx="170" cy="170" r="80" fill="none" stroke="#e5e5e0" stroke-width="1"/>
+      <!-- Attention - top -->
+      <circle cx="170" cy="40" r="30" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="170" y="37" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">Attention</text>
+      <text x="170" y="48" text-anchor="middle" font-size="7.5" fill="#1e40af">Architects</text>
+      <!-- Connection - right -->
+      <circle cx="300" cy="170" r="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="300" y="167" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600">Relationship</text>
+      <text x="300" y="178" text-anchor="middle" font-size="7.5" fill="#166534">Weavers</text>
+      <!-- Meaning - bottom -->
+      <circle cx="170" cy="300" r="30" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+      <text x="170" y="297" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600">Meaning</text>
+      <text x="170" y="308" text-anchor="middle" font-size="7.5" fill="#92400e">Makers</text>
+      <!-- Embodiment - left -->
+      <circle cx="40" cy="170" r="30" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="40" y="167" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600">Reality</text>
+      <text x="40" y="178" text-anchor="middle" font-size="7.5" fill="#991b1b">Anchors</text>
+      <!-- Center label -->
+      <text x="170" y="167" text-anchor="middle" font-size="10" fill="#888" font-weight="600">The Arts</text>
+      <text x="170" y="180" text-anchor="middle" font-size="9" fill="#888">of Being Human</text>
+      <!-- Connecting lines -->
+      <line x1="170" y1="70" x2="170" y2="90" stroke="#e5e5e0" stroke-width="1"/>
+      <line x1="170" y1="250" x2="170" y2="270" stroke="#e5e5e0" stroke-width="1"/>
+      <line x1="70" y1="170" x2="90" y2="170" stroke="#e5e5e0" stroke-width="1"/>
+      <line x1="250" y1="170" x2="270" y2="170" stroke="#e5e5e0" stroke-width="1"/>
+    </svg>
   </div>
 
   <!-- Panel 4: Arts of Being Human -->
@@ -209,6 +296,156 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
       <div class="note" id="reflection-note"></div>
     </div>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- The Great Reversal -->
+  <h2>The Great Reversal: Identity Becomes Material Again</h2>
+
+  <p>For the last half century, identity has been dematerializing &mdash; shifting from what we own to the networks we belong to. The AI revolution will trigger a great reversal. As digital networks become infinitely dense and dominated by AI, <strong>authenticity becomes the new scarcity</strong>.</p>
+
+  <p>Human identity, having moved from land to production to networks, will reverse course. It will re-ground itself in the tangible, the local, and the embodied. A &ldquo;post-digital materialism&rdquo; focused on unique physical creation and experience, not mass consumption.</p>
+
+  <div class="pullquote">
+    <p>The most valuable signal of your unique Diversity Capital will be a thing you made with your hands that an AI cannot perfectly replicate.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- The Last Scarcity -->
+  <h2>The Last Scarcity: Computation vs. Consciousness</h2>
+
+  <p>As we step into this new world, we must finally confront the nature of the intelligence that has reshaped it. For we have discovered that &ldquo;intelligence&rdquo; is not one thing, but two.</p>
+
+  <!-- SVG: Computation vs Consciousness -->
+  <div style="text-align:center; margin: 2rem 0;">
+    <svg viewBox="0 0 500 180" style="width:100%;max-width:480px;">
+      <!-- Computation side -->
+      <rect x="10" y="15" width="210" height="150" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="115" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">Computation</text>
+      <text x="115" y="62" text-anchor="middle" font-size="10" fill="#1e40af">Syntactic &middot; Data &middot; Optimization</text>
+      <line x1="40" y1="72" x2="190" y2="72" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="115" y="92" text-anchor="middle" font-size="11" fill="#1e40af">Answers &ldquo;How?&rdquo;</text>
+      <text x="115" y="110" text-anchor="middle" font-size="9.5" fill="#555">How to design a protein</text>
+      <text x="115" y="124" text-anchor="middle" font-size="9.5" fill="#555">How to optimize a supply chain</text>
+      <text x="115" y="138" text-anchor="middle" font-size="9.5" fill="#555">How to win a game</text>
+      <text x="115" y="156" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">Power: effectively infinite</text>
+      <!-- Consciousness side -->
+      <rect x="280" y="15" width="210" height="150" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="385" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a">Consciousness</text>
+      <text x="385" y="62" text-anchor="middle" font-size="10" fill="#166534">Semantic &middot; Experience &middot; Meaning</text>
+      <line x1="310" y1="72" x2="460" y2="72" stroke="#bbf7d0" stroke-width="1"/>
+      <text x="385" y="92" text-anchor="middle" font-size="11" fill="#166534">Answers &ldquo;Why?&rdquo;</text>
+      <text x="385" y="110" text-anchor="middle" font-size="9.5" fill="#555">Why is this beautiful?</text>
+      <text x="385" y="124" text-anchor="middle" font-size="9.5" fill="#555">Why is this just?</text>
+      <text x="385" y="138" text-anchor="middle" font-size="9.5" fill="#555">Why does this matter?</text>
+      <text x="385" y="156" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600">Supply: finite and precious</text>
+      <!-- Center connector -->
+      <line x1="225" y1="90" x2="275" y2="90" stroke="#888" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="250" y="82" text-anchor="middle" font-size="8" fill="#888">unbundled</text>
+    </svg>
+  </div>
+
+  <p>For all of history, these two were bundled together in the human brain. The great achievement &mdash; and terror &mdash; of the AI revolution is that it has <strong>unbundled</strong> them. It has perfected the computational engine, setting it free from the constraints of biology.</p>
+
+  <!-- Panel 3: Computation vs Consciousness Sorter -->
+  <div class="panel">
+    <h2>Computation vs. Consciousness Sorter</h2>
+    <p style="font-size:0.9rem; color:#666;">Click each task to sort it. Is it computation (How?) or consciousness (Why/Whether?).</p>
+
+    <div class="sorter-container">
+      <div class="sort-column">
+        <h3>Computation &mdash; &ldquo;How?&rdquo;</h3>
+        <div id="comp-column"></div>
+      </div>
+      <div class="sort-column">
+        <h3>Unsorted</h3>
+        <div id="unsorted-pool" class="unsorted-pool"></div>
+      </div>
+      <div class="sort-column">
+        <h3>Consciousness &mdash; &ldquo;Why/Whether?&rdquo;</h3>
+        <div id="cons-column"></div>
+      </div>
+    </div>
+
+    <button class="btn secondary" onclick="revealAnswers()">Reveal Answers</button>
+    <div id="sort-result" class="stat" style="display:none;"></div>
+  </div>
+
+  <div class="pullquote">
+    <p>The AI is the ship that can sail an infinite ocean of possibility. We are the compass that gives the journey a destination.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- The Engine of Anti-Entropy -->
+  <h2>The Engine of Anti-Entropy</h2>
+
+  <p>But what is the point of all this freedom? Is it merely to allow eight billion people to become happy potters and poets? That is a worthy goal, but it is not a civilizational one.</p>
+
+  <p>The answer lies in first principles. We began with the Second Law of Thermodynamics &mdash; the inescapable tide of entropy. We discovered that intelligence is the universe's engine for creating temporary pockets of order against that tide.</p>
+
+  <div class="stat-callout">
+    <span class="stat-number">8B</span>
+    <span class="stat-label">Human consciousnesses guiding infinite computational power &mdash; the most powerful engine of anti-entropy this planet has ever known</span>
+  </div>
+
+  <p>Our purpose is no longer simply to survive or even to flourish individually. Our new, collective purpose is to become the most powerful engine of <strong>anti-entropy</strong> this planet has ever known. Our job is to use our unique human capacity for wisdom, taste, and moral judgment to guide the near infinite sorting power of AI. We are the conscience for the perfect demon. We are the gardeners who tell the infinitely powerful machine what kind of garden to grow.</p>
+
+  <div class="pullquote">
+    <p>This is the ultimate &ldquo;job&rdquo; that can never be automated: the act of choosing what is beautiful, what is true, and what is good, and then directing the most powerful force we have ever unleashed to create more of it.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- The Great Return -->
+  <h2>The Great Return</h2>
+
+  <p>What we are approaching is not actually new. It is very old. Before economics, before agriculture, before the great mistake of believing that our value was our output, we were something else. We are about to remember <em>what</em>.</p>
+
+  <p>The future looks like the deep past. Humans gathering in small groups to create meaning, beauty, and connection. Not because we have to, but because that is what humans do when freed from the fiction of necessary labor. We are not advancing into something new. We are returning to something essential.</p>
+
+  <!-- SVG: The Great Return -->
+  <div style="text-align:center; margin: 2rem 0;">
+    <svg viewBox="0 0 500 120" style="width:100%;max-width:480px;">
+      <!-- Timeline -->
+      <line x1="30" y1="50" x2="470" y2="50" stroke="#e5e5e0" stroke-width="2"/>
+      <!-- Deep Past -->
+      <circle cx="60" cy="50" r="8" fill="#16a34a"/>
+      <text x="60" y="76" text-anchor="middle" font-size="9" fill="#555">Deep Past</text>
+      <text x="60" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600">Meaning</text>
+      <!-- Agriculture -->
+      <circle cx="160" cy="50" r="6" fill="#888"/>
+      <text x="160" y="76" text-anchor="middle" font-size="9" fill="#555">Agriculture</text>
+      <!-- Industrial -->
+      <circle cx="260" cy="50" r="6" fill="#888"/>
+      <text x="260" y="76" text-anchor="middle" font-size="9" fill="#555">Industrial Era</text>
+      <text x="260" y="36" text-anchor="middle" font-size="8" fill="#dc2626">Value = Output</text>
+      <!-- Now -->
+      <circle cx="360" cy="50" r="6" fill="#d97706"/>
+      <text x="360" y="76" text-anchor="middle" font-size="9" fill="#555">AI Revolution</text>
+      <text x="360" y="36" text-anchor="middle" font-size="8" fill="#d97706">Unbundling</text>
+      <!-- After Economics -->
+      <circle cx="450" cy="50" r="8" fill="#16a34a"/>
+      <text x="450" y="76" text-anchor="middle" font-size="9" fill="#555">After Economics</text>
+      <text x="450" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600">Meaning</text>
+      <!-- Return arc -->
+      <path d="M 60 42 Q 250 -10 450 42" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="255" y="12" text-anchor="middle" font-size="8.5" fill="#16a34a" font-style="italic">The Great Return</text>
+    </svg>
+  </div>
+
+  <p>The last day of the old world is upon us. Not in some grand apocalypse, but in an ordinary Tuesday that turns out to be the last ordinary Tuesday for some professional, somewhere. They do not know it is their last. That is how the old world ends.</p>
+
+  <p>But somewhere else, today, someone is having their first real conversation in years, unhurried by economic necessity. Someone is creating art for its own sake. Someone is raising children without the guilt of not being productive. Someone is already living in the after.</p>
+
+  <div class="pullquote">
+    <p>Now that you do not have to do anything to survive, what will you choose to be?</p>
+  </div>
+
+  <p>The answer to that question is the real work of the future. It always was. The machines have not stolen our purpose. They have cleared away the debris that was hiding it.</p>
+
+  <p style="text-align:center; font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem; color: #2563eb; margin: 2.5rem 0 1.5rem;">Welcome to after economics. Welcome to the beginning.</p>
 </div>
 
 <script>
