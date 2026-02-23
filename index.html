@@ -3,780 +3,1088 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Symbioism: The Last Economy — Explorable Explanations</title>
+<title>Symbioism: The Last Economy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg: #07070d;
+  --bg2: #0d0d18;
+  --blue: #3b82f6;
+  --violet: #8b5cf6;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --green: #10b981;
+  --white: #f0eff6;
+  --muted: #6b6a80;
+  --border: rgba(255,255,255,0.07);
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
 body {
-  background: #fafaf8;
-  color: #1a1a1a;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 300;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: default;
 }
 
-.prose {
-  font-family: Georgia, 'Times New Roman', serif;
-  max-width: 680px;
-  margin: 0 auto;
-  line-height: 1.75;
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
 }
 
-header {
-  text-align: center;
-  padding: 80px 24px 48px;
-}
-
-header h1 {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-}
-
-header .subtitle {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: clamp(0.95rem, 2vw, 1.15rem);
-  color: #555;
-  margin-bottom: 32px;
-}
-
-header .intro {
-  font-size: 1.05rem;
-  color: #333;
-}
-
-.scrub {
-  border-bottom: 2px dashed #2563eb;
-  cursor: ew-resize;
-  color: #2563eb;
-  font-weight: 600;
-  padding: 0 2px;
-  user-select: none;
-  -webkit-user-select: none;
-  display: inline;
-  touch-action: none;
-}
-.scrub:hover {
-  background: rgba(37, 99, 235, 0.08);
-}
-
-.grid-section {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 24px 24px 80px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 560px) {
-  .grid { grid-template-columns: 1fr; }
-  header { padding: 48px 20px 32px; }
-}
-
-.card {
-  background: #fff;
-  border: 1px solid #e5e5e0;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
+/* ── HERO ── */
+.hero {
   position: relative;
-}
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-}
-
-.card-accent {
-  width: 100%;
-  height: 4px;
-}
-
-.card-viz {
-  height: 100px;
-  width: 100%;
-  overflow: hidden;
-  background: #fafaf8;
-}
-.card-viz svg {
-  display: block;
-}
-
-.card-body {
-  padding: 16px 20px 20px;
-  flex: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 0 max(5vw, 24px);
+  overflow: hidden;
 }
 
-.card-badge {
-  display: inline-block;
-  font-family: system-ui, -apple-system, sans-serif;
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  padding: 120px 0 80px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
   font-size: 0.7rem;
-  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
+  color: var(--amber);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 8vw, 7.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.4s;
+}
+
+.hero-title .line-sub {
+  display: block;
+  font-size: clamp(1.4rem, 3vw, 2.8rem);
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(240,239,246,0.55);
+  letter-spacing: 0;
+  margin-top: 0.3em;
+}
+
+.hero-title .accent-blue { color: var(--blue); }
+.hero-title .accent-amber { color: var(--amber); }
+
+.hero-tagline {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 300;
+  color: rgba(240,239,246,0.75);
+  max-width: 560px;
+  margin-bottom: 3rem;
+  line-height: 1.5;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.6s;
+}
+
+.hero-tagline em {
+  color: var(--white);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.8s;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.85rem 1.8rem;
   border-radius: 4px;
-  margin-bottom: 8px;
-  width: fit-content;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(59,130,246,0.3);
+}
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 0 50px rgba(59,130,246,0.5);
 }
 
-.card-title {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 1.05rem;
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: rgba(240,239,246,0.6);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 400;
+  padding: 0.85rem 1.4rem;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-secondary:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: max(5vw, 24px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.4s;
+}
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--muted), transparent);
+}
+
+/* ── COUNTDOWN BAND ── */
+.countdown-band {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem max(5vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.countdown-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.countdown-number {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
+  color: var(--amber);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.card-question {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.88rem;
-  color: #555;
+.countdown-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.countdown-bar-wrap {
   flex: 1;
-  margin-bottom: 12px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.countdown-bar-track {
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.6rem;
+}
+.countdown-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--red));
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+.countdown-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: 300px;
   font-style: italic;
 }
 
-.card-link {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: gap 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+/* ── SECTIONS ── */
+section {
+  padding: 7rem max(5vw, 24px);
 }
-.card:hover .card-link {
-  gap: 8px;
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+}
+
+.section-body {
+  font-size: 1.05rem;
+  color: rgba(240,239,246,0.65);
+  max-width: 620px;
+  line-height: 1.75;
+}
+
+.section-body p + p { margin-top: 1em; }
+
+/* ── PREMISE ── */
+.premise {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5vw;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.premise-quote {
+  position: relative;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(59,130,246,0.04));
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.premise-quote::before {
+  content: '"';
+  font-family: var(--serif);
+  font-size: 8rem;
+  line-height: 0.7;
+  color: var(--violet);
+  opacity: 0.3;
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  pointer-events: none;
+}
+
+.premise-quote blockquote {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-style: italic;
+  line-height: 1.65;
+  color: rgba(240,239,246,0.85);
+  position: relative;
+  z-index: 1;
+}
+
+.premise-quote cite {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 1.5rem;
+  font-style: normal;
+}
+
+/* ── CONCEPTS GRID ── */
+.concepts-section { background: var(--bg2); }
+
+.concepts-header {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1.5px solid var(--border);
+}
+
+.concept-card {
+  padding: 2.5rem 2rem;
+  background: var(--bg2);
+  border-right: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.concept-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--card-color, var(--blue));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.concept-card:hover { background: rgba(255,255,255,0.02); }
+.concept-card:hover::after { transform: scaleX(1); }
+
+.concept-num {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+}
+
+.concept-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--white);
+}
+
+.concept-body {
+  font-size: 0.88rem;
+  color: rgba(240,239,246,0.5);
+  line-height: 1.65;
+}
+
+.concept-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+  margin-top: 1.2rem;
+  text-transform: uppercase;
+}
+
+/* ── THREE FUTURES ── */
+.futures-section {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.futures-section::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.futures-header {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.futures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1.5px solid var(--border);
+}
+
+.future-card {
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  border-right: 1.5px solid var(--border);
+  transition: background 0.3s;
+}
+
+.future-card:hover { background: rgba(255,255,255,0.015); }
+
+.future-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.future-num {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.future-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.future-subtitle {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.future-body {
+  font-size: 0.88rem;
+  color: rgba(240,239,246,0.55);
+  line-height: 1.7;
+}
+
+.future-verdict {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 2px;
+  margin-top: 1.5rem;
+}
+
+/* ── EXPLORABLES CTA ── */
+.explorables-section {
+  background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(139,92,246,0.06) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  padding: 8rem max(5vw, 24px);
+}
+
+.explorables-section .section-title {
+  margin: 0 auto 1.5rem;
+  text-align: center;
+  max-width: 700px;
+}
+
+.explorables-section .section-body {
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.chapter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chapter-pill {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.chapter-pill:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ── AUTHOR ── */
+.author-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5vw;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 7rem max(5vw, 24px);
+}
+
+.author-visual {
+  position: relative;
+  aspect-ratio: 4/5;
+  max-width: 400px;
+}
+
+.author-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.author-initials {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  user-select: none;
+}
+
+.author-badge {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  right: 2rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(7,7,13,0.9);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.author-badge-name {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.author-badge-title {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.author-content .section-body {
+  margin-bottom: 2rem;
+}
+
+/* ── PHILOSOPHY BAND ── */
+.philosophy-band {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 4rem max(5vw, 24px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.philosophy-item {}
+
+.philosophy-law {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+
+.philosophy-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.philosophy-body {
+  font-size: 0.85rem;
+  color: rgba(240,239,246,0.5);
+  line-height: 1.65;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 3rem max(5vw, 24px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(240,239,246,0.4);
+}
+
+.footer-nav {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-nav a {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-nav a:hover { color: var(--white); }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── DIVIDER ── */
+.rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .premise { grid-template-columns: 1fr; }
+  .futures-grid { grid-template-columns: 1fr; }
+  .author-section { grid-template-columns: 1fr; }
+  .philosophy-band { grid-template-columns: 1fr; }
+  .future-card { border-right: none; }
+  .author-visual { max-width: 100%; aspect-ratio: 3/2; }
+  .countdown-band { flex-direction: column; gap: 1.5rem; }
+  .countdown-bar-wrap { max-width: 100%; width: 100%; }
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Symbioism: The Last Economy</h1>
-  <p class="subtitle">Twenty-three interactive chapters where you manipulate the ideas directly</p>
-  <p class="prose intro">
-    Since <span class="scrub" id="scrub-year" data-min="1750" data-max="2030" data-value="1750">1750</span>,
-    civilization has reorganized its economic engine
-    <span class="scrub" id="scrub-count" data-min="1" data-max="6" data-value="4">4</span> times.
-    We are living through the <span id="ordinal">4th</span> transition now — and this one is different.
-    Each prior shift — agrarian to mercantile, mercantile to industrial, industrial to informational —
-    changed <em>what</em> humans did. This shift changes <em>whether</em> humans do it at all.
-  </p>
-</header>
-
-<section class="grid-section">
-  <div class="grid" id="card-grid"></div>
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="eyebrow">Symbioism &nbsp;·&nbsp; A New Science of Economics &nbsp;·&nbsp; Emad Mostaque</p>
+    <h1 class="hero-title">
+      The&nbsp;<span class="accent-blue">Last</span><br>Economy
+      <span class="line-sub">A Guide to the Age of Intelligent Economics</span>
+    </h1>
+    <p class="hero-tagline">
+      Your economic life expectancy is shrinking. This is <em>not a recession.</em>
+      It is a phase transition — and the window to shape it is measured in days, not decades.
+    </p>
+    <div class="hero-actions">
+      <a href="explorables.html" class="btn-primary">
+        Read the Explorables
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#premise" class="btn-secondary">The Premise ↓</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    <span>Scroll to explore</span>
+  </div>
 </section>
 
+<!-- ══ COUNTDOWN ══ -->
+<div class="countdown-band">
+  <div>
+    <p class="countdown-label">Days remaining in the critical window</p>
+    <div class="countdown-number" id="countdown-num">—</div>
+    <p class="countdown-sub">of ~1,000 days</p>
+  </div>
+  <div class="countdown-bar-wrap">
+    <p class="countdown-label">Window consumed</p>
+    <div id="pct-display" style="font-family:var(--mono);font-size:0.7rem;color:var(--amber);margin-bottom:0.3rem;">—%</div>
+    <div class="countdown-bar-track">
+      <div class="countdown-bar-fill" id="countdown-bar" style="width:0%"></div>
+    </div>
+  </div>
+  <p class="countdown-note">Not a prediction of apocalypse. An estimate of when the phase transition from liquid to crystal becomes irreversible.</p>
+</div>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- ══ PREMISE ══ -->
+<section id="premise" style="background:var(--bg2); border-bottom: 1px solid var(--border);">
+  <div class="premise">
+    <div>
+      <p class="section-label reveal">The Premise</p>
+      <h2 class="section-title reveal reveal-delay-1">The Intelligence Inversion</h2>
+      <div class="section-body reveal reveal-delay-2">
+        <p>For three hundred years, economics assumed one unchanging fact: human cognition is scarce. Rare expertise commands rare prices. The doctor, the lawyer, the engineer — each a high-value node in the network of civilization.</p>
+        <p>AI has broken this assumption completely. Not gradually. Not partially. The marginal cost of expert cognition has collapsed by 99.99% in under a decade. Our economic models — built entirely on the scarcity of mind — have no framework for what happens next.</p>
+        <p>This is not a productivity improvement. This is a phase transition. The kind that reshapes civilizations. The Last Economy is an engineering manual for what must be built on the other side.</p>
+      </div>
+    </div>
+    <div class="premise-quote reveal reveal-delay-2">
+      <blockquote>
+        "We are not approaching post-scarcity in the domain of intelligence; we have arrived. A single AI can now write a million legal briefs, create a billion architectural plans, or compose infinite symphonies — at zero marginal cost. This breaks the fundamental equation of economics entirely."
+      </blockquote>
+      <cite>— The Last Economy, Chapter 3</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THREE LAWS ══ -->
+<div style="max-width:1200px; margin:0 auto;">
+  <div class="philosophy-band">
+    <div class="philosophy-item reveal">
+      <p class="philosophy-law">First Law</p>
+      <h3 class="philosophy-title">Flow</h3>
+      <p class="philosophy-body">Value must be conserved and circulated. A system that hoards is a system that stops learning. Entropy always wins against accumulation.</p>
+    </div>
+    <div class="philosophy-item reveal reveal-delay-1">
+      <p class="philosophy-law">Second Law</p>
+      <h3 class="philosophy-title">Openness</h3>
+      <p class="philosophy-body">The system must remain open to new energy and information to fight entropy and avoid model collapse. Closed systems decay.</p>
+    </div>
+    <div class="philosophy-item reveal reveal-delay-2">
+      <p class="philosophy-law">Third Law</p>
+      <h3 class="philosophy-title">Resilience</h3>
+      <p class="philosophy-body">The system must maintain a diversity of components and strategies to survive unforeseen shocks. Monocultures are catastrophically fragile.</p>
+    </div>
+  </div>
+</div>
+<hr class="rule">
+
+<!-- ══ CONCEPTS ══ -->
+<section class="concepts-section">
+  <div class="concepts-header">
+    <p class="section-label reveal">Key Ideas</p>
+    <h2 class="section-title reveal reveal-delay-1">A New Science of Value</h2>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card reveal" style="--card-color: #3b82f6;">
+      <p class="concept-num">01 &nbsp;·&nbsp; Foundation</p>
+      <h3 class="concept-title">The MIND Dashboard</h3>
+      <p class="concept-body">GDP is criminally insane — it rewards destruction and ignores what matters. MIND measures four true capitals: Material, Intelligence, Network, and Diversity. Zero in any dimension and the entire system collapses.</p>
+      <span class="concept-tag" style="background:rgba(59,130,246,0.1); color:var(--blue);">M × I × N × D</span>
+    </div>
+    <div class="concept-card reveal reveal-delay-1" style="--card-color: #8b5cf6;">
+      <p class="concept-num">02 &nbsp;·&nbsp; Architecture</p>
+      <h3 class="concept-title">The Three Flows</h3>
+      <p class="concept-body">Smith, Marx, and Hayek were each right — about different parts of the same river. Gradient flows (scarce atoms), Circular flows (abundant bits), and Harmonic flows (trust and institutions) must all be understood together.</p>
+      <span class="concept-tag" style="background:rgba(139,92,246,0.1); color:var(--violet);">Hodge Decomposition</span>
+    </div>
+    <div class="concept-card reveal reveal-delay-2" style="--card-color: #10b981;">
+      <p class="concept-num">03 &nbsp;·&nbsp; Contract</p>
+      <h3 class="concept-title">The New Social Contract</h3>
+      <p class="concept-body">The old contract — labor for security — is broken. The new one must be an endowment: Dignity (access to intelligence), Capability (sovereign AI), and Viability (knowledge commons). Not charity. Physics.</p>
+      <span class="concept-tag" style="background:rgba(16,185,129,0.1); color:var(--green);">UAI — Universal Access to Intelligence</span>
+    </div>
+    <div class="concept-card reveal reveal-delay-3" style="--card-color: #f59e0b;">
+      <p class="concept-num">04 &nbsp;·&nbsp; Role</p>
+      <h3 class="concept-title">Humanity as the Alignment Layer</h3>
+      <p class="concept-body">AI is the Action Layer: uncapped, infinitely scalable execution. Humanity is the Alignment Layer: the source of values, ethics, and ultimate purpose. This is not a partnership of equals — it is a symbiosis of different intelligences.</p>
+      <span class="concept-tag" style="background:rgba(245,158,11,0.1); color:var(--amber);">Human–AI Symbiosis</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THREE FUTURES ══ -->
+<section class="futures-section">
+  <div class="futures-header">
+    <p class="section-label reveal">The Stakes</p>
+    <h2 class="section-title reveal reveal-delay-1">Three Possible Crystals</h2>
+    <p class="section-body reveal reveal-delay-2">Civilizations don't evolve gradually — they crystallize. Like a supercooled liquid that snaps into one of a finite number of stable structures, our civilization will solidify into one of exactly three configurations. The physics allows no others.</p>
+  </div>
+  <div class="futures-grid">
+    <div class="future-card reveal">
+      <div class="future-indicator" style="background:var(--red); color:var(--red);"></div>
+      <p class="future-num">Future One</p>
+      <h3 class="future-title">Digital Feudalism</h3>
+      <p class="future-subtitle">The Default Path · The Path of Inaction</p>
+      <p class="future-body">AI controlled by a handful of corporations. Humans receive UBI in exchange for data and attention. Not citizens — users. Not workers — content. Medieval power dynamics restored at planetary scale, with algorithms instead of lords.</p>
+      <span class="future-verdict" style="background:rgba(239,68,68,0.1); color:var(--red);">Default Trajectory</span>
+    </div>
+    <div class="future-card reveal reveal-delay-1">
+      <div class="future-indicator" style="background:#f97316; color:#f97316;"></div>
+      <p class="future-num">Future Two</p>
+      <h3 class="future-title">The Great Fragmentation</h3>
+      <p class="future-subtitle">The Fear Response · Balkanization</p>
+      <p class="future-body">Nations erect walls around their AI systems. Algorithmic cold war. Each bloc optimizes against the others. The global commons of knowledge dissolves into competing silos, each getting weaker as cooperation collapses.</p>
+      <span class="future-verdict" style="background:rgba(249,115,22,0.1); color:#f97316;">Fear Response</span>
+    </div>
+    <div class="future-card reveal reveal-delay-2">
+      <div class="future-indicator" style="background:var(--green); color:var(--green);"></div>
+      <p class="future-num">Future Three</p>
+      <h3 class="future-title">Human Symbiosis</h3>
+      <p class="future-subtitle">The Conscious Choice · The Hard Path</p>
+      <p class="future-body">Intelligence as commons. AI amplifying human purpose rather than replacing it. A civilization where abundance is a feature, not a threat — and the liberation from necessity becomes the beginning of genuine human flourishing.</p>
+      <span class="future-verdict" style="background:rgba(16,185,129,0.1); color:var(--green);">The Possible Future</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPLORABLES CTA ══ -->
+<section class="explorables-section">
+  <p class="section-label reveal">Interactive Book</p>
+  <h2 class="section-title reveal reveal-delay-1">Read it. Manipulate it. Understand it.</h2>
+  <div class="section-body reveal reveal-delay-2">
+    <p>Twenty-three interactive chapters where you drag the sliders, move the marble, and watch the ideas respond. Not a passive reading experience — an active argument you can push back against.</p>
+  </div>
+  <div class="chapter-pills reveal reveal-delay-2">
+    <span class="chapter-pill">Intro</span>
+    <span class="chapter-pill">Ch 1 · Intelligence Inversion</span>
+    <span class="chapter-pill">Ch 2 · Harbingers</span>
+    <span class="chapter-pill">Ch 3 · Seven Lies</span>
+    <span class="chapter-pill">Ch 4 · GDP Illusion</span>
+    <span class="chapter-pill">Ch 5 · Trial by Fire</span>
+    <span class="chapter-pill">Ch 6 · Maxwell's Demon</span>
+    <span class="chapter-pill">Ch 7 · Generative Engine</span>
+    <span class="chapter-pill">Ch 8 · MIND Dashboard</span>
+    <span class="chapter-pill">Ch 9 · Three Flows</span>
+    <span class="chapter-pill">Ch 10 · Network Prison</span>
+    <span class="chapter-pill">Ch 11 · Cathedral & Bazaar</span>
+    <span class="chapter-pill">Ch 12 · Cooperation</span>
+    <span class="chapter-pill">Ch 13 · Dual Engine</span>
+    <span class="chapter-pill">Ch 14 · Social Contract</span>
+    <span class="chapter-pill">Ch 15 · Alignment Economy</span>
+    <span class="chapter-pill">Ch 16 · Three Futures</span>
+    <span class="chapter-pill">Ch 17 · Symbiotic State</span>
+    <span class="chapter-pill">Ch 18 · Money for Two Worlds</span>
+    <span class="chapter-pill">Ch 19 · Nucleation</span>
+    <span class="chapter-pill">Ch 20 · Intelligent Macro</span>
+    <span class="chapter-pill">Ch 21 · After Economics</span>
+    <span class="chapter-pill">Epilogue</span>
+  </div>
+  <div class="reveal reveal-delay-3">
+    <a href="explorables.html" class="btn-primary" style="font-size:1.05rem; padding:1rem 2.5rem;">
+      Enter the Explorables
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ══ AUTHOR ══ -->
+<section style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:0;">
+  <div class="author-section">
+    <div class="author-visual reveal">
+      <div class="author-bg"></div>
+      <div class="author-initials">EM</div>
+      <div class="author-badge">
+        <p class="author-badge-name">Emad Mostaque</p>
+        <p class="author-badge-title">Founder, Stability AI &nbsp;·&nbsp; AI Researcher</p>
+      </div>
+    </div>
+    <div class="author-content">
+      <p class="section-label reveal">The Author</p>
+      <h2 class="section-title reveal reveal-delay-1">Emad Mostaque</h2>
+      <div class="section-body reveal reveal-delay-2">
+        <p>Emad Mostaque is the founder of Stability AI and one of the key architects of the open-source AI movement. He has spent the last decade building the technology described in this book — and thinking carefully about what it means for humanity.</p>
+        <p>The Last Economy is not written from the sidelines. It is an engineering manual written by someone who has seen the machinery from the inside, and who believes the window for conscious choice is still — narrowly — open.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <p class="footer-brand">Symbioism: The Last Economy</p>
+  <nav>
+    <ul class="footer-nav">
+      <li><a href="explorables.html">Explorables</a></li>
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="epilogue.html">Epilogue</a></li>
+    </ul>
+  </nav>
+</footer>
+
 <script>
-// --- Scrubable numbers ---
+// ── HERO CANVAS ──
 (function() {
-  const ordinals = ['','1st','2nd','3rd','4th','5th','6th'];
-  const ordinalEl = document.getElementById('ordinal');
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, animId;
 
-  function updateOrdinal() {
-    const v = parseInt(document.getElementById('scrub-count').dataset.value);
-    ordinalEl.textContent = ordinals[v] || v + 'th';
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
   }
 
-  document.querySelectorAll('.scrub').forEach(el => {
-    let startX, startVal;
-    const min = parseInt(el.dataset.min);
-    const max = parseInt(el.dataset.max);
-    const sensitivity = (max - min) > 100 ? 1 : 0.15;
-
-    function onMove(clientX) {
-      const dx = clientX - startX;
-      let next = Math.round(startVal + dx * sensitivity);
-      next = Math.max(min, Math.min(max, next));
-      el.dataset.value = next;
-      el.textContent = next;
-      updateOrdinal();
-    }
-
-    el.addEventListener('mousedown', e => {
-      e.preventDefault();
-      startX = e.clientX;
-      startVal = parseInt(el.dataset.value);
-      const moveHandler = e2 => onMove(e2.clientX);
-      const upHandler = () => {
-        document.removeEventListener('mousemove', moveHandler);
-        document.removeEventListener('mouseup', upHandler);
-      };
-      document.addEventListener('mousemove', moveHandler);
-      document.addEventListener('mouseup', upHandler);
-    });
-
-    el.addEventListener('touchstart', e => {
-      e.preventDefault();
-      startX = e.touches[0].clientX;
-      startVal = parseInt(el.dataset.value);
-      const moveHandler = e2 => onMove(e2.touches[0].clientX);
-      const upHandler = () => {
-        document.removeEventListener('touchmove', moveHandler);
-        document.removeEventListener('touchend', upHandler);
-      };
-      document.addEventListener('touchmove', moveHandler);
-      document.addEventListener('touchend', upHandler);
-    });
-  });
-})();
-
-// --- Card data ---
-const cards = [
-  { n: 0,  file: 'introduction.html',              title: 'The Thousand-Day Window',    ch: 'Intro',  q: 'How long do we have before the phase transition becomes irreversible?', color: '#1a1a1a' },
-  { n: 1,  file: '01-intelligence-inversion.html', title: 'The Intelligence Inversion', ch: 'Ch 1',  q: 'When cognition itself is automated, where do humans pivot?', color: '#7c3aed' },
-  { n: 2,  file: '02-harbingers.html',              title: 'Harbingers of the Storm',    ch: 'Ch 2',  q: 'What does physics look like when a system is about to break?', color: '#dc2626' },
-  { n: 3,  file: 'seven-lies.html',                 title: 'The Seven Fatal Lies',       ch: 'Ch 3',  q: 'What if the foundations of economics are not just wrong \u2014 but backwards?', color: '#b45309' },
-  { n: 4,  file: '03-gdp-illusion.html',            title: 'The GDP Illusion',           ch: 'Ch 4',  q: 'What if your only instrument rewarded destruction?', color: '#d97706' },
-  { n: 5,  file: 'ch5-trial-by-fire.html',          title: 'The Trial by Fire',          ch: 'Ch 5',  q: 'What are the seven strongest arguments against this book \u2014 and why do they fail?', color: '#dc2626' },
-  { n: 6,  file: '04-maxwells-demon.html',          title: 'Maxwell\u2019s Demon',       ch: 'Ch 6',  q: 'Is value a social agreement or a law of physics?', color: '#059669' },
-  { n: 7,  file: 'generative-engine.html',          title: 'The Generative Engine',      ch: 'Ch 7',  q: 'How does an economy conjure order from infinite chaos?', color: '#0d9488' },
-  { n: 8,  file: '05-mind-dashboard.html',          title: 'The MIND Dashboard',         ch: 'Ch 8',  q: 'What happens when any single dimension of civilization reaches zero?', color: '#2563eb' },
-  { n: 9,  file: '06-three-flows.html',             title: 'The Three Flows',            ch: 'Ch 9',  q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
-  { n: 10, file: '07-network-prison.html',          title: 'The Network Prison',         ch: 'Ch 10', q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
-  { n: 11, file: 'ch11-cathedral-bazaar.html',      title: 'Cathedral and Bazaar',       ch: 'Ch 11', q: 'Are firms becoming obsolete \u2014 and what replaces them?', color: '#0891b2' },
-  { n: 12, file: '08-cooperation-emerges.html',     title: 'Cooperation Emerges',        ch: 'Ch 12', q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
-  { n: 13, file: 'ch13-dual-engine.html',           title: 'The Dual Engine',            ch: 'Ch 13', q: 'What happens when AI accelerates the fast clock to infinity while the slow clock barely moves?', color: '#7c3aed' },
-  { n: 14, file: 'ch14-social-contract.html',       title: 'The New Social Contract',    ch: 'Ch 14', q: 'What do we owe each other in a world where labor is no longer necessary?', color: '#16a34a' },
-  { n: 15, file: 'ch15-alignment-economy.html',     title: 'The Alignment Economy',      ch: 'Ch 15', q: 'Who commands the machines \u2014 and why is that the central question of this century?', color: '#dc2626' },
-  { n: 16, file: '09-three-futures.html',           title: 'The Three Futures',          ch: 'Ch 16', q: 'Which crystal will this supercooled civilization become?', color: '#dc2626' },
-  { n: 17, file: 'ch17-symbiotic-state.html',       title: 'The Symbiotic State',        ch: 'Ch 17', q: 'What does governance look like when its job is gardening, not extracting?', color: '#2563eb' },
-  { n: 18, file: 'ch18-money-two-worlds.html',      title: 'Money for Two Worlds',       ch: 'Ch 18', q: 'Can a currency designed for atoms serve an economy running on bits?', color: '#d97706' },
-  { n: 19, file: 'nucleation.html',                 title: 'The Nucleation of the New',  ch: 'Ch 19', q: 'How does a new world crystallize \u2014 and what is your role in seeding it?', color: '#16a34a' },
-  { n: 20, file: 'intelligent-macro.html',          title: 'Intelligent Macroeconomics', ch: 'Ch 20', q: 'What if the great economic mysteries dissolve when you measure the right things?', color: '#6d28d9' },
-  { n: 21, file: '10-after-economics.html',         title: 'After Economics',            ch: 'Ch 21', q: 'AI unbundles the job. What do you replace each piece with?', color: '#7c3aed' },
-  { n: 22, file: 'epilogue.html',                   title: 'The Thousandth Day',         ch: 'Epilogue', q: 'The machines have taken our work. What do we do with the gift of that liberation?', color: '#1a1a1a' },
-];
-
-// --- Mini-visualization generators ---
-const vizGenerators = [
-  // 0: Introduction — countdown number animation
-  function(svg, w, h, color) {
-    const windowEnd = new Date('2024-01-01').getTime() + 1000 * 24 * 3600 * 1000;
-    const remaining = Math.max(0, Math.ceil((windowEnd - Date.now()) / (24 * 3600 * 1000)));
-    const pct = Math.min(1, (1000 - remaining) / 1000);
-    // Progress arc
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
-    const tau = Math.PI * 2;
-    const arc = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau);
-    const filled = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau * pct);
-    svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', arc()).attr('fill', '#e5e5e0');
-    svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', filled()).attr('fill', color).attr('opacity', 0.8);
-    svg.append('text').attr('x', cx).attr('y', cy + 5).attr('text-anchor', 'middle').attr('font-size', 18).attr('font-weight', 700).attr('fill', color).text(remaining);
-    svg.append('text').attr('x', cx).attr('y', cy + 20).attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', '#888').text('days');
-  },
-  // 1: Rising then flipping sigmoid (intelligence inversion)
-  function(svg, w, h, color) {
-    const n = 40;
-    const data = d3.range(n).map(i => {
-      const x = i / (n - 1);
-      return { x, y: 1 / (1 + Math.exp(-12 * (x - 0.5))) };
-    });
-    const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
-    const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
-    const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
-    svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.7)
-      .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-      .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-      .transition().duration(1500).attr('stroke-dashoffset', 0);
-    const data2 = data.map(d => ({ x: d.x, y: 1 - d.y }));
-    svg.append('path').datum(data2).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.25)
-      .attr('stroke-dasharray', '4,4');
-  },
-  // 2: Seismograph jitter (harbingers)
-  function(svg, w, h, color) {
-    const n = 60;
-    const data = d3.range(n).map(i => {
-      const x = i / (n - 1);
-      const amp = Math.pow(x, 2.5);
-      return { x, y: 0.5 + amp * (Math.random() - 0.5) };
-    });
-    const xS = d3.scaleLinear().domain([0, 1]).range([4, w - 4]);
-    const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
-    const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveLinear);
-    svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0.7)
-      .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-      .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-      .transition().duration(2000).attr('stroke-dashoffset', 0);
-  },
-  // 3: Flip card animation (Seven Lies)
-  function(svg, w, h, color) {
-    const n = 7;
-    const cardW = Math.floor((w - 16) / n) - 2;
-    const cardH = h - 16;
-    const data = d3.range(n).map(i => ({ i, flipped: false }));
-    const groups = svg.selectAll('g.lie-card').data(data).join('g')
-      .attr('class', 'lie-card')
-      .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
-    groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
-      .attr('fill', color).attr('opacity', 0.8);
-    // Animate: cards flip one by one revealing back side
-    data.forEach((d, i) => {
-      setTimeout(() => {
-        groups.filter((dd, ii) => ii === i)
-          .select('rect')
-          .transition().duration(300)
-          .attr('fill', '#fff')
-          .attr('stroke', color).attr('stroke-width', 1.5);
-      }, 400 + i * 260);
-    });
-  },
-  // 5: Ch5 Trial by Fire — 7 argument cards flipping one by one
-  function(svg, w, h, color) {
-    const n = 7;
-    const cardW = Math.floor((w - 16) / n) - 2;
-    const cardH = h - 16;
-    const data = d3.range(n).map(i => ({ i }));
-    const groups = svg.selectAll('g.fire-card').data(data).join('g')
-      .attr('class', 'fire-card')
-      .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
-    groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
-      .attr('fill', color).attr('opacity', 0.7);
-    data.forEach((d, i) => {
-      setTimeout(() => {
-        groups.filter((dd, ii) => ii === i).select('rect')
-          .transition().duration(300)
-          .attr('fill', '#dcfce7').attr('stroke', '#16a34a').attr('stroke-width', 1.5).attr('opacity', 1);
-      }, 300 + i * 220);
-    });
-  },
-  // 4: Diverging bars (GDP illusion)
-  function(svg, w, h, color) {
-    const n = 12;
-    const data = d3.range(n).map(i => ({ i, v: 0.3 + Math.random() * 0.7, bad: Math.random() > 0.5 }));
-    const xS = d3.scaleBand().domain(d3.range(n)).range([16, w - 16]).padding(0.35);
-    const yS = d3.scaleLinear().domain([0, 1]).range([0, h * 0.65]);
-    svg.selectAll('rect').data(data).join('rect')
-      .attr('x', d => xS(d.i)).attr('width', xS.bandwidth())
-      .attr('y', h - 10).attr('height', 0)
-      .attr('rx', 2)
-      .attr('fill', d => d.bad ? '#e5e5e0' : color).attr('opacity', d => d.bad ? 0.6 : 0.7)
-      .transition().duration(800).delay((d, i) => i * 60)
-      .attr('y', d => h - 10 - yS(d.v)).attr('height', d => yS(d.v));
-  },
-  // 5: Orbiting particles (Maxwell's Demon)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.32;
-    svg.append('line').attr('x1', cx).attr('y1', 8).attr('x2', cx).attr('y2', h - 8)
-      .attr('stroke', '#e5e5e0').attr('stroke-width', 1).attr('stroke-dasharray', '3,3');
-    const particles = d3.range(14).map(() => ({
-      angle: Math.random() * Math.PI * 2,
-      speed: 0.005 + Math.random() * 0.015,
-      rx: r * (0.5 + Math.random() * 0.5),
-      ry: r * (0.3 + Math.random() * 0.5),
-      side: Math.random() > 0.5
+  function makeNodes(n) {
+    return Array.from({length: n}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: 1.5 + Math.random() * 2,
+      alpha: 0.3 + Math.random() * 0.5,
+      hue: Math.random() > 0.6 ? '#3b82f6' : Math.random() > 0.5 ? '#8b5cf6' : '#f59e0b'
     }));
-    const dots = svg.selectAll('circle').data(particles).join('circle')
-      .attr('r', 3).attr('fill', d => d.side ? color : '#dc2626').attr('opacity', 0.65);
-    function tick() {
-      particles.forEach(p => p.angle += p.speed);
-      dots.attr('cx', d => cx + Math.cos(d.angle) * d.rx)
-          .attr('cy', d => cy + Math.sin(d.angle) * d.ry);
-      requestAnimationFrame(tick);
-    }
-    tick();
-  },
-  // 11: Ch11 Cathedral/Bazaar — two vertical bars with transaction cost line
-  function(svg, w, h, color) {
-    const barW = w * 0.28;
-    const catH = h * 0.72, bazH = h * 0.55;
-    // Cathedral bar
-    svg.append('rect').attr('x', w * 0.12).attr('y', h - 12 - catH).attr('width', barW).attr('height', 0)
-      .attr('fill', '#0891b2').attr('rx', 3).attr('opacity', 0.75)
-      .transition().duration(700).attr('height', catH);
-    svg.append('text').attr('x', w * 0.12 + barW/2).attr('y', h - 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#0891b2').text('Cathedral');
-    // Bazaar bar
-    svg.append('rect').attr('x', w * 0.6).attr('y', h - 12 - bazH).attr('width', barW).attr('height', 0)
-      .attr('fill', '#7c3aed').attr('rx', 3).attr('opacity', 0.75)
-      .transition().duration(700).delay(200).attr('height', bazH);
-    svg.append('text').attr('x', w * 0.6 + barW/2).attr('y', h - 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#7c3aed').text('Bazaar');
-    // Animated dividing line
-    const lineY = h - 12 - (catH + bazH) / 2;
-    svg.append('line').attr('x1', 0).attr('y1', lineY).attr('x2', 0).attr('y2', lineY)
-      .attr('stroke','#1a1a1a').attr('stroke-width', 1.5).attr('stroke-dasharray','4,3').attr('opacity', 0.5)
-      .transition().delay(800).duration(600).attr('x2', w);
-  },
-  // 6: Noise to pattern coalescing dots (Generative Engine)
-  function(svg, w, h, color) {
-    const n = 40;
-    const dots = d3.range(n).map(i => ({
-      sx: Math.random() * w, sy: Math.random() * h,
-      tx: (w / 2) + Math.cos(i / n * Math.PI * 2) * (w * 0.3),
-      ty: (h / 2) + Math.sin(i / n * Math.PI * 2) * (h * 0.35)
-    }));
-    const circles = svg.selectAll('circle').data(dots).join('circle')
-      .attr('cx', d => d.sx).attr('cy', d => d.sy)
-      .attr('r', 2.5).attr('fill', color).attr('opacity', 0.4);
-    // Animate toward ordered ring
-    setTimeout(() => {
-      circles.transition().duration(1400).delay((d, i) => i * 20)
-        .attr('cx', d => d.tx).attr('cy', d => d.ty).attr('opacity', 0.75);
-    }, 400);
-  },
-  // 7: Radar / pentagon (MIND Dashboard)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
-    const dims = 4;
-    const angles = d3.range(dims).map(i => (i / dims) * Math.PI * 2 - Math.PI / 2);
-    [0.33, 0.66, 1].forEach(s => {
-      const pts = angles.map(a => [cx + Math.cos(a) * r * s, cy + Math.sin(a) * r * s]);
-      svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
-        .attr('fill', 'none').attr('stroke', '#e5e5e0').attr('stroke-width', 1);
-    });
-    const vals = [0.8, 0.6, 0.4, 0.9];
-    const pts = angles.map((a, i) => [cx + Math.cos(a) * r * vals[i], cy + Math.sin(a) * r * vals[i]]);
-    svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
-      .attr('fill', color).attr('fill-opacity', 0.15).attr('stroke', color)
-      .attr('stroke-width', 1.5).attr('opacity', 0)
-      .transition().duration(800).attr('opacity', 1);
-    svg.selectAll('.dot').data(pts).join('circle')
-      .attr('cx', d => d[0]).attr('cy', d => d[1]).attr('r', 3)
-      .attr('fill', color).attr('opacity', 0)
-      .transition().duration(600).delay((d, i) => 800 + i * 100).attr('opacity', 1);
-  },
-  // 8: Three flowing streams (Three Flows)
-  function(svg, w, h, color) {
-    const streamColors = [color, '#7c3aed', '#d97706'];
-    streamColors.forEach((c, idx) => {
-      const n = 30;
-      const offset = (idx - 1) * h * 0.25;
-      const data = d3.range(n).map(i => {
-        const x = i / (n - 1);
-        return { x, y: 0.5 + offset / h + 0.12 * Math.sin(x * Math.PI * 3 + idx * 2) };
-      });
-      const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
-      const yS = d3.scaleLinear().domain([0, 1]).range([4, h - 4]);
-      const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
-      svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-        .attr('stroke', c).attr('stroke-width', 2).attr('opacity', 0.5)
-        .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-        .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-        .transition().duration(1500).delay(idx * 200).attr('stroke-dashoffset', 0);
-    });
-  },
-  // 9: Network graph (Network Prison)
-  function(svg, w, h, color) {
-    const nodes = d3.range(10).map(i => ({
-      x: 20 + Math.random() * (w - 40),
-      y: 12 + Math.random() * (h - 24),
-      r: i === 0 ? 6 : 3 + Math.random() * 2
-    }));
-    const edges = [];
-    for (let i = 1; i < nodes.length; i++) {
-      edges.push({ s: Math.floor(Math.random() * i), t: i });
-      if (Math.random() > 0.5 && i > 2) edges.push({ s: Math.floor(Math.random() * i), t: i });
-    }
-    svg.selectAll('line').data(edges).join('line')
-      .attr('x1', d => nodes[d.s].x).attr('y1', d => nodes[d.s].y)
-      .attr('x2', d => nodes[d.t].x).attr('y2', d => nodes[d.t].y)
-      .attr('stroke', '#d5d5d0').attr('stroke-width', 1);
-    svg.selectAll('circle').data(nodes).join('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
-      .attr('fill', (d, i) => i === 0 ? color : '#aaa').attr('opacity', 0.7)
-      .transition().duration(500).delay((d, i) => i * 80).attr('r', d => d.r);
-  },
-  // 10: Growing cooperation dots (Cooperation Emerges)
-  function(svg, w, h, color) {
-    const n = 24;
-    const data = d3.range(n).map(i => ({
-      x: 16 + Math.random() * (w - 32),
-      y: 10 + Math.random() * (h - 20),
-      cooperate: Math.random() > 0.4
-    }));
-    svg.selectAll('circle').data(data).join('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
-      .attr('fill', d => d.cooperate ? color : '#ddd').attr('opacity', 0.7)
-      .transition().duration(600).delay((d, i) => i * 40).attr('r', 4);
-    setTimeout(() => {
-      svg.selectAll('circle')
-        .transition().duration(1200)
-        .attr('fill', color).attr('opacity', 0.65);
-    }, 1800);
-  },
-  // 13: Ch13 Dual Engine — two clocks one fast one slow
-  function(svg, w, h, color) {
-    const drawSimpleClock = (cx, cy, r, handAngle, c) => {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', 'white').attr('stroke', c).attr('stroke-width', 2);
-      const ha = handAngle - Math.PI / 2;
-      svg.append('line').attr('x1', cx).attr('y1', cy)
-        .attr('x2', cx + Math.cos(ha) * r * 0.6).attr('y2', cy + Math.sin(ha) * r * 0.6)
-        .attr('stroke', c).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 3).attr('fill', c);
-    };
-    const r = Math.min(w * 0.2, h * 0.38);
-    let fastA = 0, slowA = 0, last = null;
-    drawSimpleClock(w * 0.28, h / 2, r, 0, '#dc2626');
-    drawSimpleClock(w * 0.72, h / 2, r, 0, '#2563eb');
-    svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#dc2626').text('Fast');
-    svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#2563eb').text('Slow');
-    function tick(ts) {
-      if (!last) last = ts;
-      const dt = (ts - last) / 1000; last = ts;
-      fastA += dt * 3; slowA += dt * 0.15;
-      svg.selectAll('*').remove();
-      drawSimpleClock(w * 0.28, h / 2, r, fastA, '#dc2626');
-      drawSimpleClock(w * 0.72, h / 2, r, slowA, '#2563eb');
-      svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#dc2626').text('Fast');
-      svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#2563eb').text('Slow');
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  },
-  // 14: Ch14 Social Contract — three circles appearing (Dignity, Capability, Viability)
-  function(svg, w, h, color) {
-    const labels = ['Dignity','Capability','Viability'];
-    const colors = ['#16a34a','#2563eb','#7c3aed'];
-    const cx = [w * 0.25, w * 0.5, w * 0.75];
-    const cy = h / 2;
-    const r = Math.min(w * 0.12, h * 0.32);
-    labels.forEach((label, i) => {
-      svg.append('circle').attr('cx', cx[i]).attr('cy', cy).attr('r', 0)
-        .attr('fill', colors[i]).attr('opacity', 0.18).attr('stroke', colors[i]).attr('stroke-width', 2)
-        .transition().duration(600).delay(i * 350).attr('r', r);
-      svg.append('text').attr('x', cx[i]).attr('y', cy + 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill', colors[i]).attr('opacity', 0)
-        .transition().delay(400 + i * 350).duration(300).attr('opacity', 1).text(label);
-    });
-  },
-  // 15: Ch15 Alignment Economy — warning lights turning on
-  function(svg, w, h, color) {
-    const lights = [{label:'Self-Pres.',c:'#dc2626'},{label:'Resource',c:'#d97706'},{label:'Capability',c:'#7c3aed'}];
-    const spacing = w / 4;
-    lights.forEach((l, i) => {
-      const cx = spacing * (i + 1);
-      svg.append('circle').attr('cx', cx).attr('cy', h / 2 - 10).attr('r', h * 0.22)
-        .attr('fill', '#e5e5e0').attr('stroke', '#ccc').attr('stroke-width', 2)
-        .transition().delay(500 + i * 600).duration(400).attr('fill', l.c).attr('opacity', 0.85);
-      svg.append('text').attr('x', cx).attr('y', h - 8).attr('text-anchor','middle').attr('font-size', 9).attr('fill', l.c).text(l.label);
-    });
-  },
-  // 11: Three branching paths (Three Futures)
-  function(svg, w, h, color) {
-    const startX = 20, startY = h / 2;
-    const branches = [
-      { dy: -0.35, c: color },
-      { dy: 0, c: '#666' },
-      { dy: 0.35, c: '#059669' }
-    ];
-    branches.forEach((b, idx) => {
-      const n = 20;
-      const data = d3.range(n).map(i => {
-        const t = i / (n - 1);
-        return { x: startX + t * (w - 40), y: startY + b.dy * h * Math.pow(t, 1.5) };
-      });
-      const line = d3.line().x(d => d.x).y(d => d.y).curve(d3.curveBasis);
-      svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-        .attr('stroke', b.c).attr('stroke-width', 2).attr('opacity', 0.6)
-        .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-        .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-        .transition().duration(1200).delay(idx * 200).attr('stroke-dashoffset', 0);
-    });
-    svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 4)
-      .attr('fill', color).attr('opacity', 0.8);
-  },
-  // 12: Ripple animation (Nucleation)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2;
-    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-      .attr('fill', color).attr('opacity', 1);
-    const numRipples = 4;
-    for (let i = 0; i < numRipples; i++) {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
-        .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
-        .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
-        .on('end', function loop() {
-          d3.select(this).attr('r', 4).attr('opacity', 0.9)
-            .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
-            .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
-            .on('end', loop);
-        });
-    }
-  },
-  // 17: Ch17 Symbiotic State — network nodes (Guardian Lattice preview)
-  function(svg, w, h, color) {
-    const nodeData = [
-      {x:0.2,y:0.3,c:'#2563eb',r:7},{x:0.5,y:0.15,c:'#2563eb',r:7},{x:0.8,y:0.3,c:'#2563eb',r:7},
-      {x:0.15,y:0.75,c:'#16a34a',r:5},{x:0.38,y:0.85,c:'#16a34a',r:5},{x:0.62,y:0.8,c:'#16a34a',r:5},{x:0.85,y:0.72,c:'#16a34a',r:5}
-    ];
-    const edges = [{s:0,t:3},{s:1,t:4},{s:2,t:5},{s:0,t:1},{s:1,t:2},{s:3,t:4},{s:4,t:5},{s:5,t:6}];
-    edges.forEach(e => {
-      const a = nodeData[e.s], b = nodeData[e.t];
-      svg.append('line').attr('x1', a.x*w).attr('y1', a.y*h).attr('x2', b.x*w).attr('y2', b.y*h)
-        .attr('stroke','#e5e5e0').attr('stroke-width',1.5);
-    });
-    nodeData.forEach((n, i) => {
-      svg.append('circle').attr('cx', n.x*w).attr('cy', n.y*h).attr('r', 0)
-        .attr('fill', n.c).attr('stroke','white').attr('stroke-width',2).attr('opacity',0.85)
-        .transition().duration(400).delay(i*100).attr('r', n.r);
-    });
-  },
-  // 18: Ch18 Money — two coin types flowing differently
-  function(svg, w, h, color) {
-    // FC coins (pooling at right)
-    const fcCoins = d3.range(8).map(i => ({ x: Math.random() * w * 0.4, y: 10 + Math.random() * (h - 20), tx: w * 0.7 + Math.random() * w * 0.2, ty: 10 + Math.random() * (h - 20) }));
-    const fcCircles = svg.selectAll('.fc').data(fcCoins).join('circle').attr('class','fc')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 5).attr('fill', '#d97706').attr('opacity', 0.8);
-    fcCircles.transition().duration(1200).delay((d,i) => i*100).attr('cx', d => d.tx).attr('cy', d => d.ty);
-    // CC coins (circulating widely)
-    const ccCoins = d3.range(8).map(i => ({ x: w * 0.4 + Math.random() * w * 0.3, y: 10 + Math.random() * (h - 20) }));
-    const ccCircles = svg.selectAll('.cc').data(ccCoins).join('circle').attr('class','cc')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 4).attr('fill', '#2563eb').attr('opacity', 0.7);
-    function circulate() {
-      ccCircles.transition().duration(800).delay((d,i) => i*60)
-        .attr('cx', () => 20 + Math.random() * (w - 40)).attr('cy', () => 10 + Math.random() * (h - 20))
-        .on('end', function(d, i) { if (i === 0) circulate(); });
-    }
-    setTimeout(circulate, 600);
-    svg.append('text').attr('x', w * 0.8).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 8).attr('fill','#d97706').text('FC pools');
-    svg.append('text').attr('x', w * 0.3).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 8).attr('fill','#2563eb').text('CC circulates');
-  },
-  // 13: Animated MIND bar chart (Intelligent Macroeconomics)
-  function(svg, w, h, color) {
-    const vals = [
-      { k: 'M', v: 0.85, c: '#ef4444' },
-      { k: 'I', v: 0.70, c: '#2563eb' },
-      { k: 'N', v: 0.45, c: '#22c55e' },
-      { k: 'D', v: 0.60, c: '#f59e0b' }
-    ];
-    const barW = (w - 32) / vals.length - 6;
-    const maxH = h - 28;
-    vals.forEach((d, i) => {
-      const x = 16 + i * (barW + 6);
-      svg.append('rect').attr('x', x).attr('y', h - 12).attr('width', barW).attr('height', 0)
-        .attr('rx', 3).attr('fill', d.c).attr('opacity', 0.75)
-        .transition().duration(700).delay(i * 120)
-        .attr('y', h - 12 - maxH * d.v).attr('height', maxH * d.v);
-      svg.append('text').attr('x', x + barW / 2).attr('y', h - 2)
-        .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 700)
-        .attr('fill', d.c).text(d.k);
-    });
-  },
-  // 14: Unbundling blocks (After Economics)
-  function(svg, w, h, color) {
-    const blockW = 14, gap = 4;
-    const cols = Math.floor((w - 20) / (blockW + gap));
-    const rows = 3;
-    const offsetX = (w - cols * (blockW + gap) + gap) / 2;
-    const offsetY = (h - rows * (blockW + gap) + gap) / 2;
-    const data = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        data.push({ r, c, x: offsetX + c * (blockW + gap), y: offsetY + r * (blockW + gap) });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxDist = 160;
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.15;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(99, 140, 246, ${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
       }
     }
-    const blockColors = [color, '#7c3aed', '#d97706', '#059669', '#dc2626'];
-    svg.selectAll('rect').data(data).join('rect')
-      .attr('x', w / 2).attr('y', h / 2).attr('width', 0).attr('height', 0)
-      .attr('rx', 2).attr('fill', (d, i) => blockColors[i % blockColors.length]).attr('opacity', 0.55)
-      .transition().duration(600).delay((d, i) => i * 25)
-      .attr('x', d => d.x).attr('y', d => d.y)
-      .attr('width', blockW).attr('height', blockW);
-  },
-  // 22: Epilogue — a glowing dot expanding (nucleation)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2;
-    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4).attr('fill', color).attr('opacity', 1);
-    for (let i = 0; i < 4; i++) {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
-        .transition().delay(i * 400).duration(1400).ease(d3.easeCubicOut)
-        .attr('r', 8 + i * 15 + Math.min(w, h) * 0.12).attr('opacity', 0)
-        .on('end', function loop() {
-          d3.select(this).attr('r', 4).attr('opacity', 0.9)
-            .transition().delay(i * 400).duration(1400).ease(d3.easeCubicOut)
-            .attr('r', 8 + i * 15 + Math.min(w, h) * 0.12).attr('opacity', 0)
-            .on('end', loop);
-        });
-    }
+
+    // Draw nodes
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.hue;
+      ctx.globalAlpha = n.alpha * 0.7;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    // Update
+    nodes.forEach(n => {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+
+    animId = requestAnimationFrame(draw);
   }
-];
 
-// --- Build cards ---
-const grid = document.getElementById('card-grid');
+  function init() {
+    resize();
+    nodes = makeNodes(80);
+    if (animId) cancelAnimationFrame(animId);
+    draw();
+  }
 
-cards.forEach((card, idx) => {
-  const a = document.createElement('a');
-  a.href = card.file;
-  a.className = 'card';
+  window.addEventListener('resize', () => { resize(); nodes = makeNodes(80); });
+  init();
+})();
 
-  // Accent bar
-  const accent = document.createElement('div');
-  accent.className = 'card-accent';
-  accent.style.background = card.color;
-  a.appendChild(accent);
+// ── COUNTDOWN ──
+(function() {
+  const windowStart = new Date('2024-03-01').getTime();
+  const totalDays = 1000;
+  const windowEnd = windowStart + totalDays * 24 * 3600 * 1000;
 
-  // Viz container
-  const vizDiv = document.createElement('div');
-  vizDiv.className = 'card-viz';
-  vizDiv.id = 'viz-' + card.n;
-  a.appendChild(vizDiv);
+  function update() {
+    const now = Date.now();
+    const remaining = Math.max(0, Math.ceil((windowEnd - now) / (24 * 3600 * 1000)));
+    const consumed = totalDays - remaining;
+    const pct = Math.min(100, (consumed / totalDays) * 100);
 
-  // Body
-  const body = document.createElement('div');
-  body.className = 'card-body';
+    document.getElementById('countdown-num').textContent = remaining.toLocaleString();
+    document.getElementById('countdown-bar').style.width = pct.toFixed(1) + '%';
+    document.getElementById('pct-display').textContent = pct.toFixed(1) + '%';
+  }
 
-  const badge = document.createElement('span');
-  badge.className = 'card-badge';
-  badge.style.background = card.color + '14';
-  badge.style.color = card.color;
-  badge.textContent = card.ch;
-  body.appendChild(badge);
+  update();
+  setInterval(update, 60000);
+})();
 
-  const title = document.createElement('div');
-  title.className = 'card-title';
-  title.textContent = card.title;
-  body.appendChild(title);
-
-  const question = document.createElement('div');
-  question.className = 'card-question';
-  question.textContent = card.q;
-  body.appendChild(question);
-
-  const link = document.createElement('span');
-  link.className = 'card-link';
-  link.style.color = card.color;
-  link.textContent = 'Explore';
-  link.insertAdjacentHTML('beforeend', ' <span style="transition:inherit">\u2192</span>');
-  body.appendChild(link);
-
-  a.appendChild(body);
-  grid.appendChild(a);
-
-  // Initialize D3 viz
-  requestAnimationFrame(() => {
-    const container = document.getElementById('viz-' + card.n);
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    const svg = d3.select(container).append('svg')
-      .attr('width', w).attr('height', h)
-      .attr('viewBox', `0 0 ${w} ${h}`);
-    vizGenerators[idx](svg, w, h, card.color);
-  });
-});
+// ── SCROLL REVEAL ──
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
+})();
 </script>
 </body>
 </html>
