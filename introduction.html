@@ -15,8 +15,8 @@
   top: 0;
   left: 0;
   height: 3px;
-  background: #2563eb;
-  z-index: 100;
+  background: linear-gradient(90deg, #2563eb, #d97706);
+  z-index: 1000;
   transition: width 0.1s linear;
   width: 0%;
   pointer-events: none;
@@ -87,7 +87,7 @@ h2 {
   background: rgba(250,250,248,0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 50;
+  z-index: 100;
 }
 
 .nav a {
@@ -200,7 +200,7 @@ input[type=range] { accent-color: #2563eb; width: 100%; }
 }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 
-.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 
 .inline-illustration { display: flex; justify-content: center; margin: 2rem 0; overflow-x: auto; }
 .inline-illustration svg { max-width: 100%; height: auto; }

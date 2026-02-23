@@ -784,9 +784,11 @@ footer {
   .philosophy-band { padding: 3rem max(5vw, 20px); }
   .chapter-pills { gap: 0.4rem; }
 }
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; }
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
 
 <!-- ══ HERO ══ -->
 <section class="hero">
@@ -1130,6 +1132,12 @@ footer {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   els.forEach(el => obs.observe(el));
 })();
+
+// Reading progress
+window.addEventListener('scroll', function() {
+  var p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
 </script>
 </body>
 </html>
