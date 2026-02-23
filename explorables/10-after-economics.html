@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After Economics</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
+.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
+
+/* Sorter styles */
+.sorter-container { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+.sort-column { flex: 1; min-width: 250px; }
+.sort-column h3 { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 0.5rem; }
+.task-card { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.25rem 0; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; user-select: none; }
+.task-card:hover { border-color: #2563eb; background: #eff6ff; }
+.task-card.computation { border-left: 3px solid #2563eb; }
+.task-card.consciousness { border-left: 3px solid #16a34a; }
+.unsorted-pool { min-height: 100px; }
+
+/* Arts cards */
+.arts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.art-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; cursor: pointer; transition: all 0.2s; }
+.art-card:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(37,99,235,0.1); }
+.art-card h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+.art-card p { font-size: 0.85rem; color: #555; margin: 0; line-height: 1.5; }
+.art-card .detail { display: none; margin-top: 0.75rem; font-size: 0.85rem; color: #555; line-height: 1.6; border-top: 1px solid #e5e5e0; padding-top: 0.75rem; }
+.art-card.open .detail { display: block; }
+
+/* Rebuild section */
+.rebuild-section { display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e0; }
+.rebuild-section.visible { display: block; }
+.archetype-display { text-align: center; margin: 1rem 0; }
+.archetype-display .name { font-size: 1.5rem; font-weight: 700; color: #2563eb; }
+.archetype-display .desc { font-size: 0.9rem; color: #888; margin-top: 0.25rem; }
+.score-display { text-align: center; font-size: 2rem; font-weight: 700; color: #16a34a; margin: 0.5rem 0; }
+
+/* Reflection */
+.reflection { margin-top: 1.5rem; padding: 1rem; background: #f5f5f3; border-radius: 8px; }
+.reflection select { padding: 0.4rem; border-radius: 4px; border: 1px solid #ccc; font-size: 0.9rem; margin: 0.25rem 0; }
+.reflection .note { font-size: 0.9rem; color: #555; margin-top: 0.75rem; font-style: italic; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="09-three-futures.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <span style="color:#aaa">Last chapter</span>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapters 20 &ndash; 21</div>
+  <h1>After Economics</h1>
+
+  <p>For three hundred years, a &ldquo;job&rdquo; bundled five things into one package: Income, Identity, Community, Purpose, and Structure. AI is unbundling them. This is not a crisis. It is an opportunity &mdash; but only if we rebuild each piece deliberately.</p>
+
+  <!-- Panel 1: Work Bundle Visualizer -->
+  <div class="panel">
+    <h2>Work Bundle Visualizer</h2>
+    <p style="font-size:0.9rem; color:#666;">Drag the slider to see how AI automation unbundles the traditional job.</p>
+    <svg id="bundle-svg" width="600" height="380" style="display:block; max-width:100%;"></svg>
+    <div class="slider-row">
+      <label>AI Automation Level: <span id="auto-val">0%</span></label>
+      <input type="range" id="auto-slider" min="0" max="100" value="0">
+    </div>
+    <p class="caption" id="bundle-caption">The bundle is intact. A job provides everything.</p>
+
+    <!-- Rebuild section -->
+    <div class="rebuild-section" id="rebuild-section">
+      <h2 style="margin-top:0;">Rebuild</h2>
+      <p style="font-size:0.9rem; color:#666;">The old bundle is dissolving. Design new sources for each dimension.</p>
+
+      <div class="slider-row">
+        <label>Income sources (UBI / Ownership / Freelance / Commons): <span id="income-val">25</span></label>
+        <input type="range" id="income-slider" min="0" max="100" value="25" oninput="updateRebuild()">
+      </div>
+      <div class="slider-row">
+        <label>Identity sources (Craft / Community roles / Learning / Contribution): <span id="identity-val">25</span></label>
+        <input type="range" id="identity-slider" min="0" max="100" value="25" oninput="updateRebuild()">
+      </div>
+      <div class="slider-row">
+        <label>Community sources (Local / Online / Cooperatives / Place-based): <span id="community-val">25</span></label>
+        <input type="range" id="community-slider" min="0" max="100" value="25" oninput="updateRebuild()">
+      </div>
+      <div class="slider-row">
+        <label>Structure sources (Self-designed / Ritual / Accountability / Seasonal): <span id="structure-val">25</span></label>
+        <input type="range" id="structure-slider" min="0" max="100" value="25" oninput="updateRebuild()">
+      </div>
+      <div class="score-display">Life Design Score: <span id="life-score">50</span>%</div>
+      <div class="archetype-display">
+        <div class="name" id="archetype-name">The Craftsperson</div>
+        <div class="desc" id="archetype-desc">Identity through making, income through ownership</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Computation vs Consciousness Sorter -->
+  <div class="panel">
+    <h2>Computation vs. Consciousness</h2>
+    <p style="font-size:0.9rem; color:#666;">Click each task to sort it. Is it computation (How?) or consciousness (Why/Whether?).</p>
+
+    <div class="sorter-container">
+      <div class="sort-column">
+        <h3>Computation &mdash; &ldquo;How?&rdquo;</h3>
+        <div id="comp-column"></div>
+      </div>
+      <div class="sort-column">
+        <h3>Unsorted</h3>
+        <div id="unsorted-pool" class="unsorted-pool"></div>
+      </div>
+      <div class="sort-column">
+        <h3>Consciousness &mdash; &ldquo;Why/Whether?&rdquo;</h3>
+        <div id="cons-column"></div>
+      </div>
+    </div>
+
+    <button class="btn secondary" onclick="revealAnswers()">Reveal Answers</button>
+    <div id="sort-result" class="stat" style="display:none;"></div>
+  </div>
+
+  <!-- Panel 4: Arts of Being Human -->
+  <div class="panel">
+    <h2>Arts of Being Human</h2>
+
+    <div class="arts-grid">
+      <div class="art-card" onclick="this.classList.toggle('open')">
+        <h3>Attention Architects</h3>
+        <p>Those who direct collective awareness toward what matters. Journalists, teachers, artists, curators.</p>
+        <div class="detail">
+          <strong>Examples:</strong> Investigative journalists, museum curators, classroom teachers, documentary filmmakers.<br>
+          <strong>Why AI cannot replace this:</strong> Determining what deserves attention requires values, not just pattern-matching. AI can surface information; only consciousness can decide what matters.<br>
+          <strong>Skills required:</strong> Discernment, courage, aesthetic sensibility, empathy for audience.
+        </div>
+      </div>
+
+      <div class="art-card" onclick="this.classList.toggle('open')">
+        <h3>Relationship Weavers</h3>
+        <p>Those who build and maintain the connective tissue of communities. Social workers, organizers, mentors, parents.</p>
+        <div class="detail">
+          <strong>Examples:</strong> Community organizers, social workers, mentors, the friend who always shows up.<br>
+          <strong>Why AI cannot replace this:</strong> Trust is built through vulnerability, shared experience, and time. It requires a being that can be hurt and still choose presence.<br>
+          <strong>Skills required:</strong> Emotional resilience, patience, cultural fluency, the ability to hold space.
+        </div>
+      </div>
+
+      <div class="art-card" onclick="this.classList.toggle('open')">
+        <h3>Meaning Makers</h3>
+        <p>Those who create frameworks for understanding experience. Philosophers, therapists, storytellers, poets.</p>
+        <div class="detail">
+          <strong>Examples:</strong> Therapists, philosophers, religious leaders, poets, novelists.<br>
+          <strong>Why AI cannot replace this:</strong> Meaning requires subjective experience. AI can generate text about meaning; it cannot experience the suffering that gives meaning its weight.<br>
+          <strong>Skills required:</strong> Depth of lived experience, intellectual honesty, narrative craft, comfort with ambiguity.
+        </div>
+      </div>
+
+      <div class="art-card" onclick="this.classList.toggle('open')">
+        <h3>Reality Anchors</h3>
+        <p>Those who maintain contact with physical, embodied truth. Doctors, farmers, builders, athletes, caregivers.</p>
+        <div class="detail">
+          <strong>Examples:</strong> Surgeons, farmers, midwives, athletes, search-and-rescue volunteers.<br>
+          <strong>Why AI cannot replace this:</strong> Physical reality cannot be hallucinated. A surgeon's hand, a farmer's reading of soil, a caregiver's touch &mdash; these require embodied presence.<br>
+          <strong>Skills required:</strong> Physical mastery, sensory acuity, stamina, presence under pressure.
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection">
+      <p style="font-weight:600; margin-bottom:0.5rem;">Where do you currently spend most energy?</p>
+      <select id="current-role" onchange="updateReflection()">
+        <option value="">Select...</option>
+        <option value="attention">Attention Architect</option>
+        <option value="relationship">Relationship Weaver</option>
+        <option value="meaning">Meaning Maker</option>
+        <option value="reality">Reality Anchor</option>
+      </select>
+      <p style="font-weight:600; margin:0.5rem 0 0.25rem;">Where do you want to spend more?</p>
+      <select id="desired-role" onchange="updateReflection()">
+        <option value="">Select...</option>
+        <option value="attention">Attention Architect</option>
+        <option value="relationship">Relationship Weaver</option>
+        <option value="meaning">Meaning Maker</option>
+        <option value="reality">Reality Anchor</option>
+      </select>
+      <div class="note" id="reflection-note"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== Panel 1: Work Bundle Visualizer ==========
+(function(){
+  const svg = d3.select('#bundle-svg');
+  const w = 600, h = 380, cx = w / 2, cy = h / 2;
+
+  const bundles = [
+    { label: 'Income', baseAngle: -Math.PI/2, color: '#2563eb' },
+    { label: 'Identity', baseAngle: -Math.PI/2 + 2*Math.PI/5, color: '#7c3aed' },
+    { label: 'Community', baseAngle: -Math.PI/2 + 4*Math.PI/5, color: '#16a34a' },
+    { label: 'Purpose', baseAngle: -Math.PI/2 + 6*Math.PI/5, color: '#ea580c' },
+    { label: 'Structure', baseAngle: -Math.PI/2 + 8*Math.PI/5, color: '#dc2626' },
+  ];
+
+  // Separation and opacity as function of automation level
+  function getState(pct) {
+    // Each bundle separates at different thresholds
+    const thresholds = [0.25, 0.70, 0.55, 0.85, 0.50]; // Income, Identity, Community, Purpose, Structure
+    const separations = [0.30, 0.60, 0.80, 1.0, 0.60];  // max separation distance factor
+    return bundles.map((b, i) => {
+      const t = thresholds[i];
+      const sep = pct > t * 100 ? Math.min(1, (pct / 100 - t) / (1 - t)) : 0;
+      const dist = sep * separations[i] * 120;
+      const opacity = 1 - sep * 0.5;
+      const r = 55 - sep * 20;
+      return { ...b, dist, opacity, r: Math.max(15, r) };
+    });
+  }
+
+  function render(pct) {
+    svg.selectAll('*').remove();
+    const states = getState(pct);
+
+    states.forEach(s => {
+      const x = cx + Math.cos(s.baseAngle) * s.dist;
+      const y = cy + Math.sin(s.baseAngle) * s.dist;
+
+      svg.append('circle')
+        .attr('cx', x).attr('cy', y).attr('r', s.r)
+        .attr('fill', s.color).attr('opacity', s.opacity * 0.25)
+        .attr('stroke', s.color).attr('stroke-width', 2).attr('stroke-opacity', s.opacity);
+
+      svg.append('text')
+        .attr('x', x).attr('y', y + 4)
+        .attr('text-anchor', 'middle').attr('font-size', 12).attr('font-weight', 600)
+        .attr('fill', s.color).attr('opacity', s.opacity)
+        .text(s.label);
+    });
+
+    // Caption
+    let caption;
+    if (pct < 10) caption = 'The bundle is intact. A job provides everything.';
+    else if (pct < 35) caption = 'Income starts to separate. Gig work and automation erode stable pay.';
+    else if (pct < 65) caption = 'Structure dissolves. Remote, flexible, precarious.';
+    else if (pct < 85) caption = 'Community weakens. The water-cooler is gone.';
+    else caption = 'The bundle is dissolved. The question is what replaces it.';
+    document.getElementById('bundle-caption').textContent = caption;
+
+    // Show rebuild section at 80%+
+    document.getElementById('rebuild-section').classList.toggle('visible', pct >= 80);
+  }
+
+  document.getElementById('auto-slider').addEventListener('input', function() {
+    document.getElementById('auto-val').textContent = this.value + '%';
+    render(+this.value);
+  });
+  render(0);
+})();
+
+// ========== Rebuild ==========
+function updateRebuild() {
+  const inc = +document.getElementById('income-slider').value;
+  const iden = +document.getElementById('identity-slider').value;
+  const comm = +document.getElementById('community-slider').value;
+  const struc = +document.getElementById('structure-slider').value;
+
+  document.getElementById('income-val').textContent = inc;
+  document.getElementById('identity-val').textContent = iden;
+  document.getElementById('community-val').textContent = comm;
+  document.getElementById('structure-val').textContent = struc;
+
+  const score = Math.round((inc + iden + comm + struc) / 4);
+  document.getElementById('life-score').textContent = score;
+
+  // Determine archetype
+  const vals = { income: inc, identity: iden, community: comm, structure: struc };
+  const max = Object.entries(vals).sort((a, b) => b[1] - a[1])[0][0];
+
+  const archetypes = {
+    income: { name: 'The Steward', desc: 'Security through diverse income; foundation for all else.' },
+    identity: { name: 'The Craftsperson', desc: 'Identity through making; purpose through mastery.' },
+    community: { name: 'The Connector', desc: 'Meaning through belonging; strength through networks.' },
+    structure: { name: 'The Scholar', desc: 'Growth through discipline; clarity through routine.' },
+  };
+  document.getElementById('archetype-name').textContent = archetypes[max].name;
+  document.getElementById('archetype-desc').textContent = archetypes[max].desc;
+}
+
+// ========== Panel 3: Sorter ==========
+const tasks = [
+  { id: 1, text: 'Write a marketing email', answer: 'comp' },
+  { id: 2, text: 'Comfort a grieving friend', answer: 'cons' },
+  { id: 3, text: 'Optimize supply chain logistics', answer: 'comp' },
+  { id: 4, text: 'Decide what is beautiful', answer: 'cons' },
+  { id: 5, text: 'Debug production code', answer: 'comp' },
+  { id: 6, text: 'Choose what is worth doing', answer: 'cons' },
+  { id: 7, text: 'Translate between languages', answer: 'comp' },
+  { id: 8, text: 'Build trust with someone over years', answer: 'cons' },
+  { id: 9, text: 'Generate a legal contract', answer: 'comp' },
+  { id: 10, text: 'Sit with someone in pain', answer: 'cons' },
+  { id: 11, text: 'Analyze financial statements', answer: 'comp' },
+  { id: 12, text: 'Forgive someone', answer: 'cons' },
+  { id: 13, text: 'Compress a dataset', answer: 'comp' },
+  { id: 14, text: 'Notice what nobody else noticed', answer: 'cons' },
+  { id: 15, text: 'Schedule meetings', answer: 'comp' },
+  { id: 16, text: 'Create meaning from suffering', answer: 'cons' },
+  { id: 17, text: 'Summarize a long document', answer: 'comp' },
+  { id: 18, text: 'Raise a child', answer: 'cons' },
+  { id: 19, text: 'Find patterns in data', answer: 'comp' },
+  { id: 20, text: 'Decide who to become', answer: 'cons' },
+];
+
+const sorted = { comp: [], cons: [], unsorted: [...tasks] };
+
+function renderSorter() {
+  const pool = document.getElementById('unsorted-pool');
+  const compCol = document.getElementById('comp-column');
+  const consCol = document.getElementById('cons-column');
+
+  pool.innerHTML = sorted.unsorted.map(t =>
+    `<div class="task-card" style="display:flex;align-items:center;gap:0.5rem;cursor:default;">
+      <button onclick="sortTask(${t.id},'comp')" style="background:#2563eb;color:white;border:none;border-radius:4px;padding:0.2rem 0.5rem;cursor:pointer;font-size:0.75rem;flex-shrink:0;">How</button>
+      <span style="flex:1;">${t.text}</span>
+      <button onclick="sortTask(${t.id},'cons')" style="background:#16a34a;color:white;border:none;border-radius:4px;padding:0.2rem 0.5rem;cursor:pointer;font-size:0.75rem;flex-shrink:0;">Why</button>
+    </div>`
+  ).join('');
+
+  compCol.innerHTML = sorted.comp.map(t =>
+    `<div class="task-card computation">${t.text}</div>`
+  ).join('');
+
+  consCol.innerHTML = sorted.cons.map(t =>
+    `<div class="task-card consciousness">${t.text}</div>`
+  ).join('');
+
+  if (sorted.unsorted.length === 0) {
+    const compCount = sorted.comp.length;
+    const consCount = sorted.cons.length;
+    document.getElementById('sort-result').style.display = 'block';
+    document.getElementById('sort-result').innerHTML =
+      `Sorted: <strong>${compCount}</strong> computation tasks, <strong>${consCount}</strong> consciousness tasks. ` +
+      `<strong>${compCount}</strong> are automatable. <strong>${consCount}</strong> remain essentially human.`;
+  }
+}
+
+function sortTask(id, dest) {
+  const idx = sorted.unsorted.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const task = sorted.unsorted.splice(idx, 1)[0];
+  sorted[dest].push(task);
+  renderSorter();
+}
+
+function revealAnswers() {
+  sorted.comp = []; sorted.cons = []; sorted.unsorted = [];
+  tasks.forEach(t => {
+    if (t.answer === 'comp') sorted.comp.push(t);
+    else sorted.cons.push(t);
+  });
+  renderSorter();
+}
+
+renderSorter();
+
+// ========== Reflection ==========
+function updateReflection() {
+  const current = document.getElementById('current-role').value;
+  const desired = document.getElementById('desired-role').value;
+  const note = document.getElementById('reflection-note');
+
+  if (!current || !desired) { note.textContent = ''; return; }
+
+  const reflections = {
+    'attention-attention': 'You are already directing attention. The question is: toward what? Sharpen your lens.',
+    'attention-relationship': 'You see clearly but may connect less deeply. The bridge from seeing to being-with is presence.',
+    'attention-meaning': 'From directing attention to creating frameworks for understanding. You already know what to look at; now ask what it means.',
+    'attention-reality': 'From the abstract to the embodied. Your eye for what matters could ground in physical craft.',
+    'relationship-attention': 'You weave connections but may want to also guide where communities look. Your empathy is your compass.',
+    'relationship-relationship': 'You are already weaving. Go deeper. The world needs those who show up.',
+    'relationship-meaning': 'From connection to interpretation. Your relationships give you the raw material; now create the narrative.',
+    'relationship-reality': 'From social bonds to physical presence. Your care could extend to embodied, hands-on work.',
+    'meaning-attention': 'From creating frameworks to directing focus. Your depth of understanding could guide collective awareness.',
+    'meaning-relationship': 'From interpretation to connection. Meaning gains power when shared in relationship.',
+    'meaning-meaning': 'You are already making meaning. The question is: for whom? Widen the circle.',
+    'meaning-reality': 'From abstraction to embodiment. Ground your insights in physical truth.',
+    'reality-attention': 'From embodied truth to directing awareness. Your grounding could anchor collective focus.',
+    'reality-relationship': 'From physical mastery to human connection. Your presence is already a gift; offer it intentionally.',
+    'reality-meaning': 'From doing to understanding why. Your embodied knowledge could become wisdom when articulated.',
+    'reality-reality': 'You are grounded. You know what is real. In an age of hallucination, this is rare and precious.',
+  };
+
+  const key = current + '-' + desired;
+  note.textContent = reflections[key] || '';
+}
+</script>
+</body>
+</html>

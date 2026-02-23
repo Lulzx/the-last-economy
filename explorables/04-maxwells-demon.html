@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 6 — Maxwell's Demon and the Physics of Value</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; max-width: 100%; height: auto; }
+.demon-btn { display: inline-block; padding: 0.5rem 1.2rem; border: 2px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; margin: 0.75rem 0; }
+.demon-btn.active { background: #2563eb; color: white; }
+.stats { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.75rem; font-size: 0.9rem; font-family: system-ui, sans-serif; }
+.stats span { background: #f5f5f0; padding: 0.3rem 0.7rem; border-radius: 4px; }
+
+.speed-slider { width: 100%; margin: 1rem 0; }
+.speed-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; }
+.speed-result { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem; text-align: center; }
+.speed-result div { background: #f5f5f0; padding: 0.75rem; border-radius: 6px; }
+.speed-result .label { font-size: 0.8rem; color: #888; }
+.speed-result .val { font-size: 1.3rem; font-weight: 700; color: #2563eb; }
+.advantage-bar { height: 12px; background: #e5e5e0; border-radius: 6px; margin-top: 1rem; overflow: hidden; }
+.advantage-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #7c3aed); border-radius: 6px; transition: width 0.3s; }
+
+.triangle-svg { display: block; margin: 0 auto; }
+.zone-label { font-size: 0.95rem; font-weight: 600; padding: 0.5rem 0; text-align: center; min-height: 1.5em; }
+.zone-desc { font-size: 0.85rem; color: #666; text-align: center; }
+
+.house-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.house-panel { text-align: center; }
+.house-panel h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+.cost-row { display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="03-gdp-illusion.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="05-mind-dashboard.html">Next &rarr;</a>
+</nav>
+<div class="prose">
+  <div class="chapter-num">Chapter 6</div>
+  <h1>Maxwell's Demon and the Physics of Value</h1>
+  <p>James Clerk Maxwell imagined a demon who could sort fast and slow molecules — creating temperature differences from uniform chaos. Value creation, it turns out, is exactly this: intelligence maintaining low entropy against the universe's constant tendency toward disorder. This isn't a metaphor. It's thermodynamics.</p>
+
+  <h2>Particle Simulator</h2>
+  <div class="panel">
+    <canvas id="particleCanvas" width="640" height="320"></canvas>
+    <div style="text-align:center">
+      <button class="demon-btn" id="demonToggle">Demon: OFF</button>
+    </div>
+    <div class="stats">
+      <span>Left temp: <strong id="leftTemp">50</strong></span>
+      <span>Right temp: <strong id="rightTemp">50</strong></span>
+      <span>System entropy: <strong id="entropy">1.00</strong></span>
+    </div>
+    <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">The demon must remember each particle state — information has a thermodynamic cost (Landauer's principle).</p>
+  </div>
+
+  <h2>Sorting Speed = Competitive Advantage</h2>
+  <div class="panel">
+    <div class="speed-labels"><span>Human speed</span><span>AI speed</span></div>
+    <input type="range" class="speed-slider" id="speedSlider" min="0" max="100" value="0">
+    <div class="speed-result">
+      <div><div class="label">Sorts / second</div><div class="val" id="sortsPerSec">10</div></div>
+      <div><div class="label">Cost / sort</div><div class="val" id="costPerSort">$0.50</div></div>
+      <div><div class="label">Competitive moat</div><div class="val" id="moat">3 years</div></div>
+    </div>
+    <div class="advantage-bar"><div class="advantage-fill" id="advFill" style="width:80%"></div></div>
+    <p style="font-size:0.9rem;margin-top:1rem;"><strong>Key insight:</strong> Speed advantage is temporary. The structural advantage is owning the sorted state.</p>
+  </div>
+
+  <h2>Three Costs Triangle</h2>
+  <div class="panel">
+    <svg id="triangleSvg" class="triangle-svg" viewBox="0 0 500 420" style="width:100%;height:auto;"></svg>
+    <div class="zone-label" id="zoneLabel">Drag the point inside the triangle</div>
+    <div class="zone-desc" id="zoneDesc"></div>
+  </div>
+
+  <h2>Intelligence vs Entropy</h2>
+  <div class="panel">
+    <p>After <span class="scrub" data-value="0" data-min="0" data-max="100" data-step="1" data-suffix=" years" data-update="updateHouses">0 years</span> of neglect, structures begin to decay.</p>
+    <div class="house-container">
+      <div class="house-panel">
+        <h3>No Maintenance</h3>
+        <svg id="houseDecay" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+      </div>
+      <div class="house-panel">
+        <h3>With Intelligence</h3>
+        <svg id="houseMaintained" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+      </div>
+    </div>
+    <div class="cost-row">
+      <span>Cumulative maintenance: <strong id="maintCost">$0</strong></span>
+      <span>Replacement cost: <strong id="replaceCost">$250,000</strong></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Scrub interaction =====
+function initScrub() {
+  document.querySelectorAll('.scrub').forEach(el => {
+    let startX, startVal;
+    el.addEventListener('mousedown', e => {
+      startX = e.clientX; startVal = parseFloat(el.dataset.value);
+      const onMove = e2 => {
+        const dx = e2.clientX - startX;
+        const step = parseFloat(el.dataset.step || 1);
+        const min = parseFloat(el.dataset.min || 0);
+        const max = parseFloat(el.dataset.max || 100);
+        const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
+        el.dataset.value = newVal;
+        el.textContent = newVal + (el.dataset.suffix || '');
+        if (el.dataset.update) window[el.dataset.update](newVal);
+      };
+      const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+      document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp); e.preventDefault();
+    });
+  });
+}
+
+// ===== Particle Simulator =====
+(function() {
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const wallX = W / 2, gateY = H / 2, gateH = 40;
+  let demonOn = false;
+  const particles = [];
+  const N = 50;
+
+  for (let i = 0; i < N; i++) {
+    const speed = 0.5 + Math.random() * 2.5;
+    const angle = Math.random() * Math.PI * 2;
+    particles.push({
+      x: Math.random() * (W - 20) + 10,
+      y: Math.random() * (H - 20) + 10,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      speed: speed,
+      r: 4,
+      hot: speed > 1.5
+    });
+  }
+
+  document.getElementById('demonToggle').addEventListener('click', function() {
+    demonOn = !demonOn;
+    this.textContent = 'Demon: ' + (demonOn ? 'ON' : 'OFF');
+    this.classList.toggle('active', demonOn);
+  });
+
+  function step() {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, W, H);
+
+    // Wall
+    ctx.fillStyle = '#555';
+    ctx.fillRect(wallX - 2, 0, 4, gateY - gateH / 2);
+    ctx.fillRect(wallX - 2, gateY + gateH / 2, 4, H - gateY - gateH / 2);
+
+    // Gate indicator
+    ctx.fillStyle = demonOn ? '#22c55e' : '#ef4444';
+    ctx.fillRect(wallX - 2, gateY - gateH / 2, 4, gateH);
+
+    let leftSum = 0, leftCount = 0, rightSum = 0, rightCount = 0;
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Bounce off walls
+      if (p.x - p.r < 0) { p.x = p.r; p.vx = Math.abs(p.vx); }
+      if (p.x + p.r > W) { p.x = W - p.r; p.vx = -Math.abs(p.vx); }
+      if (p.y - p.r < 0) { p.y = p.r; p.vy = Math.abs(p.vy); }
+      if (p.y + p.r > H) { p.y = H - p.r; p.vy = -Math.abs(p.vy); }
+
+      // Wall collision
+      const nearGate = Math.abs(p.y - gateY) < gateH / 2;
+      if (Math.abs(p.x - wallX) < p.r + 2) {
+        if (!nearGate) {
+          // Bounce off wall
+          if (p.x < wallX) { p.x = wallX - p.r - 2; p.vx = -Math.abs(p.vx); }
+          else { p.x = wallX + p.r + 2; p.vx = Math.abs(p.vx); }
+        } else if (demonOn) {
+          // Demon logic: let hot go left→right blocked, hot go right→left pass? No:
+          // Sort: fast to left, slow to right
+          const goingRight = p.vx > 0;
+          const goingLeft = p.vx < 0;
+          if (p.hot && goingRight && p.x < wallX) {
+            // fast approaching from left → let through (fast goes left side, block)
+            // Actually: demon sorts fast to LEFT, slow to RIGHT
+            // Block fast going right
+            p.x = wallX - p.r - 2; p.vx = -Math.abs(p.vx);
+          } else if (!p.hot && goingLeft && p.x > wallX) {
+            // slow approaching from right going left → block
+            p.x = wallX + p.r + 2; p.vx = Math.abs(p.vx);
+          }
+          // Otherwise let through
+        }
+        // If demon off and near gate, particles pass freely (gate open but no sorting)
+      }
+
+      // Draw
+      const t = (p.speed - 0.5) / 2.5;
+      const r = Math.round(60 + t * 195);
+      const b = Math.round(220 - t * 180);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgb(${r},${Math.round(80 - t * 40)},${b})`;
+      ctx.fill();
+
+      // Stats
+      if (p.x < wallX) { leftSum += p.speed * p.speed; leftCount++; }
+      else { rightSum += p.speed * p.speed; rightCount++; }
+    });
+
+    const leftTemp = leftCount > 0 ? (leftSum / leftCount * 20).toFixed(0) : 0;
+    const rightTemp = rightCount > 0 ? (rightSum / rightCount * 20).toFixed(0) : 0;
+    document.getElementById('leftTemp').textContent = leftTemp;
+    document.getElementById('rightTemp').textContent = rightTemp;
+
+    // Entropy: based on how mixed the sides are (1 = fully mixed, 0 = fully sorted)
+    const leftHot = particles.filter(p => p.x < wallX && p.hot).length;
+    const leftCold = particles.filter(p => p.x < wallX && !p.hot).length;
+    const rightHot = particles.filter(p => p.x >= wallX && p.hot).length;
+    const rightCold = particles.filter(p => p.x >= wallX && !p.hot).length;
+    const total = N;
+    const totalHot = particles.filter(p => p.hot).length;
+    const totalCold = N - totalHot;
+
+    let ent = 1;
+    if (leftCount > 0 && rightCount > 0 && totalHot > 0 && totalCold > 0) {
+      const idealLeftHot = totalHot * (leftCount / total);
+      const deviation = Math.abs(leftHot - idealLeftHot) / Math.max(idealLeftHot, 1);
+      ent = Math.max(0, 1 - deviation);
+    }
+    document.getElementById('entropy').textContent = ent.toFixed(2);
+
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+// ===== Speed Slider =====
+(function() {
+  const slider = document.getElementById('speedSlider');
+  slider.addEventListener('input', function() {
+    const v = parseFloat(this.value) / 100;
+    const sorts = Math.round(10 * Math.pow(100000, v));
+    const cost = (0.50 * Math.pow(0.000002, v)).toFixed(v > 0.5 ? 6 : 2);
+    const moatYears = v < 0.3 ? '3 years' : v < 0.6 ? '18 months' : v < 0.8 ? '9 months' : '6 months';
+    const scarcity = v < 0.5 ? 1 - v * 0.3 : 0.85 - (v - 0.5) * 1.2;
+    const advantage = Math.max(5, Math.min(95, scarcity * 100));
+
+    document.getElementById('sortsPerSec').textContent = sorts.toLocaleString();
+    document.getElementById('costPerSort').textContent = '$' + cost;
+    document.getElementById('moat').textContent = moatYears;
+    document.getElementById('advFill').style.width = advantage + '%';
+  });
+})();
+
+// ===== Three Costs Triangle =====
+(function() {
+  const svg = d3.select('#triangleSvg');
+  const w = 500, h = 420, pad = 60;
+  const A = [w / 2, pad];          // top: Prediction Error
+  const B = [pad, h - pad];        // bottom-left: Model Complexity
+  const C = [w - pad, h - pad];    // bottom-right: Update Cost
+
+  // Triangle
+  svg.append('polygon')
+    .attr('points', `${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}`)
+    .attr('fill', '#f8f8f5').attr('stroke', '#ccc').attr('stroke-width', 1.5);
+
+  // Labels
+  svg.append('text').attr('x', A[0]).attr('y', A[1] - 12).attr('text-anchor', 'middle').attr('font-size', 13).attr('font-weight', 600).text('Prediction Error');
+  svg.append('text').attr('x', B[0] - 5).attr('y', B[1] + 20).attr('text-anchor', 'start').attr('font-size', 13).attr('font-weight', 600).text('Model Complexity');
+  svg.append('text').attr('x', C[0] + 5).attr('y', C[1] + 20).attr('text-anchor', 'end').attr('font-size', 13).attr('font-weight', 600).text('Update Cost');
+
+  // Zone regions (approximate centers)
+  const zones = [
+    { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost', cx: (A[0] + C[0]) / 2, cy: (A[1] + C[1]) / 2 - 20 },
+    { name: 'Central Planning', desc: 'High complexity, high prediction error, low update cost', cx: (A[0] + B[0]) / 2 - 10, cy: (A[1] + B[1]) / 2 + 20 },
+    { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost', cx: w / 2, cy: (A[1] + (B[1] + C[1]) / 2) / 2 - 10 },
+  ];
+
+  zones.forEach(z => {
+    svg.append('text').attr('x', z.cx).attr('y', z.cy).attr('text-anchor', 'middle')
+      .attr('font-size', 11).attr('fill', '#aaa').attr('font-style', 'italic').text(z.name);
+  });
+
+  // Barycentric coordinates
+  function bary(px, py) {
+    const denom = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1]);
+    const wA = ((B[1] - C[1]) * (px - C[0]) + (C[0] - B[0]) * (py - C[1])) / denom;
+    const wB = ((C[1] - A[1]) * (px - C[0]) + (A[0] - C[0]) * (py - C[1])) / denom;
+    const wC = 1 - wA - wB;
+    return [Math.max(0, wA), Math.max(0, wB), Math.max(0, wC)];
+  }
+
+  function insideTriangle(px, py) {
+    const [a, b, c] = bary(px, py);
+    return a >= -0.01 && b >= -0.01 && c >= -0.01;
+  }
+
+  function getZone(wA, wB, wC) {
+    if (wA > 0.45 && wC > 0.25) return { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost. Price signals do the work.' };
+    if (wB > 0.45) return { name: 'Central Planning', desc: 'High model complexity, high prediction error, low update cost. Top-down control.' };
+    if (wA > 0.4 && wB > 0.25) return { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost. Machine learning finds patterns humans cannot.' };
+    if (wC > 0.45) return { name: 'Bureaucracy', desc: 'High update cost, slow to change. Rules over results.' };
+    return { name: 'Mixed System', desc: 'A hybrid of approaches. Most real economies live here.' };
+  }
+
+  // Draggable point
+  const startX = w / 2, startY = h / 2.5;
+  const dot = svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 10)
+    .attr('fill', '#2563eb').attr('stroke', 'white').attr('stroke-width', 2).attr('cursor', 'grab');
+
+  // Percentage labels
+  const pctA = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600);
+  const pctB = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600);
+  const pctC = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600);
+
+  function updateLabels(px, py) {
+    const [wA, wB, wC] = bary(px, py);
+    pctA.attr('x', A[0]).attr('y', A[1] - 28).attr('text-anchor', 'middle').text(Math.round(wA * 100) + '%');
+    pctB.attr('x', B[0] - 5).attr('y', B[1] + 36).attr('text-anchor', 'start').text(Math.round(wB * 100) + '%');
+    pctC.attr('x', C[0] + 5).attr('y', C[1] + 36).attr('text-anchor', 'end').text(Math.round(wC * 100) + '%');
+    const zone = getZone(wA, wB, wC);
+    document.getElementById('zoneLabel').textContent = zone.name;
+    document.getElementById('zoneDesc').textContent = zone.desc;
+  }
+
+  updateLabels(startX, startY);
+
+  const drag = d3.drag()
+    .on('drag', function(event) {
+      let nx = event.x, ny = event.y;
+      if (insideTriangle(nx, ny)) {
+        dot.attr('cx', nx).attr('cy', ny);
+        updateLabels(nx, ny);
+      }
+    });
+  dot.call(drag);
+})();
+
+// ===== House Decay =====
+// Seeded PRNG for deterministic rendering
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function drawHouse(svgId, decay) {
+  const svg = d3.select('#' + svgId);
+  svg.selectAll('*').remove();
+  const d = decay / 100; // 0 to 1
+  const rng = seededRandom(42);
+
+  // Ground
+  svg.append('rect').attr('x', 0).attr('y', 170).attr('width', 280).attr('height', 30).attr('fill', '#8B7355');
+
+  // Foundation
+  const fShift = d * 8 * (rng() > 0.5 ? 1 : -1);
+  svg.append('rect').attr('x', 40 + fShift * 0.3).attr('y', 140).attr('width', 200).attr('height', 30)
+    .attr('fill', '#999').attr('opacity', 1 - d * 0.3);
+
+  // Walls
+  const wallColor = d3.interpolateRgb('#e8d8a0', '#8a7a5a')(d);
+  svg.append('rect').attr('x', 50).attr('y', 70).attr('width', 85).attr('height', 70)
+    .attr('fill', wallColor).attr('transform', `rotate(${d * 3}, 50, 140)`);
+  svg.append('rect').attr('x', 145).attr('y', 70).attr('width', 85).attr('height', 70)
+    .attr('fill', wallColor).attr('transform', `rotate(${-d * 2}, 230, 140)`);
+
+  // Roof
+  const roofSag = d * 15;
+  svg.append('path')
+    .attr('d', `M30,75 L140,${15 + roofSag} L250,75 Z`)
+    .attr('fill', d > 0.7 ? '#654' : '#a0522d').attr('opacity', 1 - d * 0.2);
+
+  // Door
+  if (d < 0.8) {
+    svg.append('rect').attr('x', 120).attr('y', 100).attr('width', 30).attr('height', 40)
+      .attr('fill', '#654321').attr('transform', `rotate(${d * 10}, 120, 140)`);
+  }
+
+  // Windows
+  if (d < 0.6) {
+    svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
+    svg.append('rect').attr('x', 185).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
+  } else {
+    svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#333').attr('stroke', '#555');
+    svg.append('line').attr('x1', 70).attr('y1', 90).attr('x2', 95).attr('y2', 110).attr('stroke', '#aaa').attr('stroke-width', 1);
+  }
+
+  // Cracks (deterministic positions)
+  if (d > 0.3) {
+    const numCracks = Math.floor(d * 6);
+    for (let i = 0; i < numCracks; i++) {
+      const cx = 60 + rng() * 160;
+      const cy = 80 + rng() * 60;
+      const dx1 = 5 + rng() * 10, dy1 = 5 + rng() * 8;
+      const dx2 = -3 + rng() * 6, dy2 = 3 + rng() * 5;
+      svg.append('path')
+        .attr('d', `M${cx},${cy} l${dx1},${dy1} l${dx2},${dy2}`)
+        .attr('stroke', '#555').attr('stroke-width', 0.8).attr('fill', 'none');
+    }
+  }
+
+  // Vegetation overgrowth
+  if (d > 0.5) {
+    for (let i = 0; i < Math.floor(d * 8); i++) {
+      const vx = 30 + rng() * 220;
+      svg.append('path')
+        .attr('d', `M${vx},170 Q${vx + 5},${155 - d * 15} ${vx + 10},${160 - d * 10}`)
+        .attr('stroke', '#3a7a3a').attr('stroke-width', 1.5).attr('fill', 'none');
+    }
+  }
+}
+
+window.updateHouses = function(year) {
+  drawHouse('houseDecay', year);
+  drawHouse('houseMaintained', Math.min(year * 0.05, 5));
+  document.getElementById('maintCost').textContent = '$' + (year * 2500).toLocaleString();
+  document.getElementById('replaceCost').textContent = '$250,000';
+};
+
+drawHouse('houseDecay', 0);
+drawHouse('houseMaintained', 0);
+
+initScrub();
+</script>
+</body>
+</html>

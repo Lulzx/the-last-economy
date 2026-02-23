@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The GDP Illusion</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+svg text { font-family: system-ui, sans-serif; }
+
+/* GDP Paradox Cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
+.event-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: default; transition: all 0.3s; min-height: 160px; display: flex; flex-direction: column; }
+.event-card.answered { cursor: default; }
+.event-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.75rem; }
+.event-q { font-size: 0.85rem; color: #555; margin-bottom: 0.75rem; }
+.event-btns { display: flex; gap: 0.5rem; margin-top: auto; }
+.event-btns button { flex: 1; padding: 0.4rem; border-radius: 5px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.15s; }
+.event-btns button:hover { border-color: #2563eb; }
+.event-btns button.correct { background: #dcfce7; border-color: #16a34a; color: #16a34a; }
+.event-btns button.wrong { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
+.event-explain { font-size: 0.8rem; color: #555; margin-top: 0.75rem; line-height: 1.4; display: none; }
+.event-card.answered .event-explain { display: block; }
+.event-card.answered .event-btns { display: none; }
+.tally { font-size: 1rem; font-weight: 600; margin-top: 1rem; color: #2563eb; }
+
+/* Seven Lies Cards */
+.lies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
+.lie-card { perspective: 600px; min-height: 180px; cursor: pointer; }
+.lie-inner { position: relative; width: 100%; height: 100%; min-height: 180px; transition: transform 0.5s; transform-style: preserve-3d; }
+.lie-card.flipped .lie-inner { transform: rotateY(180deg); }
+.lie-front, .lie-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 1rem; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+.lie-front { background: #2563eb; color: white; border: 1px solid #1d4ed8; }
+.lie-front h3 { font-size: 0.9rem; margin: 0; line-height: 1.4; }
+.lie-front .lie-hint { font-size: 0.75rem; opacity: 0.7; margin-top: auto; padding-top: 0.5rem; }
+.lie-back { background: white; border: 1px solid #e5e5e0; transform: rotateY(180deg); }
+.lie-back p { font-size: 0.82rem; margin: 0; line-height: 1.5; color: #333; }
+.lie-back .lie-label { font-size: 0.7rem; color: #ef4444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+/* Wage-Productivity */
+.slider-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; font-size: 0.85rem; }
+.slider-row label { width: 220px; flex-shrink: 0; }
+.slider-row input { flex: 1; }
+.slider-row .val { width: 40px; text-align: right; font-weight: 600; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="02-harbingers.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="04-maxwells-demon.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapters 3 &ndash; 4</div>
+  <h1>The GDP Illusion</h1>
+
+  <p>GDP measures the flow of money through an economy, not welfare, not progress, not human flourishing. A perfect instrument &mdash; for the wrong thing. What if your only navigation instrument actively rewarded destruction?</p>
+
+  <!-- Panel 1: GDP Paradox Calculator -->
+  <div class="panel">
+    <h2>The GDP Paradox Calculator</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">For each event, guess: does GDP go UP or DOWN?</p>
+    <div class="card-grid" id="paradox-grid"></div>
+    <div class="tally" id="tally"></div>
+  </div>
+
+  <!-- Panel 2: Seven Lies -->
+  <div class="panel">
+    <h2>The Seven Lies</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to reveal the reality behind the assumption.</p>
+    <div class="lies-grid" id="lies-grid"></div>
+  </div>
+
+  <!-- Panel 3: Wage-Productivity Gap -->
+  <div class="panel">
+    <h2>The Wage-Productivity Gap</h2>
+    <div id="gap-chart"></div>
+    <div style="margin-top:1.5rem;">
+      <p style="font-size:0.9rem;color:#666;margin:0 0 0.75rem">What explains the gap? Adjust the sliders (must sum to 100%):</p>
+      <div class="slider-row">
+        <label>Software non-rivalry</label>
+        <input type="range" id="blame-sw" min="0" max="100" value="33">
+        <span class="val" id="blame-sw-val">33%</span>
+      </div>
+      <div class="slider-row">
+        <label>Network effects / winner-take-all</label>
+        <input type="range" id="blame-net" min="0" max="100" value="33">
+        <span class="val" id="blame-net-val">33%</span>
+      </div>
+      <div class="slider-row">
+        <label>Financialization / shareholder primacy</label>
+        <input type="range" id="blame-fin" min="0" max="100" value="34">
+        <span class="val" id="blame-fin-val">34%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Scrub interaction
+document.querySelectorAll('.scrub').forEach(el => {
+  let startX, startVal;
+  el.addEventListener('mousedown', e => {
+    startX = e.clientX;
+    startVal = parseFloat(el.dataset.value);
+    const onMove = e => {
+      const dx = e.clientX - startX;
+      const step = parseFloat(el.dataset.step || 1);
+      const min = parseFloat(el.dataset.min || 0);
+      const max = parseFloat(el.dataset.max || 100);
+      const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
+      el.dataset.value = newVal;
+      el.textContent = newVal + (el.dataset.suffix || '');
+      if (el.dataset.update) window[el.dataset.update](newVal);
+    };
+    const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  });
+});
+
+// ── GDP Paradox Calculator ──
+(function() {
+  const events = [
+    { name: 'Hurricane Katrina', answer: 'up', explain: 'Rebuilding construction, emergency services, and replacement purchases all add to GDP. Destruction is "good" for GDP.' },
+    { name: 'Wikipedia launch', answer: 'down', explain: 'Destroyed the $3B encyclopedia industry. The free replacement contributes $0 to GDP despite being vastly superior.' },
+    { name: 'Divorce', answer: 'up', explain: 'Two households instead of one, lawyer fees, duplicate furniture purchases, separate utilities. GDP loves inefficiency.' },
+    { name: 'Cancer diagnosis', answer: 'up', explain: 'Average treatment cost: $425K. Chemotherapy, hospital stays, pharmaceuticals. Suffering is GDP gold.' },
+    { name: 'Open-source software', answer: 'down', explain: 'Linux, Apache, Python: trillions in value, $0 GDP contribution. Free replacements for expensive proprietary software.' },
+    { name: 'GPT-4 launch', answer: 'down', explain: 'Replaces paid copywriting, coding, translation, tutoring. Each displaced dollar of human service is GDP lost.' }
+  ];
+
+  let score = 0, answered = 0;
+  const grid = document.getElementById('paradox-grid');
+
+  events.forEach((ev, i) => {
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.innerHTML = `
+      <div class="event-name">${ev.name}</div>
+      <div class="event-q">GDP goes...</div>
+      <div class="event-btns">
+        <button data-choice="up">UP</button>
+        <button data-choice="down">DOWN</button>
+      </div>
+      <div class="event-explain">${ev.explain}</div>
+    `;
+    card.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (card.classList.contains('answered')) return;
+        card.classList.add('answered');
+        answered++;
+        const correct = btn.dataset.choice === ev.answer;
+        if (correct) { score++; btn.classList.add('correct'); }
+        else { btn.classList.add('wrong'); }
+        // highlight correct one
+        card.querySelectorAll('button').forEach(b => {
+          if (b.dataset.choice === ev.answer) b.classList.add('correct');
+        });
+        document.getElementById('tally').textContent = `${score}/${answered} correct` + (answered === events.length ? (score >= 4 ? ' — You see through the illusion.' : ' — GDP is trickier than it looks.') : '');
+      });
+    });
+    grid.appendChild(card);
+  });
+})();
+
+// ── Seven Lies ──
+(function() {
+  const lies = [
+    { front: 'Scarcity is fundamental', back: 'AI reduced GPT query cost from $36/hr equivalent to $0.00015 each. Abundance is the new default for information goods.' },
+    { front: 'Markets clear efficiently', back: '40M US adults cannot afford healthcare. Markets fail catastrophically at necessities. Efficiency assumes equal access.' },
+    { front: 'Competition drives innovation', back: 'Bell Labs, CERN, the Internet: most transformative innovations came from non-competitive, publicly-funded environments.' },
+    { front: 'Growth is always good', back: 'UK: GDP +150% since 1990, median real wages +12%. Growth accrued almost entirely to the top 1%.' },
+    { front: 'Value = Price', back: 'Wikipedia: $0 price, ~$3.6B replacement cost. Nature\'s ecosystem services: $125T/year. GDP counts $0 for both.' },
+    { front: 'Infinite growth is possible', back: 'Earth\'s biomass capacity is finite. Current extraction rate: 1.7 Earths/year. Physics does not negotiate.' },
+    { front: 'Distribution follows contribution', back: 'US productivity +246% since 1973, median wages +115%. The gap is pure extraction, not earned surplus.' }
+  ];
+
+  const grid = document.getElementById('lies-grid');
+  lies.forEach((lie, i) => {
+    const card = document.createElement('div');
+    card.className = 'lie-card';
+    card.innerHTML = `
+      <div class="lie-inner">
+        <div class="lie-front">
+          <h3>"${lie.front}"</h3>
+          <div class="lie-hint">Click to reveal</div>
+        </div>
+        <div class="lie-back">
+          <div class="lie-label">The Reality</div>
+          <p>${lie.back}</p>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    grid.appendChild(card);
+  });
+})();
+
+// ── Wage-Productivity Gap ──
+(function() {
+  // Simplified index data (base 100 in 1950)
+  const years = d3.range(1950, 2025);
+  const productivity = years.map(y => {
+    if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
+    return { year: y, val: 169 + (y - 1973) * 3.47 };
+  });
+  const wages = years.map(y => {
+    if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
+    return { year: y, val: 169 + (y - 1973) * 0.9 };
+  });
+
+  const w = 640, h = 300, m = { top: 20, right: 80, bottom: 35, left: 50 };
+  const svg = d3.select('#gap-chart').append('svg')
+    .attr('viewBox', `0 0 ${w} ${h}`).style('width', '100%');
+
+  const x = d3.scaleLinear().domain([1950, 2024]).range([m.left, w - m.right]);
+  const y = d3.scaleLinear().domain([80, 360]).range([h - m.bottom, m.top]);
+
+  svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8))
+    .selectAll('text').style('font-size', '10px');
+  svg.append('g').attr('transform', `translate(${m.left},0)`)
+    .call(d3.axisLeft(y).ticks(6))
+    .selectAll('text').style('font-size', '10px');
+
+  svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(h/2)).attr('y', 14)
+    .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888').text('Index (1950 = 100)');
+
+  const line = d3.line().x(d => x(d.year)).y(d => y(d.val)).curve(d3.curveMonotoneX);
+
+  // Gap area
+  const gapArea = svg.append('path')
+    .attr('fill', '#ef444422').attr('stroke', 'none');
+
+  function updateGap() {
+    const area = d3.area()
+      .x(d => x(d.year))
+      .y0((d, i) => y(wages[i].val))
+      .y1(d => y(d.val))
+      .curve(d3.curveMonotoneX);
+    gapArea.datum(productivity.filter(d => d.year >= 1973)).attr('d', area);
+  }
+  updateGap();
+
+  svg.append('path').datum(productivity).attr('d', line)
+    .attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2.5);
+  svg.append('path').datum(wages).attr('d', line)
+    .attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 2.5);
+
+  // Labels
+  const lastProd = productivity[productivity.length - 1];
+  const lastWage = wages[wages.length - 1];
+  svg.append('text').attr('x', x(lastProd.year) + 5).attr('y', y(lastProd.val) + 4)
+    .text('Productivity').style('font-size', '11px').style('fill', '#2563eb').style('font-weight', '600');
+  svg.append('text').attr('x', x(lastWage.year) + 5).attr('y', y(lastWage.val) + 4)
+    .text('Wages').style('font-size', '11px').style('fill', '#ef4444').style('font-weight', '600');
+
+  // 1973 annotation
+  svg.append('line').attr('x1', x(1973)).attr('x2', x(1973))
+    .attr('y1', m.top).attr('y2', h - m.bottom)
+    .attr('stroke', '#888').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
+  svg.append('text').attr('x', x(1973) + 4).attr('y', m.top + 12)
+    .text('1973: divergence begins').style('font-size', '10px').style('fill', '#888');
+
+  // Blame sliders
+  const sliders = ['blame-sw', 'blame-net', 'blame-fin'];
+  const colors = ['#2563eb', '#7c3aed', '#d97706'];
+
+  // Explanation zone segments in the gap
+  const segments = svg.selectAll('.blame-seg').data(sliders).enter().append('rect')
+    .attr('x', x(1973)).attr('width', x(2024) - x(1973))
+    .attr('fill', (d, i) => colors[i]).attr('opacity', 0.12);
+
+  function updateBlame() {
+    const vals = sliders.map(id => parseInt(document.getElementById(id).value));
+    const total = vals.reduce((a, b) => a + b, 0);
+    // Normalize
+    const norm = vals.map(v => v / total * 100);
+    sliders.forEach((id, i) => {
+      document.getElementById(id + '-val').textContent = Math.round(norm[i]) + '%';
+    });
+
+    // Position segments within the gap
+    const gapTop = y(lastProd.val);
+    const gapBot = y(lastWage.val);
+    const gapH = gapBot - gapTop;
+    let cumY = gapTop;
+    segments.each(function(d, i) {
+      const segH = (norm[i] / 100) * gapH;
+      d3.select(this).attr('y', cumY).attr('height', segH);
+      cumY += segH;
+    });
+  }
+
+  sliders.forEach((id, idx) => {
+    document.getElementById(id).addEventListener('input', function() {
+      // Adjust others proportionally so sum stays 100
+      const me = parseInt(this.value);
+      const others = sliders.filter((_, i) => i !== idx);
+      const otherSum = others.reduce((s, oid) => s + parseInt(document.getElementById(oid).value), 0);
+      const remaining = 100 - me;
+      if (otherSum > 0) {
+        others.forEach(oid => {
+          const el = document.getElementById(oid);
+          el.value = Math.round((parseInt(el.value) / otherSum) * remaining);
+        });
+      }
+      updateBlame();
+    });
+  });
+
+  updateBlame();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooperation Emerges</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.active { background: #1e40af; box-shadow: 0 0 0 2px #93c5fd; }
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
+.stat strong { color: #1a1a1a; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.matrix { display: grid; grid-template-columns: auto 1fr 1fr; gap: 0; font-size: 0.85rem; margin: 1rem 0; border: 1px solid #e5e5e0; border-radius: 6px; overflow: hidden; }
+.matrix div { padding: 0.5rem 0.75rem; border: 1px solid #e5e5e0; text-align: center; }
+.matrix .header { background: #f5f5f3; font-weight: 600; }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; text-align: center; }
+.results-grid .val { font-size: 1.5rem; font-weight: 700; color: #2563eb; }
+.results-grid .lbl { font-size: 0.8rem; color: #888; }
+.leaderboard { margin: 1rem 0; }
+.leaderboard .entry { display: flex; justify-content: space-between; padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0ed; font-size: 0.9rem; }
+.leaderboard .entry:first-child { background: #eff6ff; font-weight: 600; border-radius: 6px 6px 0 0; }
+.leaderboard .rank { color: #888; width: 2rem; }
+.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
+.case-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; margin: 0.75rem 0; cursor: pointer; transition: all 0.2s; }
+.case-card:hover { border-color: #2563eb; }
+.case-card h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.case-card .big-stat { font-size: 1.8rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
+.case-card .detail { display: none; font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
+.case-card.open .detail { display: block; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="07-network-prison.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="09-three-futures.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 12</div>
+  <h1>Cooperation Emerges</h1>
+
+  <p>Cooperation isn&rsquo;t idealism. In repeated games with memory, it is the mathematically optimal selfish strategy. The prisoner&rsquo;s dilemma isn&rsquo;t a story about morality &mdash; it&rsquo;s a story about time horizons and information.</p>
+
+  <!-- Panel 1: Prisoner's Dilemma Playground -->
+  <div class="panel">
+    <h2>Prisoner&rsquo;s Dilemma Playground</h2>
+    <div class="matrix">
+      <div class="header"></div><div class="header">B: Cooperate</div><div class="header">B: Defect</div>
+      <div class="header">A: Cooperate</div><div>3, 3</div><div>0, 5</div>
+      <div class="header">A: Defect</div><div>5, 0</div><div>1, 1</div>
+    </div>
+    <div class="slider-row">
+      <label>Iterations: <span id="iter-val">50</span></label>
+      <input type="range" id="iter-slider" min="1" max="200" value="50">
+    </div>
+    <div class="slider-row">
+      <label>Reputation Visibility: <span id="rep-val">50%</span></label>
+      <input type="range" id="rep-slider" min="0" max="100" value="50">
+    </div>
+    <div class="slider-row">
+      <label>Time Horizon: <span id="horizon-val">50</span></label>
+      <input type="range" id="horizon-slider" min="1" max="200" value="50">
+    </div>
+    <button class="btn" onclick="runPD()">Run Game</button>
+    <div class="results-grid" id="pd-results" style="display:none;">
+      <div><div class="val" id="pd-a-score">0</div><div class="lbl">A's Score</div></div>
+      <div><div class="val" id="pd-b-score">0</div><div class="lbl">B's Score</div></div>
+      <div><div class="val" id="pd-coop">0%</div><div class="lbl">Mutual Cooperation</div></div>
+    </div>
+    <svg id="pd-chart" width="600" height="160" style="display:block; max-width:100%;"></svg>
+  </div>
+
+  <!-- Panel 2: Strategy Tournament -->
+  <div class="panel">
+    <h2>Strategy Tournament</h2>
+    <p style="font-size:0.9rem; color:#666;">Six strategies compete in a round-robin tournament of 100 rounds each.</p>
+    <button class="btn" onclick="runTournament()">Run Tournament</button>
+    <div class="leaderboard" id="tournament-board"></div>
+    <p class="caption" id="tournament-caption" style="display:none;">Tit-for-Tat wins not by being moral, but by being clear, reciprocal, and forgiving.</p>
+  </div>
+
+  <!-- Panel 3: Topology x Cooperation -->
+  <div class="panel">
+    <h2>Topology &times; Cooperation</h2>
+    <p style="font-size:0.9rem; color:#666;">Watch how defection (red) spreads through different network structures.</p>
+    <div class="btn-group">
+      <button class="btn" onclick="runSpread('hub')">Hub-and-Spoke</button>
+      <button class="btn" onclick="runSpread('smallworld')">Small-World</button>
+      <button class="btn" onclick="runSpread('mesh')">Mesh</button>
+    </div>
+    <svg id="spread-svg" width="600" height="360" style="display:block; max-width:100%;"></svg>
+    <div id="spread-stat" class="stat" style="text-align:center;"></div>
+  </div>
+
+  <!-- Panel 4: Real-World Proof -->
+  <div class="panel">
+    <h2>Real-World Proof</h2>
+
+    <div class="case-card" onclick="this.classList.toggle('open')">
+      <h3>Mondragon 2008</h3>
+      <div class="big-stat">0% internal unemployment</div>
+      <p style="font-size:0.85rem; color:#888;">vs. Spain's 26% peak</p>
+      <div class="detail">During the 2008 financial crisis, Mondragon cooperative (worker-owned) had 0% internal unemployment vs. Spain's 26% peak. Workers voted to reduce hours and pay rather than fire colleagues. Cooperation, encoded in ownership structure, produced resilience that hierarchical firms could not match.</div>
+    </div>
+
+    <div class="case-card" onclick="this.classList.toggle('open')">
+      <h3>Buurtzorg</h3>
+      <div class="big-stat">8% overhead</div>
+      <p style="font-size:0.85rem; color:#888;">vs. 24% industry standard</p>
+      <div class="detail">15,000 nurses in the Netherlands. No managers. 8% overhead vs. 24% industry standard. Patients recover 40% faster. Secret: each team of 12 is self-managing. Trust replaces supervision. Cooperation emerges from small, autonomous groups with shared purpose.</div>
+    </div>
+
+    <div class="case-card" onclick="this.classList.toggle('open')">
+      <h3>Linux Kernel</h3>
+      <div class="big-stat">~30M lines of code</div>
+      <p style="font-size:0.85rem; color:#888;">produced by voluntary cooperation</p>
+      <div class="detail">Produced by voluntary cooperation. Powers 96% of top 1M web servers, all Android phones, most of the internet's infrastructure. The GPL license enforces cooperation by code: you can use it, but you must share improvements. Cooperation, once structurally encoded, scales without limit.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== Panel 1: Prisoner's Dilemma ==========
+function runPD() {
+  const iters = +document.getElementById('iter-slider').value;
+  const rep = +document.getElementById('rep-slider').value / 100;
+  const horizon = +document.getElementById('horizon-slider').value;
+
+  // Two rational agents using conditional cooperation
+  // With more visibility and longer horizon, cooperation emerges
+  const coopProb = Math.min(0.95, rep * 0.6 + (horizon / 200) * 0.35 + (iters > 5 ? 0.1 : 0));
+  let aScore = 0, bScore = 0, coopRounds = 0;
+  const rounds = [];
+  let aLastCoop = true, bLastCoop = true;
+
+  for (let i = 0; i < iters; i++) {
+    // Shadow of the future: near end, tendency to defect
+    const endEffect = (iters - i) < 3 && rep < 0.5 ? 0.7 : 0;
+    const aCoop = Math.random() < (coopProb - endEffect) && (i === 0 || bLastCoop || Math.random() < rep * 0.3);
+    const bCoop = Math.random() < (coopProb - endEffect) && (i === 0 || aLastCoop || Math.random() < rep * 0.3);
+
+    if (aCoop && bCoop) { aScore += 3; bScore += 3; coopRounds++; }
+    else if (aCoop && !bCoop) { aScore += 0; bScore += 5; }
+    else if (!aCoop && bCoop) { aScore += 5; bScore += 0; }
+    else { aScore += 1; bScore += 1; }
+
+    rounds.push({ round: i, aCoop, bCoop });
+    aLastCoop = aCoop; bLastCoop = bCoop;
+  }
+
+  document.getElementById('pd-results').style.display = 'grid';
+  document.getElementById('pd-a-score').textContent = aScore;
+  document.getElementById('pd-b-score').textContent = bScore;
+  document.getElementById('pd-coop').textContent = Math.round(coopRounds / iters * 100) + '%';
+
+  // Draw chart
+  const svg = d3.select('#pd-chart');
+  svg.selectAll('*').remove();
+  const w = 600, h = 160, m = { t: 10, r: 10, b: 25, l: 30 };
+  const x = d3.scaleLinear().domain([0, iters - 1]).range([m.l, w - m.r]);
+  const barW = Math.max(1, (w - m.l - m.r) / iters - 0.5);
+
+  svg.selectAll('.bar').data(rounds).enter().append('rect')
+    .attr('x', d => x(d.round)).attr('y', m.t)
+    .attr('width', barW).attr('height', (h - m.t - m.b) / 2 - 2)
+    .attr('fill', d => d.aCoop ? '#3b82f6' : '#ef4444').attr('rx', 1);
+  svg.selectAll('.bar2').data(rounds).enter().append('rect')
+    .attr('x', d => x(d.round)).attr('y', m.t + (h - m.t - m.b) / 2 + 2)
+    .attr('width', barW).attr('height', (h - m.t - m.b) / 2 - 2)
+    .attr('fill', d => d.bCoop ? '#3b82f6' : '#ef4444').attr('rx', 1);
+
+  svg.append('text').attr('x', 5).attr('y', m.t + 20).attr('font-size', 10).attr('fill', '#888').text('A');
+  svg.append('text').attr('x', 5).attr('y', m.t + (h - m.t - m.b) / 2 + 22).attr('font-size', 10).attr('fill', '#888').text('B');
+  svg.append('text').attr('x', w / 2).attr('y', h - 3).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#aaa').text('Blue = Cooperate, Red = Defect');
+}
+
+['iter-slider', 'rep-slider', 'horizon-slider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    const map = { 'iter-slider': 'iter-val', 'rep-slider': 'rep-val', 'horizon-slider': 'horizon-val' };
+    const suffix = id === 'rep-slider' ? '%' : '';
+    document.getElementById(map[id]).textContent = this.value + suffix;
+  });
+});
+
+// ========== Panel 2: Strategy Tournament ==========
+function runTournament() {
+  // Each strategy plays all others in both player positions (full round-robin)
+  const strategies = {
+    'Always Defect': (myHist, theirHist) => false,
+    'Always Cooperate': (myHist, theirHist) => true,
+    'Random (50/50)': (myHist, theirHist) => Math.random() > 0.5,
+    'Tit-for-Tat': (myHist, theirHist) => theirHist.length === 0 ? true : theirHist[theirHist.length - 1],
+    'Generous TfT': (myHist, theirHist) => theirHist.length === 0 ? true : (theirHist[theirHist.length - 1] || Math.random() < 0.1),
+    'Grim Trigger': (myHist, theirHist) => !theirHist.includes(false),
+  };
+  const names = Object.keys(strategies);
+  const scores = {};
+  names.forEach(n => scores[n] = 0);
+
+  // Play each pair from BOTH sides (A vs B and B vs A) for asymmetric strategies
+  for (let i = 0; i < names.length; i++) {
+    for (let j = 0; j < names.length; j++) {
+      if (i === j) continue;
+      let histI = [], histJ = [];
+      for (let r = 0; r < 200; r++) {
+        const a = strategies[names[i]](histI, histJ);
+        const b = strategies[names[j]](histJ, histI);
+        if (a && b) { scores[names[i]] += 3; }
+        else if (a && !b) { scores[names[i]] += 0; }
+        else if (!a && b) { scores[names[i]] += 5; }
+        else { scores[names[i]] += 1; }
+        histI.push(a); histJ.push(b);
+      }
+    }
+  }
+
+  const ranked = names.map(n => ({ name: n, score: scores[n] })).sort((a, b) => b.score - a.score);
+  const board = document.getElementById('tournament-board');
+  board.innerHTML = ranked.map((r, i) => `<div class="entry"><span class="rank">#${i + 1}</span><span>${r.name}</span><span style="font-weight:600;">${r.score.toLocaleString()}</span></div>`).join('');
+  document.getElementById('tournament-caption').style.display = 'block';
+}
+
+// ========== Panel 3: Topology x Cooperation ==========
+function runSpread(type) {
+  const N = 64;
+  const cols = 8, rows = 8;
+  const svg = d3.select('#spread-svg');
+  svg.selectAll('*').remove();
+  const w = 600, h = 360;
+  const cw = 50, ch = 36;
+  const ox = (w - cols * cw) / 2, oy = 20;
+
+  // Build adjacency
+  const adj = Array.from({ length: N }, () => []);
+  if (type === 'hub') {
+    const hub = 0;
+    for (let i = 1; i < N; i++) { adj[hub].push(i); adj[i].push(hub); }
+  } else if (type === 'smallworld') {
+    for (let i = 0; i < N; i++) {
+      [1, 2].forEach(d => { const j = (i + d) % N; adj[i].push(j); adj[j].push(i); });
+    }
+    for (let i = 0; i < 6; i++) {
+      const a = Math.floor(Math.random() * N), b = Math.floor(Math.random() * N);
+      if (a !== b) { adj[a].push(b); adj[b].push(a); }
+    }
+  } else {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c;
+        if (c + 1 < cols) { adj[i].push(i + 1); adj[i + 1].push(i); }
+        if (r + 1 < rows) { adj[i].push(i + cols); adj[i + cols].push(i); }
+      }
+    }
+  }
+
+  const state = Array(N).fill(true); // true = cooperate
+  // Initial defector
+  const startDefector = type === 'hub' ? 0 : Math.floor(N / 2);
+  state[startDefector] = false;
+
+  const rects = svg.selectAll('rect').data(d3.range(N)).enter().append('rect')
+    .attr('x', (d) => ox + (d % cols) * cw)
+    .attr('y', (d) => oy + Math.floor(d / cols) * ch)
+    .attr('width', cw - 4).attr('height', ch - 4)
+    .attr('rx', 4)
+    .attr('fill', d => state[d] ? '#3b82f6' : '#ef4444');
+
+  let step = 0;
+  const maxSteps = 20;
+
+  function tick() {
+    if (step >= maxSteps) {
+      const defCount = state.filter(s => !s).length;
+      d3.select('#spread-stat').html(`After ${step} steps: <strong>${defCount}/${N}</strong> nodes defecting (${Math.round(defCount/N*100)}%)`);
+      return;
+    }
+    step++;
+    const newState = [...state];
+    for (let i = 0; i < N; i++) {
+      if (state[i]) {
+        const defNeighbors = adj[i].filter(j => !state[j]).length;
+        const totalNeighbors = adj[i].length || 1;
+        if (defNeighbors / totalNeighbors > 0.3 + Math.random() * 0.2) {
+          newState[i] = false;
+        }
+      }
+    }
+    for (let i = 0; i < N; i++) state[i] = newState[i];
+    rects.transition().duration(200)
+      .attr('fill', d => state[d] ? '#3b82f6' : '#ef4444');
+
+    const defCount = state.filter(s => !s).length;
+    d3.select('#spread-stat').html(`Step ${step}: <strong>${defCount}/${N}</strong> defecting`);
+    setTimeout(tick, 350);
+  }
+  tick();
+}
+</script>
+</body>
+</html>

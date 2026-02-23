@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Three Futures</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
+.trajectory-label { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0.75rem 0; padding: 0.5rem; border-radius: 6px; }
+.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
+.seed-result { font-size: 0.9rem; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; border: 1px solid #e5e5e0; }
+.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: system-ui, sans-serif; margin: 1rem 0 0.5rem; }
+.countdown-sub { text-align: center; font-size: 0.9rem; color: #888; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="08-cooperation-emerges.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="10-after-economics.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapters 16 + 19</div>
+  <h1>The Three Futures</h1>
+
+  <p>Civilizations don&rsquo;t evolve gradually. They crystallize &mdash; suddenly, irreversibly. Right now our civilization is supercooled: liquid past its freezing point, waiting for a nucleation site. The crystal we become depends on choices made in a very small window.</p>
+
+  <!-- Panel 1+2: Phase Landscape with Parameter Sliders -->
+  <div class="panel">
+    <h2>Phase Landscape</h2>
+    <p style="font-size:0.9rem; color:#666;">Drag the marble or adjust the sliders to explore the attractor basins.</p>
+    <svg id="landscape-svg" width="600" height="400" style="display:block; max-width:100%; cursor:pointer;"></svg>
+    <div id="trajectory-label" class="trajectory-label" style="background:#fef2f2; color:#dc2626;">Current trajectory: Digital Feudalism</div>
+
+    <div class="slider-row">
+      <label>AI Openness: <span id="open-val">30</span></label>
+      <div class="slider-label"><span>Closed / Proprietary</span><span>Fully Open</span></div>
+      <input type="range" id="open-slider" min="0" max="100" value="30">
+    </div>
+    <div class="slider-row">
+      <label>Wealth Concentration: <span id="wealth-val">70</span></label>
+      <div class="slider-label"><span>Distributed</span><span>Concentrated</span></div>
+      <input type="range" id="wealth-slider" min="0" max="100" value="70">
+    </div>
+    <div class="slider-row">
+      <label>Governance Transparency: <span id="gov-val">20</span></label>
+      <div class="slider-label"><span>Opaque</span><span>Transparent</span></div>
+      <input type="range" id="gov-slider" min="0" max="100" value="20">
+    </div>
+  </div>
+
+  <!-- Panel 3: Nucleation Sites -->
+  <div class="panel">
+    <h2>Nucleation Sites</h2>
+    <p style="font-size:0.9rem; color:#666;">Historical nucleation events. Click to set conditions and see the outcome.</p>
+    <div class="btn-group">
+      <button class="btn secondary" onclick="setNucleation(60,45,55,'Florence 1400','Nucleation succeeded: Renaissance')">Florence 1400</button>
+      <button class="btn secondary" onclick="setNucleation(65,50,70,'Royal Society 1660','Nucleation succeeded: Scientific Revolution')">Royal Society 1660</button>
+      <button class="btn secondary" onclick="setNucleation(55,40,65,'Bell Labs 1950','Nucleation succeeded: Information Age foundations')">Bell Labs 1950</button>
+      <button class="btn secondary" onclick="setNucleation(80,20,30,'Twitter 2006','Nucleation succeeded then captured: attention economy')">Twitter 2006</button>
+    </div>
+    <button class="btn" onclick="plantSeed()">Plant a Florence</button>
+    <div id="seed-result" class="seed-result" style="display:none;"></div>
+  </div>
+
+  <!-- Panel 4: Critical Window -->
+  <div class="panel">
+    <h2>The Critical Window</h2>
+    <div class="countdown" id="countdown">1000</div>
+    <div class="countdown-sub">Days of critical window remaining</div>
+    <div id="rate-display" class="stat" style="text-align:center; margin-top:0.5rem;">Current rate: 30 days/month consumed</div>
+    <p class="caption">The window for crystallization is not infinite. Inaction is a choice.</p>
+  </div>
+</div>
+
+<script>
+// ========== Phase Landscape ==========
+(function(){
+  const svg = d3.select('#landscape-svg');
+  const w = 600, h = 400;
+  const margin = { t: 20, r: 20, b: 20, l: 20 };
+
+  // Three attractor positions
+  const attractors = [
+    { x: 150, y: 320, label: 'Digital Feudalism', color: '#dc2626' },
+    { x: 450, y: 320, label: 'Great Fragmentation', color: '#ea580c' },
+    { x: 300, y: 80, label: 'Human Symbiosis', color: '#16a34a' },
+  ];
+
+  // Generate contour data
+  const nx = 60, ny = 40;
+  const values = new Array(nx * ny);
+  for (let j = 0; j < ny; j++) {
+    for (let i = 0; i < nx; i++) {
+      const px = (i / nx) * w, py = (j / ny) * h;
+      let v = 0;
+      attractors.forEach(a => {
+        const dx = px - a.x, dy = py - a.y;
+        v += 100 * Math.exp(-(dx * dx + dy * dy) / 15000);
+      });
+      values[j * nx + i] = v;
+    }
+  }
+
+  const contours = d3.contours().size([nx, ny]).thresholds(d3.range(10, 100, 8))(values);
+  const xScale = d3.scaleLinear().domain([0, nx]).range([0, w]);
+  const yScale = d3.scaleLinear().domain([0, ny]).range([0, h]);
+  const path = d3.geoPath(d3.geoTransform({
+    point: function(x, y) { this.stream.point(xScale(x), yScale(y)); }
+  }));
+  const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 100]);
+
+  svg.append('rect').attr('width', w).attr('height', h).attr('fill', '#f0fdf4').attr('rx', 6);
+  svg.selectAll('path.contour').data(contours).enter().append('path')
+    .attr('d', path).attr('fill', d => colorScale(d.value)).attr('stroke', '#bbb').attr('stroke-width', 0.3).attr('opacity', 0.5);
+
+  // Labels
+  attractors.forEach(a => {
+    svg.append('text').attr('x', a.x).attr('y', a.y + 5)
+      .attr('text-anchor', 'middle').attr('font-size', 12).attr('font-weight', 700)
+      .attr('fill', a.color).text(a.label);
+  });
+
+  // Marble
+  let marbleX = 180, marbleY = 280;
+  const marble = svg.append('circle').attr('cx', marbleX).attr('cy', marbleY)
+    .attr('r', 10).attr('fill', '#2563eb').attr('stroke', '#fff').attr('stroke-width', 3)
+    .attr('cursor', 'grab').attr('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))');
+
+  const marbleShadow = svg.append('circle').attr('cx', marbleX).attr('cy', marbleY + 2)
+    .attr('r', 8).attr('fill', 'rgba(0,0,0,0.1)').lower();
+
+  // Drag marble
+  marble.call(d3.drag()
+    .on('drag', function(event) {
+      marbleX = Math.max(20, Math.min(w - 20, event.x));
+      marbleY = Math.max(20, Math.min(h - 20, event.y));
+      updateMarble();
+    })
+  );
+
+  function updateMarble() {
+    marble.transition().duration(100).attr('cx', marbleX).attr('cy', marbleY);
+    marbleShadow.transition().duration(100).attr('cx', marbleX).attr('cy', marbleY + 2);
+    updateTrajectory();
+  }
+
+  function updateTrajectory() {
+    let closest = attractors[0], minDist = Infinity;
+    attractors.forEach(a => {
+      const d = Math.hypot(marbleX - a.x, marbleY - a.y);
+      if (d < minDist) { minDist = d; closest = a; }
+    });
+    const label = document.getElementById('trajectory-label');
+    label.textContent = 'Current trajectory: ' + closest.label;
+    label.style.color = closest.color;
+    label.style.background = closest.color + '11';
+    updateCountdown();
+  }
+
+  // Slider controls
+  function computeMarbleFromSliders() {
+    const openness = +document.getElementById('open-slider').value;
+    const wealth = +document.getElementById('wealth-slider').value;
+    const gov = +document.getElementById('gov-slider').value;
+
+    // Map to x,y position
+    marbleX = 100 + (wealth / 100) * 400 * 0.5 + ((100 - openness) / 100) * 200 * 0.5;
+    marbleY = 350 - (gov / 100) * 200 - (openness / 100) * 100;
+    marbleX = Math.max(40, Math.min(w - 40, marbleX));
+    marbleY = Math.max(40, Math.min(h - 40, marbleY));
+    updateMarble();
+  }
+
+  ['open-slider', 'wealth-slider', 'gov-slider'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      const valId = id.replace('-slider', '-val');
+      document.getElementById(valId).textContent = this.value;
+      computeMarbleFromSliders();
+    });
+  });
+
+  // Nucleation
+  window.setNucleation = function(openness, wealth, gov, name, result) {
+    document.getElementById('open-slider').value = openness;
+    document.getElementById('wealth-slider').value = wealth;
+    document.getElementById('gov-slider').value = gov;
+    document.getElementById('open-val').textContent = openness;
+    document.getElementById('wealth-val').textContent = wealth;
+    document.getElementById('gov-val').textContent = gov;
+    computeMarbleFromSliders();
+    const el = document.getElementById('seed-result');
+    el.style.display = 'block';
+    el.innerHTML = `<strong>${name}</strong>: ${result}`;
+  };
+
+  window.plantSeed = function() {
+    // Check if near symbiosis
+    const dist = Math.hypot(marbleX - 300, marbleY - 80);
+    const el = document.getElementById('seed-result');
+    el.style.display = 'block';
+
+    if (dist < 150) {
+      el.innerHTML = '<span style="color:#16a34a; font-weight:600;">The seed grows.</span> Conditions favor symbiosis. The nucleation site expands.';
+      el.style.borderColor = '#16a34a';
+      // Animate a glow on the landscape
+      svg.append('circle').attr('cx', marbleX).attr('cy', marbleY).attr('r', 5)
+        .attr('fill', 'none').attr('stroke', '#16a34a').attr('stroke-width', 3).attr('opacity', 1)
+        .transition().duration(1500).attr('r', 60).attr('opacity', 0).remove();
+    } else {
+      el.innerHTML = '<span style="color:#888; font-weight:600;">The seed fades.</span> Current conditions do not support nucleation. Adjust parameters toward openness and transparency.';
+      el.style.borderColor = '#ccc';
+    }
+  };
+
+  // Countdown
+  let countdown = 1000;
+  let currentRate = 30;
+
+  function updateCountdown() {
+    const dist = Math.hypot(marbleX - 300, marbleY - 80);
+    const feudDist = Math.hypot(marbleX - 150, marbleY - 320);
+    if (feudDist < 100) currentRate = 60;
+    else if (dist < 100) currentRate = 5;
+    else currentRate = 30;
+    document.getElementById('rate-display').textContent = `Current rate: ${currentRate} days/month consumed`;
+  }
+
+  // Tick the countdown every 2 seconds (simulating months passing)
+  setInterval(() => {
+    const decrement = Math.max(1, Math.round(currentRate / 15));
+    countdown = Math.max(0, countdown - decrement);
+    document.getElementById('countdown').textContent = countdown;
+    if (countdown === 0) {
+      document.getElementById('countdown').style.color = '#dc2626';
+    }
+  }, 2000);
+
+  updateTrajectory();
+})();
+</script>
+</body>
+</html>

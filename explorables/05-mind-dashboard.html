@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chs 7-8 — The MIND Dashboard</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+.dials-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.dial-wrap { text-align: center; }
+.dial-label { font-size: 0.9rem; font-weight: 600; margin-top: 0.3rem; }
+.dial-value { font-size: 1.5rem; font-weight: 700; color: #2563eb; }
+
+.vitality-display { text-align: center; margin: 1.5rem 0; }
+.vitality-num { font-size: 2.5rem; font-weight: 800; }
+.vitality-formula { font-size: 0.85rem; color: #888; margin-top: 0.25rem; font-family: monospace; }
+.health-bar { height: 16px; background: #e5e5e0; border-radius: 8px; margin: 1rem auto; max-width: 400px; overflow: hidden; }
+.health-fill { height: 100%; border-radius: 8px; transition: all 0.4s; }
+.collapse-warn { color: #dc2626; font-weight: 700; font-size: 1.1rem; text-align: center; min-height: 1.5em; margin-top: 0.5rem; }
+
+.civ-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.civ-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+.civ-btn.active, .civ-btn:hover { background: #2563eb; color: white; }
+.civ-desc { font-size: 0.9rem; color: #555; min-height: 2.5em; margin-top: 0.75rem; }
+
+.model-toggle { display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem; }
+.toggle-switch { width: 56px; height: 28px; background: #2563eb; border-radius: 14px; position: relative; cursor: pointer; transition: background 0.3s; }
+.toggle-switch.right { background: #7c3aed; }
+.toggle-knob { width: 24px; height: 24px; background: white; border-radius: 12px; position: absolute; top: 2px; left: 2px; transition: left 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.toggle-switch.right .toggle-knob { left: 30px; }
+.model-result { text-align: center; }
+.model-score { font-size: 2rem; font-weight: 800; }
+.model-verdict { font-size: 1.1rem; font-weight: 600; margin-top: 0.25rem; }
+.bar-chart { display: flex; align-items: flex-end; justify-content: center; gap: 0.75rem; height: 120px; margin: 1rem 0; }
+.bar-item { display: flex; flex-direction: column; align-items: center; }
+.bar-rect { width: 80px; border-radius: 4px 4px 0 0; transition: height 0.5s, background 0.5s; }
+.bar-label { font-size: 0.75rem; margin-top: 0.3rem; }
+
+.scale-toggle { display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="04-maxwells-demon.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="06-three-flows.html">Next &rarr;</a>
+</nav>
+<div class="prose">
+  <div class="chapter-num">Chapters 7 &ndash; 8</div>
+  <h1>The MIND Dashboard</h1>
+  <p>Civilizational health cannot be measured by adding up its parts. It is a product &mdash; Material capital &times; Intellectual capital &times; Natural capital &times; Democratic capital. Zero in any single dimension, and the entire system collapses. Not "weakens." Collapses.</p>
+
+  <h2>The Four Capital Dials</h2>
+  <div class="panel" id="dialsPanel">
+    <div class="dials-grid">
+      <div class="dial-wrap"><svg id="dialM" width="160" height="160"></svg><div class="dial-label" id="labelM">Material Capital</div><div class="dial-value" id="valM">70</div></div>
+      <div class="dial-wrap"><svg id="dialI" width="160" height="160"></svg><div class="dial-label" id="labelI">Intellectual Capital</div><div class="dial-value" id="valI">70</div></div>
+      <div class="dial-wrap"><svg id="dialN" width="160" height="160"></svg><div class="dial-label" id="labelN">Natural Capital</div><div class="dial-value" id="valN">70</div></div>
+      <div class="dial-wrap"><svg id="dialD" width="160" height="160"></svg><div class="dial-label" id="labelD">Democratic Capital</div><div class="dial-value" id="valD">70</div></div>
+    </div>
+    <div class="vitality-display">
+      <div class="vitality-num" id="vitalityNum">2,401</div>
+      <div class="vitality-formula" id="vitalityFormula">70 × 70 × 70 × 70 / 10⁶ = 2,401</div>
+      <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
+      <div class="collapse-warn" id="collapseWarn"></div>
+    </div>
+  </div>
+
+  <h2>Historical Civilizations</h2>
+  <div class="panel">
+    <div class="civ-btns">
+      <button class="civ-btn" data-civ="venice">Venice 1400</button>
+      <button class="civ-btn" data-civ="song">Song Dynasty 1100</button>
+      <button class="civ-btn" data-civ="soviet">Soviet Union 1970</button>
+      <button class="civ-btn" data-civ="costarica">Costa Rica 2020</button>
+      <button class="civ-btn" data-civ="usa">USA 2024</button>
+      <button class="civ-btn" data-civ="custom">Custom</button>
+    </div>
+    <div class="civ-desc" id="civDesc">Select a civilization to explore its capital profile.</div>
+  </div>
+
+  <h2>Sum vs Product Model</h2>
+  <div class="panel">
+    <div class="model-toggle">
+      <span style="font-weight:600">Additive</span>
+      <div class="toggle-switch" id="modelToggle"><div class="toggle-knob"></div></div>
+      <span style="font-weight:600">Multiplicative</span>
+    </div>
+    <div class="model-result">
+      <div class="model-score" id="modelScore">225 / 400</div>
+      <div class="model-verdict" id="modelVerdict">Doing OK (56%)</div>
+    </div>
+    <div class="bar-chart" id="barChart"></div>
+    <p style="font-size:0.9rem;text-align:center;color:#888;" id="modelInsight">The additive model hides single-point failures by averaging away collapse risks.</p>
+  </div>
+
+  <h2>Personal Scale</h2>
+  <div class="panel">
+    <div class="scale-toggle">
+      <span style="font-weight:600" id="scaleLeft">Civilization</span>
+      <div class="toggle-switch" id="scaleToggle"><div class="toggle-knob"></div></div>
+      <span style="font-weight:600" id="scaleRight">Individual</span>
+    </div>
+    <p id="scaleNote" style="font-size:0.9rem;color:#555;text-align:center;">The same multiplicative logic applies at every scale. Zero your health, zero your relationships &mdash; everything else becomes meaningless.</p>
+  </div>
+</div>
+
+<script>
+const state = { M: 70, I: 70, N: 70, D: 70, isMultiplicative: false, isPersonal: false };
+const colors = { M: '#ef4444', I: '#2563eb', N: '#22c55e', D: '#f59e0b' };
+const civLabels = {
+  civ: { M: 'Material Capital', I: 'Intellectual Capital', N: 'Natural Capital', D: 'Democratic Capital' },
+  personal: { M: 'Health', I: 'Skills / Knowledge', N: 'Relationships / Trust', D: 'Diverse Pursuits / Options' }
+};
+const civData = {
+  venice:    { M: 65, I: 75, N: 60, D: 55, desc: 'Venice 1400: A maritime republic with strong trade networks, artistic brilliance, and oligarchic governance. Balanced but not exceptional in any dimension.' },
+  song:      { M: 80, I: 85, N: 65, D: 40, desc: 'Song Dynasty 1100: Technological marvel with printing, gunpowder, and compass. Weak democratic capital made it vulnerable to external conquest.' },
+  soviet:    { M: 75, I: 80, N: 55, D: 15, desc: 'Soviet Union 1970: Industrial and scientific power hollowed by democratic deficit. The multiplicative model reveals the collapse the additive model hides.' },
+  costarica: { M: 55, I: 70, N: 80, D: 75, desc: 'Costa Rica 2020: Modest material wealth but exceptional natural and democratic capital. Abolished its army in 1948 and invested in education and ecology.' },
+  usa:       { M: 85, I: 80, N: 45, D: 50, desc: 'USA 2024: Enormous material and intellectual capital, but declining natural capital and democratic erosion create fragility.' },
+  custom:    { M: 70, I: 70, N: 70, D: 70, desc: 'Custom: Drag the dials to explore your own scenario.' }
+};
+
+// ===== Dial Drawing =====
+function createDial(svgId, key) {
+  const svg = d3.select('#' + svgId);
+  const cx = 80, cy = 80, r = 60;
+  const startAngle = -Math.PI * 0.75;
+  const endAngle = Math.PI * 0.75;
+  const arc = d3.arc().innerRadius(r - 12).outerRadius(r).startAngle(startAngle);
+
+  // Background arc
+  svg.append('path')
+    .attr('d', arc({ endAngle: endAngle }))
+    .attr('transform', `translate(${cx},${cy})`)
+    .attr('fill', '#e5e5e0');
+
+  // Value arc
+  const valueArc = svg.append('path')
+    .attr('class', 'value-arc')
+    .attr('transform', `translate(${cx},${cy})`)
+    .attr('fill', colors[key]);
+
+  // Handle
+  const handle = svg.append('circle')
+    .attr('r', 8).attr('fill', colors[key]).attr('stroke', 'white').attr('stroke-width', 2).attr('cursor', 'grab');
+
+  function updateDial(val) {
+    const t = val / 100;
+    const angle = startAngle + t * (endAngle - startAngle);
+    valueArc.attr('d', arc({ endAngle: angle }));
+    handle.attr('cx', cx + Math.cos(angle - Math.PI / 2) * (r - 6))
+           .attr('cy', cy + Math.sin(angle - Math.PI / 2) * (r - 6));
+  }
+
+  // Drag
+  const drag = d3.drag().on('drag', function(event) {
+    const dx = event.x - cx, dy = event.y - cy;
+    let angle = Math.atan2(dy, dx) + Math.PI / 2;
+    if (angle > Math.PI) angle -= Math.PI * 2;
+    let t = (angle - startAngle) / (endAngle - startAngle);
+    t = Math.max(0, Math.min(1, t));
+    const val = Math.round(t * 100);
+    state[key] = val;
+    updateDial(val);
+    document.getElementById('val' + key).textContent = val;
+    updateVitality();
+  });
+  handle.call(drag);
+
+  updateDial(state[key]);
+  return updateDial;
+}
+
+const dialUpdaters = {};
+['M', 'I', 'N', 'D'].forEach(k => { dialUpdaters[k] = createDial('dial' + k, k); });
+
+function setDials(m, i, n, d, animate) {
+  const targets = { M: m, I: i, N: n, D: d };
+  if (animate) {
+    const start = { M: state.M, I: state.I, N: state.N, D: state.D };
+    const duration = 600;
+    const t0 = performance.now();
+    function tick(now) {
+      const p = Math.min(1, (now - t0) / duration);
+      const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
+      ['M', 'I', 'N', 'D'].forEach(k => {
+        state[k] = Math.round(start[k] + (targets[k] - start[k]) * ease);
+        dialUpdaters[k](state[k]);
+        document.getElementById('val' + k).textContent = state[k];
+      });
+      updateVitality();
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  } else {
+    ['M', 'I', 'N', 'D'].forEach(k => {
+      state[k] = targets[k];
+      dialUpdaters[k](targets[k]);
+      document.getElementById('val' + k).textContent = targets[k];
+    });
+    updateVitality();
+  }
+}
+
+function updateVitality() {
+  const { M, I, N, D } = state;
+  const product = M * I * N * D;
+  const vitality = Math.round(product / 1e6);
+  const maxVitality = 1e4; // 100^4 / 10^6
+  const pct = vitality / maxVitality;
+
+  document.getElementById('vitalityNum').textContent = vitality.toLocaleString();
+  document.getElementById('vitalityFormula').textContent = `${M} × ${I} × ${N} × ${D} / 10⁶ = ${vitality.toLocaleString()}`;
+
+  const fill = document.getElementById('healthFill');
+  fill.style.width = (pct * 100) + '%';
+  if (pct > 0.5) fill.style.background = '#22c55e';
+  else if (pct > 0.25) fill.style.background = '#f59e0b';
+  else if (pct > 0.05) fill.style.background = '#f97316';
+  else fill.style.background = '#dc2626';
+
+  const warn = document.getElementById('collapseWarn');
+  if (M === 0 || I === 0 || N === 0 || D === 0) {
+    const zero = [M === 0 && 'M', I === 0 && 'I', N === 0 && 'N', D === 0 && 'D'].filter(Boolean).join(', ');
+    warn.textContent = 'CIVILIZATIONAL COLLAPSE -- A zero in any dimension nullifies everything';
+  } else {
+    warn.textContent = '';
+  }
+
+  updateModelDisplay();
+}
+
+// ===== Historical Civilizations =====
+document.querySelectorAll('.civ-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.civ-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const civ = civData[this.dataset.civ];
+    setDials(civ.M, civ.I, civ.N, civ.D, true);
+    document.getElementById('civDesc').textContent = civ.desc;
+  });
+});
+
+// ===== Sum vs Product =====
+document.getElementById('modelToggle').addEventListener('click', function() {
+  state.isMultiplicative = !state.isMultiplicative;
+  this.classList.toggle('right', state.isMultiplicative);
+  updateModelDisplay();
+});
+
+function updateModelDisplay() {
+  const { M, I, N, D } = state;
+  const scoreEl = document.getElementById('modelScore');
+  const verdictEl = document.getElementById('modelVerdict');
+  const insightEl = document.getElementById('modelInsight');
+  const chartEl = document.getElementById('barChart');
+
+  if (!state.isMultiplicative) {
+    const sum = M + I + N + D;
+    const pct = Math.round(sum / 4);
+    scoreEl.textContent = `${sum} / 400`;
+    scoreEl.style.color = pct > 50 ? '#22c55e' : pct > 25 ? '#f59e0b' : '#dc2626';
+    verdictEl.textContent = pct > 70 ? 'Strong' : pct > 50 ? `Doing OK (${pct}%)` : pct > 25 ? 'Struggling' : 'Critical';
+    insightEl.textContent = 'The additive model hides single-point failures by averaging away collapse risks.';
+  } else {
+    const prod = Math.round(M * I * N * D / 1e6);
+    const maxProd = 100; // 100^4 / 10^6
+    const pct = Math.round(prod / maxProd * 100);
+    scoreEl.textContent = prod.toLocaleString();
+    scoreEl.style.color = pct > 30 ? '#22c55e' : pct > 10 ? '#f59e0b' : '#dc2626';
+    verdictEl.textContent = pct > 50 ? 'Thriving' : pct > 20 ? 'Functional' : pct > 5 ? 'Critical Failure (below threshold)' : 'Collapse';
+    insightEl.textContent = 'The multiplicative model reveals how a single weak dimension can drag the entire system into crisis.';
+  }
+
+  // Bar chart
+  chartEl.innerHTML = '';
+  const vals = [
+    { label: state.isPersonal ? 'Health' : 'Material', v: M },
+    { label: state.isPersonal ? 'Skills' : 'Intellectual', v: I },
+    { label: state.isPersonal ? 'Relationships' : 'Natural', v: N },
+    { label: state.isPersonal ? 'Options' : 'Democratic', v: D }
+  ];
+  const cs = [colors.M, colors.I, colors.N, colors.D];
+  vals.forEach((d, i) => {
+    const item = document.createElement('div');
+    item.className = 'bar-item';
+    const rect = document.createElement('div');
+    rect.className = 'bar-rect';
+    rect.style.height = (d.v * 1.1) + 'px';
+    rect.style.background = cs[i];
+    const lbl = document.createElement('div');
+    lbl.className = 'bar-label';
+    lbl.textContent = d.label;
+    item.appendChild(rect);
+    item.appendChild(lbl);
+    chartEl.appendChild(item);
+  });
+}
+
+// ===== Personal Scale =====
+document.getElementById('scaleToggle').addEventListener('click', function() {
+  state.isPersonal = !state.isPersonal;
+  this.classList.toggle('right', state.isPersonal);
+  const labels = state.isPersonal ? civLabels.personal : civLabels.civ;
+  document.getElementById('labelM').textContent = labels.M;
+  document.getElementById('labelI').textContent = labels.I;
+  document.getElementById('labelN').textContent = labels.N;
+  document.getElementById('labelD').textContent = labels.D;
+  document.getElementById('scaleNote').textContent = state.isPersonal
+    ? 'At the individual level: zero your health, skills, relationships, or options -- and everything else becomes meaningless. The math is the same.'
+    : 'The same multiplicative logic applies at every scale. Zero your health, zero your relationships -- everything else becomes meaningless.';
+  updateModelDisplay();
+});
+
+updateVitality();
+</script>
+</body>
+</html>

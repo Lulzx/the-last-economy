@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Intelligence Inversion</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+svg text { font-family: system-ui, sans-serif; }
+.era-label { font-size: 11px; fill: #555; }
+.era-band { opacity: 0.25; transition: opacity 0.2s; }
+.era-band.active { opacity: 0.55; }
+.year-marker { cursor: ew-resize; }
+.info-box { font-size: 0.95rem; color: #333; margin-top: 1rem; min-height: 2.5rem; }
+.annotation { font-size: 11px; fill: #888; }
+.cost-line { fill: none; stroke-width: 2.5; }
+.calc-cols { display: flex; gap: 2rem; flex-wrap: wrap; }
+.calc-col { flex: 1; min-width: 240px; }
+.calc-col h3 { margin-top: 0; font-size: 1.1rem; }
+.ratio-display { text-align: center; font-size: 2.5rem; font-weight: 700; color: #2563eb; margin: 1.5rem 0 0.5rem; }
+.ratio-sub { text-align: center; font-size: 0.9rem; color: #888; }
+input[type="range"] { width: 100%; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
+.cost-breakdown { font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <span style="color:#aaa">First chapter</span>
+  <a href="index.html">All Chapters</a>
+  <a href="02-harbingers.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 1</div>
+  <h1>The Intelligence Inversion</h1>
+
+  <p>Four times in history, civilization reorganized around a new value engine. Agricultural surplus &rarr; Artisan skill &rarr; Industrial machines &rarr; Information networks &rarr; and now: Machine intelligence.</p>
+
+  <p>This fifth transition is different. Every previous pivot created new roles for displaced workers. But when cognition itself is automated, there is no next rung on the ladder. We are in the year
+    <span class="scrub" data-value="2026" data-min="2020" data-max="2030" data-step="1" data-update="updateYear">2026</span>,
+    now <span id="years-into">2</span> years into a transition with no historical precedent.</p>
+
+  <div class="panel">
+    <h2>The Five Eras</h2>
+    <div id="timeline-chart"></div>
+    <div class="info-box" id="timeline-info">Drag the marker across the timeline to explore each era.</div>
+  </div>
+
+  <div class="panel">
+    <h2>The Cost Cliff</h2>
+    <div id="cost-chart"></div>
+    <div class="info-box" id="cost-info"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Metabolic Cost Calculator</h2>
+    <div class="calc-cols">
+      <div class="calc-col">
+        <h3>Human</h3>
+        <label class="slider-label"><span>Hours/week</span><span id="human-hours-val">40</span></label>
+        <input type="range" id="human-hours" min="20" max="60" value="40">
+        <div class="cost-breakdown" id="human-breakdown"></div>
+      </div>
+      <div class="calc-col">
+        <h3>AI Equivalent</h3>
+        <label class="slider-label"><span>Same task output</span><span id="ai-hours-val">40</span></label>
+        <input type="range" id="ai-hours" min="20" max="60" value="40" disabled style="opacity:0.5">
+        <div class="cost-breakdown" id="ai-breakdown"></div>
+      </div>
+    </div>
+    <div class="ratio-display" id="ratio-val">50,000x</div>
+    <div class="ratio-sub">cheaper per unit of cognitive output</div>
+  </div>
+
+  <h2>The Pivot Wall</h2>
+  <p>Every previous economic transition had a cognitive escape hatch. When farming mechanized, displaced workers moved into factories — physical labor replaced by physical labor. When factories automated, workers moved into offices — routine replaced by routine. When offshoring claimed offices, workers moved into services — rote tasks replaced by interpersonal ones. Each time, the new role required a <em>different kind</em> of thinking, one machines couldn't yet replicate.</p>
+  <p>This time, every arrow hits a wall. The escape hatch from cognitive automation is... more cognition. There is no sixth era waiting patiently in the wings. For the first time, humanity must design the next economy deliberately, rather than stumble into it.</p>
+</div>
+
+<script>
+// Scrub interaction
+document.querySelectorAll('.scrub').forEach(el => {
+  let startX, startVal;
+  el.addEventListener('mousedown', e => {
+    startX = e.clientX;
+    startVal = parseFloat(el.dataset.value);
+    const onMove = e => {
+      const dx = e.clientX - startX;
+      const step = parseFloat(el.dataset.step || 1);
+      const min = parseFloat(el.dataset.min || 0);
+      const max = parseFloat(el.dataset.max || 100);
+      const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
+      el.dataset.value = newVal;
+      el.textContent = newVal + (el.dataset.suffix || '');
+      if (el.dataset.update) window[el.dataset.update](newVal);
+    };
+    const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  });
+});
+
+window.updateYear = function(val) {
+  document.getElementById('years-into').textContent = val - 2024;
+};
+
+// ── Timeline ──
+(function() {
+  const eras = [
+    { name: 'Land', start: 1750, end: 1850, color: '#8B6914', who: 'Landowners' },
+    { name: 'Labor', start: 1850, end: 1950, color: '#2563eb', who: 'Factory owners' },
+    { name: 'Capital', start: 1950, end: 1990, color: '#16a34a', who: 'Investors & Corporations' },
+    { name: 'Networks', start: 1990, end: 2020, color: '#7c3aed', who: 'Platform owners' },
+    { name: 'Intelligence', start: 2020, end: 2035, color: '#d97706', who: 'AI deployers' }
+  ];
+
+  const w = 640, h = 140, m = { top: 30, right: 20, bottom: 30, left: 20 };
+  const svg = d3.select('#timeline-chart').append('svg')
+    .attr('viewBox', `0 0 ${w} ${h}`)
+    .style('width', '100%');
+
+  const x = d3.scaleLinear().domain([1750, 2035]).range([m.left, w - m.right]);
+
+  // Era bands
+  svg.selectAll('.era-band')
+    .data(eras).enter().append('rect')
+    .attr('class', 'era-band')
+    .attr('x', d => x(d.start)).attr('y', m.top)
+    .attr('width', d => x(d.end) - x(d.start)).attr('height', h - m.top - m.bottom)
+    .attr('fill', d => d.color)
+    .attr('rx', 3);
+
+  // Era labels
+  svg.selectAll('.era-label')
+    .data(eras).enter().append('text')
+    .attr('class', 'era-label')
+    .attr('x', d => (x(d.start) + x(d.end)) / 2)
+    .attr('y', m.top - 8)
+    .attr('text-anchor', 'middle')
+    .text(d => d.name);
+
+  // Axis
+  svg.append('g')
+    .attr('transform', `translate(0,${h - m.bottom})`)
+    .call(d3.axisBottom(x).tickValues([1750, 1850, 1950, 1990, 2020, 2035]).tickFormat(d3.format('d')))
+    .selectAll('text').style('font-size', '10px');
+
+  // Draggable marker
+  let markerYear = 1990;
+  const marker = svg.append('g').attr('class', 'year-marker');
+  marker.append('line')
+    .attr('y1', m.top - 5).attr('y2', h - m.bottom + 5)
+    .attr('stroke', '#e11d48').attr('stroke-width', 2.5);
+  marker.append('circle')
+    .attr('cy', m.top - 5).attr('r', 6)
+    .attr('fill', '#e11d48').attr('stroke', 'white').attr('stroke-width', 2);
+
+  function updateMarker(yr) {
+    markerYear = yr;
+    marker.attr('transform', `translate(${x(yr)},0)`);
+    const era = eras.find(e => yr >= e.start && yr < e.end) || eras[eras.length - 1];
+    svg.selectAll('.era-band').classed('active', d => d === era);
+    document.getElementById('timeline-info').innerHTML =
+      `In <strong>${Math.round(yr)}</strong>: dominant value source = <strong>${era.name}</strong>. Power held by: <strong>${era.who}</strong>`;
+  }
+  updateMarker(markerYear);
+
+  const drag = d3.drag()
+    .on('drag', e => {
+      const yr = Math.max(1750, Math.min(2035, x.invert(e.x)));
+      updateMarker(yr);
+    });
+  marker.call(drag);
+})();
+
+// ── Cost Cliff ──
+(function() {
+  const humanData = d3.range(2000, 2025).map(y => ({ year: y, cost: 0.05 + Math.sin(y * 2.7) * 0.01 + 0.015 }));
+  const aiData = [
+    { year: 2020, cost: 0.04 },
+    { year: 2021, cost: 0.015 },
+    { year: 2022, cost: 0.006 },
+    { year: 2023, cost: 0.002 },
+    { year: 2024, cost: 0.0003 }
+  ];
+
+  const w = 640, h = 280, m = { top: 20, right: 30, bottom: 40, left: 55 };
+  const svg = d3.select('#cost-chart').append('svg')
+    .attr('viewBox', `0 0 ${w} ${h}`)
+    .style('width', '100%');
+
+  const x = d3.scaleLinear().domain([2000, 2024]).range([m.left, w - m.right]);
+  const y = d3.scaleLog().domain([0.0001, 0.15]).range([h - m.bottom, m.top]);
+
+  svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(6))
+    .selectAll('text').style('font-size', '10px');
+  svg.append('g').attr('transform', `translate(${m.left},0)`)
+    .call(d3.axisLeft(y).ticks(4, '.4f'))
+    .selectAll('text').style('font-size', '10px');
+
+  // Y label
+  svg.append('text').attr('transform', `rotate(-90)`).attr('x', -(h/2)).attr('y', 14)
+    .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888')
+    .text('$/word (log scale)');
+
+  const line = d3.line().x(d => x(d.year)).y(d => y(d.cost)).curve(d3.curveMonotoneX);
+
+  svg.append('path').datum(humanData).attr('class', 'cost-line')
+    .attr('d', line).attr('stroke', '#ef4444');
+  svg.append('path').datum(aiData).attr('class', 'cost-line')
+    .attr('d', line).attr('stroke', '#2563eb');
+
+  // Legend
+  [['Human writer', '#ef4444', 0], ['AI generation', '#2563eb', 1]].forEach(([label, col, i]) => {
+    const g = svg.append('g').attr('transform', `translate(${m.left + 10},${m.top + 10 + i * 18})`);
+    g.append('line').attr('x2', 20).attr('stroke', col).attr('stroke-width', 2.5);
+    g.append('text').attr('x', 25).attr('y', 4).text(label).style('font-size', '11px').style('fill', '#555');
+  });
+
+  // Annotations
+  [[2020, 0.04, 'GPT-3'], [2023, 0.002, 'GPT-4']].forEach(([yr, c, label]) => {
+    svg.append('text').attr('class', 'annotation')
+      .attr('x', x(yr) + 5).attr('y', y(c) - 8).text(label);
+    svg.append('circle').attr('cx', x(yr)).attr('cy', y(c)).attr('r', 3).attr('fill', '#2563eb');
+  });
+
+  // Draggable year marker
+  let markerYr = 2012;
+  const marker = svg.append('g').style('cursor', 'ew-resize');
+  marker.append('line').attr('y1', m.top).attr('y2', h - m.bottom)
+    .attr('stroke', '#888').attr('stroke-width', 1.5).attr('stroke-dasharray', '4,3');
+  marker.append('circle').attr('cy', m.top).attr('r', 5)
+    .attr('fill', '#888').attr('stroke', 'white').attr('stroke-width', 2);
+
+  function updateCostMarker(yr) {
+    markerYr = yr;
+    marker.attr('transform', `translate(${x(yr)},0)`);
+    const hc = humanData.find(d => d.year === Math.round(yr));
+    const ac = aiData.find(d => d.year === Math.round(yr));
+    let info = `<strong>${Math.round(yr)}</strong>: Human ~$${hc ? hc.cost.toFixed(3) : '0.060'}/word`;
+    if (ac) info += ` | AI ~$${ac.cost.toFixed(5)}/word | Ratio: ${Math.round((hc ? hc.cost : 0.06) / ac.cost)}x`;
+    document.getElementById('cost-info').innerHTML = info;
+  }
+  updateCostMarker(markerYr);
+
+  marker.call(d3.drag().on('drag', e => {
+    updateCostMarker(Math.max(2000, Math.min(2024, x.invert(e.x))));
+  }));
+})();
+
+// ── Metabolic Cost Calculator ──
+(function() {
+  const hoursSlider = document.getElementById('human-hours');
+  const aiSlider = document.getElementById('ai-hours');
+
+  function update() {
+    const hrs = parseInt(hoursSlider.value);
+    aiSlider.value = hrs;
+    document.getElementById('human-hours-val').textContent = hrs;
+    document.getElementById('ai-hours-val').textContent = hrs;
+
+    const hourlyRate = 50;
+    const weeklyHuman = hrs * hourlyRate;
+    const annualHuman = weeklyHuman * 52;
+    const benefits = Math.round(annualHuman * 0.3);
+    const totalHuman = annualHuman + benefits;
+
+    const aiRate = 0.001;
+    const weeklyAI = hrs * aiRate;
+    const annualAI = weeklyAI * 52;
+
+    document.getElementById('human-breakdown').innerHTML =
+      `Salary: ${hrs}h &times; $${hourlyRate}/hr &times; 52 = <strong>$${annualHuman.toLocaleString()}</strong><br>` +
+      `Benefits (30%): <strong>$${benefits.toLocaleString()}</strong><br>` +
+      `Total: <strong>$${totalHuman.toLocaleString()}/yr</strong>`;
+
+    document.getElementById('ai-breakdown').innerHTML =
+      `Compute: ${hrs}h &times; $${aiRate}/hr &times; 52 = <strong>$${annualAI.toFixed(2)}</strong><br>` +
+      `Benefits: <strong>$0</strong><br>` +
+      `Total: <strong>$${annualAI.toFixed(2)}/yr</strong>`;
+
+    const ratio = Math.round(totalHuman / annualAI);
+    document.getElementById('ratio-val').textContent = ratio.toLocaleString() + 'x';
+  }
+
+  hoursSlider.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 9 — The Three Flows</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+.river-wrap { width: 100%; overflow: hidden; border-radius: 6px; background: #0a1628; }
+.river-tooltip { font-size: 0.85rem; color: #ccc; text-align: center; min-height: 1.5em; padding: 0.5rem; background: #0a1628; border-radius: 0 0 6px 6px; }
+
+.flow-toggles { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.flow-toggle { padding: 0.5rem 1.2rem; border: 2px solid; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+.flow-toggle[data-flow="harmonic"] { border-color: #78716c; color: #78716c; background: white; }
+.flow-toggle[data-flow="harmonic"].active { background: #78716c; color: white; }
+.flow-toggle[data-flow="circular"] { border-color: #0d9488; color: #0d9488; background: white; }
+.flow-toggle[data-flow="circular"].active { background: #0d9488; color: white; }
+.flow-toggle[data-flow="gradient"] { border-color: #3b82f6; color: #3b82f6; background: white; }
+.flow-toggle[data-flow="gradient"].active { background: #3b82f6; color: white; }
+.flow-desc { text-align: center; font-size: 0.95rem; min-height: 3em; margin-top: 0.75rem; }
+
+.tx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.tx-card { border: 1.5px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; }
+.tx-card:hover { border-color: #bbb; }
+.tx-card.revealed { cursor: default; }
+.tx-card .tx-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+.tx-card .tx-answer { font-size: 0.85rem; color: #555; display: none; margin-top: 0.5rem; }
+.tx-card.revealed .tx-answer { display: block; }
+.tx-tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 3px; margin-right: 0.3rem; }
+
+.coercion-container { display: flex; gap: 1.5rem; align-items: stretch; }
+.coercion-slider-wrap { display: flex; flex-direction: column; align-items: center; width: 60px; }
+.coercion-slider { writing-mode: vertical-lr; direction: rtl; width: 24px; height: 200px; margin: 0.5rem 0; }
+.coercion-label { font-size: 0.8rem; color: #888; text-align: center; }
+.coercion-readout { flex: 1; }
+.coercion-level { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+.coercion-desc { font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; min-height: 3em; }
+.capital-bars { display: grid; gap: 0.5rem; }
+.cap-bar-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+.cap-bar-label { width: 80px; font-weight: 600; }
+.cap-bar { flex: 1; height: 14px; background: #e5e5e0; border-radius: 7px; overflow: hidden; }
+.cap-bar-fill { height: 100%; border-radius: 7px; transition: width 0.3s, background 0.3s; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="05-mind-dashboard.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="07-network-prison.html">Next &rarr;</a>
+</nav>
+<div class="prose">
+  <div class="chapter-num">Chapter 9</div>
+  <h1>The Three Flows</h1>
+  <p>Adam Smith saw markets efficiently distributing surplus. Karl Marx saw capital accumulating in self-reinforcing loops. Friedrich Hayek saw distributed knowledge flowing through price signals. They were all right. They were each describing a different layer of the same river.</p>
+
+  <h2>The River Visualization</h2>
+  <div class="panel" style="padding:0;overflow:hidden;">
+    <div class="river-wrap">
+      <svg id="riverSvg" width="100%" height="300" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="river-tooltip" id="riverTooltip">Hover over a layer to explore</div>
+  </div>
+
+  <h2>Flow Toggles</h2>
+  <div class="panel">
+    <div class="flow-toggles">
+      <button class="flow-toggle active" data-flow="harmonic">Harmonic</button>
+      <button class="flow-toggle active" data-flow="circular">Circular</button>
+      <button class="flow-toggle active" data-flow="gradient">Gradient</button>
+    </div>
+    <div class="flow-desc" id="flowDesc">Healthy economy: all three flows active and reinforcing each other.</div>
+  </div>
+
+  <h2>Transaction Labeler</h2>
+  <div class="panel">
+    <p style="font-size:0.9rem;color:#888;margin-top:0;">Click each card to reveal which flow it operates in.</p>
+    <div class="tx-grid" id="txGrid"></div>
+  </div>
+
+  <h2>The Coercion Drain</h2>
+  <div class="panel">
+    <div class="coercion-container">
+      <div class="coercion-slider-wrap">
+        <div class="coercion-label">Coercion</div>
+        <input type="range" class="coercion-slider" id="coercionSlider" min="0" max="100" value="0">
+        <div class="coercion-label">0%</div>
+      </div>
+      <div class="coercion-readout">
+        <div class="coercion-level" id="coercionLevel">Voluntary Exchange</div>
+        <div class="coercion-desc" id="coercionDesc">All three flows amplify each other. Gradient distributes, Circular accumulates, Harmonic sustains.</div>
+        <div class="capital-bars">
+          <div class="cap-bar-row"><span class="cap-bar-label">N-Capital</span><div class="cap-bar"><div class="cap-bar-fill" id="nCapFill" style="width:80%;background:#22c55e"></div></div></div>
+          <div class="cap-bar-row"><span class="cap-bar-label">D-Capital</span><div class="cap-bar"><div class="cap-bar-fill" id="dCapFill" style="width:80%;background:#f59e0b"></div></div></div>
+          <div class="cap-bar-row"><span class="cap-bar-label">Economy</span><div class="cap-bar"><div class="cap-bar-fill" id="econFill" style="width:80%;background:#3b82f6"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== River Visualization =====
+const flowState = { harmonic: true, circular: true, gradient: true };
+let riverAnim;
+
+(function initRiver() {
+  const svg = d3.select('#riverSvg');
+  const W = 680, H = 300;
+  svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+  // Layers
+  const layers = {
+    harmonic: { y: 220, h: 60, color: '#57534e', speed: 0.3, label: 'Harmonic Flow (Hayek)', desc: "Hayek's distributed knowledge. Language, culture, law, money. Slow to change, foundational." },
+    circular: { y: 140, h: 70, color: '#0d9488', speed: 0.7, label: 'Circular Flow (Marx)', desc: "Marx's capital accumulation. Profits to investment to profits. Self-reinforcing loops." },
+    gradient: { y: 60, h: 60, color: '#60a5fa', speed: 1.5, label: 'Gradient Flow (Smith)', desc: "Smith's market prices. Resources flow from low to high value. Fast, reactive." }
+  };
+
+  // Draw layers with animated wave paths
+  let t = 0;
+  const groups = {};
+
+  Object.keys(layers).forEach(key => {
+    const g = svg.append('g').attr('class', 'layer-' + key);
+    groups[key] = g;
+
+    // Hover zones
+    g.append('rect')
+      .attr('x', 0).attr('y', layers[key].y - 10).attr('width', W).attr('height', layers[key].h + 20)
+      .attr('fill', 'transparent').attr('cursor', 'pointer')
+      .on('mouseenter', () => {
+        document.getElementById('riverTooltip').textContent = layers[key].label + ': ' + layers[key].desc;
+        g.selectAll('.wave-path').attr('opacity', 1);
+      })
+      .on('mouseleave', () => {
+        document.getElementById('riverTooltip').textContent = 'Hover over a layer to explore';
+        g.selectAll('.wave-path').attr('opacity', 0.7);
+      });
+
+    // Wave paths
+    for (let i = 0; i < 4; i++) {
+      g.append('path').attr('class', 'wave-path')
+        .attr('fill', 'none')
+        .attr('stroke', layers[key].color)
+        .attr('stroke-width', 2 + Math.random() * 2)
+        .attr('opacity', 0.7);
+    }
+
+    // Circular eddies for Marx layer
+    if (key === 'circular') {
+      for (let i = 0; i < 5; i++) {
+        g.append('circle').attr('class', 'eddy')
+          .attr('cx', 80 + i * 130).attr('cy', layers[key].y + layers[key].h / 2)
+          .attr('r', 12 + Math.random() * 8)
+          .attr('fill', 'none').attr('stroke', '#5eead4').attr('stroke-width', 1.5).attr('opacity', 0.5);
+      }
+    }
+  });
+
+  function animate() {
+    t += 0.02;
+    Object.keys(layers).forEach(key => {
+      const L = layers[key];
+      const visible = flowState[key];
+      groups[key].attr('opacity', visible ? 1 : 0.08);
+
+      groups[key].selectAll('.wave-path').each(function(_, i) {
+        const path = d3.select(this);
+        const yOff = L.y + (i + 0.5) * (L.h / 4);
+        let d = `M0,${yOff}`;
+        for (let x = 0; x <= W; x += 10) {
+          const y = yOff + Math.sin((x * 0.015) + t * L.speed * 3 + i * 0.8) * (6 + i * 2)
+                        + Math.sin((x * 0.008) + t * L.speed * 1.5 + i * 1.5) * 4;
+          d += ` L${x},${y}`;
+        }
+        path.attr('d', d);
+      });
+
+      // Animate eddies
+      if (key === 'circular') {
+        groups[key].selectAll('.eddy').each(function(_, i) {
+          const eddy = d3.select(this);
+          const phase = t * 1.5 + i * 1.2;
+          eddy.attr('r', 12 + Math.sin(phase) * 6)
+              .attr('opacity', visible ? 0.3 + Math.sin(phase) * 0.2 : 0.05);
+        });
+      }
+    });
+    riverAnim = requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ===== Flow Toggles =====
+const flowDescriptions = {
+  '111': 'Healthy economy: all three flows active and reinforcing each other.',
+  '001': 'Gradient only: All price differences equalize quickly. No structural support, no accumulation. Markets without institutions.',
+  '010': 'Circular only: Capital loops internally, nothing distributed. Hoarding without exchange.',
+  '100': 'Harmonic only: Institutions exist but nothing flows through them. Fossilized.',
+  '011': 'Gradient + Circular, no Harmonic: Markets work but inequality accelerates. Circular captures Gradient\'s gains. No institutional check.',
+  '101': 'Harmonic + Gradient, no Circular: Exchange works, institutions hold, but no capital accumulates. Subsistence economy.',
+  '110': 'Harmonic + Circular, no Gradient: Institutions support accumulation but no market signals. Planned economy.',
+  '000': 'No flows active. Economic death. Nothing moves, nothing grows, nothing sustains.'
+};
+
+document.querySelectorAll('.flow-toggle').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const flow = this.dataset.flow;
+    flowState[flow] = !flowState[flow];
+    this.classList.toggle('active', flowState[flow]);
+    const key = [flowState.harmonic ? 1 : 0, flowState.circular ? 1 : 0, flowState.gradient ? 1 : 0].join('');
+    document.getElementById('flowDesc').textContent = flowDescriptions[key] || 'A partial economy with missing flows.';
+  });
+});
+
+// ===== Transaction Labeler =====
+const transactions = [
+  { title: 'Buy a coffee', flows: ['gradient'], tags: [{ label: 'Gradient', color: '#3b82f6' }], desc: 'A price signal directing surplus. You value the coffee more than $4; the shop values $4 more than the beans.' },
+  { title: 'Read Wikipedia', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Cultural commons and knowledge infrastructure. No price, no profit loop -- pure shared protocol.' },
+  { title: 'Speak English with a stranger', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'A shared protocol enabling exchange. Language is the deepest harmonic flow -- slow to change, foundational to everything.' },
+  { title: 'Pay income taxes', flows: ['circular', 'harmonic'], tags: [{ label: 'Circular', color: '#0d9488' }, { label: 'Harmonic', color: '#78716c' }], desc: 'Redistribution loop (Circular) operating through institutional channels (Harmonic). Government as flow manager.' },
+  { title: 'Join an early-stage startup', flows: ['circular'], tags: [{ label: 'Circular', color: '#0d9488' }], desc: 'Capital accumulation loop. Investment seeking returns, which fund more investment. The classic self-reinforcing cycle.' },
+  { title: 'Attend a religious service', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Social cohesion infrastructure. Shared rituals, norms, and trust -- the riverbed that channels all other flows.' }
+];
+
+const txGrid = document.getElementById('txGrid');
+transactions.forEach(tx => {
+  const card = document.createElement('div');
+  card.className = 'tx-card';
+  card.innerHTML = `
+    <div class="tx-title">${tx.title}</div>
+    <div class="tx-answer">
+      <div>${tx.tags.map(t => `<span class="tx-tag" style="background:${t.color};color:white;">${t.label}</span>`).join('')}</div>
+      <div style="margin-top:0.4rem;">${tx.desc}</div>
+    </div>
+  `;
+  card.addEventListener('click', function() {
+    if (!this.classList.contains('revealed')) {
+      this.classList.add('revealed');
+      this.style.borderColor = tx.tags[0].color;
+      this.style.background = tx.tags[0].color + '08';
+    }
+  });
+  txGrid.appendChild(card);
+});
+
+// ===== Coercion Drain =====
+const coercionSlider = document.getElementById('coercionSlider');
+coercionSlider.addEventListener('input', function() {
+  const v = parseInt(this.value);
+  const nCap = Math.max(5, 80 - v * 0.75);
+  const dCap = Math.max(5, 80 - v * 0.7);
+  const econ = Math.max(8, 80 - v * 0.5);
+
+  document.getElementById('nCapFill').style.width = nCap + '%';
+  document.getElementById('nCapFill').style.background = nCap > 40 ? '#22c55e' : nCap > 20 ? '#f59e0b' : '#dc2626';
+  document.getElementById('dCapFill').style.width = dCap + '%';
+  document.getElementById('dCapFill').style.background = dCap > 40 ? '#f59e0b' : dCap > 20 ? '#f97316' : '#dc2626';
+  document.getElementById('econFill').style.width = econ + '%';
+  document.getElementById('econFill').style.background = econ > 40 ? '#3b82f6' : econ > 20 ? '#f97316' : '#dc2626';
+
+  const levelEl = document.getElementById('coercionLevel');
+  const descEl = document.getElementById('coercionDesc');
+
+  if (v < 15) {
+    levelEl.textContent = 'Voluntary Exchange';
+    levelEl.style.color = '#22c55e';
+    descEl.textContent = 'All three flows amplify each other. Gradient distributes, Circular accumulates, Harmonic sustains.';
+  } else if (v < 40) {
+    levelEl.textContent = 'Low Coercion';
+    levelEl.style.color = '#84cc16';
+    descEl.textContent = 'Mild extraction. Some Gradient flow distorted by rent-seeking. Natural and Democratic capital slowly eroding.';
+  } else if (v < 65) {
+    levelEl.textContent = 'Mixed Coercion';
+    levelEl.style.color = '#f59e0b';
+    descEl.textContent = 'Circular flow captures Gradient gains. N and D capital declining. Trust erodes, institutions weaken.';
+  } else if (v < 85) {
+    levelEl.textContent = 'High Coercion';
+    levelEl.style.color = '#f97316';
+    descEl.textContent = 'Gradient flow reversing -- extraction replaces exchange. Only Circular remains for the coercers. Economy hollowing out.';
+  } else {
+    levelEl.textContent = 'Pure Extraction';
+    levelEl.style.color = '#dc2626';
+    descEl.textContent = 'Gradient reversed entirely. N and D collapsed. Only Circular remains for the extractors. Everyone else in survival mode.';
+  }
+
+  // Update slider label
+  coercionSlider.parentElement.querySelector('.coercion-label:last-child').textContent = v + '%';
+});
+</script>
+</body>
+</html>
