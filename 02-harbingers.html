@@ -16,12 +16,13 @@
   left: 0;
   height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, #2563eb, #d97706);
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
   z-index: 1000;
   transition: width 0.1s linear;
+  pointer-events: none;
 }
 
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 1.5rem); font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.75; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel {
@@ -128,6 +129,7 @@ input[type=range] { accent-color: #2563eb; }
 
 /* Primary button */
 .btn { background: #2563eb; color: white; border: none; border-radius: 6px; padding: 0.5rem 1.2rem; cursor: pointer; font-size: 0.95rem; }
+.btn, button { touch-action: manipulation; min-height: 36px; }
 
 /* ── Pullquote ── */
 .pullquote {
@@ -193,7 +195,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Devil's staircase illustration -->
   <div class="illustration">
-    <svg viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="A staircase pattern showing gradual rise followed by sudden collapse, representing how systems fail" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 160" style="width:100%; max-width:400px; height:auto" role="img" aria-label="A staircase pattern showing gradual rise followed by sudden collapse, representing how systems fail" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="stairGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#93c5fd"/>
@@ -266,7 +268,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Bouncing ball metaphor -->
   <div class="illustration">
-    <svg viewBox="0 0 400 130" width="400" height="130" role="img" aria-label="Three balls bouncing with decreasing resilience, showing critical slowing down" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 130" style="width:100%; max-width:400px; height:auto" role="img" aria-label="Three balls bouncing with decreasing resilience, showing critical slowing down" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- Radial gradients for 3D ball effect -->
         <radialGradient id="ballGreen" cx="35%" cy="30%" r="65%">
@@ -368,7 +370,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Widening oscillation -->
   <div class="illustration">
-    <svg viewBox="0 0 400 128" width="400" height="128" role="img" aria-label="A sine wave with increasing amplitude, representing variance explosion" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 128" style="width:100%; max-width:400px; height:auto" role="img" aria-label="A sine wave with increasing amplitude, representing variance explosion" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#93c5fd"/>
@@ -433,7 +435,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Phase transition flickering -->
   <div class="illustration">
-    <svg viewBox="0 0 400 108" width="400" height="108" role="img" aria-label="Water molecules flickering between liquid and ice states near a phase transition" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 108" style="width:100%; max-width:400px; height:auto" role="img" aria-label="Water molecules flickering between liquid and ice states near a phase transition" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="liquidFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#dbeafe"/>
@@ -526,7 +528,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Local vs. global shock propagation -->
   <div class="illustration">
-    <svg viewBox="0 0 400 138" width="400" height="138" role="img" aria-label="Comparison of shock propagation in 1980 (local) versus 2021 (global)" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 138" style="width:100%; max-width:400px; height:auto" role="img" aria-label="Comparison of shock propagation in 1980 (local) versus 2021 (global)" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="localNode" cx="40%" cy="35%" r="60%">
           <stop offset="0%" stop-color="#c7d2fe"/>
@@ -859,6 +861,7 @@ input[type=range] { accent-color: #2563eb; }
 })();
 
 // ── Correlation Length ──
+
 (function() {
   let currentYear = 1980;
   const gridEl = document.getElementById('shock-grid');
@@ -931,6 +934,26 @@ input[type=range] { accent-color: #2563eb; }
       resetGrid();
     });
   });
+})();
+</script>
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
 })();
 </script>
 </body>

@@ -18,6 +18,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+.btn, button { touch-action: manipulation; }
 
 .prose {
   font-family: 'DM Sans', system-ui, sans-serif;
@@ -32,8 +33,10 @@ nav {
   position: sticky;
   top: 0;
   background: rgba(250,250,248,0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  align-items: center;
   z-index: 100;
 }
 
@@ -215,7 +218,7 @@ nav a {
 </style>
 </head>
 <style>
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; }
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
 </style>
 <body>
 <div id="progress-bar"></div>
@@ -313,6 +316,7 @@ const cards = [
   { n: 9,  file: '06-three-flows.html',             title: 'The Three Flows',            ch: 'Ch 9',  q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
   { n: 10, file: '07-network-prison.html',          title: 'The Network Prison',         ch: 'Ch 10', q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
   { n: 11, file: 'ch11-cathedral-bazaar.html',      title: 'Cathedral and Bazaar',       ch: 'Ch 11', q: 'Are firms becoming obsolete \u2014 and what replaces them?', color: '#0891b2' },
+  { n: 11.5, file: 'ch12-intelligent-game-theory.html', title: 'Intelligent Game Theory', ch: 'Chapter 12', q: 'From prisoner\u2019s dilemmas to symbiotic equilibria \u2014 how AI and cryptography are engineering cooperation into the architecture of the game itself.', color: '#7c3aed' },
   { n: 12, file: '08-cooperation-emerges.html',     title: 'Cooperation Emerges',        ch: 'Ch 12', q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
   { n: 13, file: 'ch13-dual-engine.html',           title: 'The Dual Engine',            ch: 'Ch 13', q: 'What happens when AI accelerates the fast clock to infinity while the slow clock barely moves?', color: '#7c3aed' },
   { n: 14, file: 'ch14-social-contract.html',       title: 'The New Social Contract',    ch: 'Ch 14', q: 'What do we owe each other in a world where labor is no longer necessary?', color: '#16a34a' },
@@ -476,6 +480,32 @@ const vizGenerators = [
     svg.append('line').attr('x1', 0).attr('y1', lineY).attr('x2', 0).attr('y2', lineY)
       .attr('stroke','#1a1a1a').attr('stroke-width', 1.5).attr('stroke-dasharray','4,3').attr('opacity', 0.5)
       .transition().delay(800).duration(600).attr('x2', w);
+  },
+  // Ch12: Intelligent Game Theory — payoff matrix morphing into equilibrium
+  function(svg, w, h, color) {
+    const cx = w / 2, cy = h / 2;
+    const nodes = [
+      { x: w * 0.28, y: h * 0.3 }, { x: w * 0.72, y: h * 0.3 },
+      { x: w * 0.28, y: h * 0.7 }, { x: w * 0.72, y: h * 0.7 }
+    ];
+    const edges = [{s:0,t:1},{s:2,t:3},{s:0,t:2},{s:1,t:3},{s:0,t:3},{s:1,t:2}];
+    edges.forEach((e, i) => {
+      svg.append('line').attr('x1', nodes[e.s].x).attr('y1', nodes[e.s].y)
+        .attr('x2', nodes[e.t].x).attr('y2', nodes[e.t].y)
+        .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0)
+        .transition().delay(i * 150).duration(400).attr('opacity', 0.4);
+    });
+    nodes.forEach((n, i) => {
+      svg.append('circle').attr('cx', n.x).attr('cy', n.y).attr('r', 0)
+        .attr('fill', i < 2 ? color : '#16a34a').attr('opacity', 0.85)
+        .transition().delay(i * 120).duration(400).attr('r', 7);
+    });
+    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 0)
+      .attr('fill', color).attr('opacity', 0.9)
+      .transition().delay(700).duration(500).attr('r', 10);
+    svg.append('text').attr('x', cx).attr('y', cy + 4).attr('text-anchor', 'middle')
+      .attr('font-size', 8).attr('font-weight', 700).attr('fill', 'white').attr('opacity', 0)
+      .transition().delay(900).duration(300).attr('opacity', 1).text('Nash');
   },
   // 6: Noise to pattern coalescing dots (Generative Engine)
   function(svg, w, h, color) {
@@ -782,6 +812,7 @@ const loopDelays = [
   3500, // 5  GDP: bars grow (1460ms)
      0, // 6  Maxwell's Demon: rAF loop (self-looping)
   3500, // 7  Ch11: bars + line (2300ms)
+  3500, // Ch12: Intelligent Game Theory: nodes + equilibrium (1700ms)
   4000, // 8  Generative Engine: scatter→ring (2180ms)
   3500, // 9  MIND radar: polygon fade in (800ms)
   4000, // 10 Three Flows: streams draw (1900ms)
@@ -877,6 +908,26 @@ window.addEventListener('scroll', function() {
   var p = document.documentElement;
   document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
 });
+</script>
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
+})();
 </script>
 </body>
 </html>

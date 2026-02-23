@@ -18,8 +18,8 @@ h1, h2 { font-family: 'Playfair Display', Georgia, serif; }
 h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; z-index: 100; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; z-index: 100; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 .nav a { color: #2563eb; text-decoration: none; cursor: pointer; }
 
 /* Pullquote */
@@ -38,16 +38,53 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 /* Section divider */
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 
+/* Illustration wrapper */
+.illustration { display: flex; justify-content: center; margin: 2rem 0; }
+
 /* ── Seven Lies Cards ── */
 .lies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
   gap: 1rem;
 }
-.lie-card { perspective: 600px; min-height: 180px; cursor: pointer; }
+.lie-card {
+  perspective: 600px;
+  min-height: 180px;
+  cursor: pointer;
+  touch-action: manipulation;
+  position: relative;
+}
+/* Gradient border glow via ::before */
+.lie-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #d97706);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.lie-card:hover::before {
+  opacity: 1;
+}
 .lie-card:hover .lie-inner { box-shadow: 0 8px 24px rgba(37,99,235,0.25); }
-.lie-inner { position: relative; width: 100%; height: 100%; min-height: 180px; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; border-radius: 8px; }
-.lie-card.flipped .lie-inner { transform: rotateY(180deg); }
+.lie-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+  border-radius: 8px;
+  z-index: 1;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.lie-card.flipped .lie-inner {
+  transform: rotateY(180deg);
+  box-shadow: 0 8px 32px rgba(37,99,235,0.2);
+}
 .lie-front, .lie-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 1rem; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
 
 /* Gradient front with diagonal texture overlay */
@@ -85,6 +122,21 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .lie-expansion .lie-question { font-style: italic; color: #2563eb; margin: 0.75rem 0; font-size: 0.95rem; }
 .lie-expansion .close-btn { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: #888; cursor: pointer; text-decoration: underline; }
 
+/* D3 bar chart */
+.bar-chart-panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.bar-chart-panel h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; margin: 0 0 0.4rem 0; }
+.bar-chart-panel .chart-subtitle { font-size: 0.85rem; color: #666; margin: 0 0 1rem 0; }
+#shift-chart-info { font-size: 0.9rem; color: #333; min-height: 2.4rem; margin-top: 0.75rem; padding: 0.6rem 0.9rem; background: #f8faff; border-radius: 6px; border-left: 3px solid #2563eb; display: none; }
+#shift-chart-info.visible { display: block; }
+
+/* Network diagram */
+.network-panel { display: flex; flex-direction: column; align-items: center; margin: 2rem 0; }
+.network-panel h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; margin: 0 0 0.5rem 0; text-align: center; }
+.network-panel .network-subtitle { font-size: 0.82rem; color: #888; margin-bottom: 1rem; text-align: center; }
+
+/* btn */
+.btn { background: #2563eb; color: white; border: none; border-radius: 6px; padding: 0.5rem 1.2rem; cursor: pointer; font-size: 0.95rem; touch-action: manipulation; }
+
 @media (max-width: 480px) {
   .stat-row { grid-template-columns: 1fr; }
   .lies-grid { grid-template-columns: 1fr; }
@@ -106,6 +158,187 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 <div class="prose">
   <div class="chapter-num">Chapter 3</div>
   <h1>The Seven Fatal Lies of a Dying Paradigm</h1>
+
+  <!-- Hero SVG: Seven Crumbling Columns -->
+  <div class="illustration">
+    <svg viewBox="0 0 700 180" width="100%" style="max-width:700px;display:block;" role="img" aria-label="Seven classical columns in various states of collapse, representing the seven fatal assumptions" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Stone gradient for columns -->
+        <linearGradient id="col1Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8c99a"/>
+          <stop offset="100%" stop-color="#8b6914"/>
+        </linearGradient>
+        <linearGradient id="col2Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#dfc090"/>
+          <stop offset="100%" stop-color="#8b6914"/>
+        </linearGradient>
+        <linearGradient id="col3Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d4a574"/>
+          <stop offset="100%" stop-color="#8b6914"/>
+        </linearGradient>
+        <linearGradient id="col4Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d4a574"/>
+          <stop offset="100%" stop-color="#7a5c10"/>
+        </linearGradient>
+        <linearGradient id="col5Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c9995f"/>
+          <stop offset="100%" stop-color="#7a5c10"/>
+        </linearGradient>
+        <linearGradient id="col6Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c09050"/>
+          <stop offset="100%" stop-color="#6b4f0e"/>
+        </linearGradient>
+        <linearGradient id="col7Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#b87e3a"/>
+          <stop offset="100%" stop-color="#5c420c"/>
+        </linearGradient>
+        <!-- Fire glow at base -->
+        <radialGradient id="fireGlow" cx="50%" cy="100%" r="60%">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.38"/>
+          <stop offset="55%" stop-color="#ef4444" stop-opacity="0.14"/>
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+        </radialGradient>
+        <!-- Crack color -->
+      </defs>
+
+      <!-- Background -->
+      <rect width="700" height="180" fill="#fafaf8"/>
+
+      <!-- Title above -->
+      <text x="350" y="18" font-family="'Playfair Display', Georgia, serif" font-size="13" font-weight="700" fill="#4b3a1a" text-anchor="middle" letter-spacing="1">The Seven Fatal Assumptions</text>
+
+      <!-- Fire glow at base -->
+      <ellipse cx="590" cy="155" rx="90" ry="32" fill="url(#fireGlow)"/>
+      <ellipse cx="350" cy="158" rx="310" ry="18" fill="url(#fireGlow)" opacity="0.5"/>
+
+      <!-- Ground line -->
+      <line x1="20" y1="155" x2="680" y2="155" stroke="#c9a96e" stroke-width="1.5" opacity="0.7"/>
+
+      <!-- Helper: each column group uses transform="rotate(deg, cx, cy)" where cy is base -->
+      <!-- Column 1 — slight lean 1deg -->
+      <g transform="rotate(1, 68, 155)">
+        <rect x="58" y="40" width="20" height="110" fill="url(#col1Grad)" rx="1"/>
+        <!-- fluting lines -->
+        <line x1="63" y1="42" x2="63" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <line x1="68" y1="42" x2="68" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <line x1="73" y1="42" x2="73" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <!-- Capital -->
+        <rect x="54" y="35" width="28" height="8" fill="#c9a96e" rx="1"/>
+        <!-- Base -->
+        <rect x="54" y="148" width="28" height="7" fill="#c9a96e" rx="1"/>
+        <!-- Crack -->
+        <path d="M65 60 L68 75 L64 90" stroke="#8b0000" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <!-- Rubble -->
+        <polygon points="55,155 60,148 65,152 70,147 76,155" fill="#b8860b" opacity="0.7"/>
+        <polygon points="58,155 61,151 64,155" fill="#8b6914" opacity="0.8"/>
+      </g>
+
+      <!-- Column 2 — lean -2deg -->
+      <g transform="rotate(-2, 158, 155)">
+        <rect x="148" y="38" width="20" height="112" fill="url(#col2Grad)" rx="1"/>
+        <line x1="153" y1="40" x2="153" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <line x1="158" y1="40" x2="158" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <line x1="163" y1="40" x2="163" y2="148" stroke="#c9a96e" stroke-width="0.5" opacity="0.5"/>
+        <rect x="144" y="33" width="28" height="8" fill="#c9a96e" rx="1"/>
+        <rect x="144" y="148" width="28" height="7" fill="#c9a96e" rx="1"/>
+        <!-- Crack -->
+        <path d="M155 70 L152 85 L156 100 L153 115" stroke="#8b0000" stroke-width="0.9" fill="none" opacity="0.75"/>
+        <!-- Rubble -->
+        <polygon points="145,155 150,149 155,153 161,148 168,155" fill="#b8860b" opacity="0.7"/>
+        <polygon points="148,155 152,150 156,155" fill="#8b6914" opacity="0.75"/>
+        <polygon points="162,155 165,151 169,155" fill="#8b6914" opacity="0.6"/>
+      </g>
+
+      <!-- Column 3 — lean 1.5deg -->
+      <g transform="rotate(1.5, 248, 155)">
+        <rect x="238" y="36" width="20" height="114" fill="url(#col3Grad)" rx="1"/>
+        <line x1="243" y1="38" x2="243" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <line x1="248" y1="38" x2="248" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <line x1="253" y1="38" x2="253" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <rect x="234" y="31" width="28" height="8" fill="#b8860b" rx="1"/>
+        <rect x="234" y="148" width="28" height="7" fill="#b8860b" rx="1"/>
+        <!-- Cracks -->
+        <path d="M242 50 L246 65 L242 80" stroke="#8b0000" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <path d="M250 95 L247 110 L251 125" stroke="#8b0000" stroke-width="0.7" fill="none" opacity="0.6"/>
+        <!-- Rubble -->
+        <polygon points="235,155 240,150 246,154 252,148 258,155" fill="#9a7010" opacity="0.7"/>
+      </g>
+
+      <!-- Column 4 — lean -1deg (center) -->
+      <g transform="rotate(-1, 338, 155)">
+        <rect x="328" y="35" width="20" height="115" fill="url(#col4Grad)" rx="1"/>
+        <line x1="333" y1="37" x2="333" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <line x1="338" y1="37" x2="338" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <line x1="343" y1="37" x2="343" y2="148" stroke="#b8860b" stroke-width="0.5" opacity="0.5"/>
+        <rect x="324" y="30" width="28" height="8" fill="#b8860b" rx="1"/>
+        <rect x="324" y="148" width="28" height="7" fill="#b8860b" rx="1"/>
+        <!-- Crack -->
+        <path d="M332 55 L336 72 L332 88 L335 105" stroke="#8b0000" stroke-width="1" fill="none" opacity="0.8"/>
+        <!-- Rubble -->
+        <polygon points="325,155 330,149 335,153 341,148 349,155" fill="#9a7010" opacity="0.7"/>
+        <polygon points="328,155 332,150 337,155" fill="#7a5c10" opacity="0.8"/>
+      </g>
+
+      <!-- Column 5 — lean 2.5deg -->
+      <g transform="rotate(2.5, 428, 155)">
+        <rect x="418" y="37" width="20" height="113" fill="url(#col5Grad)" rx="1"/>
+        <line x1="423" y1="39" x2="423" y2="148" stroke="#a07010" stroke-width="0.5" opacity="0.5"/>
+        <line x1="428" y1="39" x2="428" y2="148" stroke="#a07010" stroke-width="0.5" opacity="0.5"/>
+        <line x1="433" y1="39" x2="433" y2="148" stroke="#a07010" stroke-width="0.5" opacity="0.5"/>
+        <rect x="414" y="32" width="28" height="8" fill="#a07010" rx="1"/>
+        <rect x="414" y="148" width="28" height="7" fill="#a07010" rx="1"/>
+        <!-- Cracks -->
+        <path d="M421 45 L425 60 L420 78 L424 95" stroke="#8b0000" stroke-width="0.9" fill="none" opacity="0.8"/>
+        <path d="M430 110 L426 128" stroke="#8b0000" stroke-width="0.7" fill="none" opacity="0.6"/>
+        <!-- Rubble — more than earlier -->
+        <polygon points="415,155 419,148 424,152 430,147 437,155" fill="#8a6010" opacity="0.75"/>
+        <polygon points="410,155 413,151 417,155" fill="#7a5010" opacity="0.7"/>
+        <polygon points="438,155 441,150 445,155" fill="#7a5010" opacity="0.6"/>
+      </g>
+
+      <!-- Column 6 — lean -3deg, more cracked -->
+      <g transform="rotate(-3, 518, 155)">
+        <rect x="508" y="40" width="20" height="110" fill="url(#col6Grad)" rx="1"/>
+        <line x1="513" y1="42" x2="513" y2="148" stroke="#8b6010" stroke-width="0.5" opacity="0.5"/>
+        <line x1="518" y1="42" x2="518" y2="148" stroke="#8b6010" stroke-width="0.5" opacity="0.5"/>
+        <line x1="523" y1="42" x2="523" y2="148" stroke="#8b6010" stroke-width="0.5" opacity="0.5"/>
+        <rect x="504" y="35" width="28" height="8" fill="#8b6010" rx="1"/>
+        <rect x="504" y="148" width="28" height="7" fill="#8b6010" rx="1"/>
+        <!-- Cracks — more prominent -->
+        <path d="M510 44 L515 58 L510 72 L514 90 L510 108" stroke="#8b0000" stroke-width="1.1" fill="none" opacity="0.85"/>
+        <path d="M522 55 L518 70 L522 85" stroke="#8b0000" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <!-- Heavy rubble -->
+        <polygon points="503,155 508,147 514,152 520,146 527,155" fill="#7a5010" opacity="0.8"/>
+        <polygon points="498,155 502,150 507,155" fill="#6a4010" opacity="0.75"/>
+        <polygon points="527,155 530,149 535,155" fill="#6a4010" opacity="0.7"/>
+        <polygon points="535,155 538,152 542,155" fill="#5c3808" opacity="0.6"/>
+      </g>
+
+      <!-- Column 7 — MID-COLLAPSE: tilted 15deg, fragments scattered -->
+      <g transform="rotate(15, 608, 155)">
+        <rect x="598" y="42" width="20" height="108" fill="url(#col7Grad)" rx="1" opacity="0.9"/>
+        <line x1="603" y1="44" x2="603" y2="148" stroke="#6b4010" stroke-width="0.5" opacity="0.4"/>
+        <line x1="608" y1="44" x2="608" y2="148" stroke="#6b4010" stroke-width="0.5" opacity="0.4"/>
+        <line x1="613" y1="44" x2="613" y2="148" stroke="#6b4010" stroke-width="0.5" opacity="0.4"/>
+        <rect x="594" y="37" width="28" height="8" fill="#6b4010" rx="1" opacity="0.85"/>
+        <rect x="594" y="148" width="28" height="7" fill="#6b4010" rx="1"/>
+        <!-- Heavy cracks -->
+        <path d="M601 48 L606 62 L600 78 L605 95 L599 115 L604 135" stroke="#8b0000" stroke-width="1.4" fill="none" opacity="0.9"/>
+        <path d="M614 55 L610 70 L615 88 L609 108" stroke="#8b0000" stroke-width="1" fill="none" opacity="0.8"/>
+      </g>
+      <!-- Falling fragments for column 7 (outside transform) -->
+      <rect x="645" y="100" width="10" height="10" fill="#b87e3a" rx="1" opacity="0.8" transform="rotate(20, 650, 105)"/>
+      <rect x="658" y="118" width="7" height="7" fill="#9a6820" rx="1" opacity="0.7" transform="rotate(-15, 661, 121)"/>
+      <rect x="640" y="130" width="12" height="6" fill="#c9a96e" rx="1" opacity="0.65" transform="rotate(8, 646, 133)"/>
+      <polygon points="660,140 668,135 672,143" fill="#8b6014" opacity="0.75"/>
+      <polygon points="648,142 653,137 658,144" fill="#7a5010" opacity="0.7"/>
+      <!-- Heavy rubble pile at base of col 7 -->
+      <polygon points="580,155 588,147 596,152 606,145 618,155" fill="#6b4010" opacity="0.85"/>
+      <polygon points="615,155 622,149 628,155" fill="#5c3808" opacity="0.8"/>
+      <polygon points="574,155 579,151 584,155" fill="#6b4010" opacity="0.75"/>
+      <polygon points="628,155 634,150 640,155" fill="#5c3808" opacity="0.65"/>
+    </svg>
+  </div>
 
   <div class="pullquote">
     <p>&ldquo;It ain&rsquo;t what you don&rsquo;t know that gets you into trouble. It&rsquo;s what you know for sure that just ain&rsquo;t so.&rdquo;</p>
@@ -138,6 +371,146 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
   <!-- Expansion panels rendered by JS below the grid -->
   <div id="lie-expansions"></div>
 
+  <!-- Lie Interconnection Network Diagram -->
+  <div class="network-panel">
+    <h3>All 7 Lies: Faces of One Delusion</h3>
+    <p class="network-subtitle">Every lie connects to every other &mdash; and all flow from a single grand delusion at the center.</p>
+    <svg viewBox="0 0 500 500" width="100%" style="max-width:480px;display:block;" role="img" aria-label="Network diagram showing 7 lies connected to each other and to a central Grand Delusion node" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="centerGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#f8b500"/>
+          <stop offset="100%" stop-color="#b45309"/>
+        </radialGradient>
+        <!-- Node gradients: blue→violet→amber spectrum -->
+        <radialGradient id="n0Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#93c5fd"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </radialGradient>
+        <radialGradient id="n1Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#a5b4fc"/>
+          <stop offset="100%" stop-color="#4338ca"/>
+        </radialGradient>
+        <radialGradient id="n2Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#c4b5fd"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </radialGradient>
+        <radialGradient id="n3Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#e879f9"/>
+          <stop offset="100%" stop-color="#a21caf"/>
+        </radialGradient>
+        <radialGradient id="n4Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#f9a8d4"/>
+          <stop offset="100%" stop-color="#be185d"/>
+        </radialGradient>
+        <radialGradient id="n5Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#fcd34d"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </radialGradient>
+        <radialGradient id="n6Grad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#fdba74"/>
+          <stop offset="100%" stop-color="#c2410c"/>
+        </radialGradient>
+        <filter id="nodeGlow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.25"/>
+        </filter>
+      </defs>
+
+      <!-- Background -->
+      <rect width="500" height="500" fill="#fafaf8"/>
+
+      <!-- Heptagon outer nodes: 7 nodes arranged at angles 0,51.4,102.8...
+           Center at 250,250, radius 175 -->
+      <!-- Spoke lines from center to each node (pulsing opacity) -->
+      <!-- Node positions (cx,cy) for 7 nodes at r=175:
+           0: 250+175*sin(0)=250, 250-175*cos(0)=75      => (250, 75)
+           1: 250+175*sin(51.4)=387, 250-175*cos(51.4)=140 => (387, 140)
+           2: 250+175*sin(102.8)=421, 250-175*cos(102.8)=289 => (421, 289)
+           3: 250+175*sin(154.3)=325, 250-175*cos(154.3)=408 => (325, 408)
+           4: 250+175*sin(205.7)=175, 250-175*cos(205.7)=408 => (175, 408)
+           5: 250+175*sin(257.1)=79, 250-175*cos(257.1)=289  => (79, 289)
+           6: 250+175*sin(308.6)=113, 250-175*cos(308.6)=140 => (113, 140)
+      -->
+
+      <!-- Perimeter connections (all node pairs connected) — faint pulses -->
+      <!-- We draw all 21 edges between the 7 outer nodes -->
+      <g id="peer-edges" stroke="#c4b5fd" stroke-width="0.8" fill="none">
+        <!-- n0–n1 --> <line x1="250" y1="75" x2="387" y2="140"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="3.1s" repeatCount="indefinite"/></line>
+        <!-- n0–n2 --> <line x1="250" y1="75" x2="421" y2="289"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.7s" repeatCount="indefinite"/></line>
+        <!-- n0–n3 --> <line x1="250" y1="75" x2="325" y2="408"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="4.2s" repeatCount="indefinite"/></line>
+        <!-- n0–n4 --> <line x1="250" y1="75" x2="175" y2="408"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="3.9s" repeatCount="indefinite"/></line>
+        <!-- n0–n5 --> <line x1="250" y1="75" x2="79" y2="289"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.4s" repeatCount="indefinite"/></line>
+        <!-- n0–n6 --> <line x1="250" y1="75" x2="113" y2="140"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="2.8s" repeatCount="indefinite"/></line>
+        <!-- n1–n2 --> <line x1="387" y1="140" x2="421" y2="289"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="3.2s" repeatCount="indefinite"/></line>
+        <!-- n1–n3 --> <line x1="387" y1="140" x2="325" y2="408"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.6s" repeatCount="indefinite"/></line>
+        <!-- n1–n4 --> <line x1="387" y1="140" x2="175" y2="408"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="4.0s" repeatCount="indefinite"/></line>
+        <!-- n1–n5 --> <line x1="387" y1="140" x2="79" y2="289"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="4.4s" repeatCount="indefinite"/></line>
+        <!-- n1–n6 --> <line x1="387" y1="140" x2="113" y2="140"><animate attributeName="opacity" values="0.12;0.42;0.12" dur="3.1s" repeatCount="indefinite"/></line>
+        <!-- n2–n3 --> <line x1="421" y1="289" x2="325" y2="408"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="2.9s" repeatCount="indefinite"/></line>
+        <!-- n2–n4 --> <line x1="421" y1="289" x2="175" y2="408"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.5s" repeatCount="indefinite"/></line>
+        <!-- n2–n5 --> <line x1="421" y1="289" x2="79" y2="289"><animate attributeName="opacity" values="0.1;0.36;0.1" dur="4.1s" repeatCount="indefinite"/></line>
+        <!-- n2–n6 --> <line x1="421" y1="289" x2="113" y2="140"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="4.3s" repeatCount="indefinite"/></line>
+        <!-- n3–n4 --> <line x1="325" y1="408" x2="175" y2="408"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="3.0s" repeatCount="indefinite"/></line>
+        <!-- n3–n5 --> <line x1="325" y1="408" x2="79" y2="289"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.8s" repeatCount="indefinite"/></line>
+        <!-- n3–n6 --> <line x1="325" y1="408" x2="113" y2="140"><animate attributeName="opacity" values="0.1;0.35;0.1" dur="4.5s" repeatCount="indefinite"/></line>
+        <!-- n4–n5 --> <line x1="175" y1="408" x2="79" y2="289"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="3.3s" repeatCount="indefinite"/></line>
+        <!-- n4–n6 --> <line x1="175" y1="408" x2="113" y2="140"><animate attributeName="opacity" values="0.12;0.4;0.12" dur="3.7s" repeatCount="indefinite"/></line>
+        <!-- n5–n6 --> <line x1="79" y1="289" x2="113" y2="140"><animate attributeName="opacity" values="0.18;0.5;0.18" dur="2.7s" repeatCount="indefinite"/></line>
+      </g>
+
+      <!-- Spokes from center (250,250) to each outer node -->
+      <g stroke="#d97706" stroke-width="1.2" fill="none" opacity="0.5">
+        <line x1="250" y1="250" x2="250" y2="75"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.4s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="387" y2="140"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.8s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="421" y2="289"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3.0s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="325" y2="408"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.6s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="175" y2="408"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3.2s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="79" y2="289"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.9s" repeatCount="indefinite"/></line>
+        <line x1="250" y1="250" x2="113" y2="140"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.5s" repeatCount="indefinite"/></line>
+      </g>
+
+      <!-- Center node: The Grand Delusion -->
+      <circle cx="250" cy="250" r="46" fill="url(#centerGrad)" filter="url(#nodeGlow)"/>
+      <text x="250" y="245" font-family="'Playfair Display', Georgia, serif" font-size="10" font-weight="700" fill="white" text-anchor="middle">The Grand</text>
+      <text x="250" y="258" font-family="'Playfair Display', Georgia, serif" font-size="10" font-weight="700" fill="white" text-anchor="middle">Delusion</text>
+
+      <!-- Outer nodes -->
+      <!-- n0 (250,75) — Scarcity -->
+      <circle cx="250" cy="75" r="34" fill="url(#n0Grad)" filter="url(#nodeGlow)"/>
+      <text x="250" y="70" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Scarcity is</text>
+      <text x="250" y="81" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Fundamental</text>
+
+      <!-- n1 (387,140) — Human Labor -->
+      <circle cx="387" cy="140" r="34" fill="url(#n1Grad)" filter="url(#nodeGlow)"/>
+      <text x="387" y="135" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Human Labor</text>
+      <text x="387" y="146" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Has Value</text>
+
+      <!-- n2 (421,289) — Growth Resources -->
+      <circle cx="421" cy="289" r="34" fill="url(#n2Grad)" filter="url(#nodeGlow)"/>
+      <text x="421" y="284" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Growth Needs</text>
+      <text x="421" y="295" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Resources</text>
+
+      <!-- n3 (325,408) — Markets Equilibrium -->
+      <circle cx="325" cy="408" r="34" fill="url(#n3Grad)" filter="url(#nodeGlow)"/>
+      <text x="325" y="403" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Markets Find</text>
+      <text x="325" y="414" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Equilibrium</text>
+
+      <!-- n4 (175,408) — Money Measures -->
+      <circle cx="175" cy="408" r="34" fill="url(#n4Grad)" filter="url(#nodeGlow)"/>
+      <text x="175" y="403" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Money</text>
+      <text x="175" y="414" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Measures Value</text>
+
+      <!-- n5 (79,289) — Rational Agents -->
+      <circle cx="79" cy="289" r="34" fill="url(#n5Grad)" filter="url(#nodeGlow)"/>
+      <text x="79" y="284" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="#3b2200" text-anchor="middle">Rational</text>
+      <text x="79" y="295" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="#3b2200" text-anchor="middle">Agents</text>
+
+      <!-- n6 (113,140) — Distribution -->
+      <circle cx="113" cy="140" r="34" fill="url(#n6Grad)" filter="url(#nodeGlow)"/>
+      <text x="113" y="135" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">Distribution</text>
+      <text x="113" y="146" font-family="'DM Sans', system-ui, sans-serif" font-size="8.5" font-weight="600" fill="white" text-anchor="middle">= Contribution</text>
+    </svg>
+  </div>
+
   <hr class="section-divider">
 
   <h2>The Bonfire of the Verities</h2>
@@ -161,6 +534,14 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
       <div class="stat-number">1.7x</div>
       <div class="stat-label">Earths consumed per year at current extraction rate</div>
     </div>
+  </div>
+
+  <!-- D3 Statistics Bar Chart -->
+  <div class="bar-chart-panel panel">
+    <h3>The Magnitude of the Shift</h3>
+    <p class="chart-subtitle">Click any bar to reveal context. Values reflect structural dislocations, not temporary fluctuations.</p>
+    <div id="shift-chart" style="width:100%;max-width:620px;"></div>
+    <div id="shift-chart-info"></div>
   </div>
 
   <p>The old lies were about turning humans into better machines. The new truth must be about allowing humans to become more fully human. And to write those new stories, we must first understand the true physics of value &mdash; not measured in GDP, but in the <strong>MIND capitals</strong> that make civilization possible, and in the <strong>Three Flows</strong> of value our current system is blind to.</p>
@@ -309,6 +690,122 @@ window.addEventListener('scroll', function() {
   var p = document.documentElement;
   document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
 });
+</script>
+<script>
+// ── D3 Horizontal Bar Chart: The Magnitude of the Shift ──
+(function() {
+  const data = [
+    { label: 'AI cost reduction in cognitive labor', value: 9999, display: '99.99%', desc: 'From ~$36/hr for human cognitive work to $0.0015/query for AI — a near-total collapse in the cost of intelligence, the most consequential price drop in economic history.' },
+    { label: 'Productivity growth since 1973', value: 246, display: '246%', desc: 'U.S. worker productivity has risen 246% since 1973, meaning each worker produces more than 3x as much output. The gains did not flow to workers.' },
+    { label: 'Wage growth since 1973', value: 115, display: '115%', desc: 'Despite 246% productivity growth, real wages rose only 115% over the same period. The 131-point gap represents decades of severed reward for labor.' },
+    { label: "Google's search market share", value: 91, display: '91%', desc: "Google controls 91% of global search. This is not dominance — it is a structural monopoly sustained by network effects, not competition." },
+    { label: "Meta's social media share", value: 74, display: '74%', desc: "Meta's platforms account for ~74% of social media usage. Digital markets don't find equilibrium — they crystallize into permanent winner-take-all structures." },
+    { label: 'Worker-productivity gap (pp)', value: 131, display: '131 pp', desc: 'The 131 percentage-point gap between productivity (246%) and wage growth (115%) since 1973 is the empirical signature of extraction replacing reward.' }
+  ];
+
+  const w = 600, h = 260;
+  const m = { top: 12, right: 70, bottom: 28, left: 230 };
+
+  const svg = d3.select('#shift-chart').append('svg')
+    .attr('viewBox', `0 0 ${w} ${h}`)
+    .style('width', '100%');
+
+  // Color scale: blue → violet → amber by value rank
+  const colorStops = ['#2563eb', '#4338ca', '#7c3aed', '#a21caf', '#c2410c', '#d97706'];
+  const sorted = [...data].sort((a, b) => b.value - a.value);
+  const colorMap = new Map(sorted.map((d, i) => [d.label, colorStops[i]]));
+
+  const maxVal = 9999;
+  // Use a square-root scale to handle the massive outlier (9999) gracefully
+  const x = d3.scaleSqrt().domain([0, maxVal]).range([0, w - m.left - m.right]);
+  const y = d3.scaleBand().domain(data.map(d => d.label)).range([m.top, h - m.bottom]).padding(0.28);
+
+  // Y-axis labels
+  svg.selectAll('.y-label').data(data).enter().append('text')
+    .attr('class', 'y-label')
+    .attr('x', m.left - 8)
+    .attr('y', d => y(d.label) + y.bandwidth() / 2 + 4)
+    .attr('text-anchor', 'end')
+    .style('font-size', '10.5px')
+    .style('fill', '#444')
+    .style('font-family', "'DM Sans', system-ui, sans-serif")
+    .text(d => d.label.length > 32 ? d.label.slice(0, 30) + '…' : d.label);
+
+  // Gradient defs per bar
+  const defs = svg.append('defs');
+  data.forEach((d, i) => {
+    const lg = defs.append('linearGradient')
+      .attr('id', `barGrad${i}`)
+      .attr('x1', '0%').attr('x2', '100%');
+    const base = colorMap.get(d.label);
+    lg.append('stop').attr('offset', '0%').attr('stop-color', base).attr('stop-opacity', 0.85);
+    lg.append('stop').attr('offset', '100%').attr('stop-color', base).attr('stop-opacity', 1);
+  });
+
+  // Bars
+  const bars = svg.selectAll('.shift-bar').data(data).enter().append('rect')
+    .attr('class', 'shift-bar')
+    .attr('x', m.left)
+    .attr('y', d => y(d.label))
+    .attr('width', 0)
+    .attr('height', y.bandwidth())
+    .attr('fill', (d, i) => `url(#barGrad${i})`)
+    .attr('rx', 3)
+    .style('cursor', 'pointer');
+
+  // Animate bars in
+  bars.transition().duration(800).delay((d, i) => i * 100)
+    .attr('width', d => x(d.value));
+
+  // Value labels
+  svg.selectAll('.bar-val').data(data).enter().append('text')
+    .attr('class', 'bar-val')
+    .attr('x', d => m.left + x(d.value) + 5)
+    .attr('y', d => y(d.label) + y.bandwidth() / 2 + 4)
+    .style('font-size', '10.5px')
+    .style('font-weight', '700')
+    .style('fill', (d) => colorMap.get(d.label))
+    .style('font-family', "'DM Mono', monospace")
+    .text(d => d.display);
+
+  // Click to show description
+  const infoBox = document.getElementById('shift-chart-info');
+  bars.on('click', function(event, d) {
+    bars.attr('opacity', 0.45);
+    d3.select(this).attr('opacity', 1);
+    infoBox.innerHTML = `<strong>${d.label}:</strong> ${d.desc}`;
+    infoBox.classList.add('visible');
+  });
+
+  // Bottom axis (minimal)
+  svg.append('line')
+    .attr('x1', m.left).attr('y1', h - m.bottom + 4)
+    .attr('x2', w - m.right + 20).attr('y2', h - m.bottom + 4)
+    .attr('stroke', '#e5e5e0').attr('stroke-width', 1);
+})();
+</script>
+<script>
+// ── Scroll-Reveal Animation ──
+(function() {
+  const targets = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .lie-expansion, .network-panel, .bar-chart-panel');
+  targets.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  targets.forEach(el => observer.observe(el));
+})();
 </script>
 </body>
 </html>

@@ -9,18 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
 .panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
 h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
 .nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
 .nav a:hover { color: #1d4ed8; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; transition: background 0.2s; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; transition: background 0.2s; touch-action: manipulation; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
@@ -79,6 +79,9 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .stat-row .stat-callout { flex: 1; margin: 0; }
 /* SVG illustrations */
 .illustration { display: flex; justify-content: center; margin: 2rem 0; }
+/* Scroll-reveal */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 /* Responsive */
 @media (max-width: 500px) {
   .contract-wrap { flex-direction: column; }
@@ -88,7 +91,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   .stat-row { flex-direction: column; }
 }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
 
 @media (max-width: 640px) {
   .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
@@ -120,7 +123,54 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <div class="chapter-num">Chapter 14</div>
   <h1>The New Social Contract</h1>
 
-  <div class="pullquote">
+  <!-- Torn Contract Hero SVG -->
+  <div class="illustration reveal">
+    <svg viewBox="0 0 600 180" style="max-width:580px;width:100%;" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tornOldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef9c3"/>
+          <stop offset="100%" stop-color="#fef3c7"/>
+        </linearGradient>
+        <linearGradient id="tornNewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f0fdf4"/>
+          <stop offset="100%" stop-color="#dcfce7"/>
+        </linearGradient>
+        <filter id="tornShadow">
+          <feDropShadow dx="2" dy="4" stdDeviation="6" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="600" height="180" rx="8" fill="#f8faff"/>
+      <!-- Old (left) parchment half — clipped by tear -->
+      <clipPath id="oldClip">
+        <polygon points="0,0 310,0 295,30 305,60 285,90 300,120 288,150 310,180 0,180"/>
+      </clipPath>
+      <rect x="10" y="10" width="310" height="160" rx="8" fill="url(#tornOldGrad)" stroke="#d97706" stroke-width="2" filter="url(#tornShadow)" clip-path="url(#oldClip)"/>
+      <!-- Faded text lines on old half -->
+      <line x1="30" y1="55" x2="180" y2="55" stroke="#d97706" stroke-width="1.5" opacity="0.35"/>
+      <line x1="30" y1="72" x2="165" y2="72" stroke="#d97706" stroke-width="1.5" opacity="0.25"/>
+      <line x1="30" y1="89" x2="175" y2="89" stroke="#d97706" stroke-width="1.5" opacity="0.2"/>
+      <line x1="30" y1="106" x2="155" y2="106" stroke="#d97706" stroke-width="1.5" opacity="0.18"/>
+      <line x1="30" y1="123" x2="170" y2="123" stroke="#d97706" stroke-width="1.5" opacity="0.15"/>
+      <text x="110" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="'Playfair Display', Georgia, serif">OLD CONTRACT</text>
+      <!-- New (right) clean half — clipped by tear -->
+      <clipPath id="newClip">
+        <polygon points="310,0 600,0 600,180 310,180 298,150 310,120 295,90 310,60 300,30"/>
+      </clipPath>
+      <rect x="285" y="10" width="310" height="160" rx="8" fill="url(#tornNewGrad)" stroke="#16a34a" stroke-width="2" filter="url(#tornShadow)" clip-path="url(#newClip)"/>
+      <!-- Clean lines on new half -->
+      <line x1="335" y1="55" x2="560" y2="55" stroke="#16a34a" stroke-width="1.5" opacity="0.4"/>
+      <line x1="335" y1="72" x2="555" y2="72" stroke="#16a34a" stroke-width="1.5" opacity="0.35"/>
+      <line x1="335" y1="89" x2="558" y2="89" stroke="#16a34a" stroke-width="1.5" opacity="0.3"/>
+      <line x1="335" y1="106" x2="550" y2="106" stroke="#16a34a" stroke-width="1.5" opacity="0.25"/>
+      <line x1="335" y1="123" x2="553" y2="123" stroke="#16a34a" stroke-width="1.5" opacity="0.2"/>
+      <text x="450" y="38" text-anchor="middle" font-size="12" font-weight="700" fill="#166534" font-family="'Playfair Display', Georgia, serif">NEW SOCIAL CONTRACT</text>
+      <!-- Jagged tear line -->
+      <polyline points="310,0 295,30 305,60 285,90 300,120 288,150 310,180" stroke="#92400e" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+    </svg>
+  </div>
+
+  <div class="pullquote reveal">
     <p>"Every generation needs a new revolution."</p>
     <div class="pullquote-attr">&mdash; Thomas Jefferson</div>
   </div>
@@ -132,7 +182,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>That promise is now broken. The dream is dead.</p>
 
-  <div class="stat-callout">
+  <div class="stat-callout reveal">
     <div class="stat-number">&gt;50%</div>
     <div class="stat-label">of people now believe their children will be worse off than they are &mdash; a first in modern history</div>
   </div>
@@ -140,7 +190,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The contract has been breached, not by a single act of malice, but because the economic and philosophical code it was written in has become obsolete. To understand why, and to build what comes next, we must trace the evolution of that code, from its origins in the Enlightenment to its ultimate betrayal in the digital age.</p>
 
   <!-- SVG: Broken contract metaphor — enhanced with gradients, depth, and glow -->
-  <div class="illustration">
+  <div class="illustration reveal">
     <svg width="440" height="160" viewBox="0 0 440 160" fill="none">
       <defs>
         <linearGradient id="oldContractGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -204,11 +254,11 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p><strong>Immanuel Kant</strong> proposed the ultimate ethical test: the Categorical Imperative, an attempt to create a perfectly consistent Harmonic Flow of universal, logical rules.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>These were brilliant minds, but they were all building systems on the assumption of a low-MIND-portfolio world.</p>
   </div>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2>The Philosophical Roots</h2>
     <p style="font-size:0.9rem;color:#555;">Social contract theory has been building toward this for 370 years. Click each thinker to expand their contribution.</p>
     <div class="phil-cards" id="phil-cards"></div>
@@ -222,7 +272,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The American experiment was the first attempt to synthesize these ideas &mdash; a dynamic negotiation between Jefferson's vision of decentralized Liberty (Diversity Capital) and Hamilton's vision of national industrial power (Material &amp; Network Capital).</p>
 
   <!-- SVG: Timeline of the American contract -->
-  <div class="illustration">
+  <div class="illustration reveal">
     <svg width="420" height="160" viewBox="0 0 420 160" fill="none">
       <!-- Timeline line -->
       <line x1="30" y1="80" x2="390" y2="80" stroke="#e5e5e0" stroke-width="2"/>
@@ -256,7 +306,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>Around the 1970s, that contract was betrayed. It was replaced by a harsh <strong>Neoliberal Contract</strong>: <em>you are on your own.</em> In place of security, we will give you credit and cheap goods.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>As Shoshana Zuboff has documented, Surveillance Capitalism emerged &mdash; a system that secretly claimed our private human experience as its raw material. Our consent became a fiction buried in unreadable terms of service.</p>
   </div>
 
@@ -271,7 +321,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>You would design a system that was fair and resilient for everyone. You would demand a system that guarantees three fundamental properties:</p>
 
-  <div class="stat-row">
+  <div class="stat-row reveal">
     <div class="stat-callout">
       <div class="stat-number" style="font-size:1.5rem;">1</div>
       <div class="stat-label"><strong>Dignity</strong> &mdash; meet basic needs without surrendering agency</div>
@@ -288,8 +338,34 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>These three values are the humanistic expression of the deep physical laws of our framework. This defines a new constitutional principle for any living system: <strong>Fairness as an Operational Requirement (FOR)</strong>.</p>
 
+  <!-- Rights Architecture SVG: Three concentric rings -->
+  <div class="illustration reveal">
+    <svg viewBox="0 0 300 300" style="max-width:280px;width:100%;" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="ringGlow">
+          <feDropShadow dx="0" dy="0" stdDeviation="4" flood-opacity="0.18"/>
+        </filter>
+      </defs>
+      <!-- Outer ring: Viability (amber) -->
+      <circle cx="150" cy="150" r="128" fill="#fffbeb" stroke="#d97706" stroke-width="3" filter="url(#ringGlow)"/>
+      <!-- Middle ring: Capability (blue) -->
+      <circle cx="150" cy="150" r="88" fill="#eff6ff" stroke="#2563eb" stroke-width="3" filter="url(#ringGlow)"/>
+      <!-- Inner ring: Dignity (violet) -->
+      <circle cx="150" cy="150" r="50" fill="#f5f3ff" stroke="#7c3aed" stroke-width="3" filter="url(#ringGlow)"/>
+      <!-- Inner label -->
+      <text x="150" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#7c3aed" font-family="'Playfair Display', Georgia, serif">Dignity</text>
+      <text x="150" y="162" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="'DM Sans', system-ui, sans-serif">agency &amp; needs</text>
+      <!-- Middle ring label (rotated around arc) -->
+      <text x="150" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'Playfair Display', Georgia, serif">Capability</text>
+      <text x="150" y="93" text-anchor="middle" font-size="9" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">grow &amp; contribute</text>
+      <!-- Outer ring label -->
+      <text x="150" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#d97706" font-family="'Playfair Display', Georgia, serif">Viability</text>
+      <text x="150" y="46" text-anchor="middle" font-size="9" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">system resilience</text>
+    </svg>
+  </div>
+
   <!-- SVG: Three Pillars of the New Contract — architectural metaphor -->
-  <div class="illustration">
+  <div class="illustration reveal">
     <svg width="380" height="240" viewBox="0 0 380 240" fill="none">
       <defs>
         <linearGradient id="pillar1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -351,7 +427,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>A just contract is a physically sound one. The Three Laws map directly to these principles: <strong>Flow</strong> ensures Dignity. <strong>Openness</strong> ensures Capability. <strong>Resilience</strong> ensures Viability.</p>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2>The Veil of Ignorance Simulator</h2>
     <p style="font-size:0.9rem;color:#555;">John Rawls asked: what rules would you choose if you didn't know your place in society? You will be reborn as a random person &mdash; rich or poor, healthy or ill, any country. What floor do you set?</p>
 
@@ -394,7 +470,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>It has three unbreakable promises, each mapping directly to the principles of fairness:</p>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2>The Old vs New Contract</h2>
 
     <div class="contract-wrap" id="contract-wrap">
@@ -451,7 +527,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>This will not be an easy birth. The architects of the old, extractive contract will use their immense power to defend the legacy code that enriches them. But the physics of the new world is on our side. Centralized, extractive systems are brittle. They are low in Diversity and Network Capital. Decentralized, symbiotic systems are resilient and antifragile.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>You are not just a subject of this new contract. You are its author.</p>
   </div>
 
@@ -459,7 +535,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <p>The old world will not be overthrown by armies. It will be made obsolete by a better operating system. An operating system whose code is so aligned with human flourishing that continuing to run the old, buggy, extractive software becomes an act of irrational self-harm.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>This is the great project of our generation.</p>
   </div>
 
@@ -557,6 +633,21 @@ window.addEventListener('scroll', function() {
   var p = document.documentElement;
   var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+// --- Scroll-reveal IntersectionObserver ---
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .reveal').forEach(el => {
+  el.classList.add('reveal');
+  revealObserver.observe(el);
 });
 </script>
 </body>

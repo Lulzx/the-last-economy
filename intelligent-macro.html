@@ -17,12 +17,14 @@ html { scroll-behavior: smooth; }
   left: 0;
   height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, #2563eb, #d97706);
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
   z-index: 1000;
   transition: width 0.1s linear;
+  pointer-events: none;
 }
 
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+.btn, button { touch-action: manipulation; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel {
   background: white;
@@ -50,6 +52,7 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e5e5e0;
   font-size: 0.9rem;
@@ -537,6 +540,26 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
 </div>
 
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
 <script>
 // ── Progress bar ──
 window.addEventListener('scroll', function(){

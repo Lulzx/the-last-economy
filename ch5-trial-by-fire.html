@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
 html { scroll-behavior: smooth; }
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
@@ -20,7 +21,7 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
 .nav a:hover { color: #1d4ed8; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; font-family: 'DM Sans', system-ui, sans-serif; min-height: 44px; touch-action: manipulation; }
 .btn:hover { background: #1d4ed8; }
 .btn.defense { background: #16a34a; }
 .btn.defense:hover { background: #15803d; }
@@ -30,7 +31,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .counter-text { font-size: 0.9rem; color: #555; }
 .counter-num { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
 .fallacy-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; cursor: pointer; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; }
+.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; cursor: pointer; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; word-break: break-word; touch-action: manipulation; }
 .fallacy-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
 .fallacy-card.defended { border-color: #16a34a; background: #f0fdf4; }
 .fallacy-card.challenged { border-color: #dc2626; background: #fef2f2; }
@@ -39,7 +40,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .fallacy-arg { font-style: italic; font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; border-left: 3px solid #e5e5e0; padding-left: 0.75rem; line-height: 1.6; }
 .fallacy-rebuttal { font-size: 0.9rem; color: #166534; background: white; border-radius: 4px; padding: 0.6rem 0.8rem; border: 1px solid #bbf7d0; display: none; margin-bottom: 0.5rem; line-height: 1.6; }
 .fallacy-rebuttal.show { display: block; }
-.fallacy-actions { display: flex; gap: 0.4rem; }
+.fallacy-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .status-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 0.5rem; }
 .badge-defended { background: #dcfce7; color: #16a34a; }
 .badge-challenged { background: #fee2e2; color: #dc2626; }
@@ -56,7 +57,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .rebuttal-point { margin-bottom: 0.5rem; }
 .rebuttal-point strong { color: #15803d; }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
 
 @media (max-width: 640px) {
   .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
@@ -110,8 +111,10 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       </linearGradient>
       <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
         <stop offset="0%" stop-color="#dc2626"/>
-        <stop offset="50%" stop-color="#d97706"/>
-        <stop offset="100%" stop-color="#fef08a" stop-opacity="0.5"/>
+        <stop offset="30%" stop-color="#d97706"/>
+        <stop offset="60%" stop-color="#fb923c"/>
+        <stop offset="85%" stop-color="#fef08a" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9"/>
       </linearGradient>
       <linearGradient id="pillarGrad" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#44403c"/>
@@ -127,6 +130,10 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       </filter>
       <filter id="pillar-shadow">
         <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.4"/>
+      </filter>
+      <filter id="ember-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feBlend in="SourceGraphic" in2="blur" mode="screen"/>
       </filter>
     </defs>
     <!-- Dark dramatic background -->
@@ -145,26 +152,26 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
     <rect x="262" y="53" width="18" height="57" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
     <rect x="322" y="49" width="18" height="61" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
     <rect x="382" y="54" width="18" height="56" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <!-- Flame shapes on each pillar — animated flicker -->
-    <path d="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" fill="url(#flameGrad)" opacity="0.9">
+    <!-- Flame shapes on each pillar — animated flicker, with ember-glow filter -->
+    <path d="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
       <animate attributeName="d" values="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z;M22,56 Q27,38 31,26 Q35,40 37,25 Q41,38 40,56Z;M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" dur="0.9s" repeatCount="indefinite"/>
     </path>
-    <path d="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" fill="url(#flameGrad)" opacity="0.85">
+    <path d="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
       <animate attributeName="d" values="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z;M82,51 Q87,33 91,20 Q95,35 97,20 Q101,33 100,51Z;M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" dur="1.1s" repeatCount="indefinite"/>
     </path>
-    <path d="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" fill="url(#flameGrad)" opacity="0.9">
+    <path d="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
       <animate attributeName="d" values="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z;M142,53 Q147,35 151,22 Q155,37 157,22 Q161,35 160,53Z;M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" dur="0.8s" repeatCount="indefinite"/>
     </path>
-    <path d="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" fill="url(#flameGrad)" opacity="0.85">
+    <path d="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
       <animate attributeName="d" values="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z;M202,49 Q207,31 211,18 Q215,33 217,18 Q221,31 220,49Z;M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" dur="1.2s" repeatCount="indefinite"/>
     </path>
-    <path d="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" fill="url(#flameGrad)" opacity="0.9">
+    <path d="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
       <animate attributeName="d" values="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z;M262,54 Q267,36 271,23 Q275,38 277,23 Q281,36 280,54Z;M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" dur="0.95s" repeatCount="indefinite"/>
     </path>
-    <path d="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" fill="url(#flameGrad)" opacity="0.85">
+    <path d="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
       <animate attributeName="d" values="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z;M322,50 Q327,32 331,19 Q335,34 337,19 Q341,32 340,50Z;M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" dur="1.05s" repeatCount="indefinite"/>
     </path>
-    <path d="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" fill="url(#flameGrad)" opacity="0.9">
+    <path d="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
       <animate attributeName="d" values="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z;M382,55 Q387,37 391,24 Q395,39 397,24 Q401,37 400,55Z;M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" dur="0.85s" repeatCount="indefinite"/>
     </path>
     <!-- Pillar labels -->
@@ -183,6 +190,67 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       <animate attributeName="opacity" values="0.7;0.4;0.7" dur="1.8s" repeatCount="indefinite"/>
     </circle>
     <text x="470" y="59" text-anchor="middle" font-size="14" fill="#4ade80" font-family="'DM Sans', system-ui, sans-serif">&#x2713;</text>
+    <!-- 12 floating ember particles -->
+    <!-- Ember 1 -->
+    <ellipse cx="31" cy="50" rx="2" ry="1.2" fill="#fb923c" opacity="0.8">
+      <animateMotion dur="2.1s" repeatCount="indefinite" path="M0,0 C-18,-38 -28,-78 -12,-118"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.1s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 2 -->
+    <circle cx="91" cy="48" r="1.5" fill="#fbbf24" opacity="0.8">
+      <animateMotion dur="1.8s" repeatCount="indefinite" path="M0,0 C22,-35 32,-72 18,-115"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ember 3 -->
+    <ellipse cx="38" cy="44" rx="1.8" ry="1" fill="#f97316" opacity="0.75">
+      <animateMotion dur="2.4s" repeatCount="indefinite" path="M0,0 C-25,-42 -15,-80 -20,-118"/>
+      <animate attributeName="opacity" values="0.75;0.35;0" dur="2.4s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 4 -->
+    <circle cx="151" cy="46" r="1.3" fill="#fcd34d" opacity="0.8">
+      <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C20,-40 30,-76 15,-120"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ember 5 -->
+    <ellipse cx="211" cy="45" rx="2" ry="1.1" fill="#fb923c" opacity="0.8">
+      <animateMotion dur="1.9s" repeatCount="indefinite" path="M0,0 C-22,-36 -32,-74 -16,-116"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="1.9s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 6 -->
+    <circle cx="100" cy="42" r="1.6" fill="#fde68a" opacity="0.7">
+      <animateMotion dur="2.3s" repeatCount="indefinite" path="M0,0 C28,-38 18,-76 24,-118"/>
+      <animate attributeName="opacity" values="0.7;0.3;0" dur="2.3s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ember 7 -->
+    <ellipse cx="271" cy="47" rx="1.5" ry="1" fill="#fbbf24" opacity="0.8">
+      <animateMotion dur="2.2s" repeatCount="indefinite" path="M0,0 C-20,-42 -28,-80 -14,-119"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.2s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 8 -->
+    <circle cx="331" cy="45" r="1.4" fill="#f97316" opacity="0.75">
+      <animateMotion dur="1.7s" repeatCount="indefinite" path="M0,0 C24,-37 34,-75 19,-117"/>
+      <animate attributeName="opacity" values="0.75;0.35;0" dur="1.7s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ember 9 -->
+    <ellipse cx="160" cy="43" rx="1.9" ry="1.1" fill="#fcd34d" opacity="0.7">
+      <animateMotion dur="2.5s" repeatCount="indefinite" path="M0,0 C-26,-40 -18,-78 -22,-120"/>
+      <animate attributeName="opacity" values="0.7;0.3;0" dur="2.5s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 10 -->
+    <circle cx="391" cy="48" r="1.5" fill="#fb923c" opacity="0.8">
+      <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C-24,-39 -34,-77 -18,-119"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Ember 11 -->
+    <ellipse cx="280" cy="44" rx="1.7" ry="1" fill="#fde68a" opacity="0.75">
+      <animateMotion dur="1.85s" repeatCount="indefinite" path="M0,0 C30,-36 20,-74 26,-116"/>
+      <animate attributeName="opacity" values="0.75;0.35;0" dur="1.85s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Ember 12 -->
+    <circle cx="340" cy="42" r="1.3" fill="#fbbf24" opacity="0.8">
+      <animateMotion dur="2.15s" repeatCount="indefinite" path="M0,0 C-19,-41 -29,-79 -13,-120"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.15s" repeatCount="indefinite"/>
+    </circle>
   </svg>
 
   <div class="stat-callout">
@@ -203,6 +271,8 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
       <div><span class="counter-num" id="counter">0</span><span style="color:#888;font-size:1rem;">/7</span></div>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div id="progress-dots" style="display:flex;gap:0.75rem;justify-content:center;margin:1rem 0;flex-wrap:wrap;"></div>
 
     <div class="fallacy-grid" id="fallacy-grid"></div>
 
@@ -275,10 +345,123 @@ const fallacies = [
 
 let cardStates = new Array(fallacies.length).fill(null);
 
+function updateProgressDots() {
+  const container = document.getElementById('progress-dots');
+  container.innerHTML = '';
+  cardStates.forEach(function(state, i) {
+    const dot = document.createElement('div');
+    dot.title = fallacies[i].name;
+    dot.style.cssText = [
+      'width:28px',
+      'height:28px',
+      'border-radius:50%',
+      'border:2px solid ' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#d1d5db'),
+      'background:' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#e5e7eb'),
+      'transition:background 0.3s,border-color 0.3s',
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'font-size:12px',
+      'font-weight:700',
+      'color:white',
+      'cursor:default'
+    ].join(';');
+    dot.textContent = state === 'defense' ? '\u2713' : state === 'challenged' ? '\u2715' : String(i + 1);
+    if (!state) {
+      dot.style.color = '#9ca3af';
+    }
+    container.appendChild(dot);
+  });
+}
+
+function renderVerdictChart(defendedCount, challengedCount) {
+  const existing = document.getElementById('verdict-donut');
+  if (existing) existing.remove();
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'verdict-donut';
+  wrapper.style.cssText = 'display:flex;flex-direction:column;align-items:center;margin-top:1.25rem;';
+
+  const label = document.createElement('div');
+  label.style.cssText = 'font-size:0.8rem;color:#888;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em;';
+  label.textContent = 'Verdict Split';
+  wrapper.appendChild(label);
+
+  const svgContainer = document.createElement('div');
+  svgContainer.id = 'verdict-donut-svg';
+  wrapper.appendChild(svgContainer);
+
+  const legend = document.createElement('div');
+  legend.style.cssText = 'display:flex;gap:1rem;margin-top:0.6rem;font-size:0.82rem;';
+  legend.innerHTML =
+    '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#16a34a;"></span>Defended (' + defendedCount + ')</span>' +
+    '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#dc2626;"></span>Challenged (' + challengedCount + ')</span>';
+  wrapper.appendChild(legend);
+
+  const summary = document.getElementById('verdict-summary');
+  summary.appendChild(wrapper);
+
+  const width = 200, height = 200, radius = 90;
+  const svg = d3.select('#verdict-donut-svg')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  const g = svg.append('g')
+    .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+
+  const data = [
+    { label: 'Defended', value: defendedCount, color: '#16a34a' },
+    { label: 'Challenged', value: challengedCount, color: '#dc2626' }
+  ].filter(function(d) { return d.value > 0; });
+
+  if (data.length === 0) return;
+
+  const pie = d3.pie().value(function(d) { return d.value; }).sort(null);
+  const arc = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
+
+  const arcs = g.selectAll('.arc')
+    .data(pie(data))
+    .enter()
+    .append('g')
+    .attr('class', 'arc');
+
+  arcs.append('path')
+    .attr('fill', function(d) { return d.data.color; })
+    .attr('d', arc)
+    .style('opacity', 0)
+    .transition()
+    .duration(800)
+    .ease(d3.easeCubicOut)
+    .style('opacity', 1)
+    .attrTween('d', function(d) {
+      const interpolate = d3.interpolate({ startAngle: d.startAngle, endAngle: d.startAngle }, d);
+      return function(t) { return arc(interpolate(t)); };
+    });
+
+  g.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '-0.2em')
+    .style('font-family', "'Playfair Display', Georgia, serif")
+    .style('font-size', '1.6rem')
+    .style('font-weight', '700')
+    .style('fill', '#1a1a1a')
+    .text(defendedCount);
+
+  g.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '1.2em')
+    .style('font-family', "'DM Sans', system-ui, sans-serif")
+    .style('font-size', '0.7rem')
+    .style('fill', '#888')
+    .text('defended');
+}
+
 function updateCounter() {
   const addressed = cardStates.filter(s => s !== null).length;
   document.getElementById('counter').textContent = addressed;
   document.getElementById('progress-fill').style.width = ((addressed / fallacies.length) * 100) + '%';
+  updateProgressDots();
 
   const summary = document.getElementById('verdict-summary');
   if (addressed === fallacies.length) {
@@ -294,6 +477,7 @@ function updateCounter() {
     }
     summary.innerHTML = msg;
     summary.classList.add('show');
+    renderVerdictChart(defendedCount, challengedCount);
   } else {
     summary.classList.remove('show');
   }
@@ -352,6 +536,30 @@ fallacies.forEach((f, idx) => {
   `;
   grid.appendChild(div);
 });
+
+// Initialize progress dots
+updateProgressDots();
+</script>
+
+<script>
+(function() {
+  const revealEls = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout');
+  revealEls.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => observer.observe(el));
+})();
 </script>
 </body>
 </html>

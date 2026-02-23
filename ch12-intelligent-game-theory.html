@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 12 — Intelligent Game Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+body {
+  background: #fafaf8;
+  color: #1a1a1a;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.prose {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 1.5rem);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.75;
+  font-size: 1.05rem;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.panel.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, box-shadow 0.2s;
+}
+.panel:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
+}
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 600; margin-top: 2rem; }
+h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+/* ── Sticky nav ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid #e5e5e0;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 250, 248, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.nav a { color: #2563eb; text-decoration: none; font-weight: 500; }
+.nav a:hover { text-decoration: underline; }
+
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+
+.btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 0.25rem;
+  touch-action: manipulation;
+}
+.btn:hover { background: #1d4ed8; }
+
+.btn-secondary {
+  background: white;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin: 0.2rem;
+  transition: all 0.15s;
+  touch-action: manipulation;
+}
+.btn-secondary:hover, .btn-secondary.active { background: #2563eb; color: white; }
+
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+input[type="range"] { width: 100%; accent-color: #2563eb; touch-action: manipulation; }
+
+.pullquote {
+  border-left: 5px solid #2563eb;
+  margin: 2rem 0;
+  padding: 1rem 1.75rem;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.pullquote.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
+.pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
+
+.stat-callout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.stat-callout.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
+.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+
+.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
+
+.stat-row { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.stat-row .stat-callout { flex: 1; min-width: 140px; }
+
+.illustration {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.illustration.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.epigraph { text-align: center; margin: 1.5rem 0 2.5rem; color: #555; font-size: 0.95rem; }
+.epigraph em { font-style: italic; }
+
+/* ── Example Cards ── */
+.example-cards { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+.example-card {
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s;
+}
+.example-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.example-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+}
+.example-card-header h3 { margin: 0; font-size: 1rem; }
+.example-card-body {
+  padding: 0 1.25rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+.example-card-body.open {
+  max-height: 300px;
+  padding: 0 1.25rem 1.25rem;
+}
+.example-card-toggle { font-size: 1.2rem; color: #888; transition: transform 0.3s; display: inline-block; }
+.example-card-toggle.open { transform: rotate(45deg); }
+.card-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.card-stat { flex: 1; min-width: 120px; background: #f5f5f3; border-radius: 6px; padding: 0.75rem; text-align: center; }
+.card-stat .val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.card-stat .lbl { font-size: 0.78rem; color: #555; margin-top: 0.3rem; }
+.card-border-violet { border-top: 4px solid #7c3aed; }
+.card-border-blue { border-top: 4px solid #2563eb; }
+.card-border-amber { border-top: 4px solid #d97706; }
+
+/* ── Game grid styles ── */
+.game-grid {
+  display: grid;
+  gap: 3px;
+  margin: 0.75rem 0;
+}
+.game-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: white;
+  transition: background 0.15s;
+}
+.cell-coop { background: #16a34a; }
+.cell-defect { background: #dc2626; }
+.cell-mixed { background: #d97706; }
+
+.score-display {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.score-box {
+  flex: 1;
+  background: #f5f5f3;
+  border-radius: 6px;
+  padding: 0.75rem;
+  text-align: center;
+}
+.score-box .score-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #2563eb; line-height: 1; }
+.score-box .score-lbl { font-size: 0.78rem; color: #555; margin-top: 0.3rem; }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .stat-row { flex-direction: column; }
+  .score-display { flex-direction: column; }
+  .card-stat-row { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+  .panel { padding: 1rem; }
+  .slider-row label { font-size: 0.85rem; }
+  .pullquote p { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="nav">
+  <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
+  <a href="explorables.html">All Chapters</a>
+  <a href="ch13-dual-engine.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 12</div>
+  <h1>Intelligent Game Theory</h1>
+
+  <div class="epigraph">
+    <em>"The calculus of probabilities, in its application to game theory, is a monstrously complicated subject... It is not a topic for a gentleman."</em><br>
+    &mdash; John von Neumann
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION: The Prisoner's Enlightenment        -->
+  <!-- ============================================ -->
+  <h2>The Prisoner's Enlightenment</h2>
+
+  <p>The Prisoner's Dilemma is philosophy's most depressing party trick. Two prisoners, unable to communicate, must choose whether to cooperate or to betray their partner. The math is brutal. Whatever your partner does, you are better off defecting. So both defect. Both suffer a harsher sentence than if they had cooperated. Rationality itself seems to doom us to mutual destruction.</p>
+
+  <p>In 1950, when this was formalized at the RAND Corporation, it became the cold logic of the Cold War. Whatever the Soviets do, we are better off building more bombs. Whatever we do, they are better off building more bombs. The Nash Equilibrium is a planet of rubble.</p>
+
+  <p>But then, in the 1980s, the political scientist Robert Axelrod did something beautiful. He ran a tournament, not with prisoners, but with computer programs. He invited strategists to submit algorithms that would compete in an iterated Prisoner's Dilemma, a game played thousands of times. The winner shocked everyone. It was the simplest program submitted, a four line piece of code called "Tit for Tat." Cooperate on the first move, then do whatever your opponent did last.</p>
+
+  <p>Tit for Tat did not win because it was moral. It won because it was mathematically optimal in a game that had memory and a future. Cooperation emerged not from ethics but from iteration. Not from intention but from interaction. The prisoners, given enough time, would not just get out of jail. They would achieve enlightenment.</p>
+
+  <!-- ILLUSTRATION 1: Prisoner's Dilemma D3 Simulator -->
+  <div class="panel" id="pd-simulator">
+    <h2>Prisoner's Dilemma Simulator</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Pick a strategy for each side and run 20 rounds. Green = cooperate, Red = defect, Amber = mixed.</p>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+      <div style="flex:1;min-width:160px;">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.4rem;color:#2563eb;">Player A Strategy</div>
+        <select id="strategy-a" style="width:100%;padding:0.4rem 0.6rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;font-family:'DM Sans',system-ui,sans-serif;">
+          <option value="tft">Tit for Tat</option>
+          <option value="always_defect">Always Defect</option>
+          <option value="always_coop">Always Cooperate</option>
+          <option value="random">Random</option>
+          <option value="grudger">Grudger</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.4rem;color:#dc2626;">Player B Strategy</div>
+        <select id="strategy-b" style="width:100%;padding:0.4rem 0.6rem;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;font-family:'DM Sans',system-ui,sans-serif;">
+          <option value="always_defect">Always Defect</option>
+          <option value="tft">Tit for Tat</option>
+          <option value="always_coop">Always Cooperate</option>
+          <option value="random">Random</option>
+          <option value="grudger">Grudger</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" onclick="runPDSimulation()" style="margin-bottom:0.75rem;">Run 20 Rounds</button>
+    <div id="pd-grid-container" style="width:100%;overflow-x:auto;"></div>
+    <div class="score-display" id="pd-scores" style="display:none;">
+      <div class="score-box">
+        <div class="score-val" id="score-a">0</div>
+        <div class="score-lbl">Player A Score</div>
+      </div>
+      <div class="score-box">
+        <div class="score-val" id="score-b">0</div>
+        <div class="score-lbl">Player B Score</div>
+      </div>
+    </div>
+    <div id="pd-outcome" style="margin-top:0.75rem;font-size:0.88rem;color:#555;min-height:1.5rem;background:#f5f5f3;border-radius:6px;padding:0.6rem 0.8rem;display:none;"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: The Flaw in the Old Game            -->
+  <!-- ============================================ -->
+  <h2>The Flaw in the Old Game</h2>
+
+  <p>Classical game theory made a fatal error. It assumed its agents were intelligent but its universe was stupid. It modeled players who operated in a vacuum, a featureless void with no context, no relationships, and no consequences beyond the immediate transaction.</p>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: Resolving the Great Paradoxes       -->
+  <!-- ============================================ -->
+  <h2>Resolving the Great Paradoxes: The Geometry of Betrayal</h2>
+
+  <p>The famous paradoxes of game theory are not paradoxes of human irrationality. They are the predictable outcomes of games played on impoverished landscapes.</p>
+
+  <p>The <strong>Prisoner's Dilemma</strong> is so bleak because its "prison" is a metaphor for a specific, pathological topology: a disconnected, zero-information graph with no future. The prisoners cannot communicate (zero Network Capital). They have no basis for trust. It is a one-shot game, so the reputation is worthless. In such a barren, frictionless, and timeless landscape, defection <em>is</em> the only rational move. The tragedy is not that humans are flawed, but that classical game theory mistook this pathological edge case for the universal condition.</p>
+
+  <p>An even deeper puzzle, the <strong>Traveler's Dilemma</strong>, reveals the dimensional blindness of the old framework. In this game, the purely "rational" strategy leads to the worst possible collective outcome. Yet in experiments, real humans consistently choose to cooperate, achieving a far better result. This is a massive failure of classical theory. Intelligent Economics reveals why. The "irrational" human is intuitively calculating that the long-term value of establishing a cooperative norm and building Network Capital is worth far more than the small, one-time reward for defection. The paradox is not that humans are irrational; it's that classical game theory is blind, capable of seeing only Material Capital while humans intuitively navigate all four.</p>
+
+  <!-- ILLUSTRATION 2: Topology of Betrayal SVG -->
+  <div class="illustration" id="topology-illustration">
+    <svg viewBox="0 0 620 220" style="width:100%;max-width:620px;height:auto;" role="img" aria-label="Two network diagrams showing isolated nodes versus richly connected nodes with animated pulses">
+      <defs>
+        <marker id="arrowTopology" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6" fill="#888"/>
+        </marker>
+        <radialGradient id="nodeGradLeft" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#9ca3af"/>
+          <stop offset="100%" stop-color="#4b5563"/>
+        </radialGradient>
+        <radialGradient id="nodeGradRight" cx="35%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </radialGradient>
+        <filter id="nodeGlowRight">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#2563eb" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <rect width="620" height="220" rx="10" fill="#f8faff"/>
+      <!-- LEFT: disconnected graph label -->
+      <text x="130" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280" font-family="'Playfair Display', Georgia, serif">Prisoner's Dilemma</text>
+      <text x="130" y="38" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">No connections · No memory · No future</text>
+      <!-- Left isolated nodes -->
+      <circle cx="80" cy="100" r="16" fill="url(#nodeGradLeft)" stroke="#6b7280" stroke-width="1.5"/>
+      <circle cx="155" cy="75" r="16" fill="url(#nodeGradLeft)" stroke="#6b7280" stroke-width="1.5"/>
+      <circle cx="185" cy="140" r="16" fill="url(#nodeGradLeft)" stroke="#6b7280" stroke-width="1.5"/>
+      <text x="80" y="104" text-anchor="middle" font-size="9" fill="white" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">A</text>
+      <text x="155" y="79" text-anchor="middle" font-size="9" fill="white" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">B</text>
+      <text x="185" y="144" text-anchor="middle" font-size="9" fill="white" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">C</text>
+      <!-- LEFT label -->
+      <text x="130" y="185" text-anchor="middle" font-size="10" fill="#9ca3af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Defection is rational</text>
+
+      <!-- ARROW between panels -->
+      <line x1="265" y1="110" x2="325" y2="110" stroke="#888" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowTopology)"/>
+      <text x="295" y="102" text-anchor="middle" font-size="9" fill="#888" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Add iteration</text>
+      <text x="295" y="122" text-anchor="middle" font-size="9" fill="#888" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">+ memory</text>
+
+      <!-- RIGHT: richly connected label -->
+      <text x="490" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'Playfair Display', Georgia, serif">Network Capital</text>
+      <text x="490" y="38" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="'DM Sans', system-ui, sans-serif">Rich connections · Memory · Future</text>
+
+      <!-- RIGHT: 7 richly connected nodes -->
+      <!-- Edges first -->
+      <line x1="490" y1="108" x2="420" y2="78" stroke="#60a5fa" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.1s" repeatCount="indefinite"/>
+      </line>
+      <line x1="490" y1="108" x2="560" y2="78" stroke="#7c3aed" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="490" y1="108" x2="440" y2="155" stroke="#2563eb" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.4s" repeatCount="indefinite"/>
+      </line>
+      <line x1="490" y1="108" x2="540" y2="155" stroke="#60a5fa" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.6s" repeatCount="indefinite"/>
+      </line>
+      <line x1="490" y1="108" x2="380" y2="118" stroke="#3b82f6" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="490" y1="108" x2="600" y2="118" stroke="#818cf8" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="420" y1="78" x2="560" y2="78" stroke="#93c5fd" stroke-width="1" opacity="0.4"/>
+      <line x1="440" y1="155" x2="540" y2="155" stroke="#93c5fd" stroke-width="1" opacity="0.4"/>
+      <line x1="380" y1="118" x2="440" y2="155" stroke="#93c5fd" stroke-width="1" opacity="0.35"/>
+      <line x1="600" y1="118" x2="540" y2="155" stroke="#93c5fd" stroke-width="1" opacity="0.35"/>
+      <!-- Nodes -->
+      <circle cx="490" cy="108" r="18" fill="url(#nodeGradRight)" stroke="#2563eb" stroke-width="2.5" filter="url(#nodeGlowRight)">
+        <animate attributeName="r" values="18;21;18" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="420" cy="78" r="12" fill="url(#nodeGradRight)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="560" cy="78" r="12" fill="url(#nodeGradRight)" stroke="#7c3aed" stroke-width="1.5"/>
+      <circle cx="440" cy="155" r="12" fill="url(#nodeGradRight)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="540" cy="155" r="12" fill="url(#nodeGradRight)" stroke="#60a5fa" stroke-width="1.5"/>
+      <circle cx="380" cy="118" r="10" fill="url(#nodeGradRight)" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="600" cy="118" r="10" fill="url(#nodeGradRight)" stroke="#818cf8" stroke-width="1.5"/>
+      <!-- RIGHT label -->
+      <text x="490" y="188" text-anchor="middle" font-size="10" fill="#2563eb" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Cooperation is optimal</text>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: Principal-Agent Problem             -->
+  <!-- ============================================ -->
+  <h2>Aligning the Players: Solving the Principal-Agent Problem</h2>
+
+  <p>The failure of classical game theory is not just academic; it manifests in every boardroom. The "Principal-Agent Problem," the struggle to align the interests of a CEO with their shareholders, has consumed corporate governance for fifty years. Conventional economics tries to solve this with better contracts, a classic attempt to write more complex rules for a broken game.</p>
+
+  <p>Intelligent Game Theory reveals this is not a contract problem; it is a game design problem. The principal and agent have misaligned incentives because they are playing a zero sum game on a landscape with divergent local gradients. The symbiotic solution is not to write a better contract, but to reshape the landscape. Structures like cooperatives, which give the "agent" employee ownership and a stake in long term health, are acts of topology engineering. They change the game itself, making the agent's and the principal's paths of least resistance converge toward the <strong>Symbiotic Equilibrium.</strong></p>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: The Logic of the Potlatch           -->
+  <!-- ============================================ -->
+  <h2>The Logic of the Potlatch</h2>
+
+  <p>Western observers in the 19th century were baffled by the potlatch, a vast ceremonial feast held by the Kwakwaka'wakw and other Indigenous peoples of the Pacific Northwest. Here was a society where chiefs would spend years accumulating immense wealth, only to give it all away, or even dramatically destroy it, in a single, massive ceremony. To the scarcity mindset of the colonial administrator, this was madness. They banned it, missing the genius entirely.</p>
+
+  <p>The potlatch was not about destroying wealth. It was about transmuting it. It was a sophisticated game, the goal of which was to convert rivalrous Material Capital into non-rivalrous Network Capital. When a chief gave away a thousand blankets, he was not losing a thousand blankets. He was purchasing a thousand strands of social obligation. He was broadcasting a signal of his capacity and his generosity, creating a network of allies.</p>
+
+  <p>This is a higher form of game theory than the Prisoner's Dilemma could ever imagine. They were not playing a zero sum game for a fixed pool of resources. They were playing a positive sum game to increase the resilience and prosperity of the entire network. They understood that the richest chief was not the one with the biggest hoard, but the one at the center of the strongest web of relationships.</p>
+
+  <!-- ILLUSTRATION 3: Potlatch Flow Animation SVG -->
+  <div class="illustration" id="potlatch-illustration">
+    <svg viewBox="0 0 480 260" style="width:100%;max-width:480px;height:auto;" role="img" aria-label="A chief node sending amber tokens outward along spokes, which return as blue connection lines">
+      <defs>
+        <radialGradient id="chiefGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#fcd34d"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </radialGradient>
+        <radialGradient id="memberGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#93c5fd"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </radialGradient>
+        <filter id="chiefGlow">
+          <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#d97706" flood-opacity="0.4"/>
+        </filter>
+        <filter id="tokenGlow">
+          <feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#d97706" flood-opacity="0.6"/>
+        </filter>
+      </defs>
+      <rect width="480" height="260" rx="10" fill="#fffbf0"/>
+
+      <!-- Title -->
+      <text x="240" y="20" text-anchor="middle" font-size="11" fill="#92400e" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Tokens out → Obligations in</text>
+
+      <!-- 6 spokes / connection lines (blue, animated pulse) -->
+      <line x1="240" y1="130" x2="130" y2="65" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="1.8s"/>
+      </line>
+      <line x1="240" y1="130" x2="365" y2="65" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="1.9s"/>
+      </line>
+      <line x1="240" y1="130" x2="100" y2="145" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="2.0s"/>
+      </line>
+      <line x1="240" y1="130" x2="380" y2="145" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="2.1s"/>
+      </line>
+      <line x1="240" y1="130" x2="145" y2="210" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="2.2s"/>
+      </line>
+      <line x1="240" y1="130" x2="335" y2="210" stroke="#2563eb" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.7;0.7;0.7;0.7;0" dur="3.6s" repeatCount="indefinite" begin="2.3s"/>
+      </line>
+
+      <!-- Amber tokens traveling outward along each spoke -->
+      <!-- Spoke 1: to top-left -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" path="M240,130 L130,65"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Spoke 2: to top-right -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.15s" path="M240,130 L365,65"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite" begin="0.15s"/>
+      </circle>
+      <!-- Spoke 3: to left -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.3s" path="M240,130 L100,145"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite" begin="0.3s"/>
+      </circle>
+      <!-- Spoke 4: to right -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.45s" path="M240,130 L380,145"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite" begin="0.45s"/>
+      </circle>
+      <!-- Spoke 5: to bottom-left -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.6s" path="M240,130 L145,210"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite" begin="0.6s"/>
+      </circle>
+      <!-- Spoke 6: to bottom-right -->
+      <circle r="7" fill="#fbbf24" filter="url(#tokenGlow)" opacity="0">
+        <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.75s" path="M240,130 L335,210"/>
+        <animate attributeName="opacity" values="0;1;1;0;0;0;0" dur="3.6s" repeatCount="indefinite" begin="0.75s"/>
+      </circle>
+
+      <!-- Member nodes -->
+      <circle cx="130" cy="65" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="365" cy="65" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="100" cy="145" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="380" cy="145" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="145" cy="210" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="335" cy="210" r="18" fill="url(#memberGrad)" stroke="#2563eb" stroke-width="1.5"/>
+
+      <!-- Chief node (center, on top) -->
+      <circle cx="240" cy="130" r="26" fill="url(#chiefGrad)" stroke="#d97706" stroke-width="3" filter="url(#chiefGlow)">
+        <animate attributeName="r" values="26;29;26" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="240" y="127" text-anchor="middle" font-size="10" fill="white" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">CHIEF</text>
+      <text x="240" y="140" text-anchor="middle" font-size="8" fill="#fef3c7" font-family="'DM Sans', system-ui, sans-serif">gives away</text>
+
+      <!-- Labels -->
+      <text x="240" y="245" text-anchor="middle" font-size="10" fill="#92400e" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Material Capital → Network Capital</text>
+    </svg>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: The Selfishness of Generosity       -->
+  <!-- ============================================ -->
+  <h2>The Selfishness of Generosity</h2>
+
+  <p>Here is the paradox that breaks most minds. In a sufficiently connected system with a long enough time horizon, selfishness and altruism converge. Being generous becomes the most selfish possible strategy, not in some mystical sense, but in pure mathematical returns.</p>
+
+  <p>Consider the Human Genome Project. In the 1990s, a race began between a public, open source consortium and a private company to sequence our DNA. The public project shared its data freely every 24 hours. The private company kept its data proprietary, hoping to sell access. The open model won. The resulting public domain data has since generated an estimated trillion dollars in economic value, creating entire new industries. The contributors gave away their work and got back a transformed world.</p>
+
+  <p>This is the logic of the symbiotic economy. It is a game where the winning move is to create value for the network. By increasing the health and intelligence of the system you inhabit, you increase your own chances of persistence and prosperity. The old game was about extracting value from the network. The new game is about generating value <em>through</em> the network.</p>
+
+  <div class="stat-callout" id="stat-genome">
+    <div class="stat-number">$1T+</div>
+    <div class="stat-label">Estimated economic value generated by the open Human Genome Project — from giving away the work</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: Nash to Symbiosis                   -->
+  <!-- ============================================ -->
+  <h2>The New Equilibrium: From Nash to Symbiosis</h2>
+
+  <p>A Nash Equilibrium is a state where no player can improve their outcome by unilaterally changing their strategy. It is a state of selfish stability. The Prisoner's Dilemma shows us that this can often be a terrible place.</p>
+
+  <p>Intelligent Game Theory introduces a new, higher equilibrium: the Symbiotic Equilibrium. This is a state where the system's overall health, as measured by its <strong>MIND Capitals,</strong> is maximized. In this state, an individual agent cannot improve its own long term prospects by taking an action that degrades the health of the network.</p>
+
+  <p>The goal of policy in the 21st century is to design systems where the Nash Equilibrium and the Symbiotic Equilibrium are the same. This is not about changing human nature. It is about changing the math of the game.</p>
+
+  <!-- ILLUSTRATION 4: Nash vs Symbiotic Equilibrium D3 -->
+  <div class="panel" id="equilibrium-panel">
+    <h2>Nash vs. Symbiotic Equilibrium</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Drag the dot and release. It rolls toward the nearest basin. The Symbiotic Equilibrium is deeper — and more stable.</p>
+    <svg id="landscape-svg" style="width:100%;max-width:620px;height:auto;" viewBox="0 0 620 220"></svg>
+    <div id="equilibrium-label" style="text-align:center;font-size:0.88rem;font-weight:600;margin-top:0.5rem;color:#555;">Drag the dot to explore the landscape</div>
+  </div>
+
+  <div class="pullquote" id="pq-nash">
+    <p>The goal of policy in the 21st century is to design systems where the Nash Equilibrium and the Symbiotic Equilibrium are the same. This is not about changing human nature. It is about changing the math of the game.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================ -->
+  <!-- SECTION: The Computation of Trust            -->
+  <!-- ============================================ -->
+  <h2>The Computation of Trust</h2>
+
+  <p>Classical game theory failed because it assumed a world of disconnected transactions. To cooperate, its prisoners needed to trust each other, and trust was a variable it could not model.</p>
+
+  <p>This is precisely the problem that modern AI and cryptographic systems are built to solve. Consider a multi agent AI system managing a supply chain. The AIs will learn to cooperate not because of a moral code, but because they will mathematically discover that transparent, shared ledgers and verifiable commitments dramatically reduce their collective prediction error.</p>
+
+  <p>Trust, in this new world, is not an emotion. It is a computational feature. The most successful systems will be those that engineer trust into their very architecture. They will build games where cooperation is not a matter of hope, but a matter of mathematical certainty. In such an environment, the logic of "Tit for Tat" becomes absolute. Cooperation is not just the best strategy; it is the only one that computes.</p>
+
+  <!-- ILLUSTRATION 5: Trust as Computation Slider Panel -->
+  <div class="panel" id="trust-panel">
+    <h2>Trust as Computation</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Adjust the system parameters. Watch cooperation emerge mathematically.</p>
+    <div class="slider-row">
+      <label>Transparency: <span id="transparency-val">50%</span></label>
+      <input type="range" id="transparency-slider" min="0" max="100" value="50" oninput="updateTrustChart()">
+      <div class="slider-label"><span>0% (opaque)</span><span>100% (fully open)</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Verifiability: <span id="verifiability-val">50%</span></label>
+      <input type="range" id="verifiability-slider" min="0" max="100" value="50" oninput="updateTrustChart()">
+      <div class="slider-label"><span>0% (unverifiable)</span><span>100% (cryptographic proof)</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Iteration Count: <span id="iterations-val">50</span></label>
+      <input type="range" id="iterations-slider" min="1" max="100" value="50" oninput="updateTrustChart()">
+      <div class="slider-label"><span>1 (one-shot)</span><span>100 (long shadow of future)</span></div>
+    </div>
+    <svg id="trust-chart" style="width:100%;max-width:620px;height:auto;" viewBox="0 0 620 180"></svg>
+    <div id="trust-outcome" style="text-align:center;margin-top:0.5rem;font-size:0.9rem;font-weight:600;color:#2563eb;min-height:1.5rem;"></div>
+  </div>
+
+  <p>This is not a theoretical dream. This is not a distant utopia. Dispatches from a future that already works are arriving, proving that symbiotic models thrive by rejecting the old game entirely. Look to the Basque Country of Spain, where the Mondragon Corporation, a federation of 80,000 worker-owners, faced the 2008 financial crisis with an internal unemployment rate of zero percent while the rest of the country suffered at twenty-six. Look to the Netherlands, where 15,000 Buurtzorg nurses operate with no managers, delivering the nation's highest-rated patient care with an overhead of just eight percent, a third of the industry standard. Look to America, where the largest employee-owned company, Publix, thrives by rejecting the extractive logic of public markets. These are not quaint experiments. They are proof that an economy built on symbiosis is not just more humane, but mathematically more efficient and robust.</p>
+
+  <!-- ILLUSTRATION 6: Real-World Examples Cards -->
+  <div class="example-cards" id="examples-section">
+    <div class="example-card card-border-violet">
+      <div class="example-card-header" onclick="toggleCard('card-mondragon')">
+        <h3 style="color:#7c3aed;">Mondragon Corporation</h3>
+        <span class="example-card-toggle" id="toggle-mondragon">+</span>
+      </div>
+      <div class="example-card-body" id="card-mondragon">
+        <p style="font-size:0.9rem;color:#555;margin:0 0 0.75rem;">A federation of worker-owned cooperatives in the Basque Country, Spain. During the 2008 financial crisis, while Spain's national unemployment hit 26%, Mondragon's internal unemployment rate was effectively zero — workers were reassigned rather than laid off.</p>
+        <div class="card-stat-row">
+          <div class="card-stat">
+            <div class="val" style="color:#7c3aed;">80,000</div>
+            <div class="lbl">Worker-owners</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#7c3aed;">0%</div>
+            <div class="lbl">Internal unemployment in 2008 crisis</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#dc2626;">26%</div>
+            <div class="lbl">National unemployment at same time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card card-border-blue">
+      <div class="example-card-header" onclick="toggleCard('card-buurtzorg')">
+        <h3 style="color:#2563eb;">Buurtzorg</h3>
+        <span class="example-card-toggle" id="toggle-buurtzorg">+</span>
+      </div>
+      <div class="example-card-body" id="card-buurtzorg">
+        <p style="font-size:0.9rem;color:#555;margin:0 0 0.75rem;">A Dutch nursing organization where 15,000 nurses operate in self-managing teams with no managers. They deliver the Netherlands' highest-rated patient care with dramatically lower overhead than traditional, hierarchically managed competitors.</p>
+        <div class="card-stat-row">
+          <div class="card-stat">
+            <div class="val" style="color:#2563eb;">15,000</div>
+            <div class="lbl">Nurses, self-managing</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#2563eb;">8%</div>
+            <div class="lbl">Overhead (Buurtzorg)</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#dc2626;">25%</div>
+            <div class="lbl">Industry standard overhead</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card card-border-amber">
+      <div class="example-card-header" onclick="toggleCard('card-publix')">
+        <h3 style="color:#d97706;">Publix Super Markets</h3>
+        <span class="example-card-toggle" id="toggle-publix">+</span>
+      </div>
+      <div class="example-card-body" id="card-publix">
+        <p style="font-size:0.9rem;color:#555;margin:0 0 0.75rem;">The largest employee-owned company in the United States, Publix consistently outperforms publicly-traded competitors. By rejecting the extractive logic of external shareholders, it aligns all incentives toward long-term health of the network: employees, customers, and communities.</p>
+        <div class="card-stat-row">
+          <div class="card-stat">
+            <div class="val" style="color:#d97706;">#1</div>
+            <div class="lbl">Largest employee-owned company in US</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#d97706;">&#10003;</div>
+            <div class="lbl">Consistently outperforms public competitors</div>
+          </div>
+          <div class="card-stat">
+            <div class="val" style="color:#d97706;">100%</div>
+            <div class="lbl">Employee-owned, no external shareholders</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .prose -->
+
+<script>
+// ── Progress Bar ──
+(function() {
+  const bar = document.getElementById('progress-bar');
+  function update() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    bar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// ── Scroll-reveal IntersectionObserver ──
+(function() {
+  const targets = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  targets.forEach(el => observer.observe(el));
+})();
+
+// ── Prisoner's Dilemma Simulator ──
+function getMove(strategy, myHistory, opponentHistory, round) {
+  switch(strategy) {
+    case 'always_coop': return 'C';
+    case 'always_defect': return 'D';
+    case 'random': return Math.random() < 0.5 ? 'C' : 'D';
+    case 'tft':
+      if (round === 0) return 'C';
+      return opponentHistory[round - 1];
+    case 'grudger':
+      if (round === 0) return 'C';
+      return opponentHistory.includes('D') ? 'D' : 'C';
+    default: return 'C';
+  }
+}
+
+function runPDSimulation() {
+  const stratA = document.getElementById('strategy-a').value;
+  const stratB = document.getElementById('strategy-b').value;
+  const rounds = 20;
+
+  const histA = [], histB = [];
+  let scoreA = 0, scoreB = 0;
+
+  for (let r = 0; r < rounds; r++) {
+    const moveA = getMove(stratA, histA, histB, r);
+    const moveB = getMove(stratB, histB, histA, r);
+    histA.push(moveA);
+    histB.push(moveB);
+
+    // Payoff matrix: CC=3,3 | CD=0,5 | DC=5,0 | DD=1,1
+    if (moveA === 'C' && moveB === 'C') { scoreA += 3; scoreB += 3; }
+    else if (moveA === 'C' && moveB === 'D') { scoreA += 0; scoreB += 5; }
+    else if (moveA === 'D' && moveB === 'C') { scoreA += 5; scoreB += 0; }
+    else { scoreA += 1; scoreB += 1; }
+  }
+
+  // Render grid using D3
+  const container = document.getElementById('pd-grid-container');
+  container.innerHTML = '';
+  const cellSize = Math.min(28, Math.floor((container.clientWidth || 620) / (rounds + 1)));
+  const svgW = cellSize * rounds + 120;
+  const svgH = cellSize * 2 + 60;
+
+  const svg = d3.select('#pd-grid-container').append('svg')
+    .attr('viewBox', `0 0 ${svgW} ${svgH}`)
+    .style('width', '100%');
+
+  // Row labels
+  svg.append('text').attr('x', 5).attr('y', cellSize * 0.5 + 30 + 5)
+    .attr('text-anchor', 'start').attr('font-size', 11).attr('font-weight', 700)
+    .attr('fill', '#2563eb').attr('font-family', "'DM Sans', system-ui, sans-serif")
+    .text('A');
+  svg.append('text').attr('x', 5).attr('y', cellSize * 1.5 + 30 + 5)
+    .attr('text-anchor', 'start').attr('font-size', 11).attr('font-weight', 700)
+    .attr('fill', '#dc2626').attr('font-family', "'DM Sans', system-ui, sans-serif")
+    .text('B');
+
+  // Round labels
+  for (let r = 0; r < rounds; r++) {
+    svg.append('text').attr('x', r * cellSize + cellSize / 2 + 20).attr('y', 18)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888')
+      .attr('font-family', "'DM Sans', system-ui, sans-serif")
+      .text(r + 1);
+  }
+
+  // Player A row
+  histA.forEach((move, r) => {
+    const bothC = move === 'C' && histB[r] === 'C';
+    const bothD = move === 'D' && histB[r] === 'D';
+    const color = move === 'C' ? '#16a34a' : '#dc2626';
+    svg.append('rect')
+      .attr('x', r * cellSize + 20).attr('y', 22)
+      .attr('width', cellSize - 3).attr('height', cellSize - 3)
+      .attr('rx', 3).attr('fill', color).attr('opacity', 0.9);
+    svg.append('text')
+      .attr('x', r * cellSize + cellSize / 2 + 18).attr('y', 22 + cellSize / 2 + 4)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', 'white')
+      .attr('font-weight', 700).attr('font-family', "'DM Sans', system-ui, sans-serif")
+      .text(move);
+  });
+
+  // Player B row
+  histB.forEach((move, r) => {
+    const color = move === 'C' ? '#16a34a' : '#dc2626';
+    const mixed = histA[r] !== move;
+    const cellColor = mixed ? '#d97706' : color;
+    svg.append('rect')
+      .attr('x', r * cellSize + 20).attr('y', 22 + cellSize)
+      .attr('width', cellSize - 3).attr('height', cellSize - 3)
+      .attr('rx', 3).attr('fill', cellColor).attr('opacity', 0.9);
+    svg.append('text')
+      .attr('x', r * cellSize + cellSize / 2 + 18).attr('y', 22 + cellSize * 1.5 + 4)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', 'white')
+      .attr('font-weight', 700).attr('font-family', "'DM Sans', system-ui, sans-serif")
+      .text(move);
+  });
+
+  // Legend
+  const lgY = 22 + cellSize * 2 + 12;
+  [[16a34a,'#16a34a','Cooperate'],[dc2626,'#dc2626','Defect'],[d97706,'#d97706','Mixed']].forEach((item, i) => {});
+  const legendItems = [['#16a34a','Cooperate'],['#dc2626','Defect'],['#d97706','Mixed']];
+  legendItems.forEach(([col, lbl], i) => {
+    const lx = 20 + i * 90;
+    svg.append('rect').attr('x', lx).attr('y', lgY).attr('width', 12).attr('height', 12).attr('rx', 2).attr('fill', col);
+    svg.append('text').attr('x', lx + 16).attr('y', lgY + 9).attr('font-size', 9).attr('fill', '#555')
+      .attr('font-family', "'DM Sans', system-ui, sans-serif").text(lbl);
+  });
+
+  // Scores
+  document.getElementById('score-a').textContent = scoreA;
+  document.getElementById('score-b').textContent = scoreB;
+  document.getElementById('pd-scores').style.display = 'flex';
+
+  // Outcome text
+  const coopRounds = histA.filter((m, i) => m === 'C' && histB[i] === 'C').length;
+  const defectRounds = histA.filter((m, i) => m === 'D' && histB[i] === 'D').length;
+  let outcome = `${coopRounds}/20 rounds of mutual cooperation, ${defectRounds}/20 rounds of mutual defection. `;
+  if (coopRounds >= 15) outcome += 'Near-perfect cooperation — the shadow of the future transformed the game.';
+  else if (coopRounds >= 8) outcome += 'Partial cooperation emerged. With more iterations or trust, the symbiotic equilibrium may be reached.';
+  else outcome += 'Mostly defection — the classical Prisoner\'s Dilemma trap. Change the game, not just the rules.';
+
+  const outEl = document.getElementById('pd-outcome');
+  outEl.textContent = outcome;
+  outEl.style.display = 'block';
+}
+
+// ── Nash vs Symbiotic Equilibrium Landscape ──
+(function() {
+  const svgEl = document.getElementById('landscape-svg');
+  if (!svgEl) return;
+
+  const W = 620, H = 220;
+  const svg = d3.select('#landscape-svg');
+
+  // Energy landscape function: two basins
+  // Nash basin: x~175, shallow
+  // Symbiotic basin: x~445, deep
+  function energyAt(x) {
+    const normX = (x / W);
+    const nashX = 0.28, symbX = 0.72;
+    const nashDepth = 0.4, symbDepth = 0.85;
+    const nashWidth = 0.18, symbWidth = 0.15;
+    // Two Gaussian wells
+    const nashE = -nashDepth * Math.exp(-Math.pow((normX - nashX) / nashWidth, 2));
+    const symbE = -symbDepth * Math.exp(-Math.pow((normX - symbX) / symbWidth, 2));
+    // baseline gentle slope
+    const base = 0.05 * (normX - 0.5);
+    return nashE + symbE + base;
+  }
+
+  // Draw filled contour regions using gradient
+  const defs = svg.append('defs');
+  const bgGrad = defs.append('linearGradient').attr('id', 'landscapeBg').attr('x1','0%').attr('y1','0%').attr('x2','100%').attr('y2','0%');
+  bgGrad.append('stop').attr('offset','0%').attr('stop-color','#f0f9ff');
+  bgGrad.append('stop').attr('offset','28%').attr('stop-color','#e5e7eb');
+  bgGrad.append('stop').attr('offset','50%').attr('stop-color','#f8faff');
+  bgGrad.append('stop').attr('offset','72%').attr('stop-color','#dbeafe');
+  bgGrad.append('stop').attr('offset','100%').attr('stop-color','#eff6ff');
+
+  svg.append('rect').attr('width', W).attr('height', H).attr('rx', 8).attr('fill', 'url(#landscapeBg)');
+
+  // Build landscape path
+  const baseY = H - 30;
+  const scaleY = 90;
+  const pts = [];
+  for (let x = 0; x <= W; x += 2) {
+    const e = energyAt(x);
+    pts.push([x, baseY + e * scaleY]);
+  }
+
+  // Fill under landscape
+  const area = d3.area().x(d => d[0]).y0(H).y1(d => d[1]).curve(d3.curveBasis);
+  const line = d3.line().x(d => d[0]).y(d => d[1]).curve(d3.curveBasis);
+
+  svg.append('path').datum(pts).attr('d', area(pts))
+    .attr('fill', '#e0e7ff').attr('opacity', 0.5);
+  svg.append('path').datum(pts).attr('d', line(pts))
+    .attr('fill', 'none').attr('stroke', '#6366f1').attr('stroke-width', 2.5);
+
+  // Nash basin highlight
+  svg.append('ellipse').attr('cx', 175).attr('cy', baseY + energyAt(175) * scaleY + 18)
+    .attr('rx', 48).attr('ry', 12).attr('fill', '#9ca3af').attr('opacity', 0.18);
+  svg.append('text').attr('x', 175).attr('y', baseY + energyAt(175) * scaleY + 16)
+    .attr('text-anchor', 'middle').attr('font-size', 10.5).attr('font-weight', 700).attr('fill', '#6b7280')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('Nash Equilibrium');
+  svg.append('text').attr('x', 175).attr('y', baseY + energyAt(175) * scaleY + 30)
+    .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#9ca3af')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('shallow local minimum');
+
+  // Symbiotic basin highlight
+  svg.append('ellipse').attr('cx', 445).attr('cy', baseY + energyAt(445) * scaleY + 20)
+    .attr('rx', 52).attr('ry', 14).attr('fill', '#2563eb').attr('opacity', 0.12);
+  svg.append('text').attr('x', 445).attr('y', baseY + energyAt(445) * scaleY + 16)
+    .attr('text-anchor', 'middle').attr('font-size', 10.5).attr('font-weight', 700).attr('fill', '#2563eb')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('Symbiotic Equilibrium');
+  svg.append('text').attr('x', 445).attr('y', baseY + energyAt(445) * scaleY + 30)
+    .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#60a5fa')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('deep global minimum');
+
+  // Y-axis label
+  svg.append('text').attr('transform','rotate(-90)').attr('x', -H/2).attr('y', 14)
+    .attr('text-anchor','middle').attr('font-size', 9).attr('fill','#888')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('← Energy (lower = more stable)');
+
+  // Draggable dot
+  let dotX = 300;
+  let dotY = baseY + energyAt(dotX) * scaleY;
+  let dragging = false;
+  let animFrame = null;
+
+  const dot = svg.append('circle')
+    .attr('cx', dotX).attr('cy', dotY)
+    .attr('r', 11)
+    .attr('fill', '#f59e0b')
+    .attr('stroke', '#1a1a1a')
+    .attr('stroke-width', 2.5)
+    .style('cursor', 'ew-resize')
+    .style('filter', 'drop-shadow(0 2px 5px rgba(0,0,0,0.3))');
+
+  function updateDotPos(x) {
+    dotX = Math.max(10, Math.min(W - 10, x));
+    dotY = baseY + energyAt(dotX) * scaleY;
+    dot.attr('cx', dotX).attr('cy', dotY);
+  }
+
+  function rollToEquilibrium() {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    function step() {
+      // gradient descent
+      const grad = (energyAt(dotX + 2) - energyAt(dotX - 2)) / 4;
+      dotX -= grad * 18;
+      dotX = Math.max(10, Math.min(W - 10, dotX));
+      dotY = baseY + energyAt(dotX) * scaleY;
+      dot.attr('cx', dotX).attr('cy', dotY);
+
+      const speed = Math.abs(grad * 18);
+      if (speed > 0.08) {
+        animFrame = requestAnimationFrame(step);
+      } else {
+        // settled
+        const inNash = Math.abs(dotX - 175) < 60;
+        const inSymb = Math.abs(dotX - 445) < 70;
+        const label = document.getElementById('equilibrium-label');
+        if (inNash) {
+          label.textContent = 'Settled in Nash Equilibrium — stable, but suboptimal for the collective.';
+          label.style.color = '#6b7280';
+        } else if (inSymb) {
+          label.textContent = 'Settled in Symbiotic Equilibrium — the deepest, most stable basin.';
+          label.style.color = '#2563eb';
+        } else {
+          label.textContent = 'Still between equilibria — drag and release again.';
+          label.style.color = '#555';
+        }
+      }
+    }
+    animFrame = requestAnimationFrame(step);
+  }
+
+  // Mouse events
+  dot.on('mousedown', (e) => { dragging = true; e.preventDefault(); });
+  d3.select(document).on('mousemove.landscape', (e) => {
+    if (!dragging) return;
+    const rect = svgEl.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    updateDotPos((e.clientX - rect.left) * scaleX);
+  });
+  d3.select(document).on('mouseup.landscape', () => {
+    if (dragging) { dragging = false; rollToEquilibrium(); }
+  });
+
+  // Touch events
+  dot.on('touchstart', (e) => { dragging = true; e.preventDefault(); });
+  d3.select(document).on('touchmove.landscape', (e) => {
+    if (!dragging) return;
+    const rect = svgEl.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    updateDotPos((e.touches[0].clientX - rect.left) * scaleX);
+    e.preventDefault();
+  }, { passive: false });
+  d3.select(document).on('touchend.landscape', () => {
+    if (dragging) { dragging = false; rollToEquilibrium(); }
+  });
+})();
+
+// ── Trust as Computation Chart ──
+function updateTrustChart() {
+  const t = parseInt(document.getElementById('transparency-slider').value);
+  const v = parseInt(document.getElementById('verifiability-slider').value);
+  const iter = parseInt(document.getElementById('iterations-slider').value);
+
+  document.getElementById('transparency-val').textContent = t + '%';
+  document.getElementById('verifiability-val').textContent = v + '%';
+  document.getElementById('iterations-val').textContent = iter;
+
+  const finalRate = (t * 0.3 + v * 0.3 + Math.min(iter, 50) / 50 * 0.4) * 100;
+
+  // Build line data: cooperation builds up over rounds
+  const points = [];
+  for (let i = 1; i <= iter; i++) {
+    const progress = i / iter;
+    const iterContrib = (Math.min(i, 50) / 50) * 0.4;
+    const rate = (t * 0.3 + v * 0.3 + iterContrib) * 100 * Math.min(1, progress * 1.5);
+    points.push({ x: i, y: Math.min(100, rate) });
+  }
+
+  const W = 620, H = 180;
+  const m = { top: 20, right: 20, bottom: 35, left: 50 };
+  const svg = d3.select('#trust-chart');
+  svg.selectAll('*').remove();
+
+  const x = d3.scaleLinear().domain([1, Math.max(iter, 2)]).range([m.left, W - m.right]);
+  const y = d3.scaleLinear().domain([0, 100]).range([H - m.bottom, m.top]);
+
+  // Grid
+  svg.append('g').selectAll('line').data([0,25,50,75,100]).join('line')
+    .attr('x1', m.left).attr('x2', W - m.right)
+    .attr('y1', d => y(d)).attr('y2', d => y(d))
+    .attr('stroke', '#e5e5e0').attr('stroke-width', 0.8);
+
+  // Axes
+  svg.append('g').attr('transform', `translate(0,${H - m.bottom})`)
+    .call(d3.axisBottom(x).ticks(5).tickFormat(d => 'Round ' + d))
+    .selectAll('text').style('font-size', '10px').style('fill', '#888');
+  svg.append('g').attr('transform', `translate(${m.left},0)`)
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%'))
+    .selectAll('text').style('font-size', '10px').style('fill', '#888');
+
+  svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(H / 2)).attr('y', 14)
+    .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888')
+    .attr('font-family', "'DM Sans', system-ui, sans-serif").text('Cooperation Rate');
+
+  // Area
+  const area = d3.area().x(d => x(d.x)).y0(y(0)).y1(d => y(d.y)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(points).attr('d', area)
+    .attr('fill', '#dbeafe').attr('opacity', 0.6);
+
+  // Line
+  const line = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(points).attr('d', line)
+    .attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2.5);
+
+  // Final rate dot
+  if (points.length > 0) {
+    const last = points[points.length - 1];
+    svg.append('circle').attr('cx', x(last.x)).attr('cy', y(last.y))
+      .attr('r', 6).attr('fill', '#2563eb').attr('stroke', 'white').attr('stroke-width', 2);
+    svg.append('text').attr('x', x(last.x) - 8).attr('y', y(last.y) - 10)
+      .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#2563eb').attr('font-weight', 700)
+      .attr('font-family', "'DM Sans', system-ui, sans-serif")
+      .text(Math.round(last.y) + '%');
+  }
+
+  // Outcome label
+  const label = document.getElementById('trust-outcome');
+  if (finalRate >= 80) {
+    label.textContent = 'Trust is architectural. Cooperation is now mathematically certain.';
+    label.style.color = '#16a34a';
+  } else if (finalRate >= 50) {
+    label.textContent = 'Cooperation is emerging, but the game is still fragile.';
+    label.style.color = '#d97706';
+  } else {
+    label.textContent = 'Low trust — cooperation is a hope, not a feature. Change the game.';
+    label.style.color = '#dc2626';
+  }
+}
+
+// Init trust chart
+updateTrustChart();
+window.addEventListener('resize', updateTrustChart);
+
+// ── Example Cards Toggle ──
+function toggleCard(id) {
+  const body = document.getElementById(id);
+  const toggleId = 'toggle-' + id.replace('card-', '');
+  const toggle = document.getElementById(toggleId);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
@@ -18,10 +18,10 @@ body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, s
 h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 100; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
 .nav a { color: #2563eb; text-decoration: none; }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
 
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
@@ -63,6 +63,8 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .blame-legend span { display: flex; align-items: center; gap: 0.35rem; }
 .blame-legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
 
+.btn, button { touch-action: manipulation; min-height: 36px; }
+
 /* Mobile fixes */
 @media (max-width: 640px) {
   .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
@@ -100,7 +102,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
   <!-- SVG 1: Broken Cockpit Dashboard -->
   <div class="svg-illustration">
-    <svg viewBox="0 0 420 220" width="420" height="220" style="max-width:100%;height:auto;" role="img" aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
+    <svg viewBox="0 0 420 220" style="width:100%; max-width:420px; height:auto;" role="img" aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
       <defs>
         <!-- Deep cockpit background gradient -->
         <linearGradient id="cockpitBg" x1="0" y1="0" x2="0" y2="1">
@@ -303,7 +305,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
   <!-- SVG 2: Goodhart's Law feedback loop -->
   <div class="svg-illustration">
-    <svg viewBox="0 0 460 200" width="460" height="200" style="max-width:100%;height:auto;" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
+    <svg viewBox="0 0 460 200" style="width:100%; max-width:460px; height:auto;" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
       <defs>
         <!-- Arrow markers -->
         <marker id="arrowhead-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
@@ -410,7 +412,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
   <!-- SVG 3: Real Value vs GDP (area chart with divergence zone) -->
   <div class="svg-illustration">
-    <svg viewBox="0 0 430 195" width="430" height="195" style="max-width:100%;height:auto;" role="img" aria-label="As real value rises through abundance, GDP registers it as decline">
+    <svg viewBox="0 0 430 195" style="width:100%; max-width:430px; height:auto;" role="img" aria-label="As real value rises through abundance, GDP registers it as decline">
       <defs>
         <!-- Background gradient -->
         <linearGradient id="chartBg" x1="0" y1="0" x2="0" y2="1">
@@ -794,6 +796,26 @@ document.querySelectorAll('.scrub').forEach(el => {
   });
 
   updateBlame();
+})();
+</script>
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
 })();
 </script>
 </body>

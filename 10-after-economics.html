@@ -16,9 +16,10 @@
   left: 0;
   height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, #2563eb, #d97706);
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
   z-index: 1000;
   transition: width 0.1s linear;
+  pointer-events: none;
 }
 
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -50,6 +51,7 @@ h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-we
 .nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e5e5e0;
   font-size: 0.9rem;
@@ -74,11 +76,13 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
 
+.btn, button { touch-action: manipulation; }
+
 /* Sorter styles */
 .sorter-container { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
 .sort-column { flex: 1; min-width: 250px; }
 .sort-column h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 0.5rem; }
-.task-card { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.25rem 0; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; user-select: none; }
+.task-card { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.25rem 0; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; user-select: none; touch-action: manipulation; }
 .task-card:hover { border-color: #2563eb; background: #eff6ff; }
 .task-card.computation { border-left: 3px solid #2563eb; }
 .task-card.consciousness { border-left: 3px solid #16a34a; }
@@ -661,6 +665,26 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
   <p style="text-align:center; font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem; color: #2563eb; margin: 2.5rem 0 1.5rem;">Welcome to after economics. Welcome to the beginning.</p>
 </div>
 
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
 <script>
 // ── Progress bar ──
 window.addEventListener('scroll', function(){

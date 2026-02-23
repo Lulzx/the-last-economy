@@ -16,12 +16,13 @@
   left: 0;
   height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, #2563eb, #d97706);
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
   z-index: 1000;
   transition: width 0.1s linear;
+  pointer-events: none;
 }
 
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 1.5rem); font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.75; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel {
@@ -161,6 +162,8 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   height: auto;
 }
 
+.btn, button { touch-action: manipulation; min-height: 36px; }
+
 /* ── Mobile fixes ── */
 @media (max-width: 640px) {
   .panel-full {
@@ -213,7 +216,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- Inline SVG: The Four Inversions Timeline -->
   <div class="inline-svg">
-    <svg viewBox="0 0 600 175" width="600" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 175" style="width:100%; max-width:600px; height:auto" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- Drop shadow filter for circles -->
         <filter id="circleShadow" x="-30%" y="-30%" width="160%" height="160%">
@@ -349,7 +352,7 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- Inline SVG: Kodak vs Instagram -->
   <div class="inline-svg">
-    <svg viewBox="0 0 540 210" width="540" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 540 210" style="width:100%; max-width:540px; height:auto" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="kodakGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#fef2f2"/>
@@ -773,6 +776,26 @@ window.updateYear = function(val) {
 
   hoursSlider.addEventListener('input', update);
   update();
+})();
+</script>
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
 })();
 </script>
 </body>

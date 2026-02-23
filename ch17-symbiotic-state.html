@@ -9,18 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
 .panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
 h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 100; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; touch-action: manipulation; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
@@ -53,6 +53,14 @@ input[type=range] { accent-color: #2563eb; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+/* Fortress/network SVG dissolve effect */
+.fortress-svg .fortress-path { opacity: 1; transition: opacity 0.6s; }
+.fortress-svg .network-path { opacity: 0; transition: opacity 0.6s; }
+.fortress-svg:hover .fortress-path { opacity: 0; }
+.fortress-svg:hover .network-path { opacity: 1; }
+/* Scroll-reveal */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 @media (max-width: 640px) {
   .transform-wrap { grid-template-columns: 1fr; }
   .stat-row { grid-template-columns: 1fr; flex-direction: column; }
@@ -81,13 +89,13 @@ input[type=range] { accent-color: #2563eb; }
   <div class="chapter-num">Chapter 17</div>
   <h1>The Symbiotic State: Governance as Geometry Engineering</h1>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>"Ask not what your country can do for you, ask what your country can <em>be</em> for you."</p>
     <div class="attribution">&mdash; A 21st Century Revision</div>
   </div>
 
-  <!-- SVG: The Obsolete Machine — enhanced fortress vs network state -->
-  <svg viewBox="0 0 680 160" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="From fortress state to network state">
+  <!-- SVG: The Obsolete Machine — enhanced fortress vs network state with dissolve hover effect -->
+  <svg viewBox="0 0 680 160" class="fortress-svg" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="From fortress state to network state">
     <defs>
       <linearGradient id="fortressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#fef9c3"/>
@@ -112,27 +120,27 @@ input[type=range] { accent-color: #2563eb; }
       </marker>
     </defs>
     <rect x="0" y="0" width="680" height="160" rx="8" fill="#f8faff"/>
-    <!-- Old fortress state: castle silhouette -->
-    <rect x="40" y="28" width="110" height="90" rx="4" fill="url(#fortressGrad)" stroke="#d97706" stroke-width="2" filter="url(#fortressShadow)"/>
+    <!-- Old fortress state: castle silhouette — fortress-path class for dissolve -->
+    <rect x="40" y="28" width="110" height="90" rx="4" class="fortress-path" fill="url(#fortressGrad)" stroke="#d97706" stroke-width="2" filter="url(#fortressShadow)"/>
     <!-- Battlements -->
-    <rect x="40" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="60" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="80" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="100" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="120" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="136" y="20" width="14" height="14" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-    <line x1="40" y1="42" x2="150" y2="42" stroke="#d97706" stroke-width="1" opacity="0.4"/>
+    <rect x="40" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="60" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="80" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="100" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="120" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="136" y="20" width="14" height="14" rx="2" class="fortress-path" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+    <line x1="40" y1="42" x2="150" y2="42" stroke="#d97706" stroke-width="1" class="fortress-path" opacity="0.4"/>
     <!-- Gate arch -->
-    <path d="M82,118 Q95,100 108,118" fill="#92400e" opacity="0.4"/>
-    <rect x="82" y="113" width="26" height="5" fill="#92400e" opacity="0.35"/>
-    <text x="95" y="76" text-anchor="middle" font-size="12" fill="#92400e" font-weight="700" font-family="'Playfair Display', Georgia, serif">Fortress</text>
-    <text x="95" y="94" text-anchor="middle" font-size="10" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">State</text>
-    <text x="95" y="142" text-anchor="middle" font-size="9" fill="#a16207" font-family="'DM Sans', system-ui, sans-serif">Rigid borders</text>
+    <path d="M82,118 Q95,100 108,118" class="fortress-path" fill="#92400e" opacity="0.4"/>
+    <rect x="82" y="113" width="26" height="5" class="fortress-path" fill="#92400e" opacity="0.35"/>
+    <text x="95" y="76" text-anchor="middle" font-size="12" class="fortress-path" fill="#92400e" font-weight="700" font-family="'Playfair Display', Georgia, serif">Fortress</text>
+    <text x="95" y="94" text-anchor="middle" font-size="10" class="fortress-path" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">State</text>
+    <text x="95" y="142" text-anchor="middle" font-size="9" class="fortress-path" fill="#a16207" font-family="'DM Sans', system-ui, sans-serif">Rigid borders</text>
     <!-- Arrow -->
     <line x1="175" y1="72" x2="288" y2="72" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#obsoleteArrow)"/>
     <text x="232" y="58" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">obsolescence</text>
-    <!-- Flowing forces dots -->
-    <g opacity="0.6">
+    <!-- Flowing forces dots — network-path class: initially invisible -->
+    <g class="network-path">
       <circle cx="200" cy="40" r="4" fill="#2563eb">
         <animateTransform attributeName="transform" type="translate" values="0,0;88,32;0,0" dur="4s" repeatCount="indefinite"/>
       </circle>
@@ -144,32 +152,32 @@ input[type=range] { accent-color: #2563eb; }
       </circle>
     </g>
     <text x="232" y="105" text-anchor="middle" font-size="8" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">capital, data, ideas flow through walls</text>
-    <!-- New network state hub-and-spoke -->
+    <!-- New network state hub-and-spoke — network-path class -->
     <!-- Center hub with glow -->
-    <circle cx="425" cy="64" r="16" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="2" filter="url(#networkGlow17)">
+    <circle cx="425" cy="64" r="16" class="network-path" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="2" filter="url(#networkGlow17)">
       <animate attributeName="r" values="16;18;16" dur="3s" repeatCount="indefinite"/>
     </circle>
     <!-- Peripheral nodes -->
-    <circle cx="400" cy="32" r="10" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5" filter="url(#networkGlow17)"/>
-    <circle cx="462" cy="32" r="10" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5" filter="url(#networkGlow17)"/>
-    <circle cx="480" cy="72" r="9" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="1.5"/>
-    <circle cx="455" cy="104" r="9" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5"/>
-    <circle cx="395" cy="104" r="9" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="1.5"/>
-    <circle cx="370" cy="72" r="9" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5"/>
+    <circle cx="400" cy="32" r="10" class="network-path" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5" filter="url(#networkGlow17)"/>
+    <circle cx="462" cy="32" r="10" class="network-path" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5" filter="url(#networkGlow17)"/>
+    <circle cx="480" cy="72" r="9" class="network-path" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="1.5"/>
+    <circle cx="455" cy="104" r="9" class="network-path" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5"/>
+    <circle cx="395" cy="104" r="9" class="network-path" fill="url(#networkNodeBlue17)" stroke="#93c5fd" stroke-width="1.5"/>
+    <circle cx="370" cy="72" r="9" class="network-path" fill="url(#networkNodeGreen17)" stroke="#6ee7b7" stroke-width="1.5"/>
     <!-- Connections: hub to nodes -->
-    <line x1="425" y1="64" x2="400" y2="32" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
-    <line x1="425" y1="64" x2="462" y2="32" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
-    <line x1="425" y1="64" x2="480" y2="72" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
-    <line x1="425" y1="64" x2="455" y2="104" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
-    <line x1="425" y1="64" x2="395" y2="104" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
-    <line x1="425" y1="64" x2="370" y2="72" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="400" y2="32" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="462" y2="32" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="480" y2="72" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="455" y2="104" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="395" y2="104" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
+    <line x1="425" y1="64" x2="370" y2="72" class="network-path" stroke="#3b82f6" stroke-width="1.8" opacity="0.55"/>
     <!-- Outer ring connections -->
-    <line x1="400" y1="32" x2="462" y2="32" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-    <line x1="462" y1="32" x2="480" y2="72" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-    <line x1="480" y1="72" x2="455" y2="104" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-    <line x1="455" y1="104" x2="395" y2="104" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-    <line x1="395" y1="104" x2="370" y2="72" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-    <line x1="370" y1="72" x2="400" y2="32" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="400" y1="32" x2="462" y2="32" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="462" y1="32" x2="480" y2="72" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="480" y1="72" x2="455" y2="104" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="455" y1="104" x2="395" y2="104" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="395" y1="104" x2="370" y2="72" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    <line x1="370" y1="72" x2="400" y2="32" class="network-path" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
     <text x="425" y="132" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="700" font-family="'Playfair Display', Georgia, serif">Symbiotic Network State</text>
     <text x="425" y="148" text-anchor="middle" font-size="9" fill="#3b5bdb" font-family="'DM Sans', system-ui, sans-serif">Trusted nodes, open flows</text>
     <!-- Right: question -->
@@ -187,7 +195,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>The forces of the Intelligence Inversion &mdash; global networks, dematerialized capital, and algorithmic power &mdash; are making the traditional state irrelevant. It is too slow, its jurisdiction too territorial, its tools too clumsy. It is a fortress designed for a world of invading armies, now besieged by forces that flow through its walls as if they were not there. Capital flees to the lowest tax jurisdiction at the speed of light. Information, true and false, ignores borders. The greatest challenges we face, from climate change to AI alignment, are fundamentally global, mocking the very idea of national solutions.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>To cling to the old model of the state is to cling to a cart in the age of rockets. The question is not whether the state will change, but what it will become.</p>
   </div>
 
@@ -203,7 +211,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>The Symbiotic State has a different purpose. It evolves from an extractor of value to a cultivator of a generative ecosystem. Its primary function is not to command the economy, but to create the fertile conditions from which a healthy economy can emerge. It is no longer a factory manager. <strong>It is a gardener.</strong> It is an engineer of economic geometry.</p>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2 style="margin-top:0;">From Extractor to Gardener</h2>
     <div class="transform-wrap">
       <div class="transform-side extractive">
@@ -244,13 +252,13 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>This shift requires abandoning the foundational theory of industrial-age national strategy: comparative advantage. Ricardo's elegant idea that nations should specialize based on their unique, geographically-determined efficiencies was the gospel of globalization. But it is a gospel for a world of atoms and muscles.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>When the most productive "worker" is an AI model that can be deployed in any data center on Earth, the idea of a national "advantage" in cognitive tasks becomes meaningless.</p>
   </div>
 
   <p>The new, durable advantage is not based on what your population can <em>do</em>, but on the quality of your national MIND portfolio. The critical questions become: How cheap and green is your energy? How open is your data? How trusted are your networks? How diverse are your ideas?</p>
 
-  <div class="stat-row">
+  <div class="stat-row reveal">
     <div class="stat-callout">
       <div class="stat-number">4</div>
       <div class="stat-label">MIND Capitals to steward</div>
@@ -332,7 +340,7 @@ input[type=range] { accent-color: #2563eb; }
     </g>
   </svg>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2 style="margin-top:0;">Policy as Geometry Engineering</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">The state's job is to shape the economic landscape so that cooperation is the path of least resistance. Watch how each policy tool reshapes the terrain &mdash; and how agents (dots) roll toward the valleys.</p>
 
@@ -368,7 +376,7 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>Traditional sovereignty is based on territorial control. A wall, an army, a border guard. This is becoming meaningless.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>Sovereignty in the 21st century is topological, not territorial. A nation is "sovereign" if it is a critical, trusted, and highly connected node in the global network.</p>
   </div>
 
@@ -433,13 +441,13 @@ input[type=range] { accent-color: #2563eb; }
 
   <p>It is not a government of men, but a system of laws encoded in a transparent, decentralized network. Imagine a distributed web of AI oracles, each tasked with monitoring one aspect of the landscape's health based on the MIND dashboard. When they detect a bubble forming, the protocol might automatically increase the "friction" in that sector. When they detect a "poverty trap" forming, the protocol can automatically smooth the landscape by increasing the local flow of <strong>Culture Credits</strong>.</p>
 
-  <div class="pullquote">
+  <div class="pullquote reveal">
     <p>The algorithm proposes; humanity disposes.</p>
   </div>
 
   <p>Human wisdom is not replaced; it is elevated. Imagine an <strong>Oracle Council</strong> &mdash; not of experts or politicians, but of a randomly selected jury of citizens: a nurse from Ohio, a farmer from Iowa, a programmer from California. Their task is not to debate legislation, but to deliberate on the fundamental values that guide the system. The AI oracles can calculate the most efficient path, but only this human council can decide if the destination is a place we truly want to go.</p>
 
-  <div class="panel">
+  <div class="panel reveal">
     <h2 style="margin-top:0;">The Guardian Lattice</h2>
     <div class="network-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> AI Monitoring Oracle</div>
@@ -717,16 +725,39 @@ function renderGuardianLattice() {
       .attr('opacity', 0.5);
   });
 
-  // Nodes
+  // Nodes — use design system colors: oracle=#2563eb, citizen=#16a34a
   allNodes.forEach(node => {
     const pos = nodePos[node.id];
     const g = guardianSvg.append('g').attr('class', 'gnode-' + node.id);
+    const nodeColor = node.type === 'oracle' ? '#2563eb' : '#16a34a';
     g.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 16)
-      .attr('fill', node.type === 'oracle' ? '#2563eb' : '#16a34a')
+      .attr('fill', nodeColor)
       .attr('opacity', 0.88).attr('stroke', 'white').attr('stroke-width', 2.5);
     g.append('text').attr('x', pos.x).attr('y', pos.y + 4)
       .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', 'white').attr('font-weight', 700)
       .text(node.label);
+
+    // Hover label (tooltip)
+    const tooltipText = node.type === 'oracle'
+      ? 'AI Oracle: monitors ' + node.label
+      : node.label + ': deliberates &amp; decides';
+
+    g.on('mouseover', function(event) {
+      guardianSvg.append('text')
+        .attr('id', 'tooltip-' + node.id)
+        .attr('x', pos.x)
+        .attr('y', pos.y - 22)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .attr('fill', nodeColor)
+        .attr('font-weight', 600)
+        .attr('pointer-events', 'none')
+        .text(tooltipText);
+    });
+
+    g.on('mouseout', function() {
+      guardianSvg.select('#tooltip-' + node.id).remove();
+    });
   });
 }
 
@@ -784,6 +815,21 @@ function runScenario() {
 window.addEventListener('scroll', () => {
   const p = document.documentElement;
   document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
+// --- Scroll-reveal IntersectionObserver ---
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.panel, .pullquote, .stat-callout, .reveal').forEach(el => {
+  el.classList.add('reveal');
+  revealObserver.observe(el);
 });
 </script>
 </body>

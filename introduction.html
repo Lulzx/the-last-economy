@@ -15,7 +15,7 @@
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2563eb, #d97706);
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
   z-index: 1000;
   transition: width 0.1s linear;
   width: 0%;
@@ -90,8 +90,9 @@ h2 {
   position: sticky;
   top: 0;
   background: rgba(250,250,248,0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   z-index: 100;
 }
 
@@ -119,7 +120,9 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   margin: 0.25rem;
   font-family: 'DM Sans', system-ui, sans-serif;
   transition: background 0.15s;
+  touch-action: manipulation;
 }
+button { touch-action: manipulation; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
@@ -629,6 +632,26 @@ input[type=range] { accent-color: #2563eb; width: 100%; }
 
 </div>
 
+<script>
+(function() {
+  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
 <script>
 // --- Reading Progress Bar ---
 (function() {

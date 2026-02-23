@@ -12,8 +12,8 @@
 /* ── Progress bar ── */
 #progress-bar {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
-  background: linear-gradient(90deg, #2563eb, #d97706);
-  z-index: 1000; transition: width 0.1s linear;
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+  z-index: 1000; transition: width 0.1s linear; pointer-events: none;
 }
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
@@ -24,7 +24,7 @@ h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 /* ── Sticky nav with backdrop blur ── */
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
@@ -42,7 +42,7 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 #landscape-svg { display: block; margin: 0 auto; cursor: crosshair; width: 100%; max-width: 600px; height: auto; }
 .loss-display { text-align: center; font-size: 1.2rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
 .loss-label { font-size: 0.85rem; color: #666; text-align: center; }
-input[type=range] { accent-color: #2563eb; }
+input[type=range] { accent-color: #2563eb; touch-action: manipulation; }
 /* Enrichment styles */
 .pullquote { border-left: 5px solid #2563eb; box-shadow: 0 2px 8px rgba(37,99,235,0.08); margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
@@ -63,7 +63,19 @@ input[type=range] { accent-color: #2563eb; }
 .law-card .law-icon { margin-bottom: 0.75rem; }
 .law-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
 .law-card p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.5; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
+
+/* Law card colored top borders */
+.three-laws-grid .law-card:nth-child(1) { border-top: 4px solid #2563eb; border-top-color: #2563eb; }
+.three-laws-grid .law-card:nth-child(2) { border-top: 4px solid #7c3aed; border-top-color: #7c3aed; }
+.three-laws-grid .law-card:nth-child(3) { border-top: 4px solid #d97706; border-top-color: #d97706; }
+
+/* Illustration wrapper */
+.illustration { display: flex; justify-content: center; margin: 2rem 0; }
+
+/* Scroll-reveal */
+.reveal-hidden { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal-visible { opacity: 1; transform: translateY(0); }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; touch-action: manipulation; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; cursor: pointer; }
 .slider-row label { font-size: min(0.9rem, 14px); }
 @media (max-width: 640px) {
@@ -290,7 +302,9 @@ input[type=range] { accent-color: #2563eb; }
       <text x="200" y="142" text-anchor="middle" font-size="10" fill="#aaa" font-weight="600" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">LIVING</text>
       <text x="200" y="156" text-anchor="middle" font-size="10" fill="#aaa" font-weight="600" letter-spacing="0.08em" font-family="'DM Sans', system-ui, sans-serif">SYSTEM</text>
       <!-- Flow node — blue, top -->
-      <circle cx="200" cy="40" r="34" fill="url(#flowGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="200" cy="40" r="34" fill="url(#flowGrad)" filter="url(#tripod-shadow)">
+        <animate attributeName="r" values="34;37;34" dur="2s" begin="0s" repeatCount="indefinite"/>
+      </circle>
       <circle cx="200" cy="40" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
       <circle cx="200" cy="40" r="38" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.3">
         <animate attributeName="r" values="38;42;38" dur="3s" repeatCount="indefinite"/>
@@ -300,7 +314,9 @@ input[type=range] { accent-color: #2563eb; }
       <text x="200" y="51" text-anchor="middle" font-size="8" fill="white" font-weight="700" letter-spacing="0.05em" font-family="'DM Sans', system-ui, sans-serif">FLOW</text>
       <text x="200" y="16" text-anchor="middle" font-size="8.5" fill="#2563eb" font-family="'Playfair Display', Georgia, serif" font-style="italic">Law I</text>
       <!-- Openness node — green, bottom-left -->
-      <circle cx="60" cy="220" r="34" fill="url(#openGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="60" cy="220" r="34" fill="url(#openGrad)" filter="url(#tripod-shadow)">
+        <animate attributeName="r" values="34;37;34" dur="2s" begin="0.67s" repeatCount="indefinite"/>
+      </circle>
       <circle cx="60" cy="220" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
       <circle cx="60" cy="220" r="38" fill="none" stroke="#059669" stroke-width="1" opacity="0.3">
         <animate attributeName="r" values="38;42;38" dur="3.6s" repeatCount="indefinite"/>
@@ -310,7 +326,9 @@ input[type=range] { accent-color: #2563eb; }
       <text x="60" y="231" text-anchor="middle" font-size="7" fill="white" font-weight="700" letter-spacing="0.05em" font-family="'DM Sans', system-ui, sans-serif">OPENNESS</text>
       <text x="60" y="263" text-anchor="middle" font-size="8.5" fill="#059669" font-family="'Playfair Display', Georgia, serif" font-style="italic">Law II</text>
       <!-- Resilience node — violet, bottom-right -->
-      <circle cx="340" cy="220" r="34" fill="url(#resilGrad)" filter="url(#tripod-shadow)"/>
+      <circle cx="340" cy="220" r="34" fill="url(#resilGrad)" filter="url(#tripod-shadow)">
+        <animate attributeName="r" values="34;37;34" dur="2s" begin="1.34s" repeatCount="indefinite"/>
+      </circle>
       <circle cx="340" cy="220" r="34" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/>
       <circle cx="340" cy="220" r="38" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.3">
         <animate attributeName="r" values="38;42;38" dur="4.2s" repeatCount="indefinite"/>
@@ -412,6 +430,22 @@ window.addEventListener('scroll', function(){
   var p = document.documentElement;
   document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
 });
+
+// ── Scroll-reveal ──
+(function() {
+  var targets = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout');
+  targets.forEach(function(el) { el.classList.add('reveal-hidden'); });
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('reveal-hidden');
+        entry.target.classList.add('reveal-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  targets.forEach(function(el) { observer.observe(el); });
+})();
 
 // ========== Panel 1: Denoising Grid ==========
 (function() {
