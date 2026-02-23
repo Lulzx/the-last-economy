@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 14 — The New Social Contract</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #16a34a; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #15803d; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+input[type="range"] { width: 100%; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+/* Contract tear animation */
+.contract-wrap { display: flex; gap: 0; margin: 1rem 0; }
+.contract-half { flex: 1; border: 2px solid #e5e5e0; padding: 1rem; font-size: 0.9rem; transition: all 0.6s; }
+.contract-half.old { border-radius: 8px 0 0 8px; background: #fef3c7; border-color: #fde68a; }
+.contract-half.new { border-radius: 0 8px 8px 0; background: #f0fdf4; border-color: #bbf7d0; display: none; }
+.contract-half.torn { transform: translateX(-20px) rotate(-3deg); opacity: 0; }
+.contract-half.new.show { display: block; animation: slideIn 0.5s ease; }
+@keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: none; } }
+.contract-term { margin: 0.4rem 0; font-size: 0.88rem; }
+.contract-term .arrow { color: #888; margin: 0 0.4rem; }
+.right-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.right-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; border-left: 4px solid #16a34a; }
+.right-card .right-num { font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+.right-card .right-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+.right-card .right-desc { font-size: 0.88rem; color: #555; line-height: 1.5; }
+.right-card .right-note { font-size: 0.8rem; color: #16a34a; font-style: italic; margin-top: 0.4rem; }
+/* Philosophy timeline */
+.phil-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.phil-card { border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; cursor: pointer; }
+.phil-card:hover { background: #fafaf8; }
+.phil-header { display: flex; align-items: center; gap: 0.75rem; }
+.phil-year { font-size: 0.8rem; font-weight: 700; color: #888; min-width: 40px; }
+.phil-name { font-weight: 700; font-size: 0.95rem; }
+.phil-tagline { font-size: 0.85rem; color: #555; }
+.phil-expand { display: none; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #f0f0ed; font-size: 0.88rem; color: #333; line-height: 1.6; }
+.phil-expand.open { display: block; }
+/* Veil sim */
+.veil-display { text-align: center; margin: 1rem 0; }
+.veil-score { font-size: 3rem; font-weight: 700; color: #16a34a; line-height: 1; }
+.veil-label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+.veil-bar { height: 12px; background: #e5e5e0; border-radius: 6px; overflow: hidden; margin-bottom: 0.5rem; }
+.veil-bar-fill { height: 100%; background: #16a34a; border-radius: 6px; transition: width 0.4s; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="ch13-dual-engine.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="ch15-alignment-economy.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 14</div>
+  <h1>The New Social Contract</h1>
+
+  <p>The old contract was simple: labor for security. It is broken. The machine has taken the labor side. Now we must design a new contract — not from power, but from physics. A contract based not on scarcity but on the Three Laws of a Living System.</p>
+
+  <p>Every living system requires three conditions to persist: dignity (a minimum viable substrate), capability (the tools to act), and viability (an open future). These are not political demands — they are thermodynamic requirements. A system that cannot maintain them degrades and collapses.</p>
+
+  <div class="panel">
+    <h2>The Old vs New Contract</h2>
+
+    <div class="contract-wrap" id="contract-wrap">
+      <div class="contract-half old" id="old-contract">
+        <div style="font-weight:700;font-size:0.95rem;color:#92400e;margin-bottom:0.75rem;">Old Contract (Breaking)</div>
+        <div class="contract-term">Labor <span class="arrow">&rarr;</span> Income</div>
+        <div class="contract-term">Employment <span class="arrow">&rarr;</span> Identity</div>
+        <div class="contract-term">Compliance <span class="arrow">&rarr;</span> Security</div>
+        <div class="contract-term">Corporation <span class="arrow">&rarr;</span> Community</div>
+        <div class="contract-term">Retirement <span class="arrow">&rarr;</span> Rest</div>
+      </div>
+      <div class="contract-half new" id="new-contract">
+        <div style="font-weight:700;font-size:0.95rem;color:#166534;margin-bottom:0.75rem;">New Contract (Emerging)</div>
+        <div class="contract-term">Dignity <span class="arrow">+</span> Capability</div>
+        <div class="contract-term">Purpose <span class="arrow">&rarr;</span> Identity</div>
+        <div class="contract-term">Access <span class="arrow">&rarr;</span> Agency</div>
+        <div class="contract-term">Commons <span class="arrow">&rarr;</span> Community</div>
+        <div class="contract-term">Contribution <span class="arrow">&rarr;</span> Meaning</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:0.75rem 0;">
+      <button class="btn" id="sign-btn" onclick="signContract()">Sign the New Contract</button>
+    </div>
+
+    <div class="right-cards">
+      <div class="right-card">
+        <div class="right-num">Right 1</div>
+        <div class="right-title">Right to Dignity</div>
+        <div class="right-desc">Baseline computation + access to foundational AI models. Every person, regardless of economic position, has the right to the cognitive infrastructure of the age.</div>
+        <div class="right-note">Not charity. Infrastructure.</div>
+      </div>
+      <div class="right-card">
+        <div class="right-num">Right 2</div>
+        <div class="right-title">Right to Capability</div>
+        <div class="right-desc">A sovereign AI agent, cryptographically yours alone. Not owned by a platform, not surveilled by a corporation. A partner that works for you and only you.</div>
+        <div class="right-note">Not a service. A partner.</div>
+      </div>
+      <div class="right-card">
+        <div class="right-num">Right 3</div>
+        <div class="right-title">Right to Viability</div>
+        <div class="right-desc">Auditable, open-licensed Knowledge Commons. The accumulated intelligence of civilization must remain accessible — not locked behind proprietary walls that can be raised without consent.</div>
+        <div class="right-note">Not a product. A commons.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The Philosophical Roots</h2>
+    <p style="font-size:0.9rem;color:#555;">Social contract theory has been building toward this for 370 years. Click each thinker to expand their contribution.</p>
+    <div class="phil-cards" id="phil-cards"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The Veil of Ignorance Simulator</h2>
+    <p style="font-size:0.9rem;color:#555;">John Rawls asked: what rules would you choose if you didn't know your place in society? You will be reborn as a random person — rich or poor, healthy or ill, any country. What floor do you set?</p>
+
+    <div class="slider-row">
+      <label>UBI Level: <span id="ubi-val">$1,000/month</span></label>
+      <input type="range" id="ubi-slider" min="0" max="3000" value="1000" step="100" oninput="updateVeil()">
+      <div class="slider-label"><span>$0</span><span>$3,000/month</span></div>
+    </div>
+    <div class="slider-row">
+      <label>AI Access Equality: <span id="ai-val">50%</span></label>
+      <input type="range" id="ai-slider" min="0" max="100" value="50" oninput="updateVeil()">
+      <div class="slider-label"><span>Concentrated (1%)</span><span>Universal</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Healthcare Universality: <span id="hc-val">60%</span></label>
+      <input type="range" id="hc-slider" min="0" max="100" value="60" oninput="updateVeil()">
+      <div class="slider-label"><span>Market only</span><span>Universal</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Education Access: <span id="ed-val">60%</span></label>
+      <input type="range" id="ed-slider" min="0" max="100" value="60" oninput="updateVeil()">
+      <div class="slider-label"><span>Elite only</span><span>Universal</span></div>
+    </div>
+
+    <div class="veil-display">
+      <div class="veil-score" id="veil-score">62</div>
+      <div class="veil-label">Your expected wellbeing score (random position in society)</div>
+    </div>
+    <div class="veil-bar"><div class="veil-bar-fill" id="veil-bar" style="width:62%"></div></div>
+
+    <p style="font-size:0.88rem;color:#555;font-style:italic;">Rawls' insight: behind the veil, rational agents will maximize the minimum — not the average. Equal access to intelligence maximizes the worst-case outcome for all.</p>
+  </div>
+
+</div>
+
+<script>
+// --- Contract Sign ---
+let signed = false;
+function signContract() {
+  if (signed) return;
+  signed = true;
+  const oldC = document.getElementById('old-contract');
+  const newC = document.getElementById('new-contract');
+  const btn = document.getElementById('sign-btn');
+  oldC.classList.add('torn');
+  setTimeout(() => {
+    newC.classList.add('show');
+    btn.textContent = 'Signed';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  }, 400);
+}
+
+// --- Philosophy Timeline ---
+const philosophers = [
+  { year: 1651, name: 'Thomas Hobbes', tagline: 'Security → Sovereignty', detail: 'Life without authority is "solitary, poor, nasty, brutish, and short." People consent to a sovereign power in exchange for physical security. The contract is about survival — a minimal floor of existence.' },
+  { year: 1689, name: 'John Locke', tagline: 'Property → Protection', detail: 'The contract protects natural rights: life, liberty, and property. Government exists by consent. If it violates these rights, revolution is legitimate. The first framework for rights-based governance.' },
+  { year: 1762, name: 'Jean-Jacques Rousseau', tagline: 'Community → General Will', detail: 'The legitimate state expresses the "general will" — not the sum of individual interests, but the collective good. Private property is the root of inequality; the social contract must manage this tension.' },
+  { year: 1971, name: 'John Rawls', tagline: 'Fairness → Veil of Ignorance', detail: 'Justice is what rational people would choose from behind a "veil of ignorance" — not knowing their place in society. This yields the difference principle: inequalities are only justified if they benefit the least advantaged.' },
+  { year: 2024, name: 'This Book', tagline: 'Dignity → Physics-Based Rights', detail: 'The new contract is grounded not in political agreement but in the physics of living systems. Dignity, capability, and viability are not demands — they are the minimum thermodynamic requirements for a society to persist. The machine makes their fulfillment, for the first time, materially possible for all.' }
+];
+
+const philCards = document.getElementById('phil-cards');
+const philOpen = {};
+
+philosophers.forEach((p, i) => {
+  const div = document.createElement('div');
+  div.className = 'phil-card';
+  div.id = 'phil-' + i;
+  div.innerHTML = `
+    <div class="phil-header">
+      <div class="phil-year">${p.year}</div>
+      <div>
+        <div class="phil-name">${p.name}</div>
+        <div class="phil-tagline">${p.tagline}</div>
+      </div>
+    </div>
+    <div class="phil-expand" id="phil-exp-${i}">${p.detail}</div>
+  `;
+  div.addEventListener('click', () => {
+    const exp = document.getElementById('phil-exp-' + i);
+    const isOpen = exp.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.phil-expand').forEach(e => e.classList.remove('open'));
+    if (!isOpen) exp.classList.add('open');
+  });
+  philCards.appendChild(div);
+});
+
+// --- Veil of Ignorance Simulator ---
+function updateVeil() {
+  const ubi = parseInt(document.getElementById('ubi-slider').value);
+  const ai = parseInt(document.getElementById('ai-slider').value);
+  const hc = parseInt(document.getElementById('hc-slider').value);
+  const ed = parseInt(document.getElementById('ed-slider').value);
+
+  document.getElementById('ubi-val').textContent = '$' + ubi.toLocaleString() + '/month';
+  document.getElementById('ai-val').textContent = ai + '%';
+  document.getElementById('hc-val').textContent = hc + '%';
+  document.getElementById('ed-val').textContent = ed + '%';
+
+  // Simulate expected wellbeing for random position
+  // Rawls: maximize worst-case position
+  const ubiScore = Math.min(100, (ubi / 3000) * 40);
+  const aiScore = (ai / 100) * 30;
+  const hcScore = (hc / 100) * 20;
+  const edScore = (ed / 100) * 10;
+  const total = Math.round(ubiScore + aiScore + hcScore + edScore);
+
+  document.getElementById('veil-score').textContent = total;
+  document.getElementById('veil-bar').style.width = total + '%';
+
+  const color = total < 30 ? '#dc2626' : total < 60 ? '#d97706' : '#16a34a';
+  document.getElementById('veil-score').style.color = color;
+  document.getElementById('veil-bar').style.background = color;
+}
+
+updateVeil();
+</script>
+</body>
+</html>

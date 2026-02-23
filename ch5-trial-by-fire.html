@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 5 — The Trial by Fire</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.defense { background: #16a34a; }
+.btn.defense:hover { background: #15803d; }
+.btn.prosecution { background: #dc2626; }
+.btn.prosecution:hover { background: #b91c1c; }
+.counter-bar { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.counter-text { font-size: 0.9rem; color: #555; }
+.counter-num { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
+.fallacy-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; transition: border-color 0.3s, background 0.3s; }
+.fallacy-card.defended { border-color: #16a34a; background: #f0fdf4; }
+.fallacy-card.challenged { border-color: #dc2626; background: #fef2f2; }
+.fallacy-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+.fallacy-sub { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+.fallacy-arg { font-style: italic; font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; border-left: 3px solid #e5e5e0; padding-left: 0.75rem; line-height: 1.6; }
+.fallacy-rebuttal { font-size: 0.9rem; color: #166534; background: white; border-radius: 4px; padding: 0.6rem 0.8rem; border: 1px solid #bbf7d0; display: none; margin-bottom: 0.5rem; line-height: 1.6; }
+.fallacy-rebuttal.show { display: block; }
+.fallacy-actions { display: flex; gap: 0.4rem; }
+.status-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 0.5rem; }
+.badge-defended { background: #dcfce7; color: #16a34a; }
+.badge-challenged { background: #fee2e2; color: #dc2626; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="03-gdp-illusion.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="04-maxwells-demon.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 5</div>
+  <h1>The Trial by Fire</h1>
+
+  <p>Before we build a new economics, we must defend the old order's demolition. Here are the seven strongest arguments against this book's thesis — and why each one fails.</p>
+
+  <p>These are not strawmen. Each is a serious position held by serious economists, technologists, and historians. Each must be answered directly, not dismissed. The prosecution will be heard. The defense will respond.</p>
+
+  <div class="panel">
+    <h2>The Verdict Board</h2>
+
+    <div class="counter-bar">
+      <div class="counter-text">Fallacies addressed</div>
+      <div><span class="counter-num" id="counter">0</span><span style="color:#888;font-size:1rem;">/7</span></div>
+    </div>
+
+    <div class="fallacy-grid" id="fallacy-grid"></div>
+  </div>
+
+</div>
+
+<script>
+const fallacies = [
+  {
+    name: 'The Luddite\'s Ghost',
+    sub: 'Fallacy of History',
+    arg: '"Every tech transition created more jobs. AI is no different. 250 years of irrefutable history says you\'re wrong."',
+    rebuttal: 'Previous automation replaced muscle; AI replaces the mind itself. There is nowhere left to pivot. The cotton gin displaced spinners, who became factory workers. The factory was displaced by offices. The office has nowhere to displace to. This is not a tool — it is an agent.'
+  },
+  {
+    name: 'The Inertia Defense',
+    sub: 'Fallacy of Friction',
+    arg: '"Adoption will be slow. Institutions, regulations, human resistance — we\'ll have decades to adapt."',
+    rebuttal: 'Software has near-zero friction. One API call replaces an entire knowledge worker function — no hiring, no training, no benefits, no office. Competitive pressure means no firm can afford to wait while rivals automate. The adoption curve is not linear; it is viral.'
+  },
+  {
+    name: 'The Uniquely Human',
+    sub: 'Fallacy of Humanism',
+    arg: '"Humans will pivot to care work, creativity, craft — things AI cannot do. There will always be a niche for human skill."',
+    rebuttal: 'The math doesn\'t work. There are 4 billion knowledge workers. How many Michelin-star restaurants and luxury care providers can the economy absorb? The niches are real but do not scale to a civilization. This is not a solution — it is a consolation.'
+  },
+  {
+    name: 'The Expert\'s Hubris',
+    sub: 'Fallacy of Control',
+    arg: '"Alignment researchers and regulators will keep AI safe and controlled. The smart people are on it."',
+    rebuttal: 'Alignment is unsolved — there is no consensus on whether it is even solvable. Geopolitical race dynamics mean any nation that pauses loses. Regulation cannot outrun competitive pressure operating at the speed of software deployment.'
+  },
+  {
+    name: 'The Energy Brake',
+    sub: 'Fallacy of Physics',
+    arg: '"Energy constraints will naturally slow AI growth. Physics limits compute. The exponential cannot continue."',
+    rebuttal: 'Intelligence solves its own energy problem. AI is already designing more efficient chips, finding new architectures, discovering new training methods. The most powerful optimizer in history is now tasked with removing its own constraints. This is not a brake — it is an accelerant.'
+  },
+  {
+    name: 'The UBI Cure-All',
+    sub: 'Fallacy of Solutionism',
+    arg: '"Universal Basic Income solves automation displacement. Give people money and the problem is solved. Economics has the answer ready."',
+    rebuttal: 'UBI addresses income but not identity, community, purpose, temporal structure, or social role. A society of comfortable, purposeless people is not stable — as any research on lottery winners, early retirees, or trust-fund recipients demonstrates. Money is not the only thing a job provides.'
+  },
+  {
+    name: 'The System Will Adapt',
+    sub: 'Fallacy of Homeostasis',
+    arg: '"Economic systems are self-stabilizing. Markets find equilibrium. The system has absorbed every shock before and will absorb this one."',
+    rebuttal: 'This assumes the shock is within the system\'s recovery range. Introducing a superintelligent optimizer is not a perturbation within the existing attractor basin — it is a regime change that dissolves the basin itself. Homeostasis only holds until it doesn\'t.'
+  }
+];
+
+let defended = 0;
+let challenged = 0;
+const cardStates = new Array(fallacies.length).fill(null);
+
+function updateCounter() {
+  const addressed = cardStates.filter(s => s !== null).length;
+  document.getElementById('counter').textContent = addressed;
+}
+
+function handleAction(idx, action) {
+  const card = document.getElementById('fallacy-' + idx);
+  const rebuttal = document.getElementById('rebuttal-' + idx);
+  const badge = document.getElementById('badge-' + idx);
+
+  card.classList.remove('defended', 'challenged');
+  rebuttal.classList.remove('show');
+
+  if (action === 'defense') {
+    card.classList.add('defended');
+    rebuttal.classList.add('show');
+    badge.textContent = 'DEFENDED';
+    badge.className = 'status-badge badge-defended';
+    badge.style.display = 'inline-block';
+    cardStates[idx] = 'defense';
+  } else {
+    card.classList.add('challenged');
+    badge.textContent = 'CHALLENGED';
+    badge.className = 'status-badge badge-challenged';
+    badge.style.display = 'inline-block';
+    cardStates[idx] = 'challenged';
+  }
+  updateCounter();
+}
+
+const grid = document.getElementById('fallacy-grid');
+
+fallacies.forEach((f, idx) => {
+  const div = document.createElement('div');
+  div.className = 'fallacy-card';
+  div.id = 'fallacy-' + idx;
+  div.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:0.4rem;">
+      <div class="fallacy-name">${f.name}</div>
+      <div class="fallacy-sub">${f.sub}</div>
+      <span class="status-badge" id="badge-${idx}" style="display:none;"></span>
+    </div>
+    <div class="fallacy-arg">${f.arg}</div>
+    <div class="fallacy-rebuttal" id="rebuttal-${idx}">${f.rebuttal}</div>
+    <div class="fallacy-actions">
+      <button class="btn prosecution" onclick="handleAction(${idx},'prosecution')">Prosecution</button>
+      <button class="btn defense" onclick="handleAction(${idx},'defense')">Defense &rarr; Rebuttal</button>
+    </div>
+  `;
+  grid.appendChild(div);
+});
+</script>
+</body>
+</html>

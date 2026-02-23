@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 13 — The Dual Engine</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+input[type="range"] { width: 100%; }
+.tension-bar { height: 12px; border-radius: 6px; background: linear-gradient(to right, #16a34a, #d97706, #dc2626); margin: 0.5rem 0; position: relative; }
+.tension-indicator { position: absolute; top: -4px; width: 20px; height: 20px; border-radius: 50%; background: white; border: 2px solid #1a1a1a; transform: translateX(-50%); transition: left 0.3s; }
+.tension-label { text-align: center; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; }
+.warning-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; color: #dc2626; display: none; margin-top: 0.75rem; }
+.warning-box.show { display: block; }
+.perez-timeline { position: relative; margin: 1rem 0; }
+.policy-sim { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+.sim-col h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.75rem; }
+.sim-result { background: #f5f5f3; border-radius: 6px; padding: 0.75rem; margin-top: 0.75rem; font-size: 0.9rem; }
+.sim-result .label { font-size: 0.8rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.sim-result .value { font-size: 1.6rem; font-weight: 700; }
+.sim-gap { background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.88rem; color: #92400e; margin-top: 0.75rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="08-cooperation-emerges.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="ch14-social-contract.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 13</div>
+  <h1>The Dual Engine</h1>
+
+  <p>Economies run on two clocks. The fast clock: prices, trades, quarterly reports — minutes to months. The slow clock: institutions, norms, beliefs — decades to centuries. AI is accelerating the fast clock to near-infinite speed while the slow clock barely moves.</p>
+
+  <p>Carlota Perez showed that every great technological surge follows the same pattern: an installation period of creative destruction, a crash, and then a deployment period of broad prosperity — if institutions catch up in time. The question is whether our slow-clock institutions can keep pace with a fast clock running at AI speed.</p>
+
+  <div class="panel">
+    <h2>The Two Clocks</h2>
+    <svg id="clocks-svg" width="100%" height="200"></svg>
+
+    <div class="slider-row" style="margin-top:1rem;">
+      <label>AI Multiplier: <span id="mult-val">1x</span></label>
+      <input type="range" id="mult-slider" min="1" max="100" value="1" oninput="updateClocks()">
+      <div class="slider-label"><span>1x (baseline)</span><span>100x (AI speed)</span></div>
+    </div>
+
+    <div style="margin-top:1rem;">
+      <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.4rem;">Synchronization Gap</div>
+      <div class="tension-bar">
+        <div class="tension-indicator" id="tension-ind" style="left:5%"></div>
+      </div>
+      <div class="tension-label" id="tension-label" style="color:#16a34a;">Synchronized</div>
+    </div>
+
+    <div class="warning-box" id="warning-box">
+      Institutional Failure Zone — fast systems overwhelm slow adaptive capacity. Markets move faster than regulation can respond. Norms cannot update before the next disruption arrives.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Carlota Perez Cycles</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Six technological revolutions, each following the same two-phase pattern. Click the dots to explore each era.</p>
+    <svg id="perez-svg" width="100%" height="220"></svg>
+    <div id="perez-info" style="margin-top:0.75rem;min-height:3rem;font-size:0.9rem;color:#333;padding:0.6rem 0.8rem;background:#f5f5f3;border-radius:6px;"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The Lucas Critique</h2>
+    <p style="font-size:0.9rem;color:#555;">When policymakers change a variable, people anticipate the change and adjust their behavior — invalidating the model used to justify the policy. This is the Lucas Critique: you cannot assume people are passive when they know what you're doing.</p>
+
+    <div class="policy-sim">
+      <div>
+        <h3>Policy Controls</h3>
+        <div class="slider-row">
+          <label>Interest Rate: <span id="rate-val">5%</span></label>
+          <input type="range" id="rate-slider" min="0" max="20" value="5" oninput="updateLucas()">
+        </div>
+        <div class="slider-row">
+          <label>Money Supply Growth: <span id="money-val">3%</span></label>
+          <input type="range" id="money-slider" min="0" max="20" value="3" oninput="updateLucas()">
+        </div>
+        <div class="slider-row">
+          <label>Tax Rate: <span id="tax-val">25%</span></label>
+          <input type="range" id="tax-slider" min="10" max="60" value="25" oninput="updateLucas()">
+        </div>
+        <button class="btn" style="margin-top:0.5rem;font-size:0.85rem;" onclick="resetLucas()">Reset</button>
+      </div>
+      <div>
+        <h3>Outcomes</h3>
+        <div class="sim-result">
+          <div class="label">Old Model Predicts</div>
+          <div class="value" id="model-predict" style="color:#2563eb;">+2.4%</div>
+          <div style="font-size:0.8rem;color:#888;">GDP growth</div>
+        </div>
+        <div class="sim-result">
+          <div class="label">Actual Outcome</div>
+          <div class="value" id="actual-outcome" style="color:#dc2626;">+1.1%</div>
+          <div style="font-size:0.8rem;color:#888;">with behavioral adaptation</div>
+        </div>
+        <div class="sim-gap" id="lucas-gap">
+          Lucas Gap: 1.3pp — people anticipated the policy and optimized against it, invalidating the model.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- Clock animation ---
+let clockFrame = null;
+let multValue = 1;
+let fastAngle = 0;
+let slowAngle = 0;
+let lastTime = null;
+
+function drawClock(svg, cx, cy, r, angle, label, color, small) {
+  svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r)
+    .attr('fill', 'white').attr('stroke', '#e5e5e0').attr('stroke-width', 2);
+
+  // Tick marks
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const r1 = r * 0.85, r2 = r;
+    svg.append('line')
+      .attr('x1', cx + Math.cos(a) * r1).attr('y1', cy + Math.sin(a) * r1)
+      .attr('x2', cx + Math.cos(a) * r2).attr('y2', cy + Math.sin(a) * r2)
+      .attr('stroke', '#e5e5e0').attr('stroke-width', 1);
+  }
+
+  // Hour hand
+  const ha = angle - Math.PI / 2;
+  svg.append('line').attr('class', 'hand-' + (small ? 'slow' : 'fast'))
+    .attr('x1', cx).attr('y1', cy)
+    .attr('x2', cx + Math.cos(ha) * r * 0.55).attr('y2', cy + Math.sin(ha) * r * 0.55)
+    .attr('stroke', color).attr('stroke-width', 3).attr('stroke-linecap', 'round');
+
+  // Minute hand
+  const ma = (angle * 12) - Math.PI / 2;
+  svg.append('line').attr('class', 'mhand-' + (small ? 'slow' : 'fast'))
+    .attr('x1', cx).attr('y1', cy)
+    .attr('x2', cx + Math.cos(ma) * r * 0.75).attr('y2', cy + Math.sin(ma) * r * 0.75)
+    .attr('stroke', color).attr('stroke-width', 2).attr('stroke-linecap', 'round').attr('opacity', 0.7);
+
+  // Center dot
+  svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4).attr('fill', color);
+
+  // Label
+  svg.append('text').attr('x', cx).attr('y', cy + r + 18)
+    .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 600).attr('fill', color)
+    .text(label);
+}
+
+function renderClocks(fastA, slowA) {
+  const svgEl = document.getElementById('clocks-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 200;
+  const svg = d3.select('#clocks-svg').attr('width', w).attr('height', h);
+  svg.selectAll('*').remove();
+
+  const r = Math.min(w / 5, 70);
+  const fastCx = w * 0.3, slowCx = w * 0.7, cy = h / 2 - 10;
+
+  drawClock(svg, fastCx, cy, r, fastA, 'Markets / Prices', '#dc2626', false);
+  svg.append('text').attr('x', fastCx).attr('y', cy - r - 8)
+    .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Fast Clock');
+
+  drawClock(svg, slowCx, cy, r, slowA, 'Institutions / Norms', '#2563eb', true);
+  svg.append('text').attr('x', slowCx).attr('y', cy - r - 8)
+    .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Slow Clock');
+}
+
+function animateClocks(ts) {
+  if (!lastTime) lastTime = ts;
+  const dt = (ts - lastTime) / 1000;
+  lastTime = ts;
+  fastAngle += dt * multValue * 0.8;
+  slowAngle += dt * 0.05;
+  renderClocks(fastAngle, slowAngle);
+  clockFrame = requestAnimationFrame(animateClocks);
+}
+
+function updateClocks() {
+  multValue = parseInt(document.getElementById('mult-slider').value);
+  document.getElementById('mult-val').textContent = multValue + 'x';
+  const pct = ((multValue - 1) / 99) * 100;
+  document.getElementById('tension-ind').style.left = Math.min(95, pct) + '%';
+
+  if (multValue >= 70) {
+    document.getElementById('tension-label').textContent = 'Institutional Failure Zone';
+    document.getElementById('tension-label').style.color = '#dc2626';
+    document.getElementById('warning-box').classList.add('show');
+  } else if (multValue >= 30) {
+    document.getElementById('tension-label').textContent = 'Growing Synchronization Gap';
+    document.getElementById('tension-label').style.color = '#d97706';
+    document.getElementById('warning-box').classList.remove('show');
+  } else {
+    document.getElementById('tension-label').textContent = 'Synchronized';
+    document.getElementById('tension-label').style.color = '#16a34a';
+    document.getElementById('warning-box').classList.remove('show');
+  }
+}
+
+requestAnimationFrame(ts => {
+  renderClocks(0, 0);
+  lastTime = ts;
+  clockFrame = requestAnimationFrame(animateClocks);
+});
+
+// --- Perez Cycles ---
+const perezData = [
+  { year: 1771, label: 'Industrial Revolution', install: 'Water power, textiles, iron', deploy: 'Factory system, canal networks, coal expansion', color: '#7c3aed' },
+  { year: 1829, label: 'Steam & Railways', install: 'Speculative railway mania, steam engines', deploy: 'Victorian prosperity, railway networks, global trade', color: '#0891b2' },
+  { year: 1875, label: 'Steel & Electricity', install: 'Gilded Age speculation, steel overbuilding', deploy: 'Electrification, mass production, urban growth', color: '#059669' },
+  { year: 1908, label: 'Oil & Automobiles', install: 'Roaring Twenties speculation, overproduction', deploy: 'Fordism, suburbia, consumer society, highways', color: '#d97706' },
+  { year: 1971, label: 'IT & Telecoms', install: 'Dot-com bubble, financial casino', deploy: 'Internet economy, globalization, smartphones', color: '#dc2626' },
+  { year: 2007, label: 'AI & Intelligent Networks', install: 'We are here: LLM speculation, AI race', deploy: 'Unknown — depends on choices made now', color: '#1a1a1a', current: true }
+];
+
+requestAnimationFrame(() => {
+  const svgEl = document.getElementById('perez-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 220;
+  const svg = d3.select('#perez-svg').attr('width', w).attr('height', h);
+
+  const years = perezData.map(d => d.year);
+  const xS = d3.scaleLinear().domain([1750, 2035]).range([30, w - 30]);
+  const cy = h / 2;
+
+  // Timeline line
+  svg.append('line').attr('x1', 30).attr('y1', cy).attr('x2', w - 30).attr('y2', cy)
+    .attr('stroke', '#e5e5e0').attr('stroke-width', 2);
+
+  // Phases band
+  perezData.forEach((d, i) => {
+    const x1 = xS(d.year);
+    const x2 = i < perezData.length - 1 ? xS(perezData[i+1].year) : xS(2035);
+    const installW = (x2 - x1) * 0.45;
+    const deployW = (x2 - x1) * 0.45;
+
+    svg.append('rect').attr('x', x1).attr('y', cy - 25).attr('width', installW).attr('height', 20)
+      .attr('fill', d.color).attr('opacity', d.current ? 0.3 : 0.12).attr('rx', 2);
+    svg.append('text').attr('x', x1 + installW/2).attr('y', cy - 12)
+      .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', d.color).text('Install');
+
+    if (!d.current) {
+      svg.append('rect').attr('x', x1 + installW + 4).attr('y', cy + 5).attr('width', deployW).attr('height', 20)
+        .attr('fill', d.color).attr('opacity', 0.12).attr('rx', 2);
+      svg.append('text').attr('x', x1 + installW + 4 + deployW/2).attr('y', cy + 18)
+        .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', d.color).text('Deploy');
+    }
+  });
+
+  // Dots
+  const dots = svg.selectAll('.perez-dot').data(perezData).join('circle').attr('class', 'perez-dot')
+    .attr('cx', d => xS(d.year)).attr('cy', cy)
+    .attr('r', d => d.current ? 8 : 6)
+    .attr('fill', d => d.color)
+    .attr('stroke', 'white').attr('stroke-width', 2)
+    .style('cursor', 'pointer')
+    .on('click', (event, d) => {
+      document.getElementById('perez-info').innerHTML = `<strong style="color:${d.color}">${d.year}: ${d.label}</strong><br><span style="color:#555;">Installation: ${d.install}</span><br><span style="color:#555;">Deployment: ${d.deploy}</span>`;
+    });
+
+  // Year labels
+  svg.selectAll('.perez-year').data(perezData).join('text').attr('class', 'perez-year')
+    .attr('x', d => xS(d.year)).attr('y', cy + 38)
+    .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', d => d.color).attr('font-weight', 600)
+    .text(d => d.year);
+
+  // "You are here" marker
+  const current = perezData[perezData.length - 1];
+  svg.append('text').attr('x', xS(current.year)).attr('y', cy - 38)
+    .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#1a1a1a').attr('font-weight', 700)
+    .text('← You are here');
+
+  document.getElementById('perez-info').textContent = 'Click any dot to explore that technological revolution.';
+});
+
+// --- Lucas Critique Simulator ---
+function updateLucas() {
+  const rate = parseInt(document.getElementById('rate-slider').value);
+  const money = parseInt(document.getElementById('money-slider').value);
+  const tax = parseInt(document.getElementById('tax-slider').value);
+
+  document.getElementById('rate-val').textContent = rate + '%';
+  document.getElementById('money-val').textContent = money + '%';
+  document.getElementById('tax-val').textContent = tax + '%';
+
+  // Old model prediction (naive)
+  const modelPred = (money * 0.3 - rate * 0.15 - (tax - 25) * 0.08).toFixed(1);
+  // Actual outcome (people adapt, so effect is dampened + distorted)
+  const adaptation = Math.abs(money - 5) * 0.1 + Math.abs(rate - 5) * 0.08;
+  const actual = (parseFloat(modelPred) * (0.4 + Math.random() * 0.1) - adaptation * 0.5).toFixed(1);
+  const gap = (parseFloat(modelPred) - parseFloat(actual)).toFixed(1);
+
+  document.getElementById('model-predict').textContent = (parseFloat(modelPred) >= 0 ? '+' : '') + modelPred + '%';
+  document.getElementById('actual-outcome').textContent = (parseFloat(actual) >= 0 ? '+' : '') + actual + '%';
+  document.getElementById('lucas-gap').textContent = `Lucas Gap: ${gap}pp — people anticipated the policy and optimized against it, invalidating the model. The larger the policy change, the larger the gap.`;
+}
+
+function resetLucas() {
+  document.getElementById('rate-slider').value = 5;
+  document.getElementById('money-slider').value = 3;
+  document.getElementById('tax-slider').value = 25;
+  updateLucas();
+}
+
+updateLucas();
+</script>
+</body>
+</html>

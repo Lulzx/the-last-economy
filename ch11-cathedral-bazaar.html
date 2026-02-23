@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 11 — The Cathedral and the Bazaar 2.0</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.mind-col { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.2rem; }
+.mind-col.cathedral { border-top: 3px solid #0891b2; }
+.mind-col.bazaar { border-top: 3px solid #7c3aed; }
+.mind-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.mind-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; }
+.mind-row { font-size: 0.9rem; color: #555; margin: 0.3rem 0; padding-left: 0.25rem; }
+.slider-wrap { margin: 1.5rem 0 0.5rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; margin-bottom: 0.4rem; }
+input[type="range"] { width: 100%; }
+.coase-insight { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; color: #0c4a6e; margin-top: 1rem; }
+.overfit-chart { margin: 1rem 0; }
+.example-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.example-card { border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+.example-card .ex-quote { font-style: italic; color: #555; }
+.example-card .ex-tag { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 1px 7px; border-radius: 3px; background: #fee2e2; color: #dc2626; margin-bottom: 0.3rem; }
+.sort-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.sort-col { border: 2px dashed #e5e5e0; border-radius: 8px; padding: 1rem; min-height: 160px; }
+.sort-col h3 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 0.75rem; }
+.sort-col.cathedral-col { border-color: #0891b2; }
+.sort-col.bazaar-col { border-color: #7c3aed; }
+.sort-pool { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.sort-item { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.6rem 0.9rem; font-size: 0.88rem; cursor: pointer; transition: background 0.15s; display: flex; justify-content: space-between; align-items: center; }
+.sort-item:hover { background: #eeeee9; }
+.sort-item.placed { opacity: 0.5; cursor: default; }
+.sort-item .placement-tag { font-size: 0.75rem; font-weight: 700; padding: 1px 6px; border-radius: 3px; }
+.reveal-btn-wrap { margin-top: 1rem; }
+.reveal-result { margin-top: 0.75rem; display: none; }
+.result-row { font-size: 0.88rem; margin: 0.4rem 0; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #e5e5e0; }
+.result-row.surviving { border-color: #16a34a; background: #f0fdf4; }
+.result-row.struggling { border-color: #d97706; background: #fffbeb; }
+.result-tag { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-right: 0.4rem; }
+.tag-s { background: #dcfce7; color: #16a34a; }
+.tag-st { background: #fef3c7; color: #d97706; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="07-network-prison.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="08-cooperation-emerges.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 11</div>
+  <h1>The Cathedral and the Bazaar 2.0</h1>
+
+  <p>Every economy runs two operating systems simultaneously: the Cathedral (firms — hierarchical, efficient, planned) and the Bazaar (markets — chaotic, exploratory, emergent). AI is rewriting the code of both.</p>
+
+  <p>The original framing comes from Eric Raymond's 1999 essay about open-source software. But the deeper insight is economic: transaction costs determine the boundary between planning and markets. AI changes transaction costs so radically that this boundary is dissolving entirely.</p>
+
+  <div class="panel">
+    <h2>The Two Minds</h2>
+    <div class="two-col">
+      <div class="mind-col cathedral">
+        <div class="mind-icon">🏛</div>
+        <div class="mind-title">The Cathedral</div>
+        <div style="font-size:0.85rem;color:#888;margin-bottom:0.75rem;">Firm / Hierarchy</div>
+        <div class="mind-row">Command &amp; Control</div>
+        <div class="mind-row">Plans &rarr; Executes</div>
+        <div class="mind-row">Exploit known solutions</div>
+        <div class="mind-row">Coase: internalize transactions</div>
+      </div>
+      <div class="mind-col bazaar">
+        <div class="mind-icon">🏪</div>
+        <div class="mind-title">The Bazaar</div>
+        <div style="font-size:0.85rem;color:#888;margin-bottom:0.75rem;">Market / Network</div>
+        <div class="mind-row">Distributed Discovery</div>
+        <div class="mind-row">Explores &rarr; Emerges</div>
+        <div class="mind-row">Explore unknown possibilities</div>
+        <div class="mind-row">Price signals coordinate</div>
+      </div>
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span style="color:#7c3aed;font-weight:600;">&#8592; Low Transaction Cost (Bazaar wins)</span>
+        <span style="color:#0891b2;font-weight:600;">High Transaction Cost (Cathedral wins) &#8594;</span>
+      </div>
+      <input type="range" id="tc-slider" min="0" max="100" value="50" oninput="updateTCViz()">
+    </div>
+
+    <svg id="tc-viz" width="100%" height="80"></svg>
+
+    <div class="coase-insight" id="coase-text">
+      The Coase Insight: the firm exists where the cost of organizing via the market (finding, contracting, monitoring) exceeds the cost of employing directly. AI slashes both costs simultaneously — and the boundary between firm and market dissolves.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The Overfitting Trap</h2>
+    <p style="font-size:0.9rem;color:#555;">Firms are trained on competitive environments. The best firms become perfectly adapted to their environment — and perfectly unable to adapt to a new one. This is overfitting: high accuracy on the training set, catastrophic failure on new data.</p>
+
+    <div class="overfit-chart">
+      <svg id="overfit-svg" width="100%" height="160"></svg>
+    </div>
+
+    <div class="example-cards">
+      <div class="example-card">
+        <div class="ex-tag">OVERFITTED</div>
+        <div>"Xerox PARC invented the personal computer, the graphical interface, Ethernet, and the laser printer. Then couldn't commercialize any of them." — Overfitted to copier leasing.</div>
+      </div>
+      <div class="example-card">
+        <div class="ex-tag">OVERFITTED</div>
+        <div>"Kodak invented the digital camera in 1975 — then filed for bankruptcy in 2012." — Overfitted to chemical film margins.</div>
+      </div>
+      <div class="example-card">
+        <div class="ex-tag">OVERFITTED</div>
+        <div>"Nokia held 40% of the global phone market in 2007. By 2013, its handset division was sold to Microsoft." — Overfitted to hardware manufacturing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The New Synthesis</h2>
+    <p style="font-size:0.9rem;color:#555;">Click each organization to sort it into Cathedral or Bazaar. Then reveal which mode is thriving in the AI age.</p>
+
+    <div id="sort-pool" class="sort-pool"></div>
+
+    <div class="sort-area">
+      <div class="sort-col cathedral-col" id="col-cathedral">
+        <h3 style="color:#0891b2;">Cathedral</h3>
+        <div id="cathedral-items"></div>
+      </div>
+      <div class="sort-col bazaar-col" id="col-bazaar">
+        <h3 style="color:#7c3aed;">Bazaar</h3>
+        <div id="bazaar-items"></div>
+      </div>
+    </div>
+
+    <div class="reveal-btn-wrap">
+      <button class="btn" onclick="revealResults()">Reveal AI-Age Outcomes</button>
+    </div>
+    <div class="reveal-result" id="reveal-result"></div>
+  </div>
+
+</div>
+
+<script>
+// --- Transaction Cost Slider ---
+function updateTCViz() {
+  const val = parseInt(document.getElementById('tc-slider').value);
+  const svgEl = document.getElementById('tc-viz');
+  const w = svgEl.clientWidth || 600;
+  const h = 80;
+  const svg = d3.select('#tc-viz');
+  svg.selectAll('*').remove();
+
+  // Gradient background
+  const defs = svg.append('defs');
+  const grad = defs.append('linearGradient').attr('id', 'tc-grad').attr('x1', '0%').attr('x2', '100%');
+  grad.append('stop').attr('offset', '0%').attr('stop-color', '#7c3aed').attr('stop-opacity', 0.12);
+  grad.append('stop').attr('offset', '100%').attr('stop-color', '#0891b2').attr('stop-opacity', 0.12);
+  svg.append('rect').attr('width', w).attr('height', h).attr('fill', 'url(#tc-grad)').attr('rx', 4);
+
+  // Boundary line
+  const bx = (val / 100) * w;
+  svg.append('line').attr('x1', bx).attr('y1', 0).attr('x2', bx).attr('y2', h)
+    .attr('stroke', '#1a1a1a').attr('stroke-width', 2).attr('stroke-dasharray', '4,3');
+
+  // Labels
+  svg.append('text').attr('x', bx / 2).attr('y', h / 2 + 5)
+    .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#7c3aed').attr('font-weight', 600)
+    .text('Bazaar Territory');
+
+  if (w - bx > 60) {
+    svg.append('text').attr('x', bx + (w - bx) / 2).attr('y', h / 2 + 5)
+      .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#0891b2').attr('font-weight', 600)
+      .text('Cathedral Territory');
+  }
+
+  // Boundary label
+  svg.append('text').attr('x', bx).attr('y', 14)
+    .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#555')
+    .text('Firm boundary');
+
+  const coase = document.getElementById('coase-text');
+  if (val < 30) {
+    coase.textContent = 'Low transaction costs: Markets beat firms. Platforms, DAOs, and open-source communities outcompete vertically integrated corporations. The bazaar wins.';
+  } else if (val > 70) {
+    coase.textContent = 'High transaction costs: Firms beat markets. Complex coordination requires planning, trust, and authority. The cathedral wins.';
+  } else {
+    coase.textContent = 'The Coase Insight: the firm exists where the cost of organizing via the market exceeds the cost of employing directly. AI slashes both costs simultaneously — and the boundary between firm and market dissolves.';
+  }
+}
+
+// Init TC viz
+requestAnimationFrame(() => updateTCViz());
+
+// --- Overfitting chart ---
+requestAnimationFrame(() => {
+  const svgEl = document.getElementById('overfit-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 160;
+  const svg = d3.select('#overfit-svg').attr('width', w).attr('height', h);
+
+  // Training data points
+  const pts = [
+    {x:0.05,y:0.3},{x:0.15,y:0.55},{x:0.25,y:0.4},{x:0.35,y:0.65},
+    {x:0.45,y:0.5},{x:0.55,y:0.7},{x:0.65,y:0.6},{x:0.75,y:0.8},
+    {x:0.85,y:0.7},{x:0.95,y:0.85}
+  ];
+
+  const xS = d3.scaleLinear().domain([0,1]).range([20, w-20]);
+  const yS = d3.scaleLinear().domain([0,1]).range([h-15, 15]);
+
+  // Generalize line (smooth)
+  const genData = d3.range(0, 1.01, 0.05).map(x => ({x, y: 0.3 + x * 0.6}));
+  const genLine = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
+  svg.append('path').datum(genData).attr('d', genLine)
+    .attr('fill','none').attr('stroke','#16a34a').attr('stroke-width',2.5).attr('opacity',0.8);
+  svg.append('text').attr('x', w - 22).attr('y', yS(0.3 + 0.6) - 8)
+    .attr('font-size',10).attr('fill','#16a34a').attr('text-anchor','end').text('Adaptive Newcomer');
+
+  // Overfit line (wiggly - passes through all pts)
+  const overData = d3.range(0, 1.01, 0.02).map(x => {
+    const base = 0.3 + x * 0.6;
+    const wiggle = 0.15 * Math.sin(x * Math.PI * 8) * Math.pow(x, 0.3);
+    return {x, y: base + wiggle};
+  });
+  const overLine = d3.line().x(d => xS(d.x)).y(d => yS(Math.max(0.05, Math.min(0.95, d.y)))).curve(d3.curveBasis);
+  svg.append('path').datum(overData).attr('d', overLine)
+    .attr('fill','none').attr('stroke','#dc2626').attr('stroke-width',2).attr('stroke-dasharray','5,3').attr('opacity',0.7);
+  svg.append('text').attr('x', xS(0.5)).attr('y', 12)
+    .attr('font-size',10).attr('fill','#dc2626').attr('text-anchor','middle').text('Incumbent (overfitted to old reality)');
+
+  // Data points
+  svg.selectAll('.pt').data(pts).join('circle').attr('class','pt')
+    .attr('cx', d => xS(d.x)).attr('cy', d => yS(d.y)).attr('r', 4)
+    .attr('fill','#2563eb').attr('opacity',0.7);
+
+  // Label
+  svg.append('text').attr('x', xS(0.05)).attr('y', h - 3)
+    .attr('font-size',9).attr('fill','#888').text('Time / Environmental Change &#8594;');
+});
+
+// --- Sort Game ---
+const orgs = [
+  { name: 'Traditional Corporation', correct: 'cathedral', ai: 'struggling', reason: 'Hierarchical decisions too slow for AI-speed markets' },
+  { name: 'Linux Foundation', correct: 'bazaar', ai: 'surviving', reason: 'Distributed contribution model scales with AI tooling' },
+  { name: 'Wikipedia', correct: 'bazaar', ai: 'surviving', reason: 'Knowledge commons model becomes more valuable in AI era' },
+  { name: 'Amazon Web Services', correct: 'cathedral', ai: 'surviving', reason: 'Platform infrastructure becomes more critical, not less' },
+  { name: 'DAO (Decentralized Autonomous Org)', correct: 'bazaar', ai: 'surviving', reason: 'AI-legible rules and smart contracts fit the new paradigm' },
+  { name: 'Apple App Store', correct: 'both', ai: 'struggling', reason: 'Hybrid model faces regulatory pressure and open alternatives' }
+];
+
+const placements = {};
+let selected = null;
+
+function renderPool() {
+  const pool = document.getElementById('sort-pool');
+  pool.innerHTML = '';
+  orgs.forEach((org, i) => {
+    if (placements[i]) return;
+    const div = document.createElement('div');
+    div.className = 'sort-item' + (selected === i ? ' placed' : '');
+    div.id = 'pool-' + i;
+    div.onclick = () => selectItem(i);
+    div.innerHTML = `<span>${org.name}</span> <span style="font-size:0.8rem;color:#888;">click to select</span>`;
+    pool.appendChild(div);
+  });
+}
+
+function selectItem(i) {
+  selected = i;
+  renderPool();
+  // Highlight selected
+  document.querySelectorAll('.sort-item').forEach(el => el.style.outline = '');
+  const el = document.getElementById('pool-' + i);
+  if (el) el.style.outline = '2px solid #2563eb';
+}
+
+function placeIn(col) {
+  if (selected === null) return;
+  placements[selected] = col;
+  const colEl = document.getElementById(col + '-items');
+  const div = document.createElement('div');
+  div.style.cssText = 'padding:0.4rem 0.6rem;background:#f5f5f3;border:1px solid #e5e5e0;border-radius:5px;font-size:0.85rem;margin-bottom:0.4rem;';
+  div.textContent = orgs[selected].name;
+  colEl.appendChild(div);
+  selected = null;
+  renderPool();
+}
+
+document.getElementById('col-cathedral').addEventListener('click', () => placeIn('col-cathedral'));
+document.getElementById('col-bazaar').addEventListener('click', () => placeIn('col-bazaar'));
+
+// Add click-to-column buttons
+const sortArea = document.querySelector('.sort-area');
+const btnRow = document.createElement('div');
+btnRow.style.cssText = 'display:flex;gap:0.5rem;margin-bottom:0.75rem;';
+btnRow.innerHTML = '<span style="font-size:0.85rem;color:#555;">After selecting an item, place it:</span> <button class="btn" style="background:#0891b2;font-size:0.8rem;padding:0.3rem 0.8rem;" onclick="placeIn(\'col-cathedral\')">Place in Cathedral</button> <button class="btn" style="background:#7c3aed;font-size:0.8rem;padding:0.3rem 0.8rem;" onclick="placeIn(\'col-bazaar\')">Place in Bazaar</button>';
+sortArea.parentElement.insertBefore(btnRow, sortArea);
+
+renderPool();
+
+function revealResults() {
+  const resultDiv = document.getElementById('reveal-result');
+  resultDiv.style.display = 'block';
+  let html = '<div style="font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;">AI-Age Outcomes:</div>';
+  orgs.forEach(org => {
+    const cls = org.ai === 'surviving' ? 'surviving' : 'struggling';
+    const tag = org.ai === 'surviving' ? '<span class="result-tag tag-s">THRIVING</span>' : '<span class="result-tag tag-st">PRESSURE</span>';
+    html += `<div class="result-row ${cls}">${tag}<strong>${org.name}</strong> — ${org.reason}</div>`;
+  });
+  resultDiv.innerHTML = html;
+}
+</script>
+</body>
+</html>

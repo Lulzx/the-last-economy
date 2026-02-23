@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 18 — Money for Two Worlds</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #d97706; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #b45309; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+input[type="range"] { width: 100%; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.economy-side { border-radius: 8px; padding: 1rem; border: 1px solid #e5e5e0; }
+.economy-side.atoms { border-top: 3px solid #d97706; background: #fffbeb; }
+.economy-side.bits { border-top: 3px solid #2563eb; background: #eff6ff; }
+.economy-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+.economy-prop { font-size: 0.85rem; color: #555; margin: 0.25rem 0; }
+.broken-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.broken-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; }
+.broken-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
+.broken-desc { font-size: 0.88rem; color: #555; line-height: 1.5; }
+.severity-bar { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; }
+.severity-label { font-size: 0.8rem; color: #888; }
+.severity-dots { display: flex; gap: 3px; }
+.severity-dot { width: 10px; height: 10px; border-radius: 50%; }
+.severity-dot.on { background: #dc2626; }
+.severity-dot.off { background: #e5e5e0; }
+.failure-tag { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 1px 7px; border-radius: 3px; background: #fee2e2; color: #dc2626; margin-bottom: 0.4rem; }
+.currency-designer { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0; }
+.currency-col { border-radius: 8px; padding: 1rem; border: 1px solid #e5e5e0; }
+.currency-col.fc { border-top: 3px solid #d97706; }
+.currency-col.cc { border-top: 3px solid #2563eb; }
+.currency-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
+.currency-subtitle { font-size: 0.8rem; color: #888; margin-bottom: 0.75rem; }
+.currency-effect { font-size: 0.8rem; color: #555; margin-top: 0.5rem; font-style: italic; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="ch17-symbiotic-state.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="nucleation.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 18</div>
+  <h1>Money for Two Worlds</h1>
+
+  <p>Our money was designed for a world of atoms — scarce, rivalrous, physical. But half our economy now runs on bits — abundant, non-rivalrous, digital. Using the same currency for both is like using the same measuring tape for distance and temperature.</p>
+
+  <p>The dysfunction is not accidental. We are trying to price abundance with an instrument designed for scarcity. The result: digital goods are either "free" (and secretly monetized through surveillance) or absurdly overpriced (and pirated). There is no price that correctly values a digital good in a currency designed for physical ones.</p>
+
+  <div class="panel">
+    <h2>The Two Economies</h2>
+    <div class="two-col">
+      <div class="economy-side atoms">
+        <div class="economy-title" style="color:#d97706;">Atom Economy</div>
+        <div class="economy-prop">Physical, scarce, rivalrous</div>
+        <div class="economy-prop">If I have it, you don't</div>
+        <div class="economy-prop">Governed by scarcity</div>
+        <div class="economy-prop">Supply/demand curves work</div>
+        <div class="economy-prop">Marginal cost &gt; 0</div>
+      </div>
+      <div class="economy-side bits">
+        <div class="economy-title" style="color:#2563eb;">Bit Economy</div>
+        <div class="economy-prop">Digital, abundant, non-rivalrous</div>
+        <div class="economy-prop">Copying costs nothing</div>
+        <div class="economy-prop">Governed by network effects</div>
+        <div class="economy-prop">Traditional pricing breaks</div>
+        <div class="economy-prop">Marginal cost → 0</div>
+      </div>
+    </div>
+
+    <div class="slider-row" style="margin-top:1.5rem;">
+      <label>Bit Economy as % of GDP: <span id="bit-pct">35%</span></label>
+      <input type="range" id="bit-slider" min="10" max="70" value="35" oninput="updateBitEconomy()">
+      <div class="slider-label"><span>10% (1990)</span><span>70% (2030 projected)</span></div>
+    </div>
+    <svg id="bit-economy-svg" width="100%" height="120"></svg>
+    <div id="bit-mismatch" style="font-size:0.88rem;color:#555;margin-top:0.5rem;font-style:italic;"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The Three Broken Systems</h2>
+    <div class="broken-cards">
+      <div class="broken-card">
+        <div class="failure-tag">STRUCTURAL FAILURE</div>
+        <div class="broken-title">Fiat Currency</div>
+        <div class="broken-desc">Born from debt. Requires perpetual growth. Every dollar is borrowed into existence, demanding repayment with interest. In a zero-marginal-cost bit economy, the system seizes: you cannot pay interest on a loan with a good that costs nothing to reproduce.</div>
+        <div class="severity-bar">
+          <span class="severity-label">Severity:</span>
+          <div class="severity-dots">
+            <div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot off"></div>
+          </div>
+          <span class="severity-label">4/5</span>
+        </div>
+      </div>
+      <div class="broken-card">
+        <div class="failure-tag">STRUCTURAL FAILURE</div>
+        <div class="broken-title">Bretton Woods / Dollar Reserve</div>
+        <div class="broken-desc">The Triffin Dilemma: to supply the world with reserve currency, America must run persistent deficits. But deficits undermine confidence in the currency. The system requires the host nation to impoverish itself to sustain the global financial architecture. A structural contradiction with no exit.</div>
+        <div class="severity-bar">
+          <span class="severity-label">Severity:</span>
+          <div class="severity-dots">
+            <div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div>
+          </div>
+          <span class="severity-label">5/5</span>
+        </div>
+      </div>
+      <div class="broken-card">
+        <div class="failure-tag">PARTIAL FAILURE</div>
+        <div class="broken-title">Bitcoin / Proof-of-Work</div>
+        <div class="broken-desc">Energy extractive by design. Deflationary by construction — which means hoarding beats spending, which means velocity collapses. Solves the trust problem beautifully, but creates environmental devastation and an economics of self-defeating scarcity in a world that needs abundant intelligence to flow freely.</div>
+        <div class="severity-bar">
+          <span class="severity-label">Severity:</span>
+          <div class="severity-dots">
+            <div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot on"></div><div class="severity-dot off"></div><div class="severity-dot off"></div>
+          </div>
+          <span class="severity-label">3/5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The Dual Currency Design</h2>
+    <p style="font-size:0.9rem;color:#555;">Design both currencies, then simulate how they flow through a simple economy.</p>
+
+    <div class="currency-designer">
+      <div class="currency-col fc">
+        <div class="currency-title" style="color:#d97706;">Foundation Coins (FC)</div>
+        <div class="currency-subtitle">For scarce material goods</div>
+        <div class="slider-row">
+          <label style="font-size:0.85rem;">Computational work to mint 1 FC: <span id="fc-work-val">50</span></label>
+          <input type="range" id="fc-work" min="10" max="100" value="50" oninput="updateCurrencyDesign()">
+          <div class="slider-label"><span>Easy</span><span>Hard</span></div>
+        </div>
+        <div class="currency-effect" id="fc-effect">Moderate energy tether — FC is scarce enough to price physical goods but not so scarce as to be deflationary.</div>
+      </div>
+      <div class="currency-col cc">
+        <div class="currency-title" style="color:#2563eb;">Culture Credits (CC)</div>
+        <div class="currency-subtitle">For abundant intelligence</div>
+        <div class="slider-row">
+          <label style="font-size:0.85rem;">Demurrage rate (decay/month): <span id="cc-decay-val">2%</span></label>
+          <input type="range" id="cc-decay" min="0" max="5" value="2" step="0.5" oninput="updateCurrencyDesign()">
+          <div class="slider-label"><span>0% (hoard)</span><span>5% (spend or lose)</span></div>
+        </div>
+        <div class="currency-effect" id="cc-effect">2% decay per month creates gentle pressure to circulate — intelligence flowing beats intelligence hoarded.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:0.75rem 0;">
+      <button class="btn" onclick="simulateEconomy()">Simulate Economy (30 steps)</button>
+      <button class="btn secondary" onclick="resetSimulation()">Reset</button>
+    </div>
+
+    <svg id="economy-svg" width="100%" height="240"></svg>
+    <div id="economy-log" style="font-size:0.85rem;color:#555;margin-top:0.5rem;font-style:italic;text-align:center;"></div>
+  </div>
+
+</div>
+
+<script>
+// --- Bit Economy slider ---
+function updateBitEconomy() {
+  const pct = parseInt(document.getElementById('bit-slider').value);
+  document.getElementById('bit-pct').textContent = pct + '%';
+
+  const svgEl = document.getElementById('bit-economy-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 120;
+  const svg = d3.select('#bit-economy-svg').attr('width', w).attr('height', h);
+  svg.selectAll('*').remove();
+
+  // Stacked bar
+  const barH = 40, barY = 20, barX = 20, barW = w - 40;
+  svg.append('rect').attr('x', barX).attr('y', barY).attr('width', barW).attr('height', barH)
+    .attr('fill', '#d97706').attr('rx', 4).attr('opacity', 0.8);
+  const bitW = barW * (pct / 100);
+  svg.append('rect').attr('x', barX + barW - bitW).attr('y', barY).attr('width', bitW).attr('height', barH)
+    .attr('fill', '#2563eb').attr('rx', 4).attr('opacity', 0.8);
+
+  svg.append('text').attr('x', barX + (barW - bitW) / 2).attr('y', barY + barH / 2 + 5)
+    .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'white').attr('font-weight', 700)
+    .text('Atom Economy ' + (100 - pct) + '%');
+  if (bitW > 60) {
+    svg.append('text').attr('x', barX + barW - bitW / 2).attr('y', barY + barH / 2 + 5)
+      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'white').attr('font-weight', 700)
+      .text('Bit Economy ' + pct + '%');
+  }
+
+  // Single currency system line
+  const mismatch = pct > 50 ? 'high' : pct > 30 ? 'moderate' : 'low';
+  const colors = { low: '#16a34a', moderate: '#d97706', high: '#dc2626' };
+  svg.append('text').attr('x', barX + barW / 2).attr('y', barY + barH + 30)
+    .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', colors[mismatch]).attr('font-weight', 600)
+    .text('Single-currency mismatch: ' + mismatch.toUpperCase());
+
+  const msgs = {
+    low: 'Atom economy dominates — traditional currency works adequately.',
+    moderate: 'Growing tension — digital goods are mispriced and digital labor is undervalued.',
+    high: 'Critical mismatch — 70%+ of economic value operates under the wrong pricing regime. The system is breaking.'
+  };
+  document.getElementById('bit-mismatch').textContent = msgs[mismatch];
+}
+
+requestAnimationFrame(() => updateBitEconomy());
+
+// --- Currency Design ---
+function updateCurrencyDesign() {
+  const fcWork = parseInt(document.getElementById('fc-work').value);
+  const ccDecay = parseFloat(document.getElementById('cc-decay').value);
+  document.getElementById('fc-work-val').textContent = fcWork;
+  document.getElementById('cc-decay-val').textContent = ccDecay + '%';
+
+  let fcEffect;
+  if (fcWork < 30) fcEffect = 'Low energy tether — FC is abundant and may fail to hold value for physical goods. Risk of inflation.';
+  else if (fcWork > 75) fcEffect = 'High energy tether — FC is very scarce. Good store of value, but risks deflation and hoarding.';
+  else fcEffect = 'Moderate energy tether — FC is scarce enough to price physical goods while remaining accessible.';
+  document.getElementById('fc-effect').textContent = fcEffect;
+
+  let ccEffect;
+  if (ccDecay === 0) ccEffect = 'Zero decay — CC behaves like normal money. Hoarding is rational. Intelligence pools at wealthy nodes rather than circulating.';
+  else if (ccDecay >= 4) ccEffect = ccDecay + '% decay/month — strong hot-potato effect. CC circulates rapidly through knowledge networks, incentivizing contribution over accumulation.';
+  else ccEffect = ccDecay + '% decay/month — gentle circulation pressure. Intelligence is encouraged to flow but not forced.';
+  document.getElementById('cc-effect').textContent = ccEffect;
+}
+
+// --- Economy Simulation ---
+const NODES = 10;
+let simRunning = false;
+let simStep = 0;
+let simTimer = null;
+let fcBalances = [], ccBalances = [];
+const nodeTypes = ['Person','Person','Person','Firm','Firm','AI Service','AI Service','Person','Firm','Person'];
+const nodeColors = { Person: '#7c3aed', Firm: '#d97706', 'AI Service': '#2563eb' };
+
+function initSim() {
+  fcBalances = Array(NODES).fill(0).map(() => 50 + Math.random() * 50);
+  ccBalances = Array(NODES).fill(0).map(() => 30 + Math.random() * 40);
+}
+
+function resetSimulation() {
+  if (simTimer) clearTimeout(simTimer);
+  simRunning = false;
+  simStep = 0;
+  initSim();
+  renderEconomySvg();
+  document.getElementById('economy-log').textContent = '';
+}
+
+function renderEconomySvg() {
+  const svgEl = document.getElementById('economy-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 240;
+  const svg = d3.select('#economy-svg').attr('width', w).attr('height', h);
+  svg.selectAll('*').remove();
+
+  const cx = w / 2, cy = h / 2;
+  const r = Math.min(w, h) * 0.38;
+
+  const nodePositions = Array(NODES).fill(0).map((_, i) => ({
+    x: cx + Math.cos((i / NODES) * Math.PI * 2 - Math.PI / 2) * r,
+    y: cy + Math.sin((i / NODES) * Math.PI * 2 - Math.PI / 2) * r
+  }));
+
+  // FC bars (outer rings — orange)
+  nodePositions.forEach((pos, i) => {
+    const fc = fcBalances[i];
+    const maxFC = 200;
+    const barLen = Math.min(18, (fc / maxFC) * 18);
+    svg.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 14)
+      .attr('fill', nodeColors[nodeTypes[i]] || '#888').attr('opacity', 0.8)
+      .attr('stroke', 'white').attr('stroke-width', 2);
+
+    // FC bar (right side, orange)
+    svg.append('rect').attr('x', pos.x + 14).attr('y', pos.y - barLen / 2)
+      .attr('width', 5).attr('height', barLen).attr('fill', '#d97706').attr('rx', 2).attr('opacity', 0.9);
+
+    // CC bar (below, blue)
+    const cc = ccBalances[i];
+    const ccLen = Math.min(18, (cc / 150) * 18);
+    svg.append('rect').attr('x', pos.x - ccLen / 2).attr('y', pos.y + 14)
+      .attr('width', ccLen).attr('height', 5).attr('fill', '#2563eb').attr('rx', 2).attr('opacity', 0.9);
+
+    svg.append('text').attr('x', pos.x).attr('y', pos.y + 4)
+      .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', 'white').attr('font-weight', 600)
+      .text(i);
+  });
+
+  // Legend
+  svg.append('rect').attr('x', 10).attr('y', h - 50).attr('width', 10).attr('height', 10).attr('fill', '#d97706').attr('rx', 2);
+  svg.append('text').attr('x', 24).attr('y', h - 42).attr('font-size', 9).attr('fill', '#555').text('Foundation Coins (pools at physical nodes)');
+  svg.append('rect').attr('x', 10).attr('y', h - 35).attr('width', 10).attr('height', 10).attr('fill', '#2563eb').attr('rx', 2);
+  svg.append('text').attr('x', 24).attr('y', h - 27).attr('font-size', 9).attr('fill', '#555').text('Culture Credits (circulates through AI/knowledge nodes)');
+}
+
+function stepSimulation() {
+  const ccDecay = parseFloat(document.getElementById('cc-decay').value) / 100;
+
+  // Each step: random transactions
+  for (let t = 0; t < 3; t++) {
+    const from = Math.floor(Math.random() * NODES);
+    const to = Math.floor(Math.random() * NODES);
+    if (from === to) continue;
+
+    // FC: Physical goods flow toward Firm nodes (they accumulate)
+    if (nodeTypes[to] === 'Firm' || nodeTypes[to] === 'AI Service') {
+      const amount = Math.random() * 5;
+      fcBalances[from] = Math.max(0, fcBalances[from] - amount);
+      fcBalances[to] += amount;
+    } else {
+      const amount = Math.random() * 3;
+      fcBalances[from] = Math.max(0, fcBalances[from] - amount);
+      fcBalances[to] += amount;
+    }
+
+    // CC: Circulates more rapidly, especially through AI Service nodes
+    const ccAmount = Math.random() * 8 * (nodeTypes[to] === 'AI Service' ? 2 : 1);
+    ccBalances[from] = Math.max(0, ccBalances[from] - ccAmount / 2);
+    ccBalances[to] += ccAmount;
+  }
+
+  // Apply CC decay (demurrage)
+  ccBalances = ccBalances.map(v => v * (1 - ccDecay));
+
+  // FC: slight redistribution from firms to persons (wages)
+  for (let i = 0; i < NODES; i++) {
+    if (nodeTypes[i] === 'Firm' && fcBalances[i] > 60) {
+      const wage = 2;
+      fcBalances[i] -= wage;
+      // Distribute to a random person
+      const persons = nodeTypes.map((t, j) => t === 'Person' ? j : -1).filter(j => j >= 0);
+      const recipient = persons[Math.floor(Math.random() * persons.length)];
+      fcBalances[recipient] += wage;
+    }
+  }
+}
+
+function simulateEconomy() {
+  if (simRunning) return;
+  simRunning = true;
+  simStep = 0;
+  initSim();
+  renderEconomySvg();
+
+  function tick() {
+    if (simStep >= 30) {
+      simRunning = false;
+      document.getElementById('economy-log').textContent = 'Simulation complete. Foundation Coins pooled at physical firms; Culture Credits circulated through AI service nodes with demurrage decay.';
+      return;
+    }
+    stepSimulation();
+    renderEconomySvg();
+    simStep++;
+    document.getElementById('economy-log').textContent = 'Step ' + simStep + '/30...';
+    simTimer = setTimeout(tick, 200);
+  }
+
+  tick();
+}
+
+initSim();
+requestAnimationFrame(() => renderEconomySvg());
+</script>
+</body>
+</html>

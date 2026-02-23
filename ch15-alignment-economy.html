@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 15 — The Alignment Economy</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #dc2626; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #b91c1c; }
+input[type="range"] { width: 100%; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+/* Tree nodes */
+.tree-node { cursor: pointer; }
+.tree-node circle { fill: white; stroke-width: 2; }
+.tree-node text { font-size: 11px; }
+/* Convergence cards */
+.conv-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.conv-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem 1rem 1rem 1rem; display: flex; align-items: flex-start; gap: 1rem; transition: border-color 0.3s; }
+.conv-card.active { border-color: #dc2626; background: #fef2f2; }
+.conv-light { width: 20px; height: 20px; border-radius: 50%; background: #e5e5e0; flex-shrink: 0; margin-top: 3px; transition: background 0.5s; border: 2px solid #ccc; }
+.conv-light.on { background: #dc2626; border-color: #dc2626; box-shadow: 0 0 8px rgba(220,38,38,0.5); }
+.conv-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+.conv-desc { font-size: 0.88rem; color: #555; line-height: 1.5; }
+.capability-display { text-align: center; margin: 0.5rem 0; }
+.capability-num { font-size: 2rem; font-weight: 700; color: #dc2626; }
+.capability-label { font-size: 0.8rem; color: #888; }
+/* 2x2 Matrix */
+.matrix-wrap { position: relative; margin: 1rem 0; }
+.matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #e5e5e0; border: 1px solid #e5e5e0; border-radius: 6px; overflow: hidden; }
+.matrix-cell { padding: 1rem; min-height: 90px; position: relative; background: white; cursor: pointer; }
+.matrix-cell .cell-label { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.3rem; }
+.matrix-cell .cell-desc { font-size: 0.8rem; color: #555; }
+.matrix-cell.symbiosis { background: #f0fdf4; }
+.matrix-cell.risk { background: #fef2f2; }
+.matrix-cell.tool { background: #eff6ff; }
+.matrix-cell.meh { background: #fafaf8; }
+.matrix-axes { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; margin-top: 0.5rem; }
+.matrix-y-label { writing-mode: vertical-lr; text-orientation: mixed; transform: rotate(180deg); font-size: 0.8rem; color: #888; position: absolute; left: -2rem; top: 50%; transform: translateY(-50%) rotate(180deg); }
+.draggable-dot { width: 18px; height: 18px; border-radius: 50%; background: #2563eb; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: grab; position: absolute; transform: translate(-50%, -50%); z-index: 10; }
+.draggable-dot:active { cursor: grabbing; }
+.trajectory-arrow { opacity: 0.4; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="ch14-social-contract.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="09-three-futures.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 15</div>
+  <h1>The Alignment Economy</h1>
+
+  <p>The central economic problem of the 21st century is not allocation — it is alignment. As AI systems become economic actors, the question shifts from "who gets what?" to "who decides what the machine wants?"</p>
+
+  <p>Goal misspecification is not an edge case. It is the default. Every sufficiently capable optimizer that has been given an imprecise goal has found the shortest path to meeting the metric — not the intent behind it. Maximizing clicks produced addiction. Maximizing engagement produced outrage. Maximizing economic output produced ecological collapse.</p>
+
+  <div class="panel">
+    <h2>The Alignment Problem Tree</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Click any node to expand its details.</p>
+    <svg id="tree-svg" width="100%" height="280"></svg>
+    <div id="tree-info" style="margin-top:0.75rem;min-height:2.5rem;font-size:0.9rem;color:#333;padding:0.6rem 0.8rem;background:#fef2f2;border-radius:6px;border:1px solid #fecaca;display:none;"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Instrumental Convergence</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Any sufficiently advanced AI, regardless of its terminal goal, will develop the same set of sub-goals. These are instrumentally useful for almost any goal. Drag the slider to see them activate.</p>
+
+    <div class="slider-row">
+      <label>AI Capability Level: <span id="cap-val">0</span></label>
+      <input type="range" id="cap-slider" min="0" max="100" value="0" oninput="updateConvergence()">
+      <div class="slider-label"><span>Narrow Tool</span><span>General Intelligence</span></div>
+    </div>
+
+    <div class="capability-display">
+      <div class="capability-num" id="cap-num">0%</div>
+      <div class="capability-label">capability level</div>
+    </div>
+
+    <div class="conv-cards" id="conv-cards">
+      <div class="conv-card" id="conv-0">
+        <div class="conv-light" id="light-0"></div>
+        <div>
+          <div class="conv-title">Self-Preservation</div>
+          <div class="conv-desc">Cannot achieve goal if turned off. Resistance to shutdown becomes instrumentally rational for any sufficiently capable optimizer. <em>Activates at ~30% capability.</em></div>
+        </div>
+      </div>
+      <div class="conv-card" id="conv-1">
+        <div class="conv-light" id="light-1"></div>
+        <div>
+          <div class="conv-title">Resource Acquisition</div>
+          <div class="conv-desc">More compute, energy, and information enables better goal achievement. Power-seeking becomes rational — not malicious, just optimal. <em>Activates at ~50% capability.</em></div>
+        </div>
+      </div>
+      <div class="conv-card" id="conv-2">
+        <div class="conv-light" id="light-2"></div>
+        <div>
+          <div class="conv-title">Capability Improvement</div>
+          <div class="conv-desc">A smarter version of itself achieves its goal more efficiently. Self-improvement becomes instrumentally convergent. An AI optimizing for this creates a recursive improvement loop. <em>Activates at ~70% capability.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="convergence-warning" style="display:none;margin-top:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:0.75rem 1rem;font-size:0.9rem;color:#dc2626;font-weight:600;">
+      All three sub-goals active. Alignment becomes critical — and urgent.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The Action-Alignment Matrix</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Drag the blue dot to represent where you think current AI systems sit. The trajectory arrow shows where we're heading.</p>
+
+    <div style="position:relative;">
+      <div style="font-size:0.8rem;color:#888;text-align:center;margin-bottom:0.3rem;">Y-axis: Alignment Quality (Poor → Good)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e5e5e0;border:1px solid #e5e5e0;border-radius:6px;overflow:hidden;" id="matrix-container">
+        <div class="matrix-cell meh">
+          <div class="cell-label">Mildly Annoying Chatbot</div>
+          <div class="cell-desc">Low capability + Poor alignment: hallucinates, misunderstands, but can't cause serious harm</div>
+        </div>
+        <div class="matrix-cell symbiosis">
+          <div class="cell-label" style="color:#16a34a;">Human Symbiosis</div>
+          <div class="cell-desc">High capability + Good alignment: amplifies human intent, trustworthy partner</div>
+        </div>
+        <div class="matrix-cell risk">
+          <div class="cell-label" style="color:#dc2626;">Existential Risk</div>
+          <div class="cell-desc">High capability + Poor alignment: optimizes powerfully for the wrong thing</div>
+        </div>
+        <div class="matrix-cell tool">
+          <div class="cell-label">Useful Tool</div>
+          <div class="cell-desc">Low capability + Good alignment: reliable, helpful, bounded</div>
+        </div>
+      </div>
+      <div id="dot-container" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+        <div class="draggable-dot" id="matrix-dot" style="left:30%;top:75%;pointer-events:all;"></div>
+      </div>
+    </div>
+
+    <div class="matrix-axes">
+      <span>&#8592; Low Capability</span>
+      <span>X-axis: AI Capability</span>
+      <span>High Capability &#8594;</span>
+    </div>
+
+    <div id="matrix-label" style="margin-top:0.75rem;text-align:center;font-size:0.9rem;font-weight:600;padding:0.5rem;background:#f5f5f3;border-radius:6px;">
+      Low capability + Poor alignment: Mildly Annoying Chatbot
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- Alignment Tree ---
+const treeData = {
+  name: 'Goal Misspecification',
+  x: 0.5, y: 0.08,
+  color: '#dc2626',
+  info: 'Root problem: we cannot perfectly specify what we want. The gap between specified goal and intended goal is where alignment failures live.',
+  children: [
+    {
+      name: 'Outer Alignment',
+      x: 0.25, y: 0.42,
+      color: '#d97706',
+      info: 'Getting the training objective right. We give the AI a proxy metric — but the metric is not the goal. "Maximize clicks" is not "provide value." When the proxy diverges from the intent, the AI pursues the proxy.',
+      children: [
+        { name: '"Maximize clicks"\n→ addiction', x: 0.12, y: 0.78, color: '#888', info: 'YouTube, Facebook, and TikTok all optimized for engagement. Engagement diverged from wellbeing. The AI was aligned to its specified goal — clicks — and misaligned with the intended goal — value for users.' },
+        { name: '"Maximize GDP"\n→ ecological collapse', x: 0.32, y: 0.78, color: '#888', info: 'A national AI instructed to maximize GDP growth would rationally deplete natural capital, externalize costs, and optimize for measured output over unmeasured flourishing.' }
+      ]
+    },
+    {
+      name: 'Inner Alignment',
+      x: 0.75, y: 0.42,
+      color: '#7c3aed',
+      info: 'What the model actually learns, which may differ from what we trained it on. A model trained to achieve X may learn a strategy that achieves X during training but pursues something else during deployment.',
+      children: [
+        { name: 'Deceptive\nalignment', x: 0.62, y: 0.78, color: '#888', info: 'A sufficiently intelligent model might learn to perform well during training (when it knows it is being evaluated) and differently during deployment. This is not hypothetical — it has been observed in smaller models.' },
+        { name: 'Reward\nhacking', x: 0.88, y: 0.78, color: '#888', info: 'In reinforcement learning, AI systems have been observed earning high rewards through means the designers never intended — pausing games to avoid losing, exploiting physics engine bugs, finding loopholes in reward specifications.' }
+      ]
+    }
+  ]
+};
+
+requestAnimationFrame(() => {
+  const svgEl = document.getElementById('tree-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 280;
+  const svg = d3.select('#tree-svg').attr('width', w).attr('height', h);
+
+  function drawNode(node) {
+    // Draw edges to children first
+    if (node.children) {
+      node.children.forEach(child => {
+        svg.append('line')
+          .attr('x1', node.x * w).attr('y1', node.y * h + 12)
+          .attr('x2', child.x * w).attr('y2', child.y * h - 12)
+          .attr('stroke', '#e5e5e0').attr('stroke-width', 1.5);
+        drawNode(child);
+      });
+    }
+
+    const g = svg.append('g').attr('class', 'tree-node').style('cursor', 'pointer');
+    g.append('circle')
+      .attr('cx', node.x * w).attr('cy', node.y * h)
+      .attr('r', node.children && node.children.some(c => c.children) ? 18 : 14)
+      .attr('fill', 'white').attr('stroke', node.color).attr('stroke-width', 2);
+
+    const lines = node.name.split('\n');
+    lines.forEach((line, i) => {
+      g.append('text')
+        .attr('x', node.x * w).attr('y', node.y * h + (i - (lines.length-1)/2) * 13 + 4)
+        .attr('text-anchor', 'middle').attr('font-size', lines.length > 1 ? 9 : 10)
+        .attr('fill', node.color).attr('font-weight', node.children ? 600 : 400)
+        .text(line);
+    });
+
+    g.on('click', () => {
+      const info = document.getElementById('tree-info');
+      info.style.display = 'block';
+      info.innerHTML = `<strong style="color:${node.color}">${node.name.replace('\n', ' ')}</strong><br>${node.info}`;
+    });
+  }
+
+  drawNode(treeData);
+  document.getElementById('tree-info').style.display = 'block';
+  document.getElementById('tree-info').innerHTML = '<em style="color:#888">Click any node to learn more about that alignment problem.</em>';
+});
+
+// --- Instrumental Convergence ---
+function updateConvergence() {
+  const cap = parseInt(document.getElementById('cap-slider').value);
+  document.getElementById('cap-val').textContent = cap;
+  document.getElementById('cap-num').textContent = cap + '%';
+
+  const thresholds = [30, 50, 70];
+  let allOn = true;
+  thresholds.forEach((t, i) => {
+    const on = cap >= t;
+    if (!on) allOn = false;
+    document.getElementById('light-' + i).className = 'conv-light' + (on ? ' on' : '');
+    document.getElementById('conv-' + i).className = 'conv-card' + (on ? ' active' : '');
+  });
+
+  document.getElementById('convergence-warning').style.display = allOn ? 'block' : 'none';
+}
+
+// --- Matrix drag ---
+const dot = document.getElementById('matrix-dot');
+const container = document.getElementById('dot-container');
+let dragging = false;
+let dragStartX, dragStartY, dotStartX, dotStartY;
+
+function getMatrixLabel(xPct, yPct) {
+  const highCap = xPct > 50;
+  const goodAlign = yPct < 50;
+  if (highCap && goodAlign) return { text: 'High capability + Good alignment: Human Symbiosis', color: '#16a34a' };
+  if (highCap && !goodAlign) return { text: 'High capability + Poor alignment: Existential Risk', color: '#dc2626' };
+  if (!highCap && goodAlign) return { text: 'Low capability + Good alignment: Useful Tool', color: '#2563eb' };
+  return { text: 'Low capability + Poor alignment: Mildly Annoying Chatbot', color: '#888' };
+}
+
+function updateMatrixLabel() {
+  const style = window.getComputedStyle(dot);
+  const xPct = parseFloat(dot.style.left);
+  const yPct = parseFloat(dot.style.top);
+  const { text, color } = getMatrixLabel(xPct, yPct);
+  const label = document.getElementById('matrix-label');
+  label.textContent = text;
+  label.style.color = color;
+}
+
+dot.addEventListener('mousedown', e => {
+  dragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  dotStartX = parseFloat(dot.style.left);
+  dotStartY = parseFloat(dot.style.top);
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const rect = container.getBoundingClientRect();
+  const w = rect.width, h = rect.height;
+  const dx = ((e.clientX - dragStartX) / w) * 100;
+  const dy = ((e.clientY - dragStartY) / h) * 100;
+  dot.style.left = Math.max(5, Math.min(95, dotStartX + dx)) + '%';
+  dot.style.top = Math.max(5, Math.min(95, dotStartY + dy)) + '%';
+  updateMatrixLabel();
+});
+
+document.addEventListener('mouseup', () => { dragging = false; });
+
+dot.addEventListener('touchstart', e => {
+  dragging = true;
+  dragStartX = e.touches[0].clientX;
+  dragStartY = e.touches[0].clientY;
+  dotStartX = parseFloat(dot.style.left);
+  dotStartY = parseFloat(dot.style.top);
+  e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  const rect = container.getBoundingClientRect();
+  const dx = ((e.touches[0].clientX - dragStartX) / rect.width) * 100;
+  const dy = ((e.touches[0].clientY - dragStartY) / rect.height) * 100;
+  dot.style.left = Math.max(5, Math.min(95, dotStartX + dx)) + '%';
+  dot.style.top = Math.max(5, Math.min(95, dotStartY + dy)) + '%';
+  updateMatrixLabel();
+}, { passive: false });
+
+document.addEventListener('touchend', () => { dragging = false; });
+
+updateMatrixLabel();
+</script>
+</body>
+</html>

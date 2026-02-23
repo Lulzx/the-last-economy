@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 17 — The Symbiotic State</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+.transform-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0; }
+.transform-side { border-radius: 8px; padding: 1.25rem; }
+.transform-side.extractive { background: #fef3c7; border: 1px solid #fde68a; }
+.transform-side.symbiotic { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.transform-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
+.transform-item { font-size: 0.88rem; margin: 0.3rem 0; color: #555; }
+.mind-steward-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.mind-card { border-left: 3px solid #2563eb; padding: 0.6rem 0.9rem; background: #f8faff; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+.mind-card .mc-letter { font-weight: 700; color: #2563eb; font-size: 1rem; margin-right: 0.4rem; }
+/* Landscape viz */
+.landscape-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+.landscape-log { font-size: 0.85rem; color: #555; min-height: 1.5rem; margin-top: 0.5rem; font-style: italic; }
+/* Network viz */
+.network-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem; font-size: 0.85rem; }
+.legend-item { display: flex; align-items: center; gap: 0.4rem; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+.scenario-log { background: #f5f5f3; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.88rem; min-height: 3rem; margin-top: 0.75rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="09-three-futures.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="ch18-money-two-worlds.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 17</div>
+  <h1>The Symbiotic State</h1>
+
+  <p>The nation-state was designed to control territory and tax transactions. It was built for a physical world of atoms. In a world of bits and AI, governance must reinvent itself — from extractor to gardener, from commander to cultivator.</p>
+
+  <p>The extractive state asks: what can we take? The symbiotic state asks: what conditions enable flourishing? This is not idealism — it is thermodynamics. An organism that only extracts from its ecosystem eventually destroys the conditions of its own existence. The state faces the same logic.</p>
+
+  <div class="panel">
+    <h2>From Extractor to Gardener</h2>
+    <div class="transform-wrap">
+      <div class="transform-side extractive">
+        <div class="transform-title" style="color:#92400e;">The Extractive State</div>
+        <div class="transform-item">Taxes transactions &amp; labor</div>
+        <div class="transform-item">Conscription of bodies</div>
+        <div class="transform-item">Resource extraction</div>
+        <div class="transform-item">Command &amp; control</div>
+        <div class="transform-item">GDP maximization</div>
+      </div>
+      <div class="transform-side symbiotic">
+        <div class="transform-title" style="color:#166534;">The Symbiotic State</div>
+        <div class="transform-item">Stewards MIND capitals</div>
+        <div class="transform-item">Cultivates human agency</div>
+        <div class="transform-item">Maintains commons</div>
+        <div class="transform-item">Shapes conditions</div>
+        <div class="transform-item">Wellbeing optimization</div>
+      </div>
+    </div>
+
+    <div class="mind-steward-cards">
+      <div class="mind-card">
+        <span class="mc-letter">M</span> <strong>Material Capital:</strong> Price externalities, steward ecological commons, fund regenerative infrastructure
+      </div>
+      <div class="mind-card">
+        <span class="mc-letter">I</span> <strong>Intellectual Capital:</strong> Fund fundamental research, protect digital commons, prevent knowledge enclosure
+      </div>
+      <div class="mind-card">
+        <span class="mc-letter">N</span> <strong>Network Capital:</strong> Underwrite social trust, build infrastructure for cooperation, prevent atomization
+      </div>
+      <div class="mind-card">
+        <span class="mc-letter">D</span> <strong>Design Capital:</strong> Be venture capitalist for civilizational resilience, fund diverse experiments in governance and social forms
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Policy as Geometry Engineering</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">The state's job is to shape the economic landscape so that cooperation is the path of least resistance. Watch how each policy tool reshapes the terrain — and how agents (dots) roll toward the valleys.</p>
+
+    <div class="landscape-controls">
+      <button class="btn" onclick="applyPolicy('incentivize')">Incentivize Cooperation</button>
+      <button class="btn secondary" onclick="applyPolicy('tax')">Tax Extraction</button>
+      <button class="btn secondary" onclick="applyPolicy('build')">Build Infrastructure</button>
+      <button class="btn secondary" onclick="applyPolicy('remove')">Remove Barriers</button>
+      <button class="btn secondary" onclick="resetLandscape()">Reset</button>
+    </div>
+
+    <svg id="landscape-svg" width="100%" height="200"></svg>
+    <div class="landscape-log" id="landscape-log">The economic landscape shapes behavior. Agents follow the path of least resistance — always rolling downhill.</div>
+  </div>
+
+  <div class="panel">
+    <h2>The Guardian Lattice</h2>
+    <div class="network-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> AI Monitoring Oracle</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Citizen Jury Member</div>
+    </div>
+    <svg id="guardian-svg" width="100%" height="260"></svg>
+    <div style="text-align:center;margin-top:0.75rem;">
+      <button class="btn" onclick="runScenario()">Run Scenario: MIND Capital Drop</button>
+    </div>
+    <div class="scenario-log" id="scenario-log">Click "Run Scenario" to simulate the Guardian Lattice in action.</div>
+  </div>
+
+</div>
+
+<script>
+// --- Landscape viz ---
+let landscapeState = {
+  incentivize: false,
+  tax: false,
+  build: false,
+  remove: false
+};
+
+const policyMessages = {
+  incentivize: 'Tax credits and subsidies create a valley — making cooperation the lowest-cost path. Agents flow toward it.',
+  tax: 'A carbon tax or extraction levy creates a hill. Agents avoid the costly path and route around it.',
+  build: 'Public infrastructure (broadband, transit, AI commons) creates smooth highways through previously difficult terrain.',
+  remove: 'Removing barriers (regulatory friction, licensing walls) opens direct paths that were previously blocked.'
+};
+
+function applyPolicy(type) {
+  landscapeState[type] = !landscapeState[type];
+  renderLandscape();
+  document.getElementById('landscape-log').textContent = policyMessages[type];
+}
+
+function resetLandscape() {
+  landscapeState = { incentivize: false, tax: false, build: false, remove: false };
+  renderLandscape();
+  document.getElementById('landscape-log').textContent = 'The economic landscape shapes behavior. Agents follow the path of least resistance — always rolling downhill.';
+}
+
+function renderLandscape() {
+  const svgEl = document.getElementById('landscape-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 200;
+  const svg = d3.select('#landscape-svg').attr('width', w).attr('height', h);
+  svg.selectAll('*').remove();
+
+  const n = 80;
+  const baselineY = Array.from({ length: n }, (_, i) => {
+    const x = i / (n - 1);
+    return 0.5 + 0.15 * Math.sin(x * Math.PI * 3) + 0.05 * Math.sin(x * Math.PI * 7);
+  });
+
+  // Apply policy modifications
+  const y = baselineY.map((v, i) => {
+    let mod = 0;
+    const x = i / (n - 1);
+    if (landscapeState.incentivize) mod -= 0.15 * Math.exp(-Math.pow((x - 0.7) * 5, 2));
+    if (landscapeState.tax) mod += 0.18 * Math.exp(-Math.pow((x - 0.25) * 5, 2));
+    if (landscapeState.build) mod -= 0.08 * (x > 0.4 && x < 0.6 ? 1 : 0);
+    if (landscapeState.remove) mod -= 0.1 * Math.exp(-Math.pow((x - 0.5) * 8, 2));
+    return Math.max(0.1, Math.min(0.9, v + mod));
+  });
+
+  const xS = d3.scaleLinear().domain([0, n-1]).range([0, w]);
+  const yS = d3.scaleLinear().domain([0, 1]).range([h - 20, 20]);
+
+  const data = y.map((v, i) => ({ i, v }));
+
+  // Fill area below curve (the "valley/hill" landscape)
+  const area = d3.area().x(d => xS(d.i)).y0(h - 20).y1(d => yS(d.v)).curve(d3.curveBasis);
+  const line = d3.line().x(d => xS(d.i)).y(d => yS(d.v)).curve(d3.curveBasis);
+
+  svg.append('path').datum(data).attr('d', area).attr('fill', '#e0f2fe').attr('opacity', 0.6);
+  svg.append('path').datum(data).attr('d', line).attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2);
+
+  // Agents (dots) positioned at local minima
+  const minima = [];
+  for (let i = 2; i < n - 2; i++) {
+    if (y[i] < y[i-1] && y[i] < y[i+1] && y[i] < y[i-2] && y[i] < y[i+2]) {
+      minima.push(i);
+    }
+  }
+  // Add some random agents that have rolled toward minima
+  const agentPositions = [10, 25, 40, 55, 70];
+  agentPositions.forEach(pos => {
+    // Find nearest minimum
+    let target = pos;
+    let minY = y[pos];
+    for (let j = Math.max(0, pos - 15); j < Math.min(n, pos + 15); j++) {
+      if (y[j] < minY) { minY = y[j]; target = j; }
+    }
+    svg.append('circle')
+      .attr('cx', xS(target)).attr('cy', yS(y[target]) - 6)
+      .attr('r', 4).attr('fill', '#2563eb').attr('opacity', 0.8);
+  });
+
+  // Labels for active policies
+  if (landscapeState.incentivize) {
+    svg.append('text').attr('x', xS(n * 0.7)).attr('y', yS(y[Math.round(n * 0.7)]) - 16)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#16a34a').text('Valley (incentive)');
+  }
+  if (landscapeState.tax) {
+    svg.append('text').attr('x', xS(n * 0.25)).attr('y', yS(y[Math.round(n * 0.25)]) - 16)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#dc2626').text('Hill (tax)');
+  }
+}
+
+requestAnimationFrame(() => renderLandscape());
+
+// --- Guardian Lattice Network ---
+const oracleNodes = [
+  { id: 'o1', type: 'oracle', label: 'M Capital', x: 0.2, y: 0.25 },
+  { id: 'o2', type: 'oracle', label: 'I Capital', x: 0.5, y: 0.15 },
+  { id: 'o3', type: 'oracle', label: 'N Capital', x: 0.8, y: 0.25 },
+  { id: 'o4', type: 'oracle', label: 'D Capital', x: 0.35, y: 0.45 },
+];
+const citizenNodes = [
+  { id: 'c1', type: 'citizen', label: 'Juror 1', x: 0.15, y: 0.7 },
+  { id: 'c2', type: 'citizen', label: 'Juror 2', x: 0.35, y: 0.8 },
+  { id: 'c3', type: 'citizen', label: 'Juror 3', x: 0.55, y: 0.75 },
+  { id: 'c4', type: 'citizen', label: 'Juror 4', x: 0.75, y: 0.7 },
+  { id: 'c5', type: 'citizen', label: 'Juror 5', x: 0.65, y: 0.45 },
+];
+const allNodes = [...oracleNodes, ...citizenNodes];
+
+const edges = [
+  { s: 'o1', t: 'c1', type: 'propose' },
+  { s: 'o2', t: 'c2', type: 'propose' },
+  { s: 'o3', t: 'c3', type: 'propose' },
+  { s: 'o4', t: 'c5', type: 'propose' },
+  { s: 'c1', t: 'c2', type: 'decide' },
+  { s: 'c2', t: 'c3', type: 'decide' },
+  { s: 'c3', t: 'c4', type: 'decide' },
+  { s: 'c4', t: 'c5', type: 'decide' },
+  { s: 'o1', t: 'o2', type: 'monitor' },
+  { s: 'o2', t: 'o3', type: 'monitor' },
+  { s: 'o3', t: 'o4', type: 'monitor' },
+];
+
+let guardianSvg;
+requestAnimationFrame(() => {
+  const svgEl = document.getElementById('guardian-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 260;
+  guardianSvg = d3.select('#guardian-svg').attr('width', w).attr('height', h);
+
+  const nodePos = {};
+  allNodes.forEach(n => { nodePos[n.id] = { x: n.x * w, y: n.y * h }; });
+
+  // Edges
+  edges.forEach(e => {
+    const s = nodePos[e.s], t = nodePos[e.t];
+    guardianSvg.append('line').attr('class', 'edge-' + e.s + '-' + e.t)
+      .attr('x1', s.x).attr('y1', s.y).attr('x2', t.x).attr('y2', t.y)
+      .attr('stroke', e.type === 'decide' ? '#1a1a1a' : e.type === 'propose' ? '#d97706' : '#e5e5e0')
+      .attr('stroke-width', e.type === 'decide' ? 2 : 1)
+      .attr('stroke-dasharray', e.type === 'propose' ? '4,3' : 'none')
+      .attr('opacity', 0.5);
+  });
+
+  // Nodes
+  allNodes.forEach(node => {
+    const pos = nodePos[node.id];
+    const g = guardianSvg.append('g').attr('class', 'gnode-' + node.id);
+    g.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 14)
+      .attr('fill', node.type === 'oracle' ? '#2563eb' : '#16a34a')
+      .attr('opacity', 0.85).attr('stroke', 'white').attr('stroke-width', 2);
+    g.append('text').attr('x', pos.x).attr('y', pos.y + 4)
+      .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', 'white').attr('font-weight', 600)
+      .text(node.label);
+  });
+});
+
+const scenarioSteps = [
+  'Step 1: M Capital oracle detects ecological indicator dropping below threshold...',
+  'Step 2: Oracle proposes intervention to citizen jury: "Recommend carbon price increase"...',
+  'Step 3: Citizen jury deliberates (5 randomly selected citizens, 72-hour window)...',
+  'Step 4: Jury votes 4-1 to approve intervention...',
+  'Step 5: Approved intervention applied to policy landscape. M Capital stabilizes.',
+  'Scenario complete. The Guardian Lattice: AI proposes, humans decide. Always.'
+];
+
+let scenarioRunning = false;
+function runScenario() {
+  if (scenarioRunning) return;
+  scenarioRunning = true;
+  const log = document.getElementById('scenario-log');
+  let step = 0;
+
+  function nextStep() {
+    if (step >= scenarioSteps.length) {
+      scenarioRunning = false;
+      return;
+    }
+    log.textContent = scenarioSteps[step];
+
+    // Highlight active nodes
+    if (step === 0 && guardianSvg) {
+      d3.select('.gnode-o1').select('circle').attr('fill', '#dc2626');
+    } else if (step === 1 && guardianSvg) {
+      d3.select('.gnode-o1').select('circle').attr('fill', '#d97706');
+    } else if (step === 2 && guardianSvg) {
+      ['c1','c2','c3','c4','c5'].forEach(id => {
+        d3.select('.gnode-' + id).select('circle').attr('fill', '#f59e0b');
+      });
+    } else if (step === 4 && guardianSvg) {
+      ['o1','o2','o3','o4'].forEach(id => {
+        d3.select('.gnode-' + id).select('circle').attr('fill', '#2563eb');
+      });
+      ['c1','c2','c3','c4','c5'].forEach(id => {
+        d3.select('.gnode-' + id).select('circle').attr('fill', '#16a34a');
+      });
+    }
+
+    step++;
+    setTimeout(nextStep, 1800);
+  }
+
+  nextStep();
+}
+</script>
+</body>
+</html>

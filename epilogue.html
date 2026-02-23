@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epilogue — The Thousandth Day</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #1a1a1a; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #333; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+/* Parable panels */
+.parable-viewer { position: relative; }
+.parable-panel { display: none; text-align: center; padding: 1rem 0; }
+.parable-panel.active { display: block; }
+.parable-svg-wrap { margin: 0 auto; display: flex; justify-content: center; }
+.parable-text { font-size: 1rem; color: #333; line-height: 1.7; margin-top: 1rem; font-family: Georgia, serif; font-style: italic; max-width: 480px; margin-left: auto; margin-right: auto; }
+.parable-counter { font-size: 0.8rem; color: #888; margin-top: 0.75rem; }
+.parable-nav { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+/* Reflection widget */
+.reflection-questions { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1rem; }
+.reflection-q { }
+.reflection-q .rq-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+.reflection-options { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ref-btn { background: #f5f5f3; border: 1px solid #e5e5e0; color: #1a1a1a; padding: 0.4rem 0.9rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
+.ref-btn:hover { background: #e5e5e0; }
+.ref-btn.selected { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+.letter-box { background: #fafaf8; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; margin-top: 1.25rem; display: none; font-family: Georgia, serif; font-size: 0.95rem; line-height: 1.7; }
+.letter-box.show { display: block; }
+.letter-salutation { font-weight: 700; margin-bottom: 0.75rem; }
+.letter-signature { margin-top: 0.75rem; color: #888; font-style: italic; }
+/* Timeline river */
+.river-section { position: relative; }
+.question-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.question-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; }
+.question-card .qc-front { font-weight: 700; }
+.question-card .qc-back { display: none; font-size: 0.9rem; color: #555; margin-top: 0.5rem; line-height: 1.6; border-top: 1px solid #f0f0ed; padding-top: 0.5rem; }
+.question-card.flipped .qc-back { display: block; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="10-after-economics.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <span style="color:#aaa">End of book</span>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Epilogue</div>
+  <h1>The Thousandth Day</h1>
+
+  <p>This is a book about economics. But at its heart, it is a book about what it means to be human in a world that no longer needs humans to survive. The machines have taken our work. The question is what we do with the gift of that liberation.</p>
+
+  <p>History has answered this question before. Not easily. Not without loss. But answered it.</p>
+
+  <div class="panel">
+    <h2>The Monks of St. Gall</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:1rem;">A parable in five panels. Click Next to advance.</p>
+
+    <div class="parable-viewer">
+      <!-- Panel 1 -->
+      <div class="parable-panel active" id="par-0">
+        <div class="parable-svg-wrap"><svg id="par-svg-0" width="300" height="160"></svg></div>
+        <div class="parable-text">"1450 CE. A monk in a scriptorium. He has spent thirty years hand-copying manuscripts. Each letter formed in careful silence. It is the most valuable work in the world."</div>
+      </div>
+      <!-- Panel 2 -->
+      <div class="parable-panel" id="par-1">
+        <div class="parable-svg-wrap"><svg id="par-svg-1" width="300" height="160"></svg></div>
+        <div class="parable-text">"Gutenberg's press arrives. The abbot calls the monks together. 'Brothers,' he says, 'we are obsolete. A machine can copy in one day what took us one year.'"</div>
+      </div>
+      <!-- Panel 3 -->
+      <div class="parable-panel" id="par-2">
+        <div class="parable-svg-wrap"><svg id="par-svg-2" width="300" height="160"></svg></div>
+        <div class="parable-text">"Most monks followed the path of grief. Denial. Rage. Despair. Many left. Some tried to compete with the press — and failed. The scriptorium fell silent."</div>
+      </div>
+      <!-- Panel 4 -->
+      <div class="parable-panel" id="par-3">
+        <div class="parable-svg-wrap"><svg id="par-svg-3" width="300" height="160"></svg></div>
+        <div class="parable-text">"The monks of St. Gall chose differently. They stopped copying. They became scholars — reading the flood of new books the press made available. Curators of knowledge. Teachers of literacy to a newly reading world."</div>
+      </div>
+      <!-- Panel 5 -->
+      <div class="parable-panel" id="par-4">
+        <div class="parable-svg-wrap"><svg id="par-svg-4" width="300" height="160"></svg></div>
+        <div class="parable-text">"'The machine has taken our old work,' said the abbot of St. Gall. 'Thank God. Now we can begin our real work.'"</div>
+      </div>
+
+      <div class="parable-counter" id="par-counter">Panel 1 of 5</div>
+      <div class="parable-nav">
+        <button class="btn secondary" id="par-prev" onclick="advanceParable(-1)" disabled>&larr; Previous</button>
+        <button class="btn" id="par-next" onclick="advanceParable(1)">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Your Role in the Transition</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Three questions. Then a letter from the other side of the transition.</p>
+
+    <div class="reflection-questions">
+      <div class="reflection-q">
+        <div class="rq-label">1. Which Art of Being Human resonates most with you?</div>
+        <div class="reflection-options" id="opts-1">
+          <button class="ref-btn" data-group="1" data-val="attention" onclick="selectOpt(this)">Attention Architect</button>
+          <button class="ref-btn" data-group="1" data-val="relationship" onclick="selectOpt(this)">Relationship Weaver</button>
+          <button class="ref-btn" data-group="1" data-val="meaning" onclick="selectOpt(this)">Meaning Maker</button>
+          <button class="ref-btn" data-group="1" data-val="reality" onclick="selectOpt(this)">Reality Anchor</button>
+        </div>
+      </div>
+      <div class="reflection-q">
+        <div class="rq-label">2. What would you do if income were guaranteed?</div>
+        <div class="reflection-options" id="opts-2">
+          <button class="ref-btn" data-group="2" data-val="create" onclick="selectOpt(this)">Create (art, music, writing)</button>
+          <button class="ref-btn" data-group="2" data-val="teach" onclick="selectOpt(this)">Teach and mentor</button>
+          <button class="ref-btn" data-group="2" data-val="repair" onclick="selectOpt(this)">Repair and build</button>
+          <button class="ref-btn" data-group="2" data-val="explore" onclick="selectOpt(this)">Explore and discover</button>
+          <button class="ref-btn" data-group="2" data-val="connect" onclick="selectOpt(this)">Connect and organize</button>
+        </div>
+      </div>
+      <div class="reflection-q">
+        <div class="rq-label">3. What is your role in nucleation?</div>
+        <div class="reflection-options" id="opts-3">
+          <button class="ref-btn" data-group="3" data-val="build" onclick="selectOpt(this)">Build the new system</button>
+          <button class="ref-btn" data-group="3" data-val="document" onclick="selectOpt(this)">Document the transition</button>
+          <button class="ref-btn" data-group="3" data-val="protect" onclick="selectOpt(this)">Protect what matters</button>
+          <button class="ref-btn" data-group="3" data-val="tend" onclick="selectOpt(this)">Tend to those who struggle</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="letter-box" id="letter-box">
+      <div class="letter-salutation" id="letter-sal"></div>
+      <div id="letter-body"></div>
+      <div class="letter-signature">— From the other side of the transition</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>The Three Economies</h2>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">A river flowing through time. Click the question cards in the future section to see what Consciousness Economics will need to answer.</p>
+
+    <svg id="river-svg" width="100%" height="160"></svg>
+
+    <div class="question-cards" id="question-cards">
+      <div class="question-card" onclick="this.classList.toggle('flipped')">
+        <div class="qc-front">What is the moral status of a sufficiently conscious AI?</div>
+        <div class="qc-back">If an AI system has subjective experience — something it is like to be that system — does it have interests that matter morally? And if so, who represents those interests in an economy designed only for human actors?</div>
+      </div>
+      <div class="question-card" onclick="this.classList.toggle('flipped')">
+        <div class="qc-front">Can consciousness be distributed across multiple substrates?</div>
+        <div class="qc-back">A human is one consciousness in one body. A future AI might be a single consciousness running across thousands of servers — or millions of "instances" that share memory and goals. How do you assign property rights, legal personhood, or political representation to a distributed mind?</div>
+      </div>
+      <div class="question-card" onclick="this.classList.toggle('flipped')">
+        <div class="qc-front">What replaces scarcity as the organizing principle of value?</div>
+        <div class="qc-back">Intelligence Economics replaces scarcity with MIND capitals. Consciousness Economics will need a further step: when both matter and intelligence are abundant, what is scarce? Perhaps: attention, presence, authentic relationship, the irreducible thisness of a particular moment.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- Parable SVG illustrations ---
+function drawParable(id, panelIdx) {
+  const svg = d3.select('#par-svg-' + panelIdx).attr('width', 300).attr('height', 160);
+  svg.selectAll('*').remove();
+
+  const w = 300, h = 160;
+  const cx = w / 2, cy = h / 2;
+
+  if (panelIdx === 0) {
+    // Monk at desk
+    svg.append('rect').attr('x', 80).attr('y', 80).attr('width', 140).attr('height', 60).attr('fill', '#f5f5f3').attr('stroke', '#ccc').attr('rx', 2);
+    svg.append('ellipse').attr('cx', cx).attr('cy', 60).attr('rx', 20).attr('ry', 22).attr('fill', '#f5e6c8').attr('stroke', '#ccc').attr('stroke-width', 1.5);
+    // Manuscript lines
+    for (let i = 0; i < 5; i++) {
+      svg.append('line').attr('x1', 95).attr('y1', 95 + i * 9).attr('x2', 205).attr('y2', 95 + i * 9).attr('stroke', '#1a1a1a').attr('stroke-width', 1).attr('opacity', 0.6);
+    }
+    // Quill
+    svg.append('line').attr('x1', 145).attr('y1', 70).attr('x2', 120).attr('y2', 90).attr('stroke', '#888').attr('stroke-width', 2);
+    svg.append('text').attr('x', cx).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('The scriptorium, 1450');
+
+  } else if (panelIdx === 1) {
+    // Press machine
+    svg.append('rect').attr('x', 60).attr('y', 40).attr('width', 80).attr('height', 100).attr('fill', '#d4a855').attr('stroke', '#8a6530').attr('rx', 4).attr('stroke-width', 2);
+    svg.append('rect').attr('x', 75).attr('y', 55).attr('width', 50).attr('height', 70).attr('fill', '#f5f5f3').attr('rx', 2);
+    for (let i = 0; i < 4; i++) {
+      svg.append('line').attr('x1', 82).attr('y1', 65 + i * 14).attr('x2', 118).attr('y2', 65 + i * 14).attr('stroke', '#555').attr('stroke-width', 1).attr('opacity', 0.7);
+    }
+    svg.append('rect').attr('x', 85).attr('y', 30).attr('width', 30).attr('height', 20).attr('fill', '#888').attr('rx', 2);
+    // Monk figures watching
+    [190, 215, 240].forEach((x, i) => {
+      svg.append('ellipse').attr('cx', x).attr('cy', 75).attr('rx', 10).attr('ry', 11).attr('fill', '#f5e6c8').attr('stroke', '#ccc').attr('stroke-width', 1);
+      svg.append('rect').attr('x', x - 8).attr('y', 86).attr('width', 16).attr('height', 30).attr('fill', '#6b5a3e').attr('rx', 2);
+    });
+    svg.append('text').attr('x', cx).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Gutenberg\'s press arrives');
+
+  } else if (panelIdx === 2) {
+    // Monks dispersing (sad figures)
+    const poses = [{x:60,y:80},{x:120,y:90},{x:180,y:75},{x:240,y:85}];
+    poses.forEach((p, i) => {
+      svg.append('ellipse').attr('cx', p.x).attr('cy', p.y - 12).attr('rx', 9).attr('ry', 10).attr('fill', '#f5e6c8').attr('stroke', '#ccc').attr('stroke-width', 1);
+      svg.append('rect').attr('x', p.x - 7).attr('y', p.y - 2).attr('width', 14).attr('height', 28).attr('fill', '#6b5a3e').attr('rx', 2).attr('opacity', 0.6 + i * 0.1);
+      // Drooping shoulders effect
+      svg.append('line').attr('x1', p.x - 10).attr('y1', p.y + 5).attr('x2', p.x - 18).attr('y2', p.y + 18).attr('stroke', '#6b5a3e').attr('stroke-width', 4).attr('stroke-linecap', 'round');
+      svg.append('line').attr('x1', p.x + 10).attr('y1', p.y + 5).attr('x2', p.x + 18).attr('y2', p.y + 18).attr('stroke', '#6b5a3e').attr('stroke-width', 4).attr('stroke-linecap', 'round');
+    });
+    // X marks
+    [60,180].forEach(x => {
+      svg.append('text').attr('x', x).attr('y', 130).attr('text-anchor', 'middle').attr('font-size', 18).attr('fill', '#dc2626').attr('opacity', 0.4).text('×');
+    });
+    svg.append('text').attr('x', cx).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Denial. Rage. Despair.');
+
+  } else if (panelIdx === 3) {
+    // Monks reading books, teaching
+    // Bookshelf
+    svg.append('rect').attr('x', 20).attr('y', 40).attr('width', 100).attr('height', 80).attr('fill', '#d4a855').attr('stroke', '#8a6530').attr('rx', 2).attr('stroke-width', 2);
+    for (let i = 0; i < 6; i++) {
+      const bookColors = ['#dc2626','#2563eb','#16a34a','#d97706','#7c3aed','#0891b2'];
+      svg.append('rect').attr('x', 26 + i * 14).attr('y', 48).attr('width', 12).attr('height', 65).attr('fill', bookColors[i]).attr('rx', 1);
+    }
+    // Scholar reading
+    svg.append('ellipse').attr('cx', 200).attr('cy', 65).attr('rx', 14).attr('ry', 15).attr('fill', '#f5e6c8').attr('stroke', '#ccc').attr('stroke-width', 1);
+    svg.append('rect').attr('x', 186).attr('y', 80).attr('width', 28).attr('height', 45).attr('fill', '#3b6e8c').attr('rx', 2);
+    // Open book in hands
+    svg.append('rect').attr('x', 175).attr('y', 100).attr('width', 50).attr('height', 30).attr('fill', '#f5f5f3').attr('stroke', '#ccc').attr('rx', 2);
+    svg.append('line').attr('x1', 200).attr('y1', 100).attr('x2', 200).attr('y2', 130).attr('stroke', '#ccc').attr('stroke-width', 1);
+    svg.append('text').attr('x', cx).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('Scholars, curators, teachers');
+
+  } else if (panelIdx === 4) {
+    // A single figure, light around them
+    const pulseR = 40;
+    [60, 50, 40].forEach((r, i) => {
+      svg.append('circle').attr('cx', cx).attr('cy', cy - 10).attr('r', r)
+        .attr('fill', 'none').attr('stroke', '#1a1a1a').attr('stroke-width', 1).attr('opacity', 0.1 + i * 0.1);
+    });
+    // Figure
+    svg.append('ellipse').attr('cx', cx).attr('cy', cy - 30).attr('rx', 14).attr('ry', 15).attr('fill', '#f5e6c8').attr('stroke', '#ccc').attr('stroke-width', 1);
+    svg.append('rect').attr('x', cx - 11).attr('y', cy - 15).attr('width', 22).attr('height', 40).attr('fill', '#1a1a1a').attr('rx', 2);
+    // Arms raised
+    svg.append('line').attr('x1', cx - 11).attr('y1', cy - 5).attr('x2', cx - 30).attr('y2', cy - 20).attr('stroke', '#1a1a1a').attr('stroke-width', 4).attr('stroke-linecap', 'round');
+    svg.append('line').attr('x1', cx + 11).attr('y1', cy - 5).attr('x2', cx + 30).attr('y2', cy - 20).attr('stroke', '#1a1a1a').attr('stroke-width', 4).attr('stroke-linecap', 'round');
+    svg.append('text').attr('x', cx).attr('y', cy + 45).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#888').text('"Now we can begin our real work."');
+  }
+}
+
+let currentPanel = 0;
+const totalPanels = 5;
+
+function renderParable() {
+  document.querySelectorAll('.parable-panel').forEach((el, i) => {
+    el.classList.toggle('active', i === currentPanel);
+  });
+  document.getElementById('par-counter').textContent = 'Panel ' + (currentPanel + 1) + ' of ' + totalPanels;
+  document.getElementById('par-prev').disabled = currentPanel === 0;
+  document.getElementById('par-next').disabled = currentPanel === totalPanels - 1;
+}
+
+function advanceParable(dir) {
+  currentPanel = Math.max(0, Math.min(totalPanels - 1, currentPanel + dir));
+  renderParable();
+}
+
+// Draw all parable SVGs
+requestAnimationFrame(() => {
+  for (let i = 0; i < 5; i++) drawParable(null, i);
+});
+
+// --- Reflection widget ---
+const selections = { 1: null, 2: null, 3: null };
+
+function selectOpt(btn) {
+  const group = btn.dataset.group;
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selections[group] = btn.dataset.val;
+  generateLetter();
+}
+
+const letters = {
+  attention: {
+    create: { build: 'You are the architect of new aesthetic forms — the person who shapes what the AI age looks, sounds, and feels like. The transition needs beauty as much as it needs logic.',
+               document: 'You are the chronicler — capturing the felt experience of the transition so future generations understand not just what happened but what it was like to live through it.',
+               protect: 'You are the guardian of quality attention in an age of infinite distraction. You teach people to see, to listen, to be present when presence is hardest.',
+               tend: 'You are the guide — helping those whose identities were built around their work to find meaning in attention itself, in the irreducible experience of being here.' },
+    teach: { build: 'You design the learning systems of the new age — not curriculum, but attention practices. How to be human alongside machines that never need rest.',
+              document: 'You document pedagogies — the new methods of teaching presence in an age of infinite cognitive prosthetics.',
+              protect: 'You are a teacher of attention in the deepest sense — of what matters, of how to see.',
+              tend: 'You hold space for the overwhelmed — teaching the undervalued art of simply noticing.' }
+  }
+};
+
+function generateLetter() {
+  if (!selections[1] || !selections[2] || !selections[3]) return;
+
+  const letterTemplates = {
+    'attention-create-build': 'You arrived during the transition as an architect of attention — someone who understood that building new systems was also an act of aesthetics. The tools you created were beautiful as well as functional. People came to them not just because they worked but because they felt right. That quality of presence in design became a kind of signature of the new era.',
+    'attention-create-document': 'You became the felt memory of the transition. Your work — whether writing, visual, sonic, or mixed — captured what the data could not: the texture of this time. Historians will cite the statistics. People will live inside your work.',
+    'attention-create-protect': 'You built sanctuaries — spaces and practices and objects that preserved the value of genuine human attention in an age that had automated everything else. More people needed those spaces than you ever expected.',
+    'attention-create-tend': 'Your art was a kind of medicine. You created for people who were losing their footing — work that reminded them of their own irreducible humanity at exactly the moment when they most needed to be reminded.',
+    'attention-teach-build': 'You built the pedagogies of the new age — not coding bootcamps, but attention bootcamps. Your programs taught people to navigate information abundance by deepening their capacity for presence rather than expanding their processing speed.',
+    'attention-teach-document': 'Your documentation of teaching practice during the transition became foundational. You captured not just what worked but why — the phenomenology of learning in an age when the most important things could not be automated.',
+    'attention-teach-protect': 'You became a guardian of quality attention in formal settings — insisting that some spaces remain device-free, that some conversations happen without AI mediation, that some learning require genuine struggle.',
+    'attention-teach-tend': 'You specialized in the hardest students: people over fifty who had built professional identities around capabilities the machine now exceeded. You helped them find new dignity not by pretending the machines were limited but by showing them what they still had that the machines never would.',
+    'relationship-create-build': 'You built the social infrastructure of the new economy — the rituals, spaces, and practices that enabled trust between humans who no longer shared the binding experience of work. Without you, the efficiency gains would have been hollow.',
+    'relationship-create-document': 'You were the anthropologist of the transition — documenting how human bonds changed, stretched, and sometimes broke when the shared context of labor disappeared. Your work became essential reading for anyone designing social policy.',
+    'relationship-create-protect': 'You were a weaver — repairing the social fabric where it tore. Not through grand interventions but through thousands of small acts of connection, documentation, and witness.',
+    'relationship-create-tend': 'Your creative work was a form of accompaniment — sitting with people in the difficulty of the transition and making art that said: you are not alone in this.',
+    'relationship-teach-build': 'You built the relationship architectures that the new economy ran on — the protocols of trust, the practices of accountability, the rituals of belonging that replaced what work used to provide.',
+    'relationship-teach-document': 'You documented the new forms of human connection that emerged when work was no longer the primary binding agent. Your records are now foundational to social science.',
+    'relationship-teach-protect': 'You protected the vulnerable relationships — mentoring, friendship, community — from being displaced or mediated by AI in ways that would have hollowed them out.',
+    'relationship-teach-tend': 'You tended to the isolated — the people for whom the transition meant losing not just income but the daily web of colleagues and routine that had constituted their social world.',
+    'meaning-create-build': 'You built the meaning infrastructure of the new age — not churches or ideologies but something more modest and more durable: practices, communities, and frameworks for a life of purpose without a job.',
+    'meaning-create-document': 'Your documentation of how people found meaning during the transition — the unexpected sources, the surprising resilience, the new forms of purpose — became a kind of field guide for the new age.',
+    'meaning-create-protect': 'You protected meaning from being colonized — by productivity logic, by algorithmic optimization, by the creeping sense that if something could not be measured it did not count.',
+    'meaning-create-tend': 'Your creative work held space for grief and transformation simultaneously — refusing to be either falsely optimistic or falsely despairing. That balance was exactly what people needed.',
+    'meaning-teach-build': 'You built new curricula for the deepest questions — not philosophy as academic exercise but as practical wisdom for people navigating the transition.',
+    'meaning-teach-document': 'You documented the practices and communities that sustained meaning during the transition. Your work became a map for those who came after.',
+    'meaning-teach-protect': 'You were a fierce protector of the humanities — insisting that literature, history, and philosophy were not luxuries but survival tools for the transition.',
+    'meaning-teach-tend': 'You sat with people in their purposelessness — not rushing to fix it but helping them trust that the passage through emptiness was part of the path.',
+    'reality-create-build': 'You built the epistemic infrastructure of the new age — the tools and practices that helped people distinguish signal from noise, genuine from synthetic, real from generated.',
+    'reality-create-document': 'Your documentation of what was genuinely true during the transition — amid floods of generated content — became invaluable. You were a keeper of the real.',
+    'reality-create-protect': 'You protected shared reality with fierce tenacity — calling out unreality, building systems of verification, insisting on evidence in an age when evidence could be fabricated.',
+    'reality-create-tend': 'You helped people who had been lost in information floods to find ground again — the simple, verifiable, physical reality that no AI could fake or optimize away.',
+    'reality-teach-build': 'You built the critical literacy curricula for the AI age — teaching people not just to use tools but to interrogate them, not just to consume information but to evaluate it.',
+    'reality-teach-document': 'Your documentation of epistemological challenges during the transition became standard reading for educators, journalists, and policymakers navigating the age of synthetic media.',
+    'reality-teach-protect': 'You protected the institutions of epistemic trust — journalism, science, public discourse — from being overwhelmed by the volume of generated content.',
+    'reality-teach-tend': 'You worked with the most vulnerable — people who had lost their grip on what was true, what was real, what could be trusted. That work was harder than it looked and more important than it was recognized.'
+  };
+
+  const key = `${selections[1]}-${selections[2]}-${selections[3]}`;
+  const text = letterTemplates[key] || `You combined ${selections[1]} sensibility with a drive to ${selections[2]} and a commitment to ${selections[3]}. That particular combination turned out to be exactly what the transition needed — not despite its specificity but because of it. The thousandth day arrived. The phase transition locked in. And you were there, doing the particular work that only you could do, in the way that only you could do it.`;
+
+  const salutations = {
+    build: 'To the builder:',
+    document: 'To the witness:',
+    protect: 'To the guardian:',
+    tend: 'To the companion:'
+  };
+
+  document.getElementById('letter-sal').textContent = salutations[selections[3]] || 'To you:';
+  document.getElementById('letter-body').textContent = text;
+  document.getElementById('letter-box').classList.add('show');
+}
+
+// --- River Timeline SVG ---
+requestAnimationFrame(() => {
+  const svgEl = document.getElementById('river-svg');
+  const w = svgEl.clientWidth || 600;
+  const h = 160;
+  const svg = d3.select('#river-svg').attr('width', w).attr('height', h);
+
+  const sections = [
+    { label: 'Scarcity Economics', sublabel: 'Resources', x0: 0, x1: 0.33, color: '#d97706' },
+    { label: 'Intelligence Economics', sublabel: 'This book', x0: 0.33, x1: 0.66, color: '#2563eb' },
+    { label: 'Consciousness Economics', sublabel: 'The future', x0: 0.66, x1: 1, color: '#7c3aed' }
+  ];
+
+  const riverH = 40;
+  const riverY = h / 2 - riverH / 2;
+
+  sections.forEach(s => {
+    const x1 = s.x0 * w, x2 = s.x1 * w;
+    svg.append('rect').attr('x', x1 + 2).attr('y', riverY).attr('width', x2 - x1 - 4).attr('height', riverH)
+      .attr('fill', s.color).attr('opacity', 0.15).attr('rx', s.x0 === 0 ? 4 : s.x1 === 1 ? 4 : 0);
+    svg.append('rect').attr('x', x1 + 2).attr('y', riverY).attr('width', x2 - x1 - 4).attr('height', riverH)
+      .attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2).attr('opacity', 0.4)
+      .attr('rx', s.x0 === 0 ? 4 : s.x1 === 1 ? 4 : 0);
+
+    const cx = (x1 + x2) / 2;
+    svg.append('text').attr('x', cx).attr('y', riverY + 16)
+      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', s.color).attr('font-weight', 700)
+      .text(s.label);
+    svg.append('text').attr('x', cx).attr('y', riverY + 32)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', s.color)
+      .text(s.sublabel);
+  });
+
+  // "You are here" marker
+  const youX = w * 0.5;
+  svg.append('line').attr('x1', youX).attr('y1', riverY - 15).attr('x2', youX).attr('y2', riverY)
+    .attr('stroke', '#1a1a1a').attr('stroke-width', 2).attr('stroke-dasharray', '3,2');
+  svg.append('text').attr('x', youX).attr('y', riverY - 18)
+    .attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#1a1a1a').attr('font-weight', 700)
+    .text('You are here');
+
+  // Question mark for future section
+  svg.append('text').attr('x', w * 0.83).attr('y', riverY + 60)
+    .attr('text-anchor', 'middle').attr('font-size', 24).attr('fill', '#7c3aed').attr('opacity', 0.4)
+    .text('?');
+
+  // Time labels
+  svg.append('text').attr('x', 10).attr('y', h - 10).attr('font-size', 9).attr('fill', '#888').text('Prehistory → 1800s');
+  svg.append('text').attr('x', w * 0.5).attr('y', h - 10).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888').text('1950s → now');
+  svg.append('text').attr('x', w - 10).attr('y', h - 10).attr('text-anchor', 'end').attr('font-size', 9).attr('fill', '#888').text('2040s → ?');
+});
+</script>
+</body>
+</html>
