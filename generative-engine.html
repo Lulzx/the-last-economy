@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 7 — The Generative Engine</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+
+.btn { background: #0d9488; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #0f766e; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+
+.step-counter { font-size: 1rem; font-weight: 700; color: #0d9488; text-align: center; margin: 0.75rem 0; }
+.noise-label { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 0.5rem; }
+
+/* Denoiser grid */
+#denoiser-svg { display: block; margin: 0 auto; }
+
+/* Economy mapping table */
+.mapping-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.mapping-table th { background: #0d9488; color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+.mapping-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e5e0; vertical-align: top; }
+.mapping-table tr:last-child td { border-bottom: none; }
+.mapping-table tr:nth-child(even) td { background: #f5f5f3; }
+
+/* Gradient descent */
+#landscape-svg { display: block; margin: 0 auto; cursor: crosshair; }
+.loss-display { text-align: center; font-size: 1.2rem; font-weight: 700; color: #0d9488; margin: 0.5rem 0; }
+.loss-label { font-size: 0.85rem; color: #666; text-align: center; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="04-maxwells-demon.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="05-mind-dashboard.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 7</div>
+  <h1>The Generative Engine</h1>
+
+  <p>An economy is a generative engine: it turns infinite human desires, constraints, and resources into coherent order &mdash; prices, firms, supply chains, institutions. Diffusion models in AI work by the same logic. They learn to reverse entropy, denoising random chaos into structured meaning one step at a time. Every market transaction is a denoising step.</p>
+
+  <!-- Panel 1: The Denoising Process -->
+  <div class="panel">
+    <h2>The Denoising Process</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Watch pure noise resolve into a recognizable pattern, step by step &mdash; just as economies crystallize order from chaos.</p>
+    <div class="noise-label" id="noise-label">Noise Level: 100% &mdash; Step 0 / 10</div>
+    <svg id="denoiser-svg" width="300" height="300"></svg>
+    <div style="text-align:center;margin-top:1rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+      <button class="btn" id="denoise-btn" onclick="runDenoise()">Denoise</button>
+      <button class="btn secondary" onclick="resetDenoise()">Reset</button>
+    </div>
+    <div class="step-counter" id="step-counter"></div>
+  </div>
+
+  <!-- Panel 2: Economy as Denoiser -->
+  <div class="panel">
+    <h2>Economy as Denoiser</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">The diffusion model and the economy share the same architecture: both reverse entropy through iterated local decisions guided by a global objective.</p>
+    <table class="mapping-table">
+      <tr>
+        <th>Diffusion Model</th>
+        <th>Economy</th>
+      </tr>
+      <tr>
+        <td><strong>Random noise</strong><br>Pure entropy, no structure</td>
+        <td><strong>Infinite human desires &amp; constraints</strong><br>Competing needs, scarce resources, local knowledge</td>
+      </tr>
+      <tr>
+        <td><strong>Denoising step</strong><br>Neural network removes a little noise</td>
+        <td><strong>Market transaction / policy decision</strong><br>Local actors exchange value, reducing local uncertainty</td>
+      </tr>
+      <tr>
+        <td><strong>Emergent pattern</strong><br>A recognizable image crystallizes</td>
+        <td><strong>Prices, firms, supply chains</strong><br>Coherent order emerges from distributed decisions</td>
+      </tr>
+      <tr>
+        <td><strong>The prompt</strong><br>The target image description</td>
+        <td><strong>Drive to reduce entropy / create value</strong><br>The collective gradient that guides the system</td>
+      </tr>
+      <tr>
+        <td><strong>Gradient descent</strong><br>The learning algorithm</td>
+        <td><strong>Price signals</strong><br>Error signals that propagate through the network</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Panel 3: The Gradient Descent Landscape -->
+  <div class="panel">
+    <h2>The Gradient Descent Landscape</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click anywhere to place the ball, then click "Optimize" to watch gradient descent find the minimum &mdash; simulating how an economy (or an AI) rolls toward lower-entropy states.</p>
+    <svg id="landscape-svg" width="600" height="300"></svg>
+    <div class="loss-label">Current Loss</div>
+    <div class="loss-display" id="loss-display">—</div>
+    <div style="text-align:center;margin-top:0.75rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+      <button class="btn" id="optimize-btn" onclick="startOptimize()">Optimize</button>
+      <button class="btn secondary" onclick="resetLandscape()">Reset</button>
+    </div>
+    <p style="font-size:0.85rem;color:#888;margin-top:0.75rem;text-align:center;">The landscape has multiple local minima — not all gradient descents reach the global optimum. Same problem for markets and AI alike.</p>
+  </div>
+</div>
+
+<script>
+// ========== Panel 1: Denoising Grid ==========
+(function() {
+  const GRID = 20;
+  const CELL = 14;
+  const PAD = 10;
+  const svgSize = GRID * CELL + PAD * 2;
+
+  // Target pattern: a simple house/smiley face encoded as values
+  // 1 = colored, 0 = light (background)
+  const target = [];
+  for (let r = 0; r < GRID; r++) {
+    target[r] = [];
+    for (let c = 0; c < GRID; c++) {
+      target[r][c] = 0;
+    }
+  }
+
+  // Draw a simple house shape
+  // Roof (triangle approximated as rows)
+  for (let r = 2; r <= 8; r++) {
+    const half = r - 2;
+    const start = 10 - half;
+    const end = 10 + half;
+    for (let c = start; c <= end; c++) {
+      if (c >= 0 && c < GRID) target[r][c] = 1;
+    }
+  }
+  // Walls
+  for (let r = 8; r <= 15; r++) {
+    for (let c = 5; c <= 14; c++) {
+      target[r][c] = 1;
+    }
+  }
+  // Door
+  for (let r = 11; r <= 15; r++) {
+    for (let c = 8; c <= 11; c++) {
+      target[r][c] = 0.3;
+    }
+  }
+  // Windows
+  for (let r = 9; r <= 11; r++) {
+    for (let c = 6; c <= 7; c++) target[r][c] = 0.3;
+    for (let c = 12; c <= 13; c++) target[r][c] = 0.3;
+  }
+
+  const svg = d3.select('#denoiser-svg')
+    .attr('width', svgSize).attr('height', svgSize)
+    .attr('viewBox', `0 0 ${svgSize} ${svgSize}`);
+
+  let noiseLevel = 1.0;
+  let step = 0;
+  const STEPS = 10;
+  let animating = false;
+
+  // Stable random values per cell (so noise doesn't flicker on re-render)
+  const noise = [];
+  function freshNoise() {
+    for (let r = 0; r < GRID; r++) {
+      noise[r] = [];
+      for (let c = 0; c < GRID; c++) {
+        noise[r][c] = Math.random();
+      }
+    }
+  }
+  freshNoise();
+
+  const rects = svg.selectAll('rect')
+    .data(d3.range(GRID * GRID))
+    .join('rect')
+    .attr('x', d => PAD + (d % GRID) * CELL)
+    .attr('y', d => PAD + Math.floor(d / GRID) * CELL)
+    .attr('width', CELL - 1)
+    .attr('height', CELL - 1)
+    .attr('rx', 1);
+
+  function getColor(r, c, noiseVal) {
+    const tgt = target[r][c];
+    // Target color: teal for house walls, brown for door/windows, light background
+    let targetColor;
+    if (tgt === 1) targetColor = [13, 148, 136]; // teal
+    else if (tgt === 0.3) targetColor = [120, 80, 40]; // brown
+    else targetColor = [240, 240, 238]; // background
+
+    // Noise color: random gray
+    const g = Math.floor(noise[r][c] * 200 + 30);
+    const noiseColor = [g, g, g];
+
+    // Blend between noise and target based on noise level
+    const blend = noiseVal;
+    const final = targetColor.map((t, i) => Math.round(t * (1 - blend) + noiseColor[i] * blend));
+    return `rgb(${final[0]},${final[1]},${final[2]})`;
+  }
+
+  function renderGrid(nl) {
+    rects.attr('fill', function(d) {
+      const r = Math.floor(d / GRID);
+      const c = d % GRID;
+      return getColor(r, c, nl);
+    });
+  }
+
+  window.resetDenoise = function() {
+    noiseLevel = 1.0;
+    step = 0;
+    animating = false;
+    freshNoise();
+    document.getElementById('noise-label').textContent = 'Noise Level: 100% — Step 0 / 10';
+    document.getElementById('step-counter').textContent = '';
+    document.getElementById('denoise-btn').disabled = false;
+    renderGrid(noiseLevel);
+  };
+
+  window.runDenoise = function() {
+    if (animating || step >= STEPS) return;
+    animating = true;
+    document.getElementById('denoise-btn').disabled = true;
+
+    function doStep() {
+      if (step >= STEPS) {
+        animating = false;
+        document.getElementById('denoise-btn').disabled = false;
+        return;
+      }
+      step++;
+      noiseLevel = 1 - step / STEPS;
+      // Re-seed noise slightly each step (some pixels "lock in")
+      for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+          if (Math.random() < 0.3) noise[r][c] = Math.random();
+        }
+      }
+      renderGrid(noiseLevel);
+      const pct = Math.round(noiseLevel * 100);
+      document.getElementById('noise-label').textContent = `Noise Level: ${pct}% — Step ${step} / ${STEPS}`;
+      document.getElementById('step-counter').textContent = step < STEPS
+        ? `Denoising... step ${step} of ${STEPS}`
+        : 'Pattern fully resolved. Entropy reversed.';
+
+      if (step < STEPS) {
+        setTimeout(doStep, 450);
+      } else {
+        animating = false;
+        document.getElementById('denoise-btn').disabled = false;
+      }
+    }
+    doStep();
+  };
+
+  renderGrid(1.0);
+})();
+
+// ========== Panel 3: Gradient Descent Landscape ==========
+(function() {
+  const W = 600, H = 300;
+  const svg = d3.select('#landscape-svg')
+    .attr('width', W).attr('height', H)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .style('max-width', '100%');
+
+  // Loss function: multiple local minima
+  function loss(x, y) {
+    const nx = x / W, ny = y / H;
+    // Multiple bowl minima
+    const m1 = 3.5 * Math.exp(-((nx - 0.25) ** 2 + (ny - 0.7) ** 2) / 0.025);
+    const m2 = 4.0 * Math.exp(-((nx - 0.75) ** 2 + (ny - 0.65) ** 2) / 0.018);
+    const m3 = 5.0 * Math.exp(-((nx - 0.5) ** 2 + (ny - 0.3) ** 2) / 0.020);
+    const base = 0.5 * Math.sin(nx * Math.PI * 2) * Math.sin(ny * Math.PI * 2.5);
+    return 1 - (m1 + m2 + m3) / 5 + base * 0.15;
+  }
+
+  // Build heatmap using contours
+  const NX = 60, NY = 30;
+  const values = new Array(NX * NY);
+  for (let j = 0; j < NY; j++) {
+    for (let i = 0; i < NX; i++) {
+      values[j * NX + i] = loss((i / NX) * W, (j / NY) * H);
+    }
+  }
+
+  const contours = d3.contours().size([NX, NY]).thresholds(d3.range(0.05, 1.0, 0.08))(values);
+  const xScale = d3.scaleLinear().domain([0, NX]).range([0, W]);
+  const yScale = d3.scaleLinear().domain([0, NY]).range([0, H]);
+  const path = d3.geoPath(d3.geoTransform({
+    point: function(x, y) { this.stream.point(xScale(x), yScale(y)); }
+  }));
+  const colorScale = d3.scaleSequential(d3.interpolateRdYlGn).domain([1.0, 0.0]);
+
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#fff8f0').attr('rx', 6);
+  svg.selectAll('path.contour').data(contours).enter().append('path')
+    .attr('d', path)
+    .attr('fill', d => colorScale(d.value))
+    .attr('stroke', 'rgba(0,0,0,0.08)')
+    .attr('stroke-width', 0.5)
+    .attr('opacity', 0.85);
+
+  // Label minima
+  const minima = [
+    { x: W * 0.25, y: H * 0.7, label: 'Local min' },
+    { x: W * 0.75, y: H * 0.65, label: 'Local min' },
+    { x: W * 0.5, y: H * 0.3, label: 'Global min' }
+  ];
+  minima.forEach(m => {
+    svg.append('circle').attr('cx', m.x).attr('cy', m.y).attr('r', 5)
+      .attr('fill', 'none').attr('stroke', '#333').attr('stroke-width', 1.5);
+    svg.append('text').attr('x', m.x).attr('y', m.y - 9)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#555').text(m.label);
+  });
+
+  // Ball state
+  let ballX = W * 0.7, ballY = H * 0.2;
+  let optimizing = false;
+
+  const trail = svg.append('g').attr('class', 'trail');
+  const ball = svg.append('circle').attr('r', 9)
+    .attr('fill', '#0d9488').attr('stroke', 'white').attr('stroke-width', 2.5)
+    .attr('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))')
+    .attr('cursor', 'grab');
+
+  function updateBall() {
+    ball.attr('cx', ballX).attr('cy', ballY);
+    const l = loss(ballX, ballY);
+    document.getElementById('loss-display').textContent = l.toFixed(3);
+  }
+  updateBall();
+
+  // Click to place ball
+  svg.on('click', function(event) {
+    if (optimizing) return;
+    const [mx, my] = d3.pointer(event);
+    ballX = Math.max(10, Math.min(W - 10, mx));
+    ballY = Math.max(10, Math.min(H - 10, my));
+    trail.selectAll('*').remove();
+    updateBall();
+  });
+
+  // Drag ball
+  ball.call(d3.drag()
+    .on('start', () => { if (!optimizing) ball.attr('cursor', 'grabbing'); })
+    .on('drag', function(event) {
+      if (optimizing) return;
+      ballX = Math.max(10, Math.min(W - 10, event.x));
+      ballY = Math.max(10, Math.min(H - 10, event.y));
+      trail.selectAll('*').remove();
+      updateBall();
+    })
+    .on('end', () => ball.attr('cursor', 'grab'))
+  );
+
+  window.startOptimize = function() {
+    if (optimizing) return;
+    optimizing = true;
+    document.getElementById('optimize-btn').disabled = true;
+    trail.selectAll('*').remove();
+
+    const LR = 8; // learning rate (pixels)
+    const ITERS = 80;
+    let iter = 0;
+    const EPS = 1.5;
+
+    function step() {
+      if (iter >= ITERS) {
+        optimizing = false;
+        document.getElementById('optimize-btn').disabled = false;
+        return;
+      }
+      iter++;
+      // Numerical gradient
+      const l0 = loss(ballX, ballY);
+      const gx = (loss(ballX + EPS, ballY) - l0) / EPS;
+      const gy = (loss(ballX, ballY + EPS) - l0) / EPS;
+      const mag = Math.sqrt(gx * gx + gy * gy) + 1e-6;
+      const lr = LR * (1 - iter / ITERS * 0.7); // decaying LR
+
+      // Add trail dot
+      trail.append('circle')
+        .attr('cx', ballX).attr('cy', ballY).attr('r', 2)
+        .attr('fill', '#0d9488').attr('opacity', 0.3 + (iter / ITERS) * 0.3);
+
+      ballX -= (gx / mag) * lr;
+      ballY -= (gy / mag) * lr;
+      ballX = Math.max(10, Math.min(W - 10, ballX));
+      ballY = Math.max(10, Math.min(H - 10, ballY));
+      updateBall();
+      setTimeout(step, 40);
+    }
+    step();
+  };
+
+  window.resetLandscape = function() {
+    optimizing = false;
+    document.getElementById('optimize-btn').disabled = false;
+    ballX = W * 0.7;
+    ballY = H * 0.2;
+    trail.selectAll('*').remove();
+    updateBall();
+  };
+})();
+</script>
+</body>
+</html>

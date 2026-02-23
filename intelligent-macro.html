@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 20 — Intelligent Macroeconomics</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+
+/* Puzzle cards */
+.puzzle-grid { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
+.puzzle-card { border: 1px solid #e5e5e0; border-radius: 8px; overflow: hidden; }
+.puzzle-header { padding: 0.9rem 1.1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f5f5f3; transition: background 0.15s; }
+.puzzle-header:hover { background: #ebebea; }
+.puzzle-header h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+.puzzle-header .puzzle-badge { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.puzzle-body { display: none; padding: 1rem 1.1rem; border-top: 1px solid #e5e5e0; }
+.puzzle-card.open .puzzle-body { display: block; }
+.puzzle-card.open .puzzle-toggle { transform: rotate(180deg); }
+.puzzle-toggle { transition: transform 0.2s; font-size: 0.9rem; color: #888; }
+.old-explanation { background: #f5f5f3; border-left: 3px solid #ccc; padding: 0.5rem 0.75rem; border-radius: 0 4px 4px 0; margin-bottom: 0.75rem; font-size: 0.9rem; color: #777; }
+.old-explanation .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #aaa; font-weight: 700; margin-bottom: 0.2rem; }
+.mind-explanation { border-left: 3px solid #6d28d9; padding: 0.5rem 0.75rem; border-radius: 0 4px 4px 0; background: #faf5ff; font-size: 0.9rem; margin-bottom: 0.75rem; }
+.mind-explanation .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6d28d9; font-weight: 700; margin-bottom: 0.2rem; }
+.culprit-bars { display: flex; gap: 0.4rem; margin-top: 0.75rem; align-items: flex-end; height: 60px; }
+.culprit-bar { flex: 1; border-radius: 4px 4px 0 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; font-size: 0.7rem; font-weight: 700; color: white; transition: height 0.5s; }
+
+/* MIND Allocation Game */
+.alloc-sliders { margin: 1rem 0; }
+.alloc-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.6rem 0; font-size: 0.9rem; }
+.alloc-row label { width: 32px; font-weight: 700; flex-shrink: 0; font-size: 1rem; }
+.alloc-row input { flex: 1; }
+.alloc-row .val { width: 36px; text-align: right; font-weight: 600; color: #333; }
+.alloc-total { font-size: 0.85rem; color: #888; margin: 0.25rem 0 1rem; }
+.alloc-total.over { color: #ef4444; font-weight: 600; }
+
+.scenario-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.scenario-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #6d28d9; border-radius: 6px; background: white; color: #6d28d9; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+.scenario-btn.active, .scenario-btn:hover { background: #6d28d9; color: white; }
+
+.product-display { text-align: center; margin: 1rem 0; }
+.product-num { font-size: 2.2rem; font-weight: 800; color: #6d28d9; }
+.product-formula { font-size: 0.8rem; color: #888; font-family: monospace; margin-top: 0.2rem; }
+.product-verdict { font-size: 0.95rem; font-weight: 600; margin-top: 0.3rem; }
+
+.score-bar { display: flex; align-items: flex-end; gap: 0.6rem; height: 100px; margin: 1rem 0; justify-content: center; }
+.score-bar-item { display: flex; flex-direction: column; align-items: center; flex: 1; max-width: 80px; }
+.score-bar-rect { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.4s; }
+.score-bar-label { font-size: 0.72rem; font-weight: 700; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="nucleation.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="10-after-economics.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 20</div>
+  <h1>Intelligent Macroeconomics</h1>
+
+  <p>The great economic mysteries of the 20th century become simple when you use the right instrument. The Solow Residual, wage stagnation, financial crises &mdash; each one dissolves when you measure the right capitals. GDP saw noise. MIND sees signal.</p>
+
+  <!-- Panel 1: The Macro Puzzle Explainer -->
+  <div class="panel">
+    <h2>The Macro Puzzle Explainer</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each puzzle to reveal why conventional economics was stumped &mdash; and how MIND capitals dissolve the mystery.</p>
+    <div class="puzzle-grid" id="puzzle-grid"></div>
+  </div>
+
+  <!-- Panel 2: MIND Capital Allocation Game -->
+  <div class="panel">
+    <h2>MIND Capital Allocation Game</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">You are a civilizational steward with 400 points to distribute across M, I, N, D. Choose a scenario and optimize. The MIND product is M &times; I &times; N &times; D &divide; 10&sup6;.</p>
+
+    <div class="scenario-btns">
+      <button class="scenario-btn active" id="scen-gdp" onclick="setScenario('gdp')">Maximize Short-term GDP</button>
+      <button class="scenario-btn" id="scen-resilience" onclick="setScenario('resilience')">Maximize Long-term Resilience</button>
+      <button class="scenario-btn" id="scen-ai" onclick="setScenario('ai')">Survive AI Transition</button>
+    </div>
+
+    <div id="scenario-desc" style="font-size:0.9rem;color:#555;margin-bottom:1rem;padding:0.6rem 0.8rem;background:#f5f5f3;border-radius:6px;">Push Material Capital high: short-term GDP maximization rewards physical and financial accumulation.</div>
+
+    <div class="alloc-sliders">
+      <div class="alloc-row">
+        <label style="color:#ef4444;">M</label>
+        <input type="range" id="alloc-M" min="0" max="400" value="130" oninput="updateAlloc('M')">
+        <span class="val" id="val-M">130</span>
+      </div>
+      <div class="alloc-row">
+        <label style="color:#2563eb;">I</label>
+        <input type="range" id="alloc-I" min="0" max="400" value="90" oninput="updateAlloc('I')">
+        <span class="val" id="val-I">90</span>
+      </div>
+      <div class="alloc-row">
+        <label style="color:#22c55e;">N</label>
+        <input type="range" id="alloc-N" min="0" max="400" value="90" oninput="updateAlloc('N')">
+        <span class="val" id="val-N">90</span>
+      </div>
+      <div class="alloc-row">
+        <label style="color:#f59e0b;">D</label>
+        <input type="range" id="alloc-D" min="0" max="400" value="90" oninput="updateAlloc('D')">
+        <span class="val" id="val-D">90</span>
+      </div>
+    </div>
+    <div class="alloc-total" id="alloc-total">Total: 400 / 400</div>
+
+    <div class="score-bar" id="score-bar"></div>
+
+    <div class="product-display">
+      <div class="product-num" id="product-num">—</div>
+      <div class="product-formula" id="product-formula"></div>
+      <div class="product-verdict" id="product-verdict"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== Panel 1: Puzzle Cards ==========
+const puzzles = [
+  {
+    name: 'The Solow Residual',
+    badge: 'Growth Theory',
+    badgeColor: '#2563eb',
+    old: 'Technology — a black box that economists labeled "total factor productivity" and couldn\'t explain. Growth happened, but nobody knew why.',
+    mind: 'It was unmeasured Intelligence Capital (I) + Network Capital (N) accumulating inside corporations. When firms learned, when networks thickened, when knowledge compounded — GDP rose, but none of it appeared in the models.',
+    culprits: { M: 15, I: 55, N: 30, D: 0 }
+  },
+  {
+    name: 'The Great Wage Stagnation',
+    badge: 'Distribution',
+    badgeColor: '#d97706',
+    old: 'Globalization / Skills gap — wages stagnated because workers couldn\'t compete with cheap foreign labor or didn\'t have the right skills for new jobs.',
+    mind: 'Material Capital (M) gains were captured by capital owners while Network Capital (N) became monopolized by platform firms, breaking the M↔I feedback loop. Workers got productivity gains in the real economy; capital owners captured the MIND surplus.',
+    culprits: { M: 40, I: 15, N: 40, D: 5 }
+  },
+  {
+    name: 'The 2008 Crash',
+    badge: 'Financial Crisis',
+    badgeColor: '#dc2626',
+    old: 'Subprime mortgages — a localized housing bubble that somehow became a global catastrophe through poorly understood financial instruments.',
+    mind: 'Network Capital (N = trust) collapsed. When trust in financial instruments hit zero, the MIND product = 0 regardless of M, I, or D. The entire financial system is a trust network — and trust is binary at the system level. One zero nullifies everything.',
+    culprits: { M: 5, I: 5, N: 80, D: 10 }
+  },
+  {
+    name: 'The Great Stagnation',
+    badge: 'Secular Stagnation',
+    badgeColor: '#7c3aed',
+    old: 'Low-hanging fruit is picked — we exhausted the easy technological gains of the 20th century (electricity, automobiles, antibiotics) and have nothing comparable to drive growth.',
+    mind: 'Democratic Capital (D) erosion prevented coordination on new public goods. Low D blocked I from being deployed at scale: AI, clean energy, and biotech exist but cannot be mobilized without collective decision-making capacity. The bottleneck is governance, not ideas.',
+    culprits: { M: 10, I: 25, N: 15, D: 50 }
+  }
+];
+
+const capitalColors = { M: '#ef4444', I: '#2563eb', N: '#22c55e', D: '#f59e0b' };
+
+const puzzleGrid = document.getElementById('puzzle-grid');
+puzzles.forEach((p, idx) => {
+  const card = document.createElement('div');
+  card.className = 'puzzle-card';
+
+  // Build culprit bars HTML
+  const maxCulprit = Math.max(...Object.values(p.culprits));
+  const barsHtml = Object.entries(p.culprits).map(([k, v]) => {
+    const h = Math.round((v / maxCulprit) * 56);
+    return `<div class="culprit-bar" style="height:${h}px;background:${capitalColors[k]};">${k}</div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="puzzle-header" onclick="togglePuzzle(${idx})">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <h3>${p.name}</h3>
+        <span class="puzzle-badge" style="background:${p.badgeColor}18;color:${p.badgeColor};">${p.badge}</span>
+      </div>
+      <span class="puzzle-toggle">&#9660;</span>
+    </div>
+    <div class="puzzle-body">
+      <div class="old-explanation">
+        <div class="label">Old Explanation</div>
+        ${p.old}
+      </div>
+      <div class="mind-explanation">
+        <div class="label">MIND Explanation</div>
+        ${p.mind}
+      </div>
+      <div style="font-size:0.82rem;color:#888;margin-bottom:0.25rem;">Which capital was the culprit?</div>
+      <div class="culprit-bars">${barsHtml}</div>
+    </div>
+  `;
+  puzzleGrid.appendChild(card);
+});
+
+window.togglePuzzle = function(idx) {
+  const cards = document.querySelectorAll('.puzzle-card');
+  cards[idx].classList.toggle('open');
+};
+
+// ========== Panel 2: MIND Allocation Game ==========
+const allocState = { M: 130, I: 90, N: 90, D: 90 };
+const capitalColorArr = ['#ef4444', '#2563eb', '#22c55e', '#f59e0b'];
+const MAX_TOTAL = 400;
+
+const scenarioDescs = {
+  gdp: 'Push Material Capital high: short-term GDP maximization rewards physical and financial accumulation.',
+  resilience: 'Balance all four capitals: long-term resilience requires no single dimension falling near zero.',
+  ai: 'Weight Intelligence and Network Capital: surviving an AI transition means investing in human cognition and coordination infrastructure.'
+};
+
+const scenarioTargets = {
+  gdp: { M: 180, I: 70, N: 80, D: 70 },
+  resilience: { M: 100, I: 100, N: 100, D: 100 },
+  ai: { M: 70, I: 140, N: 130, D: 60 }
+};
+
+let currentScenario = 'gdp';
+
+window.setScenario = function(sc) {
+  currentScenario = sc;
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('scen-' + sc).classList.add('active');
+  document.getElementById('scenario-desc').textContent = scenarioDescs[sc];
+
+  const t = scenarioTargets[sc];
+  Object.entries(t).forEach(([k, v]) => {
+    allocState[k] = v;
+    document.getElementById('alloc-' + k).value = v;
+    document.getElementById('val-' + k).textContent = v;
+  });
+  renderAlloc();
+};
+
+window.updateAlloc = function(key) {
+  const v = parseInt(document.getElementById('alloc-' + key).value);
+  allocState[key] = v;
+  document.getElementById('val-' + key).textContent = v;
+  renderAlloc();
+};
+
+function renderAlloc() {
+  const { M, I, N, D } = allocState;
+  const total = M + I + N + D;
+  const totalEl = document.getElementById('alloc-total');
+  totalEl.textContent = `Total: ${total} / ${MAX_TOTAL}`;
+  totalEl.className = 'alloc-total' + (total > MAX_TOTAL ? ' over' : '');
+
+  // Bar chart
+  const bar = document.getElementById('score-bar');
+  bar.innerHTML = '';
+  const vals = [
+    { k: 'M', v: M, label: 'Material', color: '#ef4444' },
+    { k: 'I', v: I, label: 'Intellect', color: '#2563eb' },
+    { k: 'N', v: N, label: 'Network', color: '#22c55e' },
+    { k: 'D', v: D, label: 'Democratic', color: '#f59e0b' }
+  ];
+  const maxV = Math.max(...vals.map(d => d.v), 1);
+  vals.forEach(d => {
+    const item = document.createElement('div');
+    item.className = 'score-bar-item';
+    const rect = document.createElement('div');
+    rect.className = 'score-bar-rect';
+    rect.style.height = Math.round((d.v / maxV) * 90) + 'px';
+    rect.style.background = d.color;
+    const lbl = document.createElement('div');
+    lbl.className = 'score-bar-label';
+    lbl.style.color = d.color;
+    lbl.textContent = d.k;
+    item.appendChild(rect);
+    item.appendChild(lbl);
+    bar.appendChild(item);
+  });
+
+  // Product
+  const product = Math.round(M * I * N * D / 1e6);
+  document.getElementById('product-num').textContent = product.toLocaleString();
+  document.getElementById('product-formula').textContent = `${M} × ${I} × ${N} × ${D} / 10⁶ = ${product.toLocaleString()}`;
+
+  // Scenario-specific verdict
+  let verdict = '';
+  const minVal = Math.min(M, I, N, D);
+  if (minVal === 0) {
+    verdict = 'Collapse — a zero in any dimension nullifies all other capitals.';
+    document.getElementById('product-verdict').style.color = '#dc2626';
+  } else if (currentScenario === 'gdp') {
+    const shortTermGDP = M * 0.6 + I * 0.2 + N * 0.1 + D * 0.1;
+    if (M > 150) verdict = `Short-term GDP optimized (score: ${Math.round(shortTermGDP)}). But fragility is rising.`;
+    else verdict = `GDP score: ${Math.round(shortTermGDP)}. Push Material Capital higher for short-term gains.`;
+    document.getElementById('product-verdict').style.color = '#d97706';
+  } else if (currentScenario === 'resilience') {
+    const balance = product / Math.max(1, (M + I + N + D) / 4 ** 4 * 1e6);
+    if (minVal > 80) verdict = `High resilience. No single point of failure. MIND product: ${product.toLocaleString()}.`;
+    else verdict = `Resilience limited by weakest capital (min: ${minVal}). Balance more evenly.`;
+    document.getElementById('product-verdict').style.color = minVal > 80 ? '#16a34a' : '#f59e0b';
+  } else {
+    const aiScore = I * 0.4 + N * 0.35 + D * 0.15 + M * 0.1;
+    if (I + N > 200) verdict = `AI transition readiness: strong (score: ${Math.round(aiScore)}). Intelligence + Network primed.`;
+    else verdict = `AI readiness score: ${Math.round(aiScore)}. Increase I and N to navigate the transition.`;
+    document.getElementById('product-verdict').style.color = I + N > 200 ? '#16a34a' : '#6d28d9';
+  }
+  if (minVal > 0) document.getElementById('product-verdict').textContent = verdict;
+  else document.getElementById('product-verdict').textContent = verdict;
+}
+
+renderAlloc();
+</script>
+</body>
+</html>

@@ -181,7 +181,7 @@ footer {
 
 <header>
   <h1>Symbioism: The Last Economy</h1>
-  <p class="subtitle">Ten interactive chapters where you manipulate the ideas directly</p>
+  <p class="subtitle">Fourteen interactive chapters where you manipulate the ideas directly</p>
   <p class="prose intro">
     Since <span class="scrub" id="scrub-year" data-min="1750" data-max="2030" data-value="1750">1750</span>,
     civilization has reorganized its economic engine
@@ -257,16 +257,20 @@ footer {
 
 // --- Card data ---
 const cards = [
-  { n: 1,  file: '01-intelligence-inversion.html', title: 'The Intelligence Inversion', ch: 'Ch 1',   q: 'When cognition itself is automated, where do humans pivot?', color: '#7c3aed' },
-  { n: 2,  file: '02-harbingers.html',              title: 'Harbingers of the Storm',    ch: 'Ch 2',   q: 'What does physics look like when a system is about to break?', color: '#dc2626' },
-  { n: 3,  file: '03-gdp-illusion.html',            title: 'The GDP Illusion',           ch: 'Chs 3\u20134', q: 'What if your only instrument rewarded destruction?', color: '#d97706' },
-  { n: 4,  file: '04-maxwells-demon.html',           title: 'Maxwell\u2019s Demon',              ch: 'Ch 6',   q: 'Is value a social agreement or a law of physics?', color: '#059669' },
-  { n: 5,  file: '05-mind-dashboard.html',           title: 'The MIND Dashboard',         ch: 'Chs 7\u20138', q: 'What happens when any single dimension of civilization reaches zero?', color: '#2563eb' },
-  { n: 6,  file: '06-three-flows.html',              title: 'The Three Flows',            ch: 'Ch 9',   q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
-  { n: 7,  file: '07-network-prison.html',           title: 'The Network Prison',         ch: 'Ch 10',  q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
-  { n: 8,  file: '08-cooperation-emerges.html',      title: 'Cooperation Emerges',        ch: 'Ch 12',  q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
-  { n: 9,  file: '09-three-futures.html',            title: 'The Three Futures',          ch: 'Chs 16+19', q: 'Which crystal will this supercooled civilization become?', color: '#dc2626' },
-  { n: 10, file: '10-after-economics.html',          title: 'After Economics',            ch: 'Chs 20\u201321', q: 'AI unbundles the job. What do you replace each piece with?', color: '#7c3aed' },
+  { n: 1,  file: '01-intelligence-inversion.html', title: 'The Intelligence Inversion', ch: 'Ch 1',  q: 'When cognition itself is automated, where do humans pivot?', color: '#7c3aed' },
+  { n: 2,  file: '02-harbingers.html',              title: 'Harbingers of the Storm',    ch: 'Ch 2',  q: 'What does physics look like when a system is about to break?', color: '#dc2626' },
+  { n: 3,  file: 'seven-lies.html',                 title: 'The Seven Fatal Lies',       ch: 'Ch 3',  q: 'What if the foundations of economics are not just wrong \u2014 but backwards?', color: '#b45309' },
+  { n: 4,  file: '03-gdp-illusion.html',            title: 'The GDP Illusion',           ch: 'Ch 4',  q: 'What if your only instrument rewarded destruction?', color: '#d97706' },
+  { n: 5,  file: '04-maxwells-demon.html',          title: 'Maxwell\u2019s Demon',       ch: 'Ch 6',  q: 'Is value a social agreement or a law of physics?', color: '#059669' },
+  { n: 6,  file: 'generative-engine.html',          title: 'The Generative Engine',      ch: 'Ch 7',  q: 'How does an economy conjure order from infinite chaos?', color: '#0d9488' },
+  { n: 7,  file: '05-mind-dashboard.html',          title: 'The MIND Dashboard',         ch: 'Ch 8',  q: 'What happens when any single dimension of civilization reaches zero?', color: '#2563eb' },
+  { n: 8,  file: '06-three-flows.html',             title: 'The Three Flows',            ch: 'Ch 9',  q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
+  { n: 9,  file: '07-network-prison.html',          title: 'The Network Prison',         ch: 'Ch 10', q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
+  { n: 10, file: '08-cooperation-emerges.html',     title: 'Cooperation Emerges',        ch: 'Ch 12', q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
+  { n: 11, file: '09-three-futures.html',           title: 'The Three Futures',          ch: 'Ch 16', q: 'Which crystal will this supercooled civilization become?', color: '#dc2626' },
+  { n: 12, file: 'nucleation.html',                 title: 'The Nucleation of the New',  ch: 'Ch 19', q: 'How does a new world crystallize \u2014 and what is your role in seeding it?', color: '#16a34a' },
+  { n: 13, file: 'intelligent-macro.html',          title: 'Intelligent Macroeconomics', ch: 'Ch 20', q: 'What if the great economic mysteries dissolve when you measure the right things?', color: '#6d28d9' },
+  { n: 14, file: '10-after-economics.html',         title: 'After Economics',            ch: 'Ch 21', q: 'AI unbundles the job. What do you replace each piece with?', color: '#7c3aed' },
 ];
 
 // --- Mini-visualization generators ---
@@ -286,7 +290,6 @@ const vizGenerators = [
       .attr('stroke-dasharray', function() { return this.getTotalLength(); })
       .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
       .transition().duration(1500).attr('stroke-dashoffset', 0);
-    // mirror line
     const data2 = data.map(d => ({ x: d.x, y: 1 - d.y }));
     svg.append('path').datum(data2).attr('d', line).attr('fill', 'none')
       .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.25)
@@ -309,10 +312,31 @@ const vizGenerators = [
       .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
       .transition().duration(2000).attr('stroke-dashoffset', 0);
   },
-  // 3: Diverging bars (GDP illusion)
+  // 3: Flip card animation (Seven Lies)
+  function(svg, w, h, color) {
+    const n = 7;
+    const cardW = Math.floor((w - 16) / n) - 2;
+    const cardH = h - 16;
+    const data = d3.range(n).map(i => ({ i, flipped: false }));
+    const groups = svg.selectAll('g.lie-card').data(data).join('g')
+      .attr('class', 'lie-card')
+      .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
+    groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
+      .attr('fill', color).attr('opacity', 0.8);
+    // Animate: cards flip one by one revealing back side
+    data.forEach((d, i) => {
+      setTimeout(() => {
+        groups.filter((dd, ii) => ii === i)
+          .select('rect')
+          .transition().duration(300)
+          .attr('fill', '#fff')
+          .attr('stroke', color).attr('stroke-width', 1.5);
+      }, 400 + i * 260);
+    });
+  },
+  // 4: Diverging bars (GDP illusion)
   function(svg, w, h, color) {
     const n = 12;
-    const barW = w / (n * 2);
     const data = d3.range(n).map(i => ({ i, v: 0.3 + Math.random() * 0.7, bad: Math.random() > 0.5 }));
     const xS = d3.scaleBand().domain(d3.range(n)).range([16, w - 16]).padding(0.35);
     const yS = d3.scaleLinear().domain([0, 1]).range([0, h * 0.65]);
@@ -324,7 +348,7 @@ const vizGenerators = [
       .transition().duration(800).delay((d, i) => i * 60)
       .attr('y', d => h - 10 - yS(d.v)).attr('height', d => yS(d.v));
   },
-  // 4: Orbiting particles (Maxwell's Demon)
+  // 5: Orbiting particles (Maxwell's Demon)
   function(svg, w, h, color) {
     const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.32;
     svg.append('line').attr('x1', cx).attr('y1', 8).attr('x2', cx).attr('y2', h - 8)
@@ -346,18 +370,34 @@ const vizGenerators = [
     }
     tick();
   },
-  // 5: Radar / pentagon (MIND Dashboard)
+  // 6: Noise to pattern coalescing dots (Generative Engine)
+  function(svg, w, h, color) {
+    const n = 40;
+    const dots = d3.range(n).map(i => ({
+      sx: Math.random() * w, sy: Math.random() * h,
+      tx: (w / 2) + Math.cos(i / n * Math.PI * 2) * (w * 0.3),
+      ty: (h / 2) + Math.sin(i / n * Math.PI * 2) * (h * 0.35)
+    }));
+    const circles = svg.selectAll('circle').data(dots).join('circle')
+      .attr('cx', d => d.sx).attr('cy', d => d.sy)
+      .attr('r', 2.5).attr('fill', color).attr('opacity', 0.4);
+    // Animate toward ordered ring
+    setTimeout(() => {
+      circles.transition().duration(1400).delay((d, i) => i * 20)
+        .attr('cx', d => d.tx).attr('cy', d => d.ty).attr('opacity', 0.75);
+    }, 400);
+  },
+  // 7: Radar / pentagon (MIND Dashboard)
   function(svg, w, h, color) {
     const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
-    const dims = 5;
+    const dims = 4;
     const angles = d3.range(dims).map(i => (i / dims) * Math.PI * 2 - Math.PI / 2);
-    // grid
     [0.33, 0.66, 1].forEach(s => {
       const pts = angles.map(a => [cx + Math.cos(a) * r * s, cy + Math.sin(a) * r * s]);
       svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
         .attr('fill', 'none').attr('stroke', '#e5e5e0').attr('stroke-width', 1);
     });
-    const vals = [0.8, 0.6, 0.4, 0.9, 0.55];
+    const vals = [0.8, 0.6, 0.4, 0.9];
     const pts = angles.map((a, i) => [cx + Math.cos(a) * r * vals[i], cy + Math.sin(a) * r * vals[i]]);
     svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
       .attr('fill', color).attr('fill-opacity', 0.15).attr('stroke', color)
@@ -368,10 +408,10 @@ const vizGenerators = [
       .attr('fill', color).attr('opacity', 0)
       .transition().duration(600).delay((d, i) => 800 + i * 100).attr('opacity', 1);
   },
-  // 6: Three flowing streams (Three Flows)
+  // 8: Three flowing streams (Three Flows)
   function(svg, w, h, color) {
-    const colors = [color, '#7c3aed', '#d97706'];
-    colors.forEach((c, idx) => {
+    const streamColors = [color, '#7c3aed', '#d97706'];
+    streamColors.forEach((c, idx) => {
       const n = 30;
       const offset = (idx - 1) * h * 0.25;
       const data = d3.range(n).map(i => {
@@ -388,7 +428,7 @@ const vizGenerators = [
         .transition().duration(1500).delay(idx * 200).attr('stroke-dashoffset', 0);
     });
   },
-  // 7: Network graph (Network Prison)
+  // 9: Network graph (Network Prison)
   function(svg, w, h, color) {
     const nodes = d3.range(10).map(i => ({
       x: 20 + Math.random() * (w - 40),
@@ -409,7 +449,7 @@ const vizGenerators = [
       .attr('fill', (d, i) => i === 0 ? color : '#aaa').attr('opacity', 0.7)
       .transition().duration(500).delay((d, i) => i * 80).attr('r', d => d.r);
   },
-  // 8: Growing cooperation dots (Cooperation Emerges)
+  // 10: Growing cooperation dots (Cooperation Emerges)
   function(svg, w, h, color) {
     const n = 24;
     const data = d3.range(n).map(i => ({
@@ -417,18 +457,17 @@ const vizGenerators = [
       y: 10 + Math.random() * (h - 20),
       cooperate: Math.random() > 0.4
     }));
-    const dots = svg.selectAll('circle').data(data).join('circle')
+    svg.selectAll('circle').data(data).join('circle')
       .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
       .attr('fill', d => d.cooperate ? color : '#ddd').attr('opacity', 0.7)
       .transition().duration(600).delay((d, i) => i * 40).attr('r', 4);
-    // animate defectors turning cooperative
     setTimeout(() => {
       svg.selectAll('circle')
         .transition().duration(1200)
         .attr('fill', color).attr('opacity', 0.65);
     }, 1800);
   },
-  // 9: Three branching paths (Three Futures)
+  // 11: Three branching paths (Three Futures)
   function(svg, w, h, color) {
     const startX = 20, startY = h / 2;
     const branches = [
@@ -452,7 +491,47 @@ const vizGenerators = [
     svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 4)
       .attr('fill', color).attr('opacity', 0.8);
   },
-  // 10: Unbundling blocks (After Economics)
+  // 12: Ripple animation (Nucleation)
+  function(svg, w, h, color) {
+    const cx = w / 2, cy = h / 2;
+    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
+      .attr('fill', color).attr('opacity', 1);
+    const numRipples = 4;
+    for (let i = 0; i < numRipples; i++) {
+      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
+        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
+        .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
+        .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
+        .on('end', function loop() {
+          d3.select(this).attr('r', 4).attr('opacity', 0.9)
+            .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
+            .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
+            .on('end', loop);
+        });
+    }
+  },
+  // 13: Animated MIND bar chart (Intelligent Macroeconomics)
+  function(svg, w, h, color) {
+    const vals = [
+      { k: 'M', v: 0.85, c: '#ef4444' },
+      { k: 'I', v: 0.70, c: '#2563eb' },
+      { k: 'N', v: 0.45, c: '#22c55e' },
+      { k: 'D', v: 0.60, c: '#f59e0b' }
+    ];
+    const barW = (w - 32) / vals.length - 6;
+    const maxH = h - 28;
+    vals.forEach((d, i) => {
+      const x = 16 + i * (barW + 6);
+      svg.append('rect').attr('x', x).attr('y', h - 12).attr('width', barW).attr('height', 0)
+        .attr('rx', 3).attr('fill', d.c).attr('opacity', 0.75)
+        .transition().duration(700).delay(i * 120)
+        .attr('y', h - 12 - maxH * d.v).attr('height', maxH * d.v);
+      svg.append('text').attr('x', x + barW / 2).attr('y', h - 2)
+        .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 700)
+        .attr('fill', d.c).text(d.k);
+    });
+  },
+  // 14: Unbundling blocks (After Economics)
   function(svg, w, h, color) {
     const blockW = 14, gap = 4;
     const cols = Math.floor((w - 20) / (blockW + gap));
@@ -465,10 +544,10 @@ const vizGenerators = [
         data.push({ r, c, x: offsetX + c * (blockW + gap), y: offsetY + r * (blockW + gap) });
       }
     }
-    const colors = [color, '#7c3aed', '#d97706', '#059669', '#dc2626'];
+    const blockColors = [color, '#7c3aed', '#d97706', '#059669', '#dc2626'];
     svg.selectAll('rect').data(data).join('rect')
       .attr('x', w / 2).attr('y', h / 2).attr('width', 0).attr('height', 0)
-      .attr('rx', 2).attr('fill', (d, i) => colors[i % colors.length]).attr('opacity', 0.55)
+      .attr('rx', 2).attr('fill', (d, i) => blockColors[i % blockColors.length]).attr('opacity', 0.55)
       .transition().duration(600).delay((d, i) => i * 25)
       .attr('x', d => d.x).attr('y', d => d.y)
       .attr('width', blockW).attr('height', blockW);

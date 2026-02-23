@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 19 — The Nucleation of the New</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+svg text { font-family: system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary:hover { background: #e5e5e0; }
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; }
+.slider-row { margin: 0.75rem 0; }
+.slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
+.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
+.trajectory-label { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0.75rem 0; padding: 0.5rem; border-radius: 6px; }
+.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
+.seed-result { font-size: 0.9rem; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; border: 1px solid #e5e5e0; }
+.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: system-ui, sans-serif; margin: 1rem 0 0.5rem; }
+.countdown-sub { text-align: center; font-size: 0.9rem; color: #888; }
+
+/* Plant your seed panel */
+.seed-form { display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
+.seed-form textarea { width: 100%; min-height: 80px; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.6rem; font-family: Georgia, serif; font-size: 0.95rem; line-height: 1.5; resize: vertical; background: #fafaf8; color: #1a1a1a; box-sizing: border-box; }
+.seed-form textarea:focus { outline: 2px solid #16a34a; border-color: transparent; }
+.scope-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+.scope-row label { font-weight: 600; white-space: nowrap; }
+.scope-row span { color: #666; font-size: 0.85rem; min-width: 55px; text-align: right; }
+#ripple-svg { display: block; margin: 1rem auto 0; }
+.commit-btn { background: #16a34a; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600; align-self: flex-start; }
+.commit-btn:hover { background: #15803d; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="09-three-futures.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="intelligent-macro.html">Next &rarr;</a>
+</nav>
+
+<div class="prose">
+  <div class="chapter-num">Chapter 19</div>
+  <h1>The Nucleation of the New</h1>
+
+  <p>Top-down revolution fails. Civilizations crystallize around seeds &mdash; small, successful experiments that demonstrate a better way. This is the strategy of nucleation. Florence was not decreed. The Scientific Revolution was not legislated. They grew from tiny clusters of conditions that happened to align, then spread outward until they rewrote the world.</p>
+
+  <!-- Panel 1: Nucleation Sites -->
+  <div class="panel">
+    <h2>Nucleation Sites</h2>
+    <p style="font-size:0.9rem; color:#666;">Historical nucleation events. Click to see what conditions enabled them &mdash; and what we can learn for today.</p>
+    <div class="btn-group">
+      <button class="btn secondary" onclick="showNucleation('Florence 1400', 'Renaissance', 60, 45, 55, 'A small city-state with open patronage networks, distributed wealth, and unusually permeable social hierarchies allowed artists and thinkers to cross-pollinate. The seed: a handful of workshops in one city became the template for a civilization.')">Florence 1400</button>
+      <button class="btn secondary" onclick="showNucleation('Royal Society 1660', 'Scientific Revolution', 65, 50, 70, 'The Royal Society created a new protocol: public experimental method, peer criticism, shared knowledge. Before this, knowledge was hoarded. After it, knowledge compounded. The seed: a meeting of twelve curious men who agreed to argue by evidence.')">Royal Society 1660</button>
+      <button class="btn secondary" onclick="showNucleation('Bell Labs 1950', 'Information Age', 55, 40, 65, 'Non-competitive, mission-driven, cross-disciplinary: Bell Labs invented the transistor, laser, Unix, C, and information theory. The seed: enough slack to explore, enough structure to converge.')">Bell Labs 1950</button>
+      <button class="btn secondary" onclick="showNucleation('Twitter 2006', 'Attention Economy', 80, 20, 30, 'A nucleation site that succeeded as a platform but was captured by engagement optimization. The seed grew — then it grew in the wrong direction. Not all crystallization is beneficial.')">Twitter 2006</button>
+    </div>
+    <div id="nucleation-result" class="seed-result" style="display:none;"></div>
+  </div>
+
+  <!-- Panel 2: Critical Window -->
+  <div class="panel">
+    <h2>The Critical Window</h2>
+    <div class="countdown" id="countdown">1000</div>
+    <div class="countdown-sub">Days of critical window remaining</div>
+    <div id="rate-display" class="stat" style="text-align:center; margin-top:0.5rem;">Current rate: 30 days/month consumed</div>
+    <div style="margin-top:1rem;">
+      <div class="slider-row">
+        <label>How much of civilizational attention is directed at coordination? <span id="coord-val">30</span>%</label>
+        <input type="range" id="coord-slider" min="0" max="100" value="30" oninput="updateWindow()">
+      </div>
+      <div class="slider-row">
+        <label>How many active nucleation experiments are running? <span id="seeds-val">5</span></label>
+        <input type="range" id="seeds-slider" min="0" max="50" value="5" oninput="updateWindow()">
+      </div>
+    </div>
+    <p class="caption">The window for crystallization is not infinite. Inaction is a choice. Every day consumed without nucleation is a day the current attractor grows stronger.</p>
+  </div>
+
+  <!-- Panel 3: Plant Your Seed -->
+  <div class="panel">
+    <h2>Plant Your Seed</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Every transformation begins with one seed. What is yours? Florence was a city. Bell Labs was a building. The Scientific Revolution was a meeting. Your nucleation site does not have to be large &mdash; it has to be real.</p>
+    <div class="seed-form">
+      <div>
+        <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:0.25rem;">What is your Florence?</label>
+        <textarea id="seed-idea" placeholder="Describe your seed idea, project, or community experiment..."></textarea>
+      </div>
+      <div class="scope-row">
+        <label>Scope:</label>
+        <input type="range" id="scope-slider" min="0" max="100" value="20" style="flex:1;" oninput="updateScope()">
+        <span id="scope-label">Local</span>
+      </div>
+      <button class="commit-btn" onclick="commitSeed()">Commit</button>
+    </div>
+    <svg id="ripple-svg" width="300" height="180"></svg>
+    <div id="commit-result" style="display:none;font-size:0.9rem;color:#15803d;font-weight:600;text-align:center;margin-top:0.5rem;"></div>
+  </div>
+</div>
+
+<script>
+// ========== Panel 1: Nucleation Sites ==========
+window.showNucleation = function(name, outcome, openness, wealth, gov, detail) {
+  const el = document.getElementById('nucleation-result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <strong>${name}</strong> &rarr; <em>${outcome}</em><br>
+    <span style="font-size:0.85rem;color:#555;line-height:1.5;">${detail}</span>
+    <div style="display:flex;gap:1rem;margin-top:0.75rem;font-size:0.82rem;color:#888;">
+      <span>AI Openness: <strong>${openness}%</strong></span>
+      <span>Wealth distribution: <strong>${100 - wealth}% concentrated</strong></span>
+      <span>Gov transparency: <strong>${gov}%</strong></span>
+    </div>
+  `;
+};
+
+// ========== Panel 2: Critical Window ==========
+let countdown = 1000;
+let currentRate = 30;
+let windowInterval;
+
+function updateWindow() {
+  const coord = parseInt(document.getElementById('coord-slider').value);
+  const seeds = parseInt(document.getElementById('seeds-slider').value);
+  document.getElementById('coord-val').textContent = coord;
+  document.getElementById('seeds-val').textContent = seeds;
+
+  // More coordination + more seeds = slower consumption
+  const effectiveness = (coord / 100) * 0.5 + Math.min(seeds, 30) / 30 * 0.5;
+  currentRate = Math.round(60 * (1 - effectiveness * 0.85));
+  currentRate = Math.max(2, currentRate);
+  document.getElementById('rate-display').textContent = `Current rate: ${currentRate} days/month consumed`;
+}
+
+setInterval(() => {
+  const decrement = Math.max(1, Math.round(currentRate / 15));
+  countdown = Math.max(0, countdown - decrement);
+  const el = document.getElementById('countdown');
+  el.textContent = countdown;
+  if (countdown === 0) {
+    el.style.color = '#dc2626';
+  } else if (countdown < 200) {
+    el.style.color = '#f59e0b';
+  }
+}, 2000);
+
+updateWindow();
+
+// ========== Panel 3: Plant Your Seed ==========
+const scopeLabels = ['Local', 'Local', 'Regional', 'Regional', 'National', 'National', 'Continental', 'Global', 'Global', 'Global', 'Civilizational'];
+
+window.updateScope = function() {
+  const v = parseInt(document.getElementById('scope-slider').value);
+  const idx = Math.min(10, Math.floor(v / 10));
+  document.getElementById('scope-label').textContent = scopeLabels[idx];
+};
+
+const rippleSvg = d3.select('#ripple-svg');
+const RW = 300, RH = 180;
+const rcx = RW / 2, rcy = RH / 2;
+
+window.commitSeed = function() {
+  const idea = document.getElementById('seed-idea').value.trim();
+  if (!idea) {
+    document.getElementById('seed-idea').style.outline = '2px solid #ef4444';
+    setTimeout(() => { document.getElementById('seed-idea').style.outline = ''; }, 1500);
+    return;
+  }
+  const scope = parseInt(document.getElementById('scope-slider').value);
+  const maxR = 30 + scope * 0.7;
+
+  // Clear previous ripples
+  rippleSvg.selectAll('*').remove();
+
+  // Seed dot
+  rippleSvg.append('circle').attr('cx', rcx).attr('cy', rcy).attr('r', 5)
+    .attr('fill', '#16a34a').attr('opacity', 1);
+
+  // Animate concentric expanding circles
+  const numRipples = 5;
+  for (let i = 0; i < numRipples; i++) {
+    rippleSvg.append('circle')
+      .attr('cx', rcx).attr('cy', rcy)
+      .attr('r', 5)
+      .attr('fill', 'none')
+      .attr('stroke', '#16a34a')
+      .attr('stroke-width', 2.5 - i * 0.4)
+      .attr('opacity', 0.9 - i * 0.12)
+      .transition()
+      .delay(i * 280)
+      .duration(1400)
+      .ease(d3.easeCubicOut)
+      .attr('r', maxR + i * (maxR / numRipples))
+      .attr('opacity', 0)
+      .on('end', function() {
+        // Loop: restart ripple
+        if (i === 0) {
+          d3.select(this).attr('r', 5).attr('opacity', 0.9)
+            .transition().delay(300).duration(1400).ease(d3.easeCubicOut)
+            .attr('r', maxR).attr('opacity', 0);
+        }
+      });
+  }
+
+  // Label the scope
+  const scopeIdx = Math.min(10, Math.floor(scope / 10));
+  const scopeName = scopeLabels[scopeIdx];
+  rippleSvg.append('text')
+    .attr('x', rcx).attr('y', rcy - maxR - 8)
+    .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#16a34a')
+    .attr('font-weight', '600').text(scopeName + ' nucleation');
+
+  // Show result message
+  const result = document.getElementById('commit-result');
+  result.style.display = 'block';
+  result.textContent = 'The seed is planted. Now make it real.';
+};
+</script>
+</body>
+</html>

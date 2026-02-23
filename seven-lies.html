@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 3 — The Seven Fatal Lies</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav a { color: #2563eb; text-decoration: none; }
+
+/* Seven Lies Cards */
+.lies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
+.lie-card { perspective: 600px; min-height: 180px; cursor: pointer; }
+.lie-inner { position: relative; width: 100%; height: 100%; min-height: 180px; transition: transform 0.5s; transform-style: preserve-3d; }
+.lie-card.flipped .lie-inner { transform: rotateY(180deg); }
+.lie-front, .lie-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 1rem; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+.lie-front { background: #2563eb; color: white; border: 1px solid #1d4ed8; }
+.lie-front h3 { font-size: 0.9rem; margin: 0; line-height: 1.4; }
+.lie-front .lie-hint { font-size: 0.75rem; opacity: 0.7; margin-top: auto; padding-top: 0.5rem; }
+.lie-back { background: white; border: 1px solid #e5e5e0; transform: rotateY(180deg); }
+.lie-back p { font-size: 0.82rem; margin: 0; line-height: 1.5; color: #333; }
+.lie-back .lie-label { font-size: 0.7rem; color: #ef4444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="02-harbingers.html">&larr; Previous</a>
+  <a href="index.html">All Chapters</a>
+  <a href="03-gdp-illusion.html">Next &rarr;</a>
+</nav>
+<div class="prose">
+  <div class="chapter-num">Chapter 3</div>
+  <h1>The Seven Fatal Lies</h1>
+  <p>Economics is a house built on sand. The foundational assumptions that govern our lives are no longer just wrong &mdash; they have become the precise opposite of reality. Click each card to reveal the reality behind the assumption.</p>
+
+  <!-- Seven Lies panel -->
+  <div class="panel">
+    <h2>The Seven Fatal Assumptions</h2>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to reveal the reality behind the assumption.</p>
+    <div class="lies-grid" id="lies-grid"></div>
+  </div>
+</div>
+<script>
+// ── Seven Lies ──
+(function() {
+  const lies = [
+    { front: 'Scarcity is fundamental', back: 'AI reduced GPT query cost from $36/hr equivalent to $0.00015 each. Abundance is the new default for information goods.' },
+    { front: 'Markets clear efficiently', back: '40M US adults cannot afford healthcare. Markets fail catastrophically at necessities. Efficiency assumes equal access.' },
+    { front: 'Competition drives innovation', back: 'Bell Labs, CERN, the Internet: most transformative innovations came from non-competitive, publicly-funded environments.' },
+    { front: 'Growth is always good', back: 'UK: GDP +150% since 1990, median real wages +12%. Growth accrued almost entirely to the top 1%.' },
+    { front: 'Value = Price', back: 'Wikipedia: $0 price, ~$3.6B replacement cost. Nature\'s ecosystem services: $125T/year. GDP counts $0 for both.' },
+    { front: 'Infinite growth is possible', back: 'Earth\'s biomass capacity is finite. Current extraction rate: 1.7 Earths/year. Physics does not negotiate.' },
+    { front: 'Distribution follows contribution', back: 'US productivity +246% since 1973, median wages +115%. The gap is pure extraction, not earned surplus.' }
+  ];
+
+  const grid = document.getElementById('lies-grid');
+  lies.forEach((lie, i) => {
+    const card = document.createElement('div');
+    card.className = 'lie-card';
+    card.innerHTML = `
+      <div class="lie-inner">
+        <div class="lie-front">
+          <h3>"${lie.front}"</h3>
+          <div class="lie-hint">Click to reveal</div>
+        </div>
+        <div class="lie-back">
+          <div class="lie-label">The Reality</div>
+          <p>${lie.back}</p>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    grid.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>
