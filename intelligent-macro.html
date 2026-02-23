@@ -9,18 +9,69 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #d97706);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel {
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.panel:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+
+/* ── Sticky nav with backdrop blur ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e0;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  background: rgba(250,250,248,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
 /* Enrichment styles */
-.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote {
+  border-left: 5px solid #2563eb;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+}
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; color: #6b7280; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
@@ -72,7 +123,16 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .score-bar-rect { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.4s; }
 .score-bar-label { font-size: 0.72rem; font-weight: 700; margin-top: 0.25rem; }
 
-/* Mobile responsiveness */
+/* Mobile breakpoints */
+@media (max-width: 640px) {
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+  .stat-row { flex-direction: column; }
+  .calc-cols { flex-direction: column; }
+  .gauges { grid-template-columns: 1fr !important; }
+  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .ratio-display { font-size: 2rem; }
+  .stat-number { font-size: 2.2rem; }
+}
 @media (max-width: 480px) {
   .alloc-row { gap: 0.5rem; }
   .alloc-row label { width: 24px; font-size: 0.9rem; }
@@ -81,12 +141,12 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   .scenario-btn { text-align: center; }
   .score-bar { gap: 0.4rem; }
   .product-num { font-size: 1.8rem; }
-  .stat-row { flex-direction: column; }
-  .stat-number { font-size: 2.2rem; }
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
 }
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
 <nav class="nav">
   <a href="nucleation.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -108,22 +168,31 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <p>On December 31, 1600, Queen Elizabeth I signed a charter that gave birth to a new kind of life on Earth. She called it the East India Company. It was not human. It was an artificial being, a &ldquo;corporate person,&rdquo; capable of living forever and pursuing a single, simple objective: profit. It was our first, slow, mechanical attempt at artificial intelligence.</p>
 
   <!-- SVG: Timeline of corporate evolution -->
-  <svg viewBox="0 0 680 100" style="width:100%;margin:1.5rem 0;" aria-label="Timeline from corporation to AI">
-    <line x1="40" y1="50" x2="640" y2="50" stroke="#e5e5e0" stroke-width="2"/>
-    <circle cx="80" cy="50" r="8" fill="#2563eb"/>
-    <text x="80" y="80" text-anchor="middle" font-size="11" fill="#555">1600</text>
-    <text x="80" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Corporation</text>
-    <circle cx="260" cy="50" r="8" fill="#2563eb" opacity="0.7"/>
-    <text x="260" y="80" text-anchor="middle" font-size="11" fill="#555">1900s</text>
-    <text x="260" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Industrial GDP</text>
-    <circle cx="440" cy="50" r="8" fill="#2563eb" opacity="0.85"/>
-    <text x="440" y="80" text-anchor="middle" font-size="11" fill="#555">1970s</text>
-    <text x="440" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a">Wage Decoupling</text>
-    <circle cx="600" cy="50" r="10" fill="#2563eb"/>
-    <text x="600" y="80" text-anchor="middle" font-size="11" fill="#555">2020s</text>
-    <text x="600" y="35" text-anchor="middle" font-size="10" font-weight="700" fill="#2563eb">Fast AI</text>
-    <!-- Arrow tips -->
-    <polygon points="640,50 632,45 632,55" fill="#e5e5e0"/>
+  <svg viewBox="0 0 680 110" style="width:100%;margin:1.5rem 0;" aria-label="Timeline from corporation to AI">
+    <defs>
+      <linearGradient id="timelineGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#93c5fd"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+      </linearGradient>
+      <filter id="tl-shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+    </defs>
+    <rect x="0" y="0" width="680" height="110" rx="8" fill="#f8faff"/>
+    <line x1="40" y1="58" x2="640" y2="58" stroke="url(#timelineGrad)" stroke-width="2"/>
+    <circle cx="80" cy="58" r="8" fill="#2563eb" filter="url(#tl-shadow)"/>
+    <text x="80" y="85" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1600</text>
+    <text x="80" y="40" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Corporation</text>
+    <circle cx="260" cy="58" r="8" fill="#2563eb" opacity="0.7" filter="url(#tl-shadow)"/>
+    <text x="260" y="85" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1900s</text>
+    <text x="260" y="40" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Industrial GDP</text>
+    <circle cx="440" cy="58" r="8" fill="#2563eb" opacity="0.85" filter="url(#tl-shadow)"/>
+    <text x="440" y="85" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1970s</text>
+    <text x="440" y="40" text-anchor="middle" font-size="10" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Wage Decoupling</text>
+    <circle cx="600" cy="58" r="10" fill="#2563eb" filter="url(#tl-shadow)"/>
+    <text x="600" y="85" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">2020s</text>
+    <text x="600" y="40" text-anchor="middle" font-size="10" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Fast AI</text>
+    <polygon points="640,58 632,52 632,64" fill="url(#timelineGrad)"/>
   </svg>
 
   <p>For the last four hundred years, the entire story of macroeconomics has been the story of us &mdash; the slow, complex, biological minds &mdash; trying to understand and control the behavior of these strange, powerful, and increasingly alien corporate minds we had created. We built a science of ghosts, chasing phantom aggregates like &ldquo;total output,&rdquo; because we were trying to understand the weather of a world inhabited by these new gods, without ever understanding the gods themselves.</p>
@@ -161,23 +230,29 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <p>For a generation, the bargain held: as corporate beings grew more productive, so did their human components. Then, around 1973, the link shattered. Productivity continued its climb, but wages for the median worker flatlined.</p>
 
   <!-- SVG: Productivity vs Wages divergence -->
-  <svg viewBox="0 0 680 180" style="width:100%;margin:1.5rem 0;" aria-label="Productivity vs wages divergence since 1973">
-    <text x="340" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">The Third Economic Inversion</text>
+  <svg viewBox="0 0 680 190" style="width:100%;margin:1.5rem 0;" aria-label="Productivity vs wages divergence since 1973">
+    <defs>
+      <filter id="chart-shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+    </defs>
+    <rect x="0" y="0" width="680" height="190" rx="8" fill="#f8faff"/>
+    <text x="340" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">The Third Economic Inversion</text>
     <!-- Axes -->
-    <line x1="60" y1="150" x2="640" y2="150" stroke="#ccc" stroke-width="1"/>
-    <line x1="60" y1="30" x2="60" y2="150" stroke="#ccc" stroke-width="1"/>
+    <line x1="60" y1="155" x2="640" y2="155" stroke="#ccc" stroke-width="1"/>
+    <line x1="60" y1="35" x2="60" y2="155" stroke="#ccc" stroke-width="1"/>
     <!-- Productivity line (rising) -->
-    <polyline points="60,140 180,120 300,100 420,70 540,40 640,30" fill="none" stroke="#2563eb" stroke-width="2.5"/>
-    <text x="645" y="32" font-size="10" fill="#2563eb" font-weight="600">Productivity</text>
+    <polyline points="60,145 180,125 300,105 420,75 540,45 640,35" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="645" y="37" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Productivity</text>
     <!-- Wages line (flat after 1973) -->
-    <polyline points="60,140 180,120 300,118 420,116 540,114 640,112" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3"/>
-    <text x="645" y="114" font-size="10" fill="#ef4444" font-weight="600">Wages</text>
+    <polyline points="60,145 180,125 300,122 420,120 540,118 640,116" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="645" y="118" font-size="10" fill="#ef4444" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Wages</text>
     <!-- 1973 marker -->
-    <line x1="180" y1="30" x2="180" y2="150" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,4"/>
-    <text x="180" y="165" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="600">1973</text>
+    <line x1="180" y1="35" x2="180" y2="155" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <text x="180" y="172" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">1973</text>
     <!-- Axis labels -->
-    <text x="60" y="170" font-size="9" fill="#888">1950</text>
-    <text x="640" y="170" font-size="9" fill="#888" text-anchor="end">2020</text>
+    <text x="60" y="175" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">1950</text>
+    <text x="640" y="175" font-size="9" fill="#888" text-anchor="end" font-family="'DM Sans', system-ui, sans-serif">2020</text>
   </svg>
 
   <p>The chasm was the direct accounting trace of the <strong>Third Economic Inversion</strong>. The corporate beings discovered that the most effective way to grow was no longer by enhancing rivalrous human labor, but by investing in non-rivalrous, infinitely scalable capital like software. The &ldquo;Productivity-Pay Gap&rdquo; was the sound of the corporate mind decoupling its fate from the fate of its human parts.</p>
@@ -219,41 +294,55 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <p>These puzzles defined the macroeconomic landscape of the world built by the &ldquo;slow AI&rdquo; of the corporation. But the arrival of true, &ldquo;fast AI&rdquo; does not just solve these old riddles; it creates a set of new, even stranger ones that will define the 21st century.</p>
 
   <!-- SVG: Three new puzzles -->
-  <svg viewBox="0 0 680 220" style="width:100%;margin:1.5rem 0;" aria-label="Three new puzzles of the intelligent age">
+  <svg viewBox="0 0 680 230" style="width:100%;margin:1.5rem 0;" aria-label="Three new puzzles of the intelligent age">
+    <defs>
+      <linearGradient id="deflGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#dbeafe"/>
+        <stop offset="100%" stop-color="#f0f9ff"/>
+      </linearGradient>
+      <linearGradient id="negGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fee2e2"/>
+        <stop offset="100%" stop-color="#fff5f5"/>
+      </linearGradient>
+      <linearGradient id="evaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fffbeb"/>
+        <stop offset="100%" stop-color="#fefce8"/>
+      </linearGradient>
+      <filter id="puzzle-shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+    </defs>
     <!-- Deflationary Spiral -->
-    <rect x="10" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
-    <text x="110" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb">Deflationary Spiral</text>
-    <line x1="40" y1="52" x2="180" y2="52" stroke="#eff6ff" stroke-width="1"/>
-    <!-- Downward spiral icon -->
+    <rect x="10" y="10" width="200" height="210" rx="8" fill="url(#deflGrad)" stroke="#bfdbfe" stroke-width="1.5" filter="url(#puzzle-shadow)"/>
+    <text x="110" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Deflationary Spiral</text>
+    <line x1="40" y1="52" x2="180" y2="52" stroke="#dbeafe" stroke-width="1"/>
     <path d="M110,70 Q140,80 130,100 Q120,120 90,110 Q70,100 80,85 Q90,70 110,75" fill="none" stroke="#2563eb" stroke-width="2"/>
     <polygon points="108,77 116,73 112,81" fill="#2563eb"/>
-    <text x="110" y="140" text-anchor="middle" font-size="9.5" fill="#555">
+    <text x="110" y="148" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">
       <tspan x="110" dy="0">AI drives the cost of</tspan>
       <tspan x="110" dy="14">intelligence toward zero.</tspan>
       <tspan x="110" dy="14">What becomes of price?</tspan>
     </text>
     <!-- Negative Value Worker -->
-    <rect x="240" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
-    <text x="340" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#ef4444">Negative Value Worker</text>
-    <line x1="270" y1="52" x2="410" y2="52" stroke="#fef2f2" stroke-width="1"/>
-    <!-- Person with minus -->
-    <circle cx="340" cy="80" r="12" fill="none" stroke="#ef4444" stroke-width="2"/>
-    <line x1="332" y1="80" x2="348" y2="80" stroke="#ef4444" stroke-width="2.5"/>
-    <line x1="340" y1="96" x2="340" y2="120" stroke="#ef4444" stroke-width="2"/>
-    <text x="340" y="145" text-anchor="middle" font-size="9.5" fill="#555">
+    <rect x="240" y="10" width="200" height="210" rx="8" fill="url(#negGrad)" stroke="#fca5a5" stroke-width="1.5" filter="url(#puzzle-shadow)"/>
+    <text x="340" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">Negative Value Worker</text>
+    <line x1="270" y1="52" x2="410" y2="52" stroke="#fee2e2" stroke-width="1"/>
+    <circle cx="340" cy="82" r="12" fill="none" stroke="#ef4444" stroke-width="2"/>
+    <line x1="332" y1="82" x2="348" y2="82" stroke="#ef4444" stroke-width="2.5"/>
+    <line x1="340" y1="98" x2="340" y2="122" stroke="#ef4444" stroke-width="2"/>
+    <text x="340" y="148" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">
       <tspan x="340" dy="0">When hiring a human</tspan>
       <tspan x="340" dy="14">introduces more cost than</tspan>
       <tspan x="340" dy="14">benefit. Labor as liability.</tspan>
     </text>
     <!-- Evaporating Assets -->
-    <rect x="470" y="10" width="200" height="200" rx="8" fill="white" stroke="#e5e5e0" stroke-width="1"/>
-    <text x="570" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b">Evaporating Assets</text>
-    <line x1="500" y1="52" x2="640" y2="52" stroke="#fffbeb" stroke-width="1"/>
-    <!-- Dissolving blocks icon -->
+    <rect x="470" y="10" width="200" height="210" rx="8" fill="url(#evaGrad)" stroke="#fde68a" stroke-width="1.5" filter="url(#puzzle-shadow)"/>
+    <text x="570" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b" font-family="'DM Sans', system-ui, sans-serif">Evaporating Assets</text>
+    <line x1="500" y1="52" x2="640" y2="52" stroke="#fef9c3" stroke-width="1"/>
     <rect x="545" y="70" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.9"/>
     <rect x="570" y="80" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.6"/>
     <rect x="555" y="95" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.3"/>
-    <text x="570" y="140" text-anchor="middle" font-size="9.5" fill="#555">
+    <text x="570" y="148" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">
       <tspan x="570" dy="0">A software update can</tspan>
       <tspan x="570" dy="14">render a factory worthless</tspan>
       <tspan x="570" dy="14">overnight. Capital in flux.</tspan>
@@ -318,31 +407,49 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <p>But its second, and more profound, task is to prepare for the emergence of the <strong>&ldquo;Third Mind&rdquo;</strong>: the autonomous, non-human, machine-to-machine economy itself. How do you conduct monetary policy in an economy run by algorithms? How do you ensure financial stability when the most important financial actors are non-conscious agent swarms?</p>
 
   <!-- SVG: Three Minds evolution -->
-  <svg viewBox="0 0 680 130" style="width:100%;margin:1.5rem 0;" aria-label="Evolution from First to Third Mind">
+  <svg viewBox="0 0 680 140" style="width:100%;margin:1.5rem 0;" aria-label="Evolution from First to Third Mind">
+    <defs>
+      <radialGradient id="mind1Grad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#dbeafe"/>
+        <stop offset="100%" stop-color="#bfdbfe"/>
+      </radialGradient>
+      <radialGradient id="mind2Grad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f3e8ff"/>
+        <stop offset="100%" stop-color="#e9d5ff"/>
+      </radialGradient>
+      <radialGradient id="mind3Grad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fee2e2"/>
+        <stop offset="100%" stop-color="#fca5a5"/>
+      </radialGradient>
+      <filter id="mind-shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+    </defs>
+    <rect x="0" y="0" width="680" height="140" rx="8" fill="#f8faff"/>
     <!-- First Mind: Human -->
-    <circle cx="110" cy="55" r="35" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="110" y="50" text-anchor="middle" font-size="22" fill="#2563eb">&#x1D5A8;</text>
-    <text x="110" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb">Human</text>
-    <text x="110" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">First Mind</text>
-    <text x="110" y="122" text-anchor="middle" font-size="9" fill="#888">Biological</text>
+    <circle cx="110" cy="58" r="35" fill="url(#mind1Grad)" stroke="#2563eb" stroke-width="1.5" filter="url(#mind-shadow)"/>
+    <text x="110" y="53" text-anchor="middle" font-size="22" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#x1D5A8;</text>
+    <text x="110" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Human</text>
+    <text x="110" y="110" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">First Mind</text>
+    <text x="110" y="124" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Biological</text>
     <!-- Arrow 1 -->
-    <line x1="155" y1="55" x2="225" y2="55" stroke="#ccc" stroke-width="1.5"/>
-    <polygon points="225,55 218,50 218,60" fill="#ccc"/>
+    <line x1="155" y1="58" x2="225" y2="58" stroke="#ccc" stroke-width="2"/>
+    <polygon points="225,58 218,52 218,64" fill="#ccc"/>
     <!-- Second Mind: Corporation -->
-    <circle cx="290" cy="55" r="35" fill="#faf5ff" stroke="#6d28d9" stroke-width="1.5"/>
-    <text x="290" y="52" text-anchor="middle" font-size="18" fill="#6d28d9">&#x25B2;</text>
-    <text x="290" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#6d28d9">Corp</text>
-    <text x="290" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">Second Mind</text>
-    <text x="290" y="122" text-anchor="middle" font-size="9" fill="#888">Slow AI (1600)</text>
+    <circle cx="290" cy="58" r="35" fill="url(#mind2Grad)" stroke="#6d28d9" stroke-width="1.5" filter="url(#mind-shadow)"/>
+    <text x="290" y="55" text-anchor="middle" font-size="18" fill="#6d28d9" font-family="'DM Sans', system-ui, sans-serif">&#x25B2;</text>
+    <text x="290" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#6d28d9" font-family="'DM Sans', system-ui, sans-serif">Corp</text>
+    <text x="290" y="110" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Second Mind</text>
+    <text x="290" y="124" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Slow AI (1600)</text>
     <!-- Arrow 2 -->
-    <line x1="335" y1="55" x2="405" y2="55" stroke="#ccc" stroke-width="1.5"/>
-    <polygon points="405,55 398,50 398,60" fill="#ccc"/>
+    <line x1="335" y1="58" x2="405" y2="58" stroke="#ccc" stroke-width="2"/>
+    <polygon points="405,58 398,52 398,64" fill="#ccc"/>
     <!-- Third Mind: Machine Economy -->
-    <circle cx="470" cy="55" r="35" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="470" y="55" text-anchor="middle" font-size="16" fill="#ef4444">&#x2731;&#x2731;</text>
-    <text x="470" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#ef4444">M2M</text>
-    <text x="470" y="108" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a">Third Mind</text>
-    <text x="470" y="122" text-anchor="middle" font-size="9" fill="#888">Fast AI (2020s)</text>
+    <circle cx="470" cy="58" r="35" fill="url(#mind3Grad)" stroke="#ef4444" stroke-width="1.5" filter="url(#mind-shadow)"/>
+    <text x="470" y="58" text-anchor="middle" font-size="16" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">&#x2731;&#x2731;</text>
+    <text x="470" y="68" text-anchor="middle" font-size="9" font-weight="600" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">M2M</text>
+    <text x="470" y="110" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Third Mind</text>
+    <text x="470" y="124" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Fast AI (2020s)</text>
   </svg>
 
   <div class="pullquote">
@@ -352,6 +459,12 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 </div>
 
 <script>
+// ── Progress bar ──
+window.addEventListener('scroll', function(){
+  var p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // ========== Panel 1: Puzzle Cards ==========
 const puzzles = [
   {

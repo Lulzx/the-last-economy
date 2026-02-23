@@ -13,10 +13,11 @@ body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, s
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 .panel-spacer { height: 1rem; }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; z-index: 100; background: rgba(250,250,248,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
@@ -46,13 +47,13 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 input[type=range] { accent-color: #2563eb; }
 
 /* Enrichment styles */
-.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
 .stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
+.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
 .stat-row .stat-callout { flex: 1; min-width: 180px; margin: 0; }
 .historical-mirror { background: #f9fafb; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
@@ -64,9 +65,16 @@ input[type=range] { accent-color: #2563eb; }
 .law-card .law-icon { margin-bottom: 0.75rem; }
 .law-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
 .law-card p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.5; }
+.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s ease; }
+.panel { transition: all 0.2s ease; }
+@media (max-width: 640px) {
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+  .stat-row { flex-direction: column; }
+}
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
 <nav class="nav">
   <a href="04-maxwells-demon.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -609,6 +617,12 @@ input[type=range] { accent-color: #2563eb; }
     updateBall();
   };
 })();
+</script>
+<script>
+window.addEventListener('scroll', function() {
+  var p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
 </script>
 </body>
 </html>

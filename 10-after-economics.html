@@ -9,14 +9,58 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #d97706);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel {
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.panel:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+
+/* ── Sticky nav with backdrop blur ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e0;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  background: rgba(250,250,248,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
@@ -64,7 +108,14 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .reflection .note { font-size: 0.9rem; color: #555; margin-top: 0.75rem; font-style: italic; }
 
 /* Enrichment styles */
-.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+.pullquote {
+  border-left: 5px solid #2563eb;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+}
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
@@ -73,9 +124,24 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .stat-row .stat-callout { flex: 1; min-width: 140px; }
+
+/* Mobile breakpoints */
+@media (max-width: 640px) {
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+  .stat-row { flex-direction: column; }
+  .calc-cols { flex-direction: column; }
+  .gauges { grid-template-columns: 1fr !important; }
+  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .ratio-display { font-size: 2rem; }
+  .stat-number { font-size: 2.2rem; }
+}
+@media (max-width: 480px) {
+  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
+}
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
 <nav class="nav">
   <a href="intelligent-macro.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -159,27 +225,43 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <!-- SVG: Opportunity Cost Inversion -->
   <div class="panel" style="padding:1rem; text-align:center;">
-    <svg viewBox="0 0 600 200" style="width:100%;max-width:560px;display:block;margin:0 auto;">
+    <svg viewBox="0 0 600 210" style="width:100%;max-width:560px;display:block;margin:0 auto;">
+      <defs>
+        <linearGradient id="oldWorldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fee2e2"/>
+          <stop offset="100%" stop-color="#fca5a5"/>
+        </linearGradient>
+        <linearGradient id="newWorldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#bfdbfe"/>
+        </linearGradient>
+        <filter id="opp-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+        </filter>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#888"/>
+        </marker>
+      </defs>
+      <rect x="0" y="0" width="600" height="210" rx="8" fill="#fafaf8"/>
       <!-- Old world -->
-      <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Old World</text>
-      <rect x="50" y="35" width="200" height="60" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="150" y="60" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">Time scarcity</text>
-      <text x="150" y="78" text-anchor="middle" font-size="10" fill="#991b1b">Every "yes" = a million "no"s</text>
+      <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Old World</text>
+      <rect x="50" y="35" width="200" height="60" rx="8" fill="url(#oldWorldGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#opp-shadow)"/>
+      <text x="150" y="60" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Time scarcity</text>
+      <text x="150" y="78" text-anchor="middle" font-size="10" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">Every "yes" = a million "no"s</text>
       <!-- Arrow -->
       <line x1="270" y1="65" x2="330" y2="65" stroke="#888" stroke-width="2" marker-end="url(#arrowhead)"/>
-      <text x="300" y="55" text-anchor="middle" font-size="10" fill="#888">AI</text>
-      <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#888"/></marker></defs>
+      <text x="300" y="55" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">AI</text>
       <!-- New world -->
-      <text x="450" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">New World</text>
-      <rect x="350" y="35" width="200" height="60" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="450" y="60" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">Attention scarcity</text>
-      <text x="450" y="78" text-anchor="middle" font-size="10" fill="#1e40af">What am I choosing to experience?</text>
+      <text x="450" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">New World</text>
+      <rect x="350" y="35" width="200" height="60" rx="8" fill="url(#newWorldGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#opp-shadow)"/>
+      <text x="450" y="60" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Attention scarcity</text>
+      <text x="450" y="78" text-anchor="middle" font-size="10" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">What am I choosing to experience?</text>
       <!-- Bottom labels -->
-      <text x="150" y="120" text-anchor="middle" font-size="11" fill="#555">&ldquo;What could I be producing?&rdquo;</text>
-      <text x="450" y="120" text-anchor="middle" font-size="11" fill="#555">&ldquo;What consciousness am I cultivating?&rdquo;</text>
+      <text x="150" y="122" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">"What could I be producing?"</text>
+      <text x="450" y="122" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">"What consciousness am I cultivating?"</text>
       <!-- Dividing insight -->
-      <rect x="100" y="145" width="400" height="40" rx="6" fill="#fafaf8" stroke="#e5e5e0" stroke-width="1"/>
-      <text x="300" y="170" text-anchor="middle" font-size="11" fill="#555" font-style="italic">The real opportunity cost of mindless scrolling is consciousness left uncultivated.</text>
+      <rect x="60" y="140" width="480" height="44" rx="6" fill="#f0f9ff" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="300" y="166" text-anchor="middle" font-size="11" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The real opportunity cost of mindless scrolling is consciousness left uncultivated.</text>
     </svg>
   </div>
 
@@ -201,32 +283,53 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
   <!-- SVG: Four Arts Compass -->
   <div style="text-align:center; margin: 2rem 0;">
     <svg viewBox="0 0 340 340" style="width:100%;max-width:320px;">
+      <defs>
+        <radialGradient id="attentionGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#bfdbfe"/>
+        </radialGradient>
+        <radialGradient id="relationGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#dcfce7"/>
+          <stop offset="100%" stop-color="#bbf7d0"/>
+        </radialGradient>
+        <radialGradient id="meaningGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fef9c3"/>
+          <stop offset="100%" stop-color="#fde68a"/>
+        </radialGradient>
+        <radialGradient id="realityGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fee2e2"/>
+          <stop offset="100%" stop-color="#fca5a5"/>
+        </radialGradient>
+        <filter id="compass-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+        </filter>
+      </defs>
       <circle cx="170" cy="170" r="150" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4 4"/>
       <circle cx="170" cy="170" r="80" fill="none" stroke="#e5e5e0" stroke-width="1"/>
       <!-- Attention - top -->
-      <circle cx="170" cy="40" r="30" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="170" y="37" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">Attention</text>
-      <text x="170" y="48" text-anchor="middle" font-size="7.5" fill="#1e40af">Architects</text>
+      <circle cx="170" cy="40" r="30" fill="url(#attentionGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#compass-shadow)"/>
+      <text x="170" y="37" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Attention</text>
+      <text x="170" y="48" text-anchor="middle" font-size="7.5" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Architects</text>
       <!-- Connection - right -->
-      <circle cx="300" cy="170" r="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-      <text x="300" y="167" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600">Relationship</text>
-      <text x="300" y="178" text-anchor="middle" font-size="7.5" fill="#166534">Weavers</text>
+      <circle cx="300" cy="170" r="30" fill="url(#relationGrad)" stroke="#16a34a" stroke-width="1.5" filter="url(#compass-shadow)"/>
+      <text x="300" y="167" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Relationship</text>
+      <text x="300" y="178" text-anchor="middle" font-size="7.5" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Weavers</text>
       <!-- Meaning - bottom -->
-      <circle cx="170" cy="300" r="30" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
-      <text x="170" y="297" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600">Meaning</text>
-      <text x="170" y="308" text-anchor="middle" font-size="7.5" fill="#92400e">Makers</text>
+      <circle cx="170" cy="300" r="30" fill="url(#meaningGrad)" stroke="#d97706" stroke-width="1.5" filter="url(#compass-shadow)"/>
+      <text x="170" y="297" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
+      <text x="170" y="308" text-anchor="middle" font-size="7.5" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">Makers</text>
       <!-- Embodiment - left -->
-      <circle cx="40" cy="170" r="30" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="40" y="167" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600">Reality</text>
-      <text x="40" y="178" text-anchor="middle" font-size="7.5" fill="#991b1b">Anchors</text>
+      <circle cx="40" cy="170" r="30" fill="url(#realityGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#compass-shadow)"/>
+      <text x="40" y="167" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Reality</text>
+      <text x="40" y="178" text-anchor="middle" font-size="7.5" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">Anchors</text>
       <!-- Center label -->
-      <text x="170" y="167" text-anchor="middle" font-size="10" fill="#888" font-weight="600">The Arts</text>
-      <text x="170" y="180" text-anchor="middle" font-size="9" fill="#888">of Being Human</text>
+      <text x="170" y="167" text-anchor="middle" font-size="10" fill="#888" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">The Arts</text>
+      <text x="170" y="180" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">of Being Human</text>
       <!-- Connecting lines -->
-      <line x1="170" y1="70" x2="170" y2="90" stroke="#e5e5e0" stroke-width="1"/>
-      <line x1="170" y1="250" x2="170" y2="270" stroke="#e5e5e0" stroke-width="1"/>
-      <line x1="70" y1="170" x2="90" y2="170" stroke="#e5e5e0" stroke-width="1"/>
-      <line x1="250" y1="170" x2="270" y2="170" stroke="#e5e5e0" stroke-width="1"/>
+      <line x1="170" y1="70" x2="170" y2="90" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="170" y1="250" x2="170" y2="270" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="70" y1="170" x2="90" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
+      <line x1="250" y1="170" x2="270" y2="170" stroke="#e5e5e0" stroke-width="1.5"/>
     </svg>
   </div>
 
@@ -320,29 +423,42 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
   <!-- SVG: Computation vs Consciousness -->
   <div style="text-align:center; margin: 2rem 0;">
     <svg viewBox="0 0 500 180" style="width:100%;max-width:480px;">
+      <defs>
+        <linearGradient id="compGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#bfdbfe"/>
+        </linearGradient>
+        <linearGradient id="consGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#dcfce7"/>
+          <stop offset="100%" stop-color="#bbf7d0"/>
+        </linearGradient>
+        <filter id="comp-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+        </filter>
+      </defs>
       <!-- Computation side -->
-      <rect x="10" y="15" width="210" height="150" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="115" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">Computation</text>
-      <text x="115" y="62" text-anchor="middle" font-size="10" fill="#1e40af">Syntactic &middot; Data &middot; Optimization</text>
+      <rect x="10" y="15" width="210" height="150" rx="10" fill="url(#compGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#comp-shadow)"/>
+      <text x="115" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Computation</text>
+      <text x="115" y="62" text-anchor="middle" font-size="10" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Syntactic &middot; Data &middot; Optimization</text>
       <line x1="40" y1="72" x2="190" y2="72" stroke="#bfdbfe" stroke-width="1"/>
-      <text x="115" y="92" text-anchor="middle" font-size="11" fill="#1e40af">Answers &ldquo;How?&rdquo;</text>
-      <text x="115" y="110" text-anchor="middle" font-size="9.5" fill="#555">How to design a protein</text>
-      <text x="115" y="124" text-anchor="middle" font-size="9.5" fill="#555">How to optimize a supply chain</text>
-      <text x="115" y="138" text-anchor="middle" font-size="9.5" fill="#555">How to win a game</text>
-      <text x="115" y="156" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">Power: effectively infinite</text>
+      <text x="115" y="92" text-anchor="middle" font-size="11" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Answers "How?"</text>
+      <text x="115" y="110" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to design a protein</text>
+      <text x="115" y="124" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to optimize a supply chain</text>
+      <text x="115" y="138" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">How to win a game</text>
+      <text x="115" y="156" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Power: effectively infinite</text>
       <!-- Consciousness side -->
-      <rect x="280" y="15" width="210" height="150" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-      <text x="385" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a">Consciousness</text>
-      <text x="385" y="62" text-anchor="middle" font-size="10" fill="#166534">Semantic &middot; Experience &middot; Meaning</text>
+      <rect x="280" y="15" width="210" height="150" rx="10" fill="url(#consGrad)" stroke="#16a34a" stroke-width="1.5" filter="url(#comp-shadow)"/>
+      <text x="385" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">Consciousness</text>
+      <text x="385" y="62" text-anchor="middle" font-size="10" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Semantic &middot; Experience &middot; Meaning</text>
       <line x1="310" y1="72" x2="460" y2="72" stroke="#bbf7d0" stroke-width="1"/>
-      <text x="385" y="92" text-anchor="middle" font-size="11" fill="#166534">Answers &ldquo;Why?&rdquo;</text>
-      <text x="385" y="110" text-anchor="middle" font-size="9.5" fill="#555">Why is this beautiful?</text>
-      <text x="385" y="124" text-anchor="middle" font-size="9.5" fill="#555">Why is this just?</text>
-      <text x="385" y="138" text-anchor="middle" font-size="9.5" fill="#555">Why does this matter?</text>
-      <text x="385" y="156" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600">Supply: finite and precious</text>
+      <text x="385" y="92" text-anchor="middle" font-size="11" fill="#166534" font-family="'DM Sans', system-ui, sans-serif">Answers "Why?"</text>
+      <text x="385" y="110" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why is this beautiful?</text>
+      <text x="385" y="124" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why is this just?</text>
+      <text x="385" y="138" text-anchor="middle" font-size="9.5" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Why does this matter?</text>
+      <text x="385" y="156" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Supply: finite and precious</text>
       <!-- Center connector -->
-      <line x1="225" y1="90" x2="275" y2="90" stroke="#888" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text x="250" y="82" text-anchor="middle" font-size="8" fill="#888">unbundled</text>
+      <line x1="225" y1="90" x2="275" y2="90" stroke="#888" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="250" y="82" text-anchor="middle" font-size="8" fill="#888" font-family="'DM Sans', system-ui, sans-serif">unbundled</text>
     </svg>
   </div>
 
@@ -407,31 +523,41 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <!-- SVG: The Great Return -->
   <div style="text-align:center; margin: 2rem 0;">
-    <svg viewBox="0 0 500 120" style="width:100%;max-width:480px;">
+    <svg viewBox="0 0 500 130" style="width:100%;max-width:480px;">
+      <defs>
+        <linearGradient id="returnLineGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#16a34a"/>
+          <stop offset="50%" stop-color="#d97706"/>
+          <stop offset="100%" stop-color="#16a34a"/>
+        </linearGradient>
+        <filter id="return-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+        </filter>
+      </defs>
       <!-- Timeline -->
       <line x1="30" y1="50" x2="470" y2="50" stroke="#e5e5e0" stroke-width="2"/>
       <!-- Deep Past -->
-      <circle cx="60" cy="50" r="8" fill="#16a34a"/>
-      <text x="60" y="76" text-anchor="middle" font-size="9" fill="#555">Deep Past</text>
-      <text x="60" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600">Meaning</text>
+      <circle cx="60" cy="50" r="8" fill="#16a34a" filter="url(#return-shadow)"/>
+      <text x="60" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Deep Past</text>
+      <text x="60" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
       <!-- Agriculture -->
       <circle cx="160" cy="50" r="6" fill="#888"/>
-      <text x="160" y="76" text-anchor="middle" font-size="9" fill="#555">Agriculture</text>
+      <text x="160" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Agriculture</text>
       <!-- Industrial -->
       <circle cx="260" cy="50" r="6" fill="#888"/>
-      <text x="260" y="76" text-anchor="middle" font-size="9" fill="#555">Industrial Era</text>
-      <text x="260" y="36" text-anchor="middle" font-size="8" fill="#dc2626">Value = Output</text>
+      <text x="260" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Industrial Era</text>
+      <text x="260" y="36" text-anchor="middle" font-size="8" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Value = Output</text>
       <!-- Now -->
       <circle cx="360" cy="50" r="6" fill="#d97706"/>
-      <text x="360" y="76" text-anchor="middle" font-size="9" fill="#555">AI Revolution</text>
-      <text x="360" y="36" text-anchor="middle" font-size="8" fill="#d97706">Unbundling</text>
+      <text x="360" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">AI Revolution</text>
+      <text x="360" y="36" text-anchor="middle" font-size="8" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">Unbundling</text>
       <!-- After Economics -->
-      <circle cx="450" cy="50" r="8" fill="#16a34a"/>
-      <text x="450" y="76" text-anchor="middle" font-size="9" fill="#555">After Economics</text>
-      <text x="450" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600">Meaning</text>
+      <circle cx="450" cy="50" r="8" fill="#16a34a" filter="url(#return-shadow)"/>
+      <text x="450" y="76" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">After Economics</text>
+      <text x="450" y="36" text-anchor="middle" font-size="8" fill="#16a34a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Meaning</text>
       <!-- Return arc -->
-      <path d="M 60 42 Q 250 -10 450 42" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text x="255" y="12" text-anchor="middle" font-size="8.5" fill="#16a34a" font-style="italic">The Great Return</text>
+      <path d="M 60 42 Q 250 -10 450 42" fill="none" stroke="url(#returnLineGrad)" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="255" y="12" text-anchor="middle" font-size="8.5" fill="#16a34a" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The Great Return</text>
     </svg>
   </div>
 
@@ -449,6 +575,12 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 </div>
 
 <script>
+// ── Progress bar ──
+window.addEventListener('scroll', function(){
+  var p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // ========== Panel 1: Work Bundle Visualizer ==========
 (function(){
   const wrap = document.getElementById('bundle-wrap');
