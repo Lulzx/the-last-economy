@@ -746,6 +746,42 @@ const vizGenerators = [
   }
 ];
 
+// --- Loop delays per viz index (ms); 0 = already self-looping ---
+const loopDelays = [
+  3000, // 0  Introduction: static arc
+  3500, // 1  Intelligence Inversion: path draw (1500ms)
+  4000, // 2  Harbingers: seismograph draw (2000ms)
+  4000, // 3  Seven Lies: card flips (1960ms)
+  3500, // 4  Ch5 Trial: fire card flips (1620ms)
+  3500, // 5  GDP: bars grow (1460ms)
+     0, // 6  Maxwell's Demon: rAF loop (self-looping)
+  3500, // 7  Ch11: bars + line (2300ms)
+  4000, // 8  Generative Engine: scatter→ring (2180ms)
+  3500, // 9  MIND radar: polygon fade in (800ms)
+  4000, // 10 Three Flows: streams draw (1900ms)
+  3000, // 11 Network Prison: nodes appear (1220ms)
+  6000, // 12 Cooperation: appear + converge (4520ms)
+     0, // 13 Dual Engine: rAF loop (self-looping)
+  3000, // 14 Social Contract: circles appear (1300ms)
+  4000, // 15 Alignment: lights turn on (1900ms)
+  3500, // 16 Three Futures: branches draw (1600ms)
+     0, // 17 Nucleation: ripple loop (self-looping)
+  3000, // 18 Symbiotic State: nodes appear (1000ms)
+  4000, // 19 Ch18 Money: coins flow (1900ms)
+  3000, // 20 Intelligent Macro: bars grow (1060ms)
+  3000, // 21 After Economics: blocks expand (1200ms)
+     0, // 22 Epilogue: glow loop (self-looping)
+];
+
+function initViz(idx, svg, w, h, color) {
+  svg.selectAll('*').remove();
+  vizGenerators[idx](svg, w, h, color);
+  const delay = loopDelays[idx];
+  if (delay > 0) {
+    setTimeout(() => initViz(idx, svg, w, h, color), delay);
+  }
+}
+
 // --- Build cards ---
 const grid = document.getElementById('card-grid');
 
@@ -806,7 +842,7 @@ cards.forEach((card, idx) => {
       .attr('width', w).attr('height', h)
       .attr('viewBox', `0 0 ${w} ${h}`)
       .style('width', '100%').style('max-width', '600px');
-    vizGenerators[idx](svg, w, h, card.color);
+    initViz(idx, svg, w, h, card.color);
   });
 });
 </script>
