@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 9 — The Three Flows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
@@ -20,7 +23,7 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .river-tooltip { font-size: 0.85rem; color: #ccc; text-align: center; min-height: 1.5em; padding: 0.5rem; background: #0a1628; border-radius: 0 0 6px 6px; }
 
 .flow-toggles { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
-.flow-toggle { padding: 0.5rem 1.2rem; border: 2px solid; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+.flow-toggle { padding: 0.5rem 1.2rem; border: 2px solid; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-family: 'DM Sans', system-ui, sans-serif; }
 .flow-toggle[data-flow="harmonic"] { border-color: #78716c; color: #78716c; background: white; }
 .flow-toggle[data-flow="harmonic"].active { background: #78716c; color: white; }
 .flow-toggle[data-flow="circular"] { border-color: #0d9488; color: #0d9488; background: white; }
@@ -40,7 +43,7 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 
 .coercion-container { display: flex; gap: 1.5rem; align-items: stretch; }
 .coercion-slider-wrap { display: flex; flex-direction: column; align-items: center; width: 60px; }
-.coercion-slider { writing-mode: vertical-lr; direction: rtl; width: 24px; height: 200px; margin: 0.5rem 0; }
+.coercion-slider { writing-mode: vertical-lr; direction: rtl; width: 24px; height: 200px; margin: 0.5rem 0; accent-color: #2563eb; }
 .coercion-label { font-size: 0.8rem; color: #888; text-align: center; }
 .coercion-readout { flex: 1; }
 .coercion-level { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -50,6 +53,13 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .cap-bar-label { width: 80px; font-weight: 600; }
 .cap-bar { flex: 1; height: 14px; background: #e5e5e0; border-radius: 7px; overflow: hidden; }
 .cap-bar-fill { height: 100%; border-radius: 7px; transition: width 0.3s, background 0.3s; }
+
+@media (max-width: 600px) {
+  .tx-grid { grid-template-columns: 1fr; }
+  .coercion-container { flex-direction: column; }
+  .coercion-slider-wrap { flex-direction: row; width: 100%; }
+  .coercion-slider { writing-mode: horizontal-tb; direction: ltr; width: 100%; height: 24px; }
+}
 </style>
 </head>
 <body>
@@ -66,7 +76,7 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
   <h2>The River Visualization</h2>
   <div class="panel" style="padding:0;overflow:hidden;">
     <div class="river-wrap">
-      <svg id="riverSvg" width="100%" height="300" preserveAspectRatio="none"></svg>
+      <svg id="riverSvg" style="width:100%;display:block;" height="300" preserveAspectRatio="none"></svg>
     </div>
     <div class="river-tooltip" id="riverTooltip">Hover over a layer to explore</div>
   </div>
@@ -115,17 +125,17 @@ let riverAnim;
 
 (function initRiver() {
   const svg = d3.select('#riverSvg');
-  const W = 680, H = 300;
+  const container = document.getElementById('riverSvg').parentElement;
+  const W = container.clientWidth || 680;
+  const H = 300;
   svg.attr('viewBox', `0 0 ${W} ${H}`);
 
-  // Layers
   const layers = {
     harmonic: { y: 220, h: 60, color: '#57534e', speed: 0.3, label: 'Harmonic Flow (Hayek)', desc: "Hayek's distributed knowledge. Language, culture, law, money. Slow to change, foundational." },
     circular: { y: 140, h: 70, color: '#0d9488', speed: 0.7, label: 'Circular Flow (Marx)', desc: "Marx's capital accumulation. Profits to investment to profits. Self-reinforcing loops." },
     gradient: { y: 60, h: 60, color: '#60a5fa', speed: 1.5, label: 'Gradient Flow (Smith)', desc: "Smith's market prices. Resources flow from low to high value. Fast, reactive." }
   };
 
-  // Draw layers with animated wave paths
   let t = 0;
   const groups = {};
 
@@ -133,7 +143,6 @@ let riverAnim;
     const g = svg.append('g').attr('class', 'layer-' + key);
     groups[key] = g;
 
-    // Hover zones
     g.append('rect')
       .attr('x', 0).attr('y', layers[key].y - 10).attr('width', W).attr('height', layers[key].h + 20)
       .attr('fill', 'transparent').attr('cursor', 'pointer')
@@ -146,7 +155,6 @@ let riverAnim;
         g.selectAll('.wave-path').attr('opacity', 0.7);
       });
 
-    // Wave paths
     for (let i = 0; i < 4; i++) {
       g.append('path').attr('class', 'wave-path')
         .attr('fill', 'none')
@@ -155,7 +163,6 @@ let riverAnim;
         .attr('opacity', 0.7);
     }
 
-    // Circular eddies for Marx layer
     if (key === 'circular') {
       for (let i = 0; i < 5; i++) {
         g.append('circle').attr('class', 'eddy')
@@ -185,7 +192,6 @@ let riverAnim;
         path.attr('d', d);
       });
 
-      // Animate eddies
       if (key === 'circular') {
         groups[key].selectAll('.eddy').each(function(_, i) {
           const eddy = d3.select(this);
@@ -293,7 +299,6 @@ coercionSlider.addEventListener('input', function() {
     descEl.textContent = 'Gradient reversed entirely. N and D collapsed. Only Circular remains for the extractors. Everyone else in survival mode.';
   }
 
-  // Update slider label
   coercionSlider.parentElement.querySelector('.coercion-label:last-child').textContent = v + '%';
 });
 </script>

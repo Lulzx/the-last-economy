@@ -4,30 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 4 — The GDP Illusion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 .panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
 
-svg text { font-family: system-ui, sans-serif; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
 /* GDP Paradox Cards */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
-.event-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: default; transition: all 0.3s; min-height: 160px; display: flex; flex-direction: column; }
+.event-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; min-height: 160px; display: flex; flex-direction: column; }
 .event-card.answered { cursor: default; }
 .event-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.75rem; }
 .event-q { font-size: 0.85rem; color: #555; margin-bottom: 0.75rem; }
 .event-btns { display: flex; gap: 0.5rem; margin-top: auto; }
-.event-btns button { flex: 1; padding: 0.4rem; border-radius: 5px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.15s; }
-.event-btns button:hover { border-color: #2563eb; }
+.event-btns button { flex: 1; padding: 0.4rem; border-radius: 5px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.15s; font-family: 'DM Sans', system-ui, sans-serif; }
+.event-btns button:hover { border-color: #2563eb; background: #eff6ff; }
 .event-btns button.correct { background: #dcfce7; border-color: #16a34a; color: #16a34a; }
 .event-btns button.wrong { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
 .event-explain { font-size: 0.8rem; color: #555; margin-top: 0.75rem; line-height: 1.4; display: none; }
@@ -38,8 +41,13 @@ svg text { font-family: system-ui, sans-serif; }
 /* Wage-Productivity */
 .slider-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; font-size: 0.85rem; }
 .slider-row label { width: 220px; flex-shrink: 0; }
-.slider-row input { flex: 1; }
+.slider-row input[type=range] { flex: 1; accent-color: #2563eb; cursor: pointer; }
 .slider-row .val { width: 40px; text-align: right; font-weight: 600; }
+
+/* Legend for blame sliders */
+.blame-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; font-size: 0.8rem; }
+.blame-legend span { display: flex; align-items: center; gap: 0.35rem; }
+.blame-legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
 </style>
 </head>
 <body>
@@ -66,7 +74,7 @@ svg text { font-family: system-ui, sans-serif; }
   <!-- Panel 2: Wage-Productivity Gap -->
   <div class="panel">
     <h2>The Wage-Productivity Gap</h2>
-    <div id="gap-chart"></div>
+    <div id="gap-chart" style="width:100%;max-width:640px;"></div>
     <div style="margin-top:1.5rem;">
       <p style="font-size:0.9rem;color:#666;margin:0 0 0.75rem">What explains the gap? Adjust the sliders (must sum to 100%):</p>
       <div class="slider-row">
@@ -83,6 +91,11 @@ svg text { font-family: system-ui, sans-serif; }
         <label>Financialization / shareholder primacy</label>
         <input type="range" id="blame-fin" min="0" max="100" value="34">
         <span class="val" id="blame-fin-val">34%</span>
+      </div>
+      <div class="blame-legend">
+        <span><span class="swatch" style="background:#2563eb"></span> Software non-rivalry</span>
+        <span><span class="swatch" style="background:#7c3aed"></span> Network effects</span>
+        <span><span class="swatch" style="background:#d97706"></span> Financialization</span>
       </div>
     </div>
   </div>
@@ -170,7 +183,9 @@ document.querySelectorAll('.scrub').forEach(el => {
     return { year: y, val: 169 + (y - 1973) * 0.9 };
   });
 
-  const w = 640, h = 300, m = { top: 20, right: 80, bottom: 35, left: 50 };
+  const container = document.getElementById('gap-chart');
+  const cw = container.clientWidth || 640;
+  const w = cw, h = 300, m = { top: 20, right: 80, bottom: 35, left: 50 };
   const svg = d3.select('#gap-chart').append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`).style('width', '100%');
 

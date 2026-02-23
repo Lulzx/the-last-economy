@@ -4,21 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 3 — The Seven Fatal Lies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+h1, h2 { font-family: 'Playfair Display', Georgia, serif; }
 h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
-.nav a { color: #2563eb; text-decoration: none; }
+.nav a { color: #2563eb; text-decoration: none; cursor: pointer; }
 
 /* Seven Lies Cards */
 .lies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
 .lie-card { perspective: 600px; min-height: 180px; cursor: pointer; }
-.lie-inner { position: relative; width: 100%; height: 100%; min-height: 180px; transition: transform 0.5s; transform-style: preserve-3d; }
+.lie-card:hover .lie-inner:not(.flipped-inner) { box-shadow: 0 4px 12px rgba(37,99,235,0.15); }
+.lie-inner { position: relative; width: 100%; height: 100%; min-height: 180px; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; border-radius: 8px; }
 .lie-card.flipped .lie-inner { transform: rotateY(180deg); }
 .lie-front, .lie-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 1rem; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
 .lie-front { background: #2563eb; color: white; border: 1px solid #1d4ed8; }
@@ -43,7 +48,7 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
   <!-- Seven Lies panel -->
   <div class="panel">
     <h2>The Seven Fatal Assumptions</h2>
-    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to reveal the reality behind the assumption.</p>
+    <p style="font-size:0.9rem;color:#666;margin-top:0">Click each card to reveal the reality behind the assumption. Click again or press Escape to close.</p>
     <div class="lies-grid" id="lies-grid"></div>
   </div>
 </div>
@@ -78,6 +83,13 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
     `;
     card.addEventListener('click', () => card.classList.toggle('flipped'));
     grid.appendChild(card);
+  });
+
+  // Escape key closes all flipped cards
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.lie-card.flipped').forEach(c => c.classList.remove('flipped'));
+    }
   });
 })();
 </script>

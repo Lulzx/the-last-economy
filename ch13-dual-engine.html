@@ -4,23 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 13 — The Dual Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h3 { font-family: 'Playfair Display', Georgia, serif; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
+.nav a:hover { text-decoration: underline; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
 .btn:hover { background: #1d4ed8; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
-input[type="range"] { width: 100%; }
+input[type="range"] { width: 100%; accent-color: #2563eb; }
 .tension-bar { height: 12px; border-radius: 6px; background: linear-gradient(to right, #16a34a, #d97706, #dc2626); margin: 0.5rem 0; position: relative; }
 .tension-indicator { position: absolute; top: -4px; width: 20px; height: 20px; border-radius: 50%; background: white; border: 2px solid #1a1a1a; transform: translateX(-50%); transition: left 0.3s; }
 .tension-label { text-align: center; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; }
@@ -28,16 +33,17 @@ input[type="range"] { width: 100%; }
 .warning-box.show { display: block; }
 .perez-timeline { position: relative; margin: 1rem 0; }
 .policy-sim { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+@media (max-width: 600px) { .policy-sim { grid-template-columns: 1fr; } }
 .sim-col h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.75rem; }
 .sim-result { background: #f5f5f3; border-radius: 6px; padding: 0.75rem; margin-top: 0.75rem; font-size: 0.9rem; }
 .sim-result .label { font-size: 0.8rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-.sim-result .value { font-size: 1.6rem; font-weight: 700; }
+.sim-result .value { font-size: 1.6rem; font-weight: 700; font-family: 'DM Mono', monospace; }
 .sim-gap { background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.88rem; color: #92400e; margin-top: 0.75rem; }
 </style>
 </head>
 <body>
 <nav class="nav">
-  <a href="08-cooperation-emerges.html">&larr; Previous</a>
+  <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
   <a href="ch14-social-contract.html">Next &rarr;</a>
 </nav>
@@ -52,7 +58,7 @@ input[type="range"] { width: 100%; }
 
   <div class="panel">
     <h2>The Two Clocks</h2>
-    <svg id="clocks-svg" width="100%" height="200"></svg>
+    <svg id="clocks-svg" style="width:100%;max-width:600px;" height="200"></svg>
 
     <div class="slider-row" style="margin-top:1rem;">
       <label>AI Multiplier: <span id="mult-val">1x</span></label>
@@ -76,7 +82,7 @@ input[type="range"] { width: 100%; }
   <div class="panel">
     <h2>Carlota Perez Cycles</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Six technological revolutions, each following the same two-phase pattern. Click the dots to explore each era.</p>
-    <svg id="perez-svg" width="100%" height="220"></svg>
+    <svg id="perez-svg" style="width:100%;max-width:600px;" height="220"></svg>
     <div id="perez-info" style="margin-top:0.75rem;min-height:3rem;font-size:0.9rem;color:#333;padding:0.6rem 0.8rem;background:#f5f5f3;border-radius:6px;"></div>
   </div>
 
@@ -171,7 +177,7 @@ function renderClocks(fastA, slowA) {
   const svgEl = document.getElementById('clocks-svg');
   const w = svgEl.clientWidth || 600;
   const h = 200;
-  const svg = d3.select('#clocks-svg').attr('width', w).attr('height', h);
+  const svg = d3.select('#clocks-svg').attr('height', h);
   svg.selectAll('*').remove();
 
   const r = Math.min(w / 5, 70);
@@ -233,13 +239,13 @@ const perezData = [
   { year: 2007, label: 'AI & Intelligent Networks', install: 'We are here: LLM speculation, AI race', deploy: 'Unknown — depends on choices made now', color: '#1a1a1a', current: true }
 ];
 
-requestAnimationFrame(() => {
+function renderPerez() {
   const svgEl = document.getElementById('perez-svg');
   const w = svgEl.clientWidth || 600;
   const h = 220;
-  const svg = d3.select('#perez-svg').attr('width', w).attr('height', h);
+  const svg = d3.select('#perez-svg').attr('height', h);
+  svg.selectAll('*').remove();
 
-  const years = perezData.map(d => d.year);
   const xS = d3.scaleLinear().domain([1750, 2035]).range([30, w - 30]);
   const cy = h / 2;
 
@@ -268,7 +274,7 @@ requestAnimationFrame(() => {
   });
 
   // Dots
-  const dots = svg.selectAll('.perez-dot').data(perezData).join('circle').attr('class', 'perez-dot')
+  svg.selectAll('.perez-dot').data(perezData).join('circle').attr('class', 'perez-dot')
     .attr('cx', d => xS(d.year)).attr('cy', cy)
     .attr('r', d => d.current ? 8 : 6)
     .attr('fill', d => d.color)
@@ -288,10 +294,13 @@ requestAnimationFrame(() => {
   const current = perezData[perezData.length - 1];
   svg.append('text').attr('x', xS(current.year)).attr('y', cy - 38)
     .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#1a1a1a').attr('font-weight', 700)
-    .text('← You are here');
+    .text('\u2190 You are here');
 
   document.getElementById('perez-info').textContent = 'Click any dot to explore that technological revolution.';
-});
+}
+
+requestAnimationFrame(renderPerez);
+window.addEventListener('resize', renderPerez);
 
 // --- Lucas Critique Simulator ---
 function updateLucas() {
@@ -312,7 +321,7 @@ function updateLucas() {
 
   document.getElementById('model-predict').textContent = (parseFloat(modelPred) >= 0 ? '+' : '') + modelPred + '%';
   document.getElementById('actual-outcome').textContent = (parseFloat(actual) >= 0 ? '+' : '') + actual + '%';
-  document.getElementById('lucas-gap').textContent = `Lucas Gap: ${gap}pp — people anticipated the policy and optimized against it, invalidating the model. The larger the policy change, the larger the gap.`;
+  document.getElementById('lucas-gap').textContent = `Lucas Gap: ${gap}pp \u2014 people anticipated the policy and optimized against it, invalidating the model. The larger the policy change, the larger the gap.`;
 }
 
 function resetLucas() {

@@ -4,22 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 14 — The New Social Contract</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #16a34a; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
-.btn:hover { background: #15803d; }
+.nav a:hover { text-decoration: underline; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; transition: background 0.2s; }
+.btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
-input[type="range"] { width: 100%; }
+input[type="range"] { width: 100%; accent-color: #2563eb; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
@@ -34,15 +38,20 @@ input[type="range"] { width: 100%; }
 .contract-term { margin: 0.4rem 0; font-size: 0.88rem; }
 .contract-term .arrow { color: #888; margin: 0 0.4rem; }
 .right-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-.right-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; border-left: 4px solid #16a34a; }
-.right-card .right-num { font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
-.right-card .right-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+.right-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; border-left: 4px solid #2563eb; transition: transform 0.2s, box-shadow 0.2s; }
+.right-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.right-card .right-num { font-size: 0.75rem; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+.right-card .right-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
 .right-card .right-desc { font-size: 0.88rem; color: #555; line-height: 1.5; }
-.right-card .right-note { font-size: 0.8rem; color: #16a34a; font-style: italic; margin-top: 0.4rem; }
+.right-card .right-note { font-size: 0.8rem; color: #2563eb; font-style: italic; margin-top: 0.4rem; }
 /* Philosophy timeline */
 .phil-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-.phil-card { border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; cursor: pointer; }
-.phil-card:hover { background: #fafaf8; }
+.phil-card { border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+.phil-card:hover { background: #f0f4ff; border-color: #2563eb; }
+.phil-card.active { background: #2563eb; color: white; border-color: #2563eb; }
+.phil-card.active .phil-year { color: rgba(255,255,255,0.7); }
+.phil-card.active .phil-tagline { color: rgba(255,255,255,0.8); }
+.phil-card.active .phil-expand { color: rgba(255,255,255,0.9); border-top-color: rgba(255,255,255,0.2); }
 .phil-header { display: flex; align-items: center; gap: 0.75rem; }
 .phil-year { font-size: 0.8rem; font-weight: 700; color: #888; min-width: 40px; }
 .phil-name { font-weight: 700; font-size: 0.95rem; }
@@ -51,10 +60,17 @@ input[type="range"] { width: 100%; }
 .phil-expand.open { display: block; }
 /* Veil sim */
 .veil-display { text-align: center; margin: 1rem 0; }
-.veil-score { font-size: 3rem; font-weight: 700; color: #16a34a; line-height: 1; }
+.veil-score { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; transition: color 0.3s; }
 .veil-label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
 .veil-bar { height: 12px; background: #e5e5e0; border-radius: 6px; overflow: hidden; margin-bottom: 0.5rem; }
-.veil-bar-fill { height: 100%; background: #16a34a; border-radius: 6px; transition: width 0.4s; }
+.veil-bar-fill { height: 100%; background: #2563eb; border-radius: 6px; transition: width 0.4s, background 0.3s; }
+/* Responsive */
+@media (max-width: 500px) {
+  .contract-wrap { flex-direction: column; }
+  .contract-half.old { border-radius: 8px 8px 0 0; }
+  .contract-half.new { border-radius: 0 0 8px 8px; }
+  .contract-half.torn { transform: translateY(-10px); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -182,15 +198,14 @@ function signContract() {
 
 // --- Philosophy Timeline ---
 const philosophers = [
-  { year: 1651, name: 'Thomas Hobbes', tagline: 'Security → Sovereignty', detail: 'Life without authority is "solitary, poor, nasty, brutish, and short." People consent to a sovereign power in exchange for physical security. The contract is about survival — a minimal floor of existence.' },
-  { year: 1689, name: 'John Locke', tagline: 'Property → Protection', detail: 'The contract protects natural rights: life, liberty, and property. Government exists by consent. If it violates these rights, revolution is legitimate. The first framework for rights-based governance.' },
-  { year: 1762, name: 'Jean-Jacques Rousseau', tagline: 'Community → General Will', detail: 'The legitimate state expresses the "general will" — not the sum of individual interests, but the collective good. Private property is the root of inequality; the social contract must manage this tension.' },
-  { year: 1971, name: 'John Rawls', tagline: 'Fairness → Veil of Ignorance', detail: 'Justice is what rational people would choose from behind a "veil of ignorance" — not knowing their place in society. This yields the difference principle: inequalities are only justified if they benefit the least advantaged.' },
-  { year: 2024, name: 'This Book', tagline: 'Dignity → Physics-Based Rights', detail: 'The new contract is grounded not in political agreement but in the physics of living systems. Dignity, capability, and viability are not demands — they are the minimum thermodynamic requirements for a society to persist. The machine makes their fulfillment, for the first time, materially possible for all.' }
+  { year: 1651, name: 'Thomas Hobbes', tagline: 'Security \u2192 Sovereignty', detail: 'Life without authority is \u201Csolitary, poor, nasty, brutish, and short.\u201D People consent to a sovereign power in exchange for physical security. The contract is about survival \u2014 a minimal floor of existence.' },
+  { year: 1689, name: 'John Locke', tagline: 'Property \u2192 Protection', detail: 'The contract protects natural rights: life, liberty, and property. Government exists by consent. If it violates these rights, revolution is legitimate. The first framework for rights-based governance.' },
+  { year: 1762, name: 'Jean-Jacques Rousseau', tagline: 'Community \u2192 General Will', detail: 'The legitimate state expresses the \u201Cgeneral will\u201D \u2014 not the sum of individual interests, but the collective good. Private property is the root of inequality; the social contract must manage this tension.' },
+  { year: 1971, name: 'John Rawls', tagline: 'Fairness \u2192 Veil of Ignorance', detail: 'Justice is what rational people would choose from behind a \u201Cveil of ignorance\u201D \u2014 not knowing their place in society. This yields the difference principle: inequalities are only justified if they benefit the least advantaged.' },
+  { year: 2024, name: 'This Book', tagline: 'Dignity \u2192 Physics-Based Rights', detail: 'The new contract is grounded not in political agreement but in the physics of living systems. Dignity, capability, and viability are not demands \u2014 they are the minimum thermodynamic requirements for a society to persist. The machine makes their fulfillment, for the first time, materially possible for all.' }
 ];
 
 const philCards = document.getElementById('phil-cards');
-const philOpen = {};
 
 philosophers.forEach((p, i) => {
   const div = document.createElement('div');
@@ -209,9 +224,13 @@ philosophers.forEach((p, i) => {
   div.addEventListener('click', () => {
     const exp = document.getElementById('phil-exp-' + i);
     const isOpen = exp.classList.contains('open');
-    // Close all
+    // Close all and remove active
     document.querySelectorAll('.phil-expand').forEach(e => e.classList.remove('open'));
-    if (!isOpen) exp.classList.add('open');
+    document.querySelectorAll('.phil-card').forEach(c => c.classList.remove('active'));
+    if (!isOpen) {
+      exp.classList.add('open');
+      div.classList.add('active');
+    }
   });
   philCards.appendChild(div);
 });

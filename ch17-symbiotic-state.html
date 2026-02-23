@@ -4,21 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 17 — The Symbiotic State</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
+.btn.active { background: #2563eb; color: white; }
 .transform-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0; }
 .transform-side { border-radius: 8px; padding: 1.25rem; }
 .transform-side.extractive { background: #fef3c7; border: 1px solid #fde68a; }
@@ -26,7 +30,8 @@ svg text { font-family: system-ui, sans-serif; }
 .transform-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
 .transform-item { font-size: 0.88rem; margin: 0.3rem 0; color: #555; }
 .mind-steward-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-.mind-card { border-left: 3px solid #2563eb; padding: 0.6rem 0.9rem; background: #f8faff; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+.mind-card { border-left: 3px solid #2563eb; padding: 0.6rem 0.9rem; background: #f8faff; border-radius: 0 6px 6px 0; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+.mind-card:hover { background: #eff6ff; }
 .mind-card .mc-letter { font-weight: 700; color: #2563eb; font-size: 1rem; margin-right: 0.4rem; }
 /* Landscape viz */
 .landscape-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
@@ -36,6 +41,10 @@ svg text { font-family: system-ui, sans-serif; }
 .legend-item { display: flex; align-items: center; gap: 0.4rem; }
 .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 .scenario-log { background: #f5f5f3; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.88rem; min-height: 3rem; margin-top: 0.75rem; line-height: 1.6; }
+input[type=range] { accent-color: #2563eb; }
+@media (max-width: 600px) {
+  .transform-wrap { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -102,7 +111,7 @@ svg text { font-family: system-ui, sans-serif; }
       <button class="btn secondary" onclick="resetLandscape()">Reset</button>
     </div>
 
-    <svg id="landscape-svg" width="100%" height="200"></svg>
+    <svg id="landscape-svg" style="width:100%;max-width:600px;" height="200"></svg>
     <div class="landscape-log" id="landscape-log">The economic landscape shapes behavior. Agents follow the path of least resistance — always rolling downhill.</div>
   </div>
 
@@ -112,7 +121,7 @@ svg text { font-family: system-ui, sans-serif; }
       <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> AI Monitoring Oracle</div>
       <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Citizen Jury Member</div>
     </div>
-    <svg id="guardian-svg" width="100%" height="260"></svg>
+    <svg id="guardian-svg" style="width:100%;max-width:600px;" height="260"></svg>
     <div style="text-align:center;margin-top:0.75rem;">
       <button class="btn" onclick="runScenario()">Run Scenario: MIND Capital Drop</button>
     </div>
@@ -137,14 +146,30 @@ const policyMessages = {
   remove: 'Removing barriers (regulatory friction, licensing walls) opens direct paths that were previously blocked.'
 };
 
+function updatePolicyButtons() {
+  const btns = document.querySelectorAll('.landscape-controls .btn');
+  const keys = ['incentivize', 'tax', 'build', 'remove'];
+  btns.forEach((btn, i) => {
+    if (i < keys.length) {
+      if (landscapeState[keys[i]]) {
+        btn.className = 'btn active';
+      } else {
+        btn.className = i === 0 ? 'btn' : 'btn secondary';
+      }
+    }
+  });
+}
+
 function applyPolicy(type) {
   landscapeState[type] = !landscapeState[type];
+  updatePolicyButtons();
   renderLandscape();
   document.getElementById('landscape-log').textContent = policyMessages[type];
 }
 
 function resetLandscape() {
   landscapeState = { incentivize: false, tax: false, build: false, remove: false };
+  updatePolicyButtons();
   renderLandscape();
   document.getElementById('landscape-log').textContent = 'The economic landscape shapes behavior. Agents follow the path of least resistance — always rolling downhill.';
 }
@@ -186,13 +211,6 @@ function renderLandscape() {
   svg.append('path').datum(data).attr('d', line).attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2);
 
   // Agents (dots) positioned at local minima
-  const minima = [];
-  for (let i = 2; i < n - 2; i++) {
-    if (y[i] < y[i-1] && y[i] < y[i+1] && y[i] < y[i-2] && y[i] < y[i+2]) {
-      minima.push(i);
-    }
-  }
-  // Add some random agents that have rolled toward minima
   const agentPositions = [10, 25, 40, 55, 70];
   agentPositions.forEach(pos => {
     // Find nearest minimum
@@ -218,6 +236,10 @@ function renderLandscape() {
 }
 
 requestAnimationFrame(() => renderLandscape());
+window.addEventListener('resize', () => {
+  renderLandscape();
+  renderGuardianLattice();
+});
 
 // --- Guardian Lattice Network ---
 const oracleNodes = [
@@ -250,11 +272,12 @@ const edges = [
 ];
 
 let guardianSvg;
-requestAnimationFrame(() => {
+function renderGuardianLattice() {
   const svgEl = document.getElementById('guardian-svg');
   const w = svgEl.clientWidth || 600;
   const h = 260;
   guardianSvg = d3.select('#guardian-svg').attr('width', w).attr('height', h);
+  guardianSvg.selectAll('*').remove();
 
   const nodePos = {};
   allNodes.forEach(n => { nodePos[n.id] = { x: n.x * w, y: n.y * h }; });
@@ -281,7 +304,9 @@ requestAnimationFrame(() => {
       .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', 'white').attr('font-weight', 600)
       .text(node.label);
   });
-});
+}
+
+requestAnimationFrame(() => renderGuardianLattice());
 
 const scenarioSteps = [
   'Step 1: M Capital oracle detects ecological indicator dropping below threshold...',

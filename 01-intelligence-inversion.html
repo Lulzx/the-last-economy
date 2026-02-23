@@ -4,20 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Intelligence Inversion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 .panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h3 { font-family: 'Playfair Display', Georgia, serif; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
-.nav a { color: #2563eb; text-decoration: none; }
+.nav a { color: #2563eb; text-decoration: none; cursor: pointer; }
+.nav a:hover { text-decoration: underline; }
 
-svg text { font-family: system-ui, sans-serif; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .era-label { font-size: 11px; fill: #555; }
 .era-band { opacity: 0.25; transition: opacity 0.2s; }
 .era-band.active { opacity: 0.55; }
@@ -30,14 +35,14 @@ svg text { font-family: system-ui, sans-serif; }
 .calc-col h3 { margin-top: 0; font-size: 1.1rem; }
 .ratio-display { text-align: center; font-size: 2.5rem; font-weight: 700; color: #2563eb; margin: 1.5rem 0 0.5rem; }
 .ratio-sub { text-align: center; font-size: 0.9rem; color: #888; }
-input[type="range"] { width: 100%; }
+input[type="range"] { width: 100%; accent-color: #2563eb; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
 .cost-breakdown { font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
 </style>
 </head>
 <body>
 <nav class="nav">
-  <a href="introduction.html">&larr; Introduction</a>
+  <a href="introduction.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
   <a href="02-harbingers.html">Next &rarr;</a>
 </nav>
@@ -117,7 +122,7 @@ window.updateYear = function(val) {
   document.getElementById('years-into').textContent = val - 2024;
 };
 
-// ── Timeline ──
+// -- Timeline --
 (function() {
   const eras = [
     { name: 'Land', start: 1750, end: 1850, color: '#8B6914', who: 'Landowners' },
@@ -127,10 +132,12 @@ window.updateYear = function(val) {
     { name: 'Intelligence', start: 2020, end: 2035, color: '#d97706', who: 'AI deployers' }
   ];
 
-  const w = 640, h = 140, m = { top: 30, right: 20, bottom: 30, left: 20 };
+  const container = document.getElementById('timeline-chart');
+  const cw = container.clientWidth || 640;
+  const w = Math.min(640, cw), h = 140, m = { top: 30, right: 20, bottom: 30, left: 20 };
   const svg = d3.select('#timeline-chart').append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`)
-    .style('width', '100%');
+    .style('width', '100%').style('max-width', '640px');
 
   const x = d3.scaleLinear().domain([1750, 2035]).range([m.left, w - m.right]);
 
@@ -157,6 +164,12 @@ window.updateYear = function(val) {
     .attr('transform', `translate(0,${h - m.bottom})`)
     .call(d3.axisBottom(x).tickValues([1750, 1850, 1950, 1990, 2020, 2035]).tickFormat(d3.format('d')))
     .selectAll('text').style('font-size', '10px');
+
+  // X-axis label
+  svg.append('text')
+    .attr('x', w / 2).attr('y', h - 2)
+    .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888')
+    .text('Year');
 
   // Draggable marker
   let markerYear = 1990;
@@ -186,7 +199,7 @@ window.updateYear = function(val) {
   marker.call(drag);
 })();
 
-// ── Cost Cliff ──
+// -- Cost Cliff --
 (function() {
   const humanData = d3.range(2000, 2025).map(y => ({ year: y, cost: 0.05 + Math.sin(y * 2.7) * 0.01 + 0.015 }));
   const aiData = [
@@ -197,10 +210,12 @@ window.updateYear = function(val) {
     { year: 2024, cost: 0.0003 }
   ];
 
-  const w = 640, h = 280, m = { top: 20, right: 30, bottom: 40, left: 55 };
+  const container = document.getElementById('cost-chart');
+  const cw = container.clientWidth || 640;
+  const w = Math.min(640, cw), h = 280, m = { top: 20, right: 30, bottom: 50, left: 55 };
   const svg = d3.select('#cost-chart').append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`)
-    .style('width', '100%');
+    .style('width', '100%').style('max-width', '640px');
 
   const x = d3.scaleLinear().domain([2000, 2024]).range([m.left, w - m.right]);
   const y = d3.scaleLog().domain([0.0001, 0.15]).range([h - m.bottom, m.top]);
@@ -212,7 +227,13 @@ window.updateYear = function(val) {
     .call(d3.axisLeft(y).ticks(4, '.4f'))
     .selectAll('text').style('font-size', '10px');
 
-  // Y label
+  // X-axis label
+  svg.append('text')
+    .attr('x', (m.left + w - m.right) / 2).attr('y', h - 8)
+    .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888')
+    .text('Year');
+
+  // Y-axis label
   svg.append('text').attr('transform', `rotate(-90)`).attr('x', -(h/2)).attr('y', 14)
     .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888')
     .text('$/word (log scale)');
@@ -262,7 +283,7 @@ window.updateYear = function(val) {
   }));
 })();
 
-// ── Metabolic Cost Calculator ──
+// -- Metabolic Cost Calculator --
 (function() {
   const hoursSlider = document.getElementById('human-hours');
   const aiSlider = document.getElementById('ai-hours');

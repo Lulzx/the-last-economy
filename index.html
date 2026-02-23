@@ -6,21 +6,22 @@
 <title>Symbioism: The Last Economy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #07070d;
-  --bg2: #0d0d18;
-  --blue: #3b82f6;
-  --violet: #8b5cf6;
-  --amber: #f59e0b;
-  --red: #ef4444;
-  --green: #10b981;
-  --white: #f0eff6;
-  --muted: #6b6a80;
-  --border: rgba(255,255,255,0.07);
+  --bg: #fafaf8;
+  --bg2: #f3f3f0;
+  --blue: #2563eb;
+  --violet: #7c3aed;
+  --amber: #d97706;
+  --red: #dc2626;
+  --green: #059669;
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --muted: #888;
+  --border: #e5e5e0;
   --serif: 'Playfair Display', Georgia, serif;
   --sans: 'DM Sans', system-ui, sans-serif;
   --mono: 'DM Mono', monospace;
@@ -30,23 +31,13 @@ html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
-  color: var(--white);
+  color: var(--text);
   font-family: var(--sans);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   overflow-x: hidden;
   cursor: default;
-}
-
-/* ── NOISE OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 1000;
-  opacity: 0.4;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── HERO ── */
@@ -93,6 +84,7 @@ body::before {
   line-height: 0.95;
   letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
+  color: var(--text);
   opacity: 0;
   animation: fadeUp 0.9s ease forwards 0.4s;
 }
@@ -102,7 +94,7 @@ body::before {
   font-size: clamp(1.4rem, 3vw, 2.8rem);
   font-weight: 400;
   font-style: italic;
-  color: rgba(240,239,246,0.55);
+  color: var(--text-secondary);
   letter-spacing: 0;
   margin-top: 0.3em;
 }
@@ -112,19 +104,19 @@ body::before {
 
 .hero-tagline {
   font-size: clamp(1rem, 2vw, 1.35rem);
-  font-weight: 300;
-  color: rgba(240,239,246,0.75);
+  font-weight: 400;
+  color: var(--text-secondary);
   max-width: 560px;
   margin-bottom: 3rem;
-  line-height: 1.5;
+  line-height: 1.6;
   opacity: 0;
   animation: fadeUp 0.9s ease forwards 0.6s;
 }
 
 .hero-tagline em {
-  color: var(--white);
+  color: var(--text);
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .hero-actions {
@@ -140,21 +132,22 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  background: var(--blue);
+  background: #2563eb;
   color: #fff;
   font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 500;
   padding: 0.85rem 1.8rem;
-  border-radius: 4px;
+  border-radius: 6px;
   text-decoration: none;
+  cursor: pointer;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0 30px rgba(59,130,246,0.3);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.2);
 }
 .btn-primary:hover {
-  background: #2563eb;
+  background: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: 0 0 50px rgba(59,130,246,0.5);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.3);
 }
 
 .btn-secondary {
@@ -162,17 +155,18 @@ body::before {
   align-items: center;
   gap: 0.6rem;
   background: transparent;
-  color: rgba(240,239,246,0.6);
+  color: var(--text-secondary);
   font-family: var(--sans);
   font-size: 0.9rem;
-  font-weight: 400;
+  font-weight: 500;
   padding: 0.85rem 1.4rem;
-  border-radius: 4px;
+  border-radius: 6px;
   text-decoration: none;
   border: 1px solid var(--border);
-  transition: color 0.2s, border-color 0.2s;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.btn-secondary:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+.btn-secondary:hover { color: var(--text); border-color: #ccc; background: rgba(0,0,0,0.02); }
 
 .scroll-hint {
   position: absolute;
@@ -198,7 +192,7 @@ body::before {
 
 /* ── COUNTDOWN BAND ── */
 .countdown-band {
-  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+  background: var(--bg2);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 2.5rem max(5vw, 24px);
@@ -242,7 +236,7 @@ body::before {
 
 .countdown-bar-track {
   height: 3px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.08);
   border-radius: 2px;
   overflow: hidden;
   margin-top: 0.6rem;
@@ -283,11 +277,12 @@ section {
   letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
   max-width: 700px;
+  color: var(--text);
 }
 
 .section-body {
   font-size: 1.05rem;
-  color: rgba(240,239,246,0.65);
+  color: var(--text-secondary);
   max-width: 620px;
   line-height: 1.75;
 }
@@ -307,18 +302,18 @@ section {
 .premise-quote {
   position: relative;
   padding: 3rem;
-  background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(59,130,246,0.04));
+  background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(37,99,235,0.03));
   border: 1px solid var(--border);
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .premise-quote::before {
-  content: '"';
+  content: '\201C';
   font-family: var(--serif);
   font-size: 8rem;
   line-height: 0.7;
   color: var(--violet);
-  opacity: 0.3;
+  opacity: 0.2;
   position: absolute;
   top: 1.5rem;
   left: 2rem;
@@ -330,7 +325,7 @@ section {
   font-size: clamp(1.1rem, 1.8vw, 1.4rem);
   font-style: italic;
   line-height: 1.65;
-  color: rgba(240,239,246,0.85);
+  color: var(--text);
   position: relative;
   z-index: 1;
 }
@@ -357,20 +352,23 @@ section {
 .concepts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5px;
+  gap: 1px;
   max-width: 1200px;
   margin: 0 auto;
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .concept-card {
   padding: 2.5rem 2rem;
-  background: var(--bg2);
-  border-right: 1.5px solid var(--border);
-  border-bottom: 1.5px solid var(--border);
-  transition: background 0.3s;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .concept-card::after {
@@ -386,7 +384,7 @@ section {
   transition: transform 0.3s ease;
 }
 
-.concept-card:hover { background: rgba(255,255,255,0.02); }
+.concept-card:hover { background: var(--bg2); }
 .concept-card:hover::after { transform: scaleX(1); }
 
 .concept-num {
@@ -402,12 +400,12 @@ section {
   font-size: 1.35rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-  color: var(--white);
+  color: var(--text);
 }
 
 .concept-body {
   font-size: 0.88rem;
-  color: rgba(240,239,246,0.5);
+  color: var(--text-secondary);
   line-height: 1.65;
 }
 
@@ -417,7 +415,7 @@ section {
   font-size: 0.6rem;
   letter-spacing: 0.1em;
   padding: 0.2rem 0.6rem;
-  border-radius: 2px;
+  border-radius: 3px;
   margin-top: 1.2rem;
   text-transform: uppercase;
 }
@@ -437,7 +435,7 @@ section {
   transform: translateX(-50%);
   width: 800px;
   height: 600px;
-  background: radial-gradient(ellipse, rgba(139,92,246,0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(124,58,237,0.03) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -449,21 +447,25 @@ section {
 .futures-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5px;
+  gap: 1px;
   max-width: 1200px;
   margin: 0 auto;
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .future-card {
   padding: 3rem 2.5rem;
   position: relative;
   overflow: hidden;
-  border-right: 1.5px solid var(--border);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
   transition: background 0.3s;
+  cursor: pointer;
 }
 
-.future-card:hover { background: rgba(255,255,255,0.015); }
+.future-card:hover { background: var(--bg2); }
 
 .future-indicator {
   width: 10px;
@@ -488,6 +490,7 @@ section {
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.2;
+  color: var(--text);
 }
 
 .future-subtitle {
@@ -496,12 +499,12 @@ section {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
-  opacity: 0.5;
+  color: var(--muted);
 }
 
 .future-body {
   font-size: 0.88rem;
-  color: rgba(240,239,246,0.55);
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -512,13 +515,13 @@ section {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 0.3rem 0.8rem;
-  border-radius: 2px;
+  border-radius: 3px;
   margin-top: 1.5rem;
 }
 
 /* ── EXPLORABLES CTA ── */
 .explorables-section {
-  background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(139,92,246,0.06) 100%);
+  background: var(--bg2);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   text-align: center;
@@ -553,13 +556,15 @@ section {
   letter-spacing: 0.1em;
   padding: 0.3rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 2px;
+  border-radius: 3px;
   color: var(--muted);
   text-transform: uppercase;
-  transition: border-color 0.2s, color 0.2s;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 
-.chapter-pill:hover { border-color: var(--blue); color: var(--blue); }
+.chapter-pill:hover { border-color: var(--blue); color: var(--blue); background: rgba(37,99,235,0.04); }
 
 /* ── AUTHOR ── */
 .author-section {
@@ -581,9 +586,9 @@ section {
 .author-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.06));
   border: 1px solid var(--border);
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .author-initials {
@@ -595,7 +600,7 @@ section {
   font-family: var(--serif);
   font-size: 8rem;
   font-weight: 900;
-  color: rgba(255,255,255,0.04);
+  color: rgba(0,0,0,0.04);
   user-select: none;
 }
 
@@ -605,8 +610,9 @@ section {
   left: 2rem;
   right: 2rem;
   padding: 1.25rem 1.5rem;
-  background: rgba(7,7,13,0.9);
+  background: rgba(250,250,248,0.95);
   border: 1px solid var(--border);
+  border-radius: 6px;
   backdrop-filter: blur(10px);
 }
 
@@ -615,6 +621,7 @@ section {
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
+  color: var(--text);
 }
 
 .author-badge-title {
@@ -657,11 +664,12 @@ section {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--text);
 }
 
 .philosophy-body {
   font-size: 0.85rem;
-  color: rgba(240,239,246,0.5);
+  color: var(--text-secondary);
   line-height: 1.65;
 }
 
@@ -680,7 +688,7 @@ footer {
   font-family: var(--serif);
   font-size: 1.1rem;
   font-weight: 700;
-  color: rgba(240,239,246,0.4);
+  color: var(--muted);
 }
 
 .footer-nav {
@@ -696,9 +704,10 @@ footer {
   text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
+  cursor: pointer;
   transition: color 0.2s;
 }
-.footer-nav a:hover { color: var(--white); }
+.footer-nav a:hover { color: var(--text); }
 
 /* ── SCROLL REVEAL ── */
 .reveal {
@@ -837,29 +846,29 @@ footer {
     <h2 class="section-title reveal reveal-delay-1">A New Science of Value</h2>
   </div>
   <div class="concepts-grid">
-    <div class="concept-card reveal" style="--card-color: #3b82f6;">
+    <div class="concept-card reveal" style="--card-color: var(--blue);">
       <p class="concept-num">01 &nbsp;·&nbsp; Foundation</p>
       <h3 class="concept-title">The MIND Dashboard</h3>
       <p class="concept-body">GDP is criminally insane — it rewards destruction and ignores what matters. MIND measures four true capitals: Material, Intelligence, Network, and Diversity. Zero in any dimension and the entire system collapses.</p>
-      <span class="concept-tag" style="background:rgba(59,130,246,0.1); color:var(--blue);">M × I × N × D</span>
+      <span class="concept-tag" style="background:rgba(37,99,235,0.08); color:var(--blue);">M × I × N × D</span>
     </div>
-    <div class="concept-card reveal reveal-delay-1" style="--card-color: #8b5cf6;">
+    <div class="concept-card reveal reveal-delay-1" style="--card-color: var(--violet);">
       <p class="concept-num">02 &nbsp;·&nbsp; Architecture</p>
       <h3 class="concept-title">The Three Flows</h3>
       <p class="concept-body">Smith, Marx, and Hayek were each right — about different parts of the same river. Gradient flows (scarce atoms), Circular flows (abundant bits), and Harmonic flows (trust and institutions) must all be understood together.</p>
-      <span class="concept-tag" style="background:rgba(139,92,246,0.1); color:var(--violet);">Hodge Decomposition</span>
+      <span class="concept-tag" style="background:rgba(124,58,237,0.08); color:var(--violet);">Hodge Decomposition</span>
     </div>
-    <div class="concept-card reveal reveal-delay-2" style="--card-color: #10b981;">
+    <div class="concept-card reveal reveal-delay-2" style="--card-color: var(--green);">
       <p class="concept-num">03 &nbsp;·&nbsp; Contract</p>
       <h3 class="concept-title">The New Social Contract</h3>
       <p class="concept-body">The old contract — labor for security — is broken. The new one must be an endowment: Dignity (access to intelligence), Capability (sovereign AI), and Viability (knowledge commons). Not charity. Physics.</p>
-      <span class="concept-tag" style="background:rgba(16,185,129,0.1); color:var(--green);">UAI — Universal Access to Intelligence</span>
+      <span class="concept-tag" style="background:rgba(5,150,105,0.08); color:var(--green);">UAI — Universal Access to Intelligence</span>
     </div>
-    <div class="concept-card reveal reveal-delay-3" style="--card-color: #f59e0b;">
+    <div class="concept-card reveal reveal-delay-3" style="--card-color: var(--amber);">
       <p class="concept-num">04 &nbsp;·&nbsp; Role</p>
       <h3 class="concept-title">Humanity as the Alignment Layer</h3>
       <p class="concept-body">AI is the Action Layer: uncapped, infinitely scalable execution. Humanity is the Alignment Layer: the source of values, ethics, and ultimate purpose. This is not a partnership of equals — it is a symbiosis of different intelligences.</p>
-      <span class="concept-tag" style="background:rgba(245,158,11,0.1); color:var(--amber);">Human–AI Symbiosis</span>
+      <span class="concept-tag" style="background:rgba(217,119,6,0.08); color:var(--amber);">Human–AI Symbiosis</span>
     </div>
   </div>
 </section>
@@ -878,7 +887,7 @@ footer {
       <h3 class="future-title">Digital Feudalism</h3>
       <p class="future-subtitle">The Default Path · The Path of Inaction</p>
       <p class="future-body">AI controlled by a handful of corporations. Humans receive UBI in exchange for data and attention. Not citizens — users. Not workers — content. Medieval power dynamics restored at planetary scale, with algorithms instead of lords.</p>
-      <span class="future-verdict" style="background:rgba(239,68,68,0.1); color:var(--red);">Default Trajectory</span>
+      <span class="future-verdict" style="background:rgba(220,38,38,0.08); color:var(--red);">Default Trajectory</span>
     </div>
     <div class="future-card reveal reveal-delay-1">
       <div class="future-indicator" style="background:#f97316; color:#f97316;"></div>
@@ -886,7 +895,7 @@ footer {
       <h3 class="future-title">The Great Fragmentation</h3>
       <p class="future-subtitle">The Fear Response · Balkanization</p>
       <p class="future-body">Nations erect walls around their AI systems. Algorithmic cold war. Each bloc optimizes against the others. The global commons of knowledge dissolves into competing silos, each getting weaker as cooperation collapses.</p>
-      <span class="future-verdict" style="background:rgba(249,115,22,0.1); color:#f97316;">Fear Response</span>
+      <span class="future-verdict" style="background:rgba(249,115,22,0.08); color:#f97316;">Fear Response</span>
     </div>
     <div class="future-card reveal reveal-delay-2">
       <div class="future-indicator" style="background:var(--green); color:var(--green);"></div>
@@ -894,7 +903,7 @@ footer {
       <h3 class="future-title">Human Symbiosis</h3>
       <p class="future-subtitle">The Conscious Choice · The Hard Path</p>
       <p class="future-body">Intelligence as commons. AI amplifying human purpose rather than replacing it. A civilization where abundance is a feature, not a threat — and the liberation from necessity becomes the beginning of genuine human flourishing.</p>
-      <span class="future-verdict" style="background:rgba(16,185,129,0.1); color:var(--green);">The Possible Future</span>
+      <span class="future-verdict" style="background:rgba(5,150,105,0.08); color:var(--green);">The Possible Future</span>
     </div>
   </div>
 </section>
@@ -907,29 +916,29 @@ footer {
     <p>Twenty-three interactive chapters where you drag the sliders, move the marble, and watch the ideas respond. Not a passive reading experience — an active argument you can push back against.</p>
   </div>
   <div class="chapter-pills reveal reveal-delay-2">
-    <span class="chapter-pill">Intro</span>
-    <span class="chapter-pill">Ch 1 · Intelligence Inversion</span>
-    <span class="chapter-pill">Ch 2 · Harbingers</span>
-    <span class="chapter-pill">Ch 3 · Seven Lies</span>
-    <span class="chapter-pill">Ch 4 · GDP Illusion</span>
-    <span class="chapter-pill">Ch 5 · Trial by Fire</span>
-    <span class="chapter-pill">Ch 6 · Maxwell's Demon</span>
-    <span class="chapter-pill">Ch 7 · Generative Engine</span>
-    <span class="chapter-pill">Ch 8 · MIND Dashboard</span>
-    <span class="chapter-pill">Ch 9 · Three Flows</span>
-    <span class="chapter-pill">Ch 10 · Network Prison</span>
-    <span class="chapter-pill">Ch 11 · Cathedral & Bazaar</span>
-    <span class="chapter-pill">Ch 12 · Cooperation</span>
-    <span class="chapter-pill">Ch 13 · Dual Engine</span>
-    <span class="chapter-pill">Ch 14 · Social Contract</span>
-    <span class="chapter-pill">Ch 15 · Alignment Economy</span>
-    <span class="chapter-pill">Ch 16 · Three Futures</span>
-    <span class="chapter-pill">Ch 17 · Symbiotic State</span>
-    <span class="chapter-pill">Ch 18 · Money for Two Worlds</span>
-    <span class="chapter-pill">Ch 19 · Nucleation</span>
-    <span class="chapter-pill">Ch 20 · Intelligent Macro</span>
-    <span class="chapter-pill">Ch 21 · After Economics</span>
-    <span class="chapter-pill">Epilogue</span>
+    <a href="introduction.html" class="chapter-pill">Intro</a>
+    <a href="01-intelligence-inversion.html" class="chapter-pill">Ch 1 · Intelligence Inversion</a>
+    <a href="02-harbingers.html" class="chapter-pill">Ch 2 · Harbingers</a>
+    <a href="seven-lies.html" class="chapter-pill">Ch 3 · Seven Lies</a>
+    <a href="03-gdp-illusion.html" class="chapter-pill">Ch 4 · GDP Illusion</a>
+    <a href="ch5-trial-by-fire.html" class="chapter-pill">Ch 5 · Trial by Fire</a>
+    <a href="04-maxwells-demon.html" class="chapter-pill">Ch 6 · Maxwell's Demon</a>
+    <a href="generative-engine.html" class="chapter-pill">Ch 7 · Generative Engine</a>
+    <a href="05-mind-dashboard.html" class="chapter-pill">Ch 8 · MIND Dashboard</a>
+    <a href="06-three-flows.html" class="chapter-pill">Ch 9 · Three Flows</a>
+    <a href="07-network-prison.html" class="chapter-pill">Ch 10 · Network Prison</a>
+    <a href="ch11-cathedral-bazaar.html" class="chapter-pill">Ch 11 · Cathedral &amp; Bazaar</a>
+    <a href="08-cooperation-emerges.html" class="chapter-pill">Ch 12 · Cooperation</a>
+    <a href="ch13-dual-engine.html" class="chapter-pill">Ch 13 · Dual Engine</a>
+    <a href="ch14-social-contract.html" class="chapter-pill">Ch 14 · Social Contract</a>
+    <a href="ch15-alignment-economy.html" class="chapter-pill">Ch 15 · Alignment Economy</a>
+    <a href="09-three-futures.html" class="chapter-pill">Ch 16 · Three Futures</a>
+    <a href="ch17-symbiotic-state.html" class="chapter-pill">Ch 17 · Symbiotic State</a>
+    <a href="ch18-money-two-worlds.html" class="chapter-pill">Ch 18 · Money for Two Worlds</a>
+    <a href="nucleation.html" class="chapter-pill">Ch 19 · Nucleation</a>
+    <a href="intelligent-macro.html" class="chapter-pill">Ch 20 · Intelligent Macro</a>
+    <a href="10-after-economics.html" class="chapter-pill">Ch 21 · After Economics</a>
+    <a href="epilogue.html" class="chapter-pill">Epilogue</a>
   </div>
   <div class="reveal reveal-delay-3">
     <a href="explorables.html" class="btn-primary" style="font-size:1.05rem; padding:1rem 2.5rem;">
@@ -992,8 +1001,8 @@ footer {
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
       r: 1.5 + Math.random() * 2,
-      alpha: 0.3 + Math.random() * 0.5,
-      hue: Math.random() > 0.6 ? '#3b82f6' : Math.random() > 0.5 ? '#8b5cf6' : '#f59e0b'
+      alpha: 0.15 + Math.random() * 0.3,
+      hue: Math.random() > 0.6 ? '#2563eb' : Math.random() > 0.5 ? '#7c3aed' : '#d97706'
     }));
   }
 
@@ -1008,11 +1017,11 @@ footer {
         const dist = Math.sqrt(dx*dx + dy*dy);
         const maxDist = 160;
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.15;
+          const alpha = (1 - dist / maxDist) * 0.08;
           ctx.beginPath();
           ctx.moveTo(nodes[i].x, nodes[i].y);
           ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = `rgba(99, 140, 246, ${alpha})`;
+          ctx.strokeStyle = `rgba(37, 99, 235, ${alpha})`;
           ctx.lineWidth = 0.8;
           ctx.stroke();
         }
@@ -1024,7 +1033,7 @@ footer {
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
       ctx.fillStyle = n.hue;
-      ctx.globalAlpha = n.alpha * 0.7;
+      ctx.globalAlpha = n.alpha;
       ctx.fill();
       ctx.globalAlpha = 1;
     });

@@ -4,18 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 5 — The Trial by Fire</title>
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; }
+.nav a:hover { text-decoration: underline; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
 .btn.defense { background: #16a34a; }
 .btn.defense:hover { background: #15803d; }
@@ -25,10 +28,11 @@ svg text { font-family: system-ui, sans-serif; }
 .counter-text { font-size: 0.9rem; color: #555; }
 .counter-num { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
 .fallacy-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; transition: border-color 0.3s, background 0.3s; }
+.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; cursor: pointer; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; }
+.fallacy-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
 .fallacy-card.defended { border-color: #16a34a; background: #f0fdf4; }
 .fallacy-card.challenged { border-color: #dc2626; background: #fef2f2; }
-.fallacy-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+.fallacy-name { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
 .fallacy-sub { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
 .fallacy-arg { font-style: italic; font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; border-left: 3px solid #e5e5e0; padding-left: 0.75rem; line-height: 1.6; }
 .fallacy-rebuttal { font-size: 0.9rem; color: #166534; background: white; border-radius: 4px; padding: 0.6rem 0.8rem; border: 1px solid #bbf7d0; display: none; margin-bottom: 0.5rem; line-height: 1.6; }
@@ -37,13 +41,17 @@ svg text { font-family: system-ui, sans-serif; }
 .status-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 0.5rem; }
 .badge-defended { background: #dcfce7; color: #16a34a; }
 .badge-challenged { background: #fee2e2; color: #dc2626; }
+.progress-bar { width: 100%; height: 6px; background: #e5e5e0; border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
+.progress-fill { height: 100%; background: #2563eb; border-radius: 3px; transition: width 0.4s ease; }
+.verdict-summary { display: none; margin-top: 1.5rem; padding: 1rem; border-radius: 8px; border: 1px solid #e5e5e0; background: #f5f5f3; text-align: center; line-height: 1.6; }
+.verdict-summary.show { display: block; }
 </style>
 </head>
 <body>
 <nav class="nav">
-  <a href="03-gdp-illusion.html">&larr; Previous</a>
+  <a href="04-maxwells-demon.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
-  <a href="04-maxwells-demon.html">Next &rarr;</a>
+  <a href="05-mind-dashboard.html">Next &rarr;</a>
 </nav>
 
 <div class="prose">
@@ -61,8 +69,11 @@ svg text { font-family: system-ui, sans-serif; }
       <div class="counter-text">Fallacies addressed</div>
       <div><span class="counter-num" id="counter">0</span><span style="color:#888;font-size:1rem;">/7</span></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
 
     <div class="fallacy-grid" id="fallacy-grid"></div>
+
+    <div class="verdict-summary" id="verdict-summary"></div>
   </div>
 
 </div>
@@ -72,54 +83,71 @@ const fallacies = [
   {
     name: 'The Luddite\'s Ghost',
     sub: 'Fallacy of History',
-    arg: '"Every tech transition created more jobs. AI is no different. 250 years of irrefutable history says you\'re wrong."',
-    rebuttal: 'Previous automation replaced muscle; AI replaces the mind itself. There is nowhere left to pivot. The cotton gin displaced spinners, who became factory workers. The factory was displaced by offices. The office has nowhere to displace to. This is not a tool — it is an agent.'
+    arg: '\u201cEvery tech transition created more jobs. AI is no different. 250 years of irrefutable history says you\u2019re wrong.\u201d',
+    rebuttal: 'Previous automation replaced muscle; AI replaces the mind itself. There is nowhere left to pivot. The cotton gin displaced spinners, who became factory workers. The factory was displaced by offices. The office has nowhere to displace to. This is not a tool \u2014 it is an agent.'
   },
   {
     name: 'The Inertia Defense',
     sub: 'Fallacy of Friction',
-    arg: '"Adoption will be slow. Institutions, regulations, human resistance — we\'ll have decades to adapt."',
-    rebuttal: 'Software has near-zero friction. One API call replaces an entire knowledge worker function — no hiring, no training, no benefits, no office. Competitive pressure means no firm can afford to wait while rivals automate. The adoption curve is not linear; it is viral.'
+    arg: '\u201cAdoption will be slow. Institutions, regulations, human resistance \u2014 we\u2019ll have decades to adapt.\u201d',
+    rebuttal: 'Software has near-zero friction. One API call replaces an entire knowledge worker function \u2014 no hiring, no training, no benefits, no office. Competitive pressure means no firm can afford to wait while rivals automate. The adoption curve is not linear; it is viral.'
   },
   {
     name: 'The Uniquely Human',
     sub: 'Fallacy of Humanism',
-    arg: '"Humans will pivot to care work, creativity, craft — things AI cannot do. There will always be a niche for human skill."',
-    rebuttal: 'The math doesn\'t work. There are 4 billion knowledge workers. How many Michelin-star restaurants and luxury care providers can the economy absorb? The niches are real but do not scale to a civilization. This is not a solution — it is a consolation.'
+    arg: '\u201cHumans will pivot to care work, creativity, craft \u2014 things AI cannot do. There will always be a niche for human skill.\u201d',
+    rebuttal: 'The math doesn\u2019t work. There are 4 billion knowledge workers. How many Michelin-star restaurants and luxury care providers can the economy absorb? The niches are real but do not scale to a civilization. This is not a solution \u2014 it is a consolation.'
   },
   {
     name: 'The Expert\'s Hubris',
     sub: 'Fallacy of Control',
-    arg: '"Alignment researchers and regulators will keep AI safe and controlled. The smart people are on it."',
-    rebuttal: 'Alignment is unsolved — there is no consensus on whether it is even solvable. Geopolitical race dynamics mean any nation that pauses loses. Regulation cannot outrun competitive pressure operating at the speed of software deployment.'
+    arg: '\u201cAlignment researchers and regulators will keep AI safe and controlled. The smart people are on it.\u201d',
+    rebuttal: 'Alignment is unsolved \u2014 there is no consensus on whether it is even solvable. Geopolitical race dynamics mean any nation that pauses loses. Regulation cannot outrun competitive pressure operating at the speed of software deployment.'
   },
   {
     name: 'The Energy Brake',
     sub: 'Fallacy of Physics',
-    arg: '"Energy constraints will naturally slow AI growth. Physics limits compute. The exponential cannot continue."',
-    rebuttal: 'Intelligence solves its own energy problem. AI is already designing more efficient chips, finding new architectures, discovering new training methods. The most powerful optimizer in history is now tasked with removing its own constraints. This is not a brake — it is an accelerant.'
+    arg: '\u201cEnergy constraints will naturally slow AI growth. Physics limits compute. The exponential cannot continue.\u201d',
+    rebuttal: 'Intelligence solves its own energy problem. AI is already designing more efficient chips, finding new architectures, discovering new training methods. The most powerful optimizer in history is now tasked with removing its own constraints. This is not a brake \u2014 it is an accelerant.'
   },
   {
     name: 'The UBI Cure-All',
     sub: 'Fallacy of Solutionism',
-    arg: '"Universal Basic Income solves automation displacement. Give people money and the problem is solved. Economics has the answer ready."',
-    rebuttal: 'UBI addresses income but not identity, community, purpose, temporal structure, or social role. A society of comfortable, purposeless people is not stable — as any research on lottery winners, early retirees, or trust-fund recipients demonstrates. Money is not the only thing a job provides.'
+    arg: '\u201cUniversal Basic Income solves automation displacement. Give people money and the problem is solved. Economics has the answer ready.\u201d',
+    rebuttal: 'UBI addresses income but not identity, community, purpose, temporal structure, or social role. A society of comfortable, purposeless people is not stable \u2014 as any research on lottery winners, early retirees, or trust-fund recipients demonstrates. Money is not the only thing a job provides.'
   },
   {
     name: 'The System Will Adapt',
     sub: 'Fallacy of Homeostasis',
-    arg: '"Economic systems are self-stabilizing. Markets find equilibrium. The system has absorbed every shock before and will absorb this one."',
-    rebuttal: 'This assumes the shock is within the system\'s recovery range. Introducing a superintelligent optimizer is not a perturbation within the existing attractor basin — it is a regime change that dissolves the basin itself. Homeostasis only holds until it doesn\'t.'
+    arg: '\u201cEconomic systems are self-stabilizing. Markets find equilibrium. The system has absorbed every shock before and will absorb this one.\u201d',
+    rebuttal: 'This assumes the shock is within the system\u2019s recovery range. Introducing a superintelligent optimizer is not a perturbation within the existing attractor basin \u2014 it is a regime change that dissolves the basin itself. Homeostasis only holds until it doesn\u2019t.'
   }
 ];
 
-let defended = 0;
-let challenged = 0;
-const cardStates = new Array(fallacies.length).fill(null);
+let cardStates = new Array(fallacies.length).fill(null);
 
 function updateCounter() {
   const addressed = cardStates.filter(s => s !== null).length;
   document.getElementById('counter').textContent = addressed;
+  document.getElementById('progress-fill').style.width = ((addressed / fallacies.length) * 100) + '%';
+
+  const summary = document.getElementById('verdict-summary');
+  if (addressed === fallacies.length) {
+    const defendedCount = cardStates.filter(s => s === 'defense').length;
+    const challengedCount = cardStates.filter(s => s === 'challenged').length;
+    let msg = '';
+    if (defendedCount === fallacies.length) {
+      msg = '<strong>Unanimous defense.</strong> Every argument has been rebutted. The thesis survives the trial by fire.';
+    } else if (challengedCount === fallacies.length) {
+      msg = '<strong>Full prosecution.</strong> You have sided with the critics on every count. The thesis is in trouble.';
+    } else {
+      msg = `<strong>Split verdict:</strong> ${defendedCount} defended, ${challengedCount} challenged. The debate continues.`;
+    }
+    summary.innerHTML = msg;
+    summary.classList.add('show');
+  } else {
+    summary.classList.remove('show');
+  }
 }
 
 function handleAction(idx, action) {
@@ -154,7 +182,7 @@ fallacies.forEach((f, idx) => {
   div.className = 'fallacy-card';
   div.id = 'fallacy-' + idx;
   div.innerHTML = `
-    <div style="display:flex;align-items:baseline;gap:0.4rem;">
+    <div style="display:flex;align-items:baseline;gap:0.4rem;flex-wrap:wrap;">
       <div class="fallacy-name">${f.name}</div>
       <div class="fallacy-sub">${f.sub}</div>
       <span class="status-badge" id="badge-${idx}" style="display:none;"></span>

@@ -4,19 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Epilogue — The Thousandth Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #1a1a1a; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
-.btn:hover { background: #333; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
 /* Parable panels */
@@ -24,7 +27,7 @@ svg text { font-family: system-ui, sans-serif; }
 .parable-panel { display: none; text-align: center; padding: 1rem 0; }
 .parable-panel.active { display: block; }
 .parable-svg-wrap { margin: 0 auto; display: flex; justify-content: center; }
-.parable-text { font-size: 1rem; color: #333; line-height: 1.7; margin-top: 1rem; font-family: Georgia, serif; font-style: italic; max-width: 480px; margin-left: auto; margin-right: auto; }
+.parable-text { font-size: 1rem; color: #333; line-height: 1.7; margin-top: 1rem; font-family: 'DM Sans', system-ui, sans-serif; font-style: italic; max-width: 480px; margin-left: auto; margin-right: auto; }
 .parable-counter { font-size: 0.8rem; color: #888; margin-top: 0.75rem; }
 .parable-nav { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
 /* Reflection widget */
@@ -34,8 +37,8 @@ svg text { font-family: system-ui, sans-serif; }
 .reflection-options { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .ref-btn { background: #f5f5f3; border: 1px solid #e5e5e0; color: #1a1a1a; padding: 0.4rem 0.9rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
 .ref-btn:hover { background: #e5e5e0; }
-.ref-btn.selected { background: #1a1a1a; color: white; border-color: #1a1a1a; }
-.letter-box { background: #fafaf8; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; margin-top: 1.25rem; display: none; font-family: Georgia, serif; font-size: 0.95rem; line-height: 1.7; }
+.ref-btn.selected { background: #2563eb; color: white; border-color: #2563eb; }
+.letter-box { background: #fafaf8; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.25rem; margin-top: 1.25rem; display: none; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.95rem; line-height: 1.7; }
 .letter-box.show { display: block; }
 .letter-salutation { font-weight: 700; margin-bottom: 0.75rem; }
 .letter-signature { margin-top: 0.75rem; color: #888; font-style: italic; }
@@ -46,6 +49,7 @@ svg text { font-family: system-ui, sans-serif; }
 .question-card .qc-front { font-weight: 700; }
 .question-card .qc-back { display: none; font-size: 0.9rem; color: #555; margin-top: 0.5rem; line-height: 1.6; border-top: 1px solid #f0f0ed; padding-top: 0.5rem; }
 .question-card.flipped .qc-back { display: block; }
+input[type=range] { accent-color: #2563eb; }
 </style>
 </head>
 <body>
@@ -148,7 +152,7 @@ svg text { font-family: system-ui, sans-serif; }
     <h2>The Three Economies</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">A river flowing through time. Click the question cards in the future section to see what Consciousness Economics will need to answer.</p>
 
-    <svg id="river-svg" width="100%" height="160"></svg>
+    <svg id="river-svg" style="width:100%;max-width:600px;" height="160"></svg>
 
     <div class="question-cards" id="question-cards">
       <div class="question-card" onclick="this.classList.toggle('flipped')">
@@ -385,8 +389,16 @@ requestAnimationFrame(() => {
       .text(s.sublabel);
   });
 
-  // "You are here" marker
-  const youX = w * 0.5;
+  // "You are here" marker — dynamic position based on today's date
+  // The book conceptualizes the transition from Scarcity Economics (ending ~2020)
+  // through Intelligence Economics (~2020-2045) to Consciousness Economics (~2045+).
+  // Map today's date within the Intelligence Economics band (0.33 to 0.66).
+  const transitionStart = new Date('2020-01-01').getTime();
+  const transitionEnd = new Date('2045-01-01').getTime();
+  const now = Date.now();
+  const progress = Math.max(0, Math.min(1, (now - transitionStart) / (transitionEnd - transitionStart)));
+  const youX = w * (0.33 + progress * 0.33);
+
   svg.append('line').attr('x1', youX).attr('y1', riverY - 15).attr('x2', youX).attr('y2', riverY)
     .attr('stroke', '#1a1a1a').attr('stroke-width', 2).attr('stroke-dasharray', '3,2');
   svg.append('text').attr('x', youX).attr('y', riverY - 18)

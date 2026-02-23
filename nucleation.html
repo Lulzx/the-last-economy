@@ -4,23 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 19 — The Nucleation of the New</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
 .btn:hover { background: #1d4ed8; }
-.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; cursor: pointer; }
 .btn.secondary:hover { background: #e5e5e0; }
+.btn.secondary.active { background: #2563eb; color: white; border-color: #2563eb; }
 .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
-input[type="range"] { width: 100%; margin: 0.25rem 0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
@@ -28,19 +32,20 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
 .trajectory-label { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0.75rem 0; padding: 0.5rem; border-radius: 6px; }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
 .seed-result { font-size: 0.9rem; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; border: 1px solid #e5e5e0; }
-.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: system-ui, sans-serif; margin: 1rem 0 0.5rem; }
+.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: 'DM Sans', system-ui, sans-serif; margin: 1rem 0 0.5rem; }
 .countdown-sub { text-align: center; font-size: 0.9rem; color: #888; }
 
 /* Plant your seed panel */
 .seed-form { display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
-.seed-form textarea { width: 100%; min-height: 80px; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.6rem; font-family: Georgia, serif; font-size: 0.95rem; line-height: 1.5; resize: vertical; background: #fafaf8; color: #1a1a1a; box-sizing: border-box; }
-.seed-form textarea:focus { outline: 2px solid #16a34a; border-color: transparent; }
+.seed-form textarea { width: 100%; min-height: 80px; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.6rem; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.95rem; line-height: 1.5; resize: vertical; background: #fafaf8; color: #1a1a1a; box-sizing: border-box; }
+.seed-form textarea:focus { outline: 2px solid #2563eb; border-color: transparent; }
 .scope-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
 .scope-row label { font-weight: 600; white-space: nowrap; }
 .scope-row span { color: #666; font-size: 0.85rem; min-width: 55px; text-align: right; }
-#ripple-svg { display: block; margin: 1rem auto 0; }
+#ripple-svg { display: block; margin: 1rem auto 0; width: 100%; max-width: 300px; }
 .commit-btn { background: #16a34a; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600; align-self: flex-start; }
 .commit-btn:hover { background: #15803d; }
+.validation-msg { color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem; display: none; }
 </style>
 </head>
 <body>
@@ -60,11 +65,11 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
   <div class="panel">
     <h2>Nucleation Sites</h2>
     <p style="font-size:0.9rem; color:#666;">Historical nucleation events. Click to see what conditions enabled them &mdash; and what we can learn for today.</p>
-    <div class="btn-group">
-      <button class="btn secondary" onclick="showNucleation('Florence 1400', 'Renaissance', 60, 45, 55, 'A small city-state with open patronage networks, distributed wealth, and unusually permeable social hierarchies allowed artists and thinkers to cross-pollinate. The seed: a handful of workshops in one city became the template for a civilization.')">Florence 1400</button>
-      <button class="btn secondary" onclick="showNucleation('Royal Society 1660', 'Scientific Revolution', 65, 50, 70, 'The Royal Society created a new protocol: public experimental method, peer criticism, shared knowledge. Before this, knowledge was hoarded. After it, knowledge compounded. The seed: a meeting of twelve curious men who agreed to argue by evidence.')">Royal Society 1660</button>
-      <button class="btn secondary" onclick="showNucleation('Bell Labs 1950', 'Information Age', 55, 40, 65, 'Non-competitive, mission-driven, cross-disciplinary: Bell Labs invented the transistor, laser, Unix, C, and information theory. The seed: enough slack to explore, enough structure to converge.')">Bell Labs 1950</button>
-      <button class="btn secondary" onclick="showNucleation('Twitter 2006', 'Attention Economy', 80, 20, 30, 'A nucleation site that succeeded as a platform but was captured by engagement optimization. The seed grew — then it grew in the wrong direction. Not all crystallization is beneficial.')">Twitter 2006</button>
+    <div class="btn-group" id="nucleation-btns">
+      <button class="btn secondary" onclick="showNucleation(this, 'Florence 1400', 'Renaissance', 60, 45, 55, 'A small city-state with open patronage networks, distributed wealth, and unusually permeable social hierarchies allowed artists and thinkers to cross-pollinate. The seed: a handful of workshops in one city became the template for a civilization.')">Florence 1400</button>
+      <button class="btn secondary" onclick="showNucleation(this, 'Royal Society 1660', 'Scientific Revolution', 65, 50, 70, 'The Royal Society created a new protocol: public experimental method, peer criticism, shared knowledge. Before this, knowledge was hoarded. After it, knowledge compounded. The seed: a meeting of twelve curious men who agreed to argue by evidence.')">Royal Society 1660</button>
+      <button class="btn secondary" onclick="showNucleation(this, 'Bell Labs 1950', 'Information Age', 55, 40, 65, 'Non-competitive, mission-driven, cross-disciplinary: Bell Labs invented the transistor, laser, Unix, C, and information theory. The seed: enough slack to explore, enough structure to converge.')">Bell Labs 1950</button>
+      <button class="btn secondary" onclick="showNucleation(this, 'Twitter 2006', 'Attention Economy', 80, 20, 30, 'A nucleation site that succeeded as a platform but was captured by engagement optimization. The seed grew — then it grew in the wrong direction. Not all crystallization is beneficial.')">Twitter 2006</button>
     </div>
     <div id="nucleation-result" class="seed-result" style="display:none;"></div>
   </div>
@@ -96,6 +101,7 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
       <div>
         <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:0.25rem;">What is your Florence?</label>
         <textarea id="seed-idea" placeholder="Describe your seed idea, project, or community experiment..."></textarea>
+        <div class="validation-msg" id="seed-validation">Please enter your response</div>
       </div>
       <div class="scope-row">
         <label>Scope:</label>
@@ -104,14 +110,18 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
       </div>
       <button class="commit-btn" onclick="commitSeed()">Commit</button>
     </div>
-    <svg id="ripple-svg" width="300" height="180"></svg>
+    <svg id="ripple-svg" width="300" height="180" style="width:100%;max-width:300px;"></svg>
     <div id="commit-result" style="display:none;font-size:0.9rem;color:#15803d;font-weight:600;text-align:center;margin-top:0.5rem;"></div>
   </div>
 </div>
 
 <script>
 // ========== Panel 1: Nucleation Sites ==========
-window.showNucleation = function(name, outcome, openness, wealth, gov, detail) {
+window.showNucleation = function(btnEl, name, outcome, openness, wealth, gov, detail) {
+  // Set active state on clicked button
+  document.querySelectorAll('#nucleation-btns .btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
   const el = document.getElementById('nucleation-result');
   el.style.display = 'block';
   el.innerHTML = `
@@ -128,7 +138,6 @@ window.showNucleation = function(name, outcome, openness, wealth, gov, detail) {
 // ========== Panel 2: Critical Window ==========
 let countdown = 1000;
 let currentRate = 30;
-let windowInterval;
 
 function updateWindow() {
   const coord = parseInt(document.getElementById('coord-slider').value);
@@ -170,56 +179,69 @@ const rippleSvg = d3.select('#ripple-svg');
 const RW = 300, RH = 180;
 const rcx = RW / 2, rcy = RH / 2;
 
+let rippleTimer = null;
+
+function startRippleLoop(maxR, scopeName) {
+  if (rippleTimer) clearInterval(rippleTimer);
+
+  function drawRipples() {
+    rippleSvg.selectAll('*').remove();
+
+    // Seed dot
+    rippleSvg.append('circle').attr('cx', rcx).attr('cy', rcy).attr('r', 5)
+      .attr('fill', '#16a34a').attr('opacity', 1);
+
+    // Scope label
+    rippleSvg.append('text')
+      .attr('x', rcx).attr('y', rcy - maxR - 8)
+      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#16a34a')
+      .attr('font-weight', '600').text(scopeName + ' nucleation');
+
+    // Animate concentric expanding circles
+    const numRipples = 5;
+    for (let i = 0; i < numRipples; i++) {
+      rippleSvg.append('circle')
+        .attr('cx', rcx).attr('cy', rcy)
+        .attr('r', 5)
+        .attr('fill', 'none')
+        .attr('stroke', '#16a34a')
+        .attr('stroke-width', 2.5 - i * 0.4)
+        .attr('opacity', 0.9 - i * 0.12)
+        .transition()
+        .delay(i * 280)
+        .duration(1400)
+        .ease(d3.easeCubicOut)
+        .attr('r', maxR + i * (maxR / numRipples))
+        .attr('opacity', 0);
+    }
+  }
+
+  drawRipples();
+  // Loop the animation continuously
+  const totalDuration = 1400 + 4 * 280 + 400; // last ripple delay + duration + pause
+  rippleTimer = setInterval(drawRipples, totalDuration);
+}
+
 window.commitSeed = function() {
   const idea = document.getElementById('seed-idea').value.trim();
+  const validationMsg = document.getElementById('seed-validation');
   if (!idea) {
+    validationMsg.style.display = 'block';
     document.getElementById('seed-idea').style.outline = '2px solid #ef4444';
-    setTimeout(() => { document.getElementById('seed-idea').style.outline = ''; }, 1500);
+    setTimeout(() => {
+      document.getElementById('seed-idea').style.outline = '';
+      validationMsg.style.display = 'none';
+    }, 3000);
     return;
   }
+  validationMsg.style.display = 'none';
+
   const scope = parseInt(document.getElementById('scope-slider').value);
   const maxR = 30 + scope * 0.7;
-
-  // Clear previous ripples
-  rippleSvg.selectAll('*').remove();
-
-  // Seed dot
-  rippleSvg.append('circle').attr('cx', rcx).attr('cy', rcy).attr('r', 5)
-    .attr('fill', '#16a34a').attr('opacity', 1);
-
-  // Animate concentric expanding circles
-  const numRipples = 5;
-  for (let i = 0; i < numRipples; i++) {
-    rippleSvg.append('circle')
-      .attr('cx', rcx).attr('cy', rcy)
-      .attr('r', 5)
-      .attr('fill', 'none')
-      .attr('stroke', '#16a34a')
-      .attr('stroke-width', 2.5 - i * 0.4)
-      .attr('opacity', 0.9 - i * 0.12)
-      .transition()
-      .delay(i * 280)
-      .duration(1400)
-      .ease(d3.easeCubicOut)
-      .attr('r', maxR + i * (maxR / numRipples))
-      .attr('opacity', 0)
-      .on('end', function() {
-        // Loop: restart ripple
-        if (i === 0) {
-          d3.select(this).attr('r', 5).attr('opacity', 0.9)
-            .transition().delay(300).duration(1400).ease(d3.easeCubicOut)
-            .attr('r', maxR).attr('opacity', 0);
-        }
-      });
-  }
-
-  // Label the scope
   const scopeIdx = Math.min(10, Math.floor(scope / 10));
   const scopeName = scopeLabels[scopeIdx];
-  rippleSvg.append('text')
-    .attr('x', rcx).attr('y', rcy - maxR - 8)
-    .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#16a34a')
-    .attr('font-weight', '600').text(scopeName + ' nucleation');
+
+  startRippleLoop(maxR, scopeName);
 
   // Show result message
   const result = document.getElementById('commit-result');

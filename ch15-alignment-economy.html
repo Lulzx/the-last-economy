@@ -4,20 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 15 — The Alignment Economy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #dc2626; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
-.btn:hover { background: #b91c1c; }
-input[type="range"] { width: 100%; }
+.nav a:hover { text-decoration: underline; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+input[type="range"] { width: 100%; accent-color: #2563eb; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
@@ -27,14 +31,14 @@ input[type="range"] { width: 100%; }
 .tree-node text { font-size: 11px; }
 /* Convergence cards */
 .conv-cards { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-.conv-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem 1rem 1rem 1rem; display: flex; align-items: flex-start; gap: 1rem; transition: border-color 0.3s; }
-.conv-card.active { border-color: #dc2626; background: #fef2f2; }
+.conv-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem 1rem 1rem 1rem; display: flex; align-items: flex-start; gap: 1rem; transition: border-color 0.3s, background 0.3s; cursor: pointer; }
+.conv-card.active { border-color: #2563eb; background: #eff6ff; }
 .conv-light { width: 20px; height: 20px; border-radius: 50%; background: #e5e5e0; flex-shrink: 0; margin-top: 3px; transition: background 0.5s; border: 2px solid #ccc; }
-.conv-light.on { background: #dc2626; border-color: #dc2626; box-shadow: 0 0 8px rgba(220,38,38,0.5); }
+.conv-light.on { background: #2563eb; border-color: #2563eb; box-shadow: 0 0 8px rgba(37,99,235,0.5); }
 .conv-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
 .conv-desc { font-size: 0.88rem; color: #555; line-height: 1.5; }
 .capability-display { text-align: center; margin: 0.5rem 0; }
-.capability-num { font-size: 2rem; font-weight: 700; color: #dc2626; }
+.capability-num { font-size: 2rem; font-weight: 700; color: #2563eb; }
 .capability-label { font-size: 0.8rem; color: #888; }
 /* 2x2 Matrix */
 .matrix-wrap { position: relative; margin: 1rem 0; }
@@ -57,7 +61,7 @@ input[type="range"] { width: 100%; }
 <nav class="nav">
   <a href="ch14-social-contract.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
-  <a href="09-three-futures.html">Next &rarr;</a>
+  <a href="ch17-symbiotic-state.html">Next &rarr;</a>
 </nav>
 
 <div class="prose">
@@ -71,8 +75,8 @@ input[type="range"] { width: 100%; }
   <div class="panel">
     <h2>The Alignment Problem Tree</h2>
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Click any node to expand its details.</p>
-    <svg id="tree-svg" width="100%" height="280"></svg>
-    <div id="tree-info" style="margin-top:0.75rem;min-height:2.5rem;font-size:0.9rem;color:#333;padding:0.6rem 0.8rem;background:#fef2f2;border-radius:6px;border:1px solid #fecaca;display:none;"></div>
+    <svg id="tree-svg" style="width:100%;max-width:600px;" height="280"></svg>
+    <div id="tree-info" style="margin-top:0.75rem;min-height:2.5rem;font-size:0.9rem;color:#333;padding:0.6rem 0.8rem;background:#eff6ff;border-radius:6px;border:1px solid #bfdbfe;display:none;"></div>
   </div>
 
   <div class="panel">
@@ -124,7 +128,7 @@ input[type="range"] { width: 100%; }
     <p style="font-size:0.9rem;color:#555;margin-bottom:0.75rem;">Drag the blue dot to represent where you think current AI systems sit. The trajectory arrow shows where we're heading.</p>
 
     <div style="position:relative;">
-      <div style="font-size:0.8rem;color:#888;text-align:center;margin-bottom:0.3rem;">Y-axis: Alignment Quality (Poor → Good)</div>
+      <div style="font-size:0.8rem;color:#888;text-align:center;margin-bottom:0.3rem;">Y-axis: Alignment Quality (Poor &rarr; Good)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e5e5e0;border:1px solid #e5e5e0;border-radius:6px;overflow:hidden;" id="matrix-container">
         <div class="matrix-cell meh">
           <div class="cell-label">Mildly Annoying Chatbot</div>
@@ -271,7 +275,6 @@ function getMatrixLabel(xPct, yPct) {
 }
 
 function updateMatrixLabel() {
-  const style = window.getComputedStyle(dot);
   const xPct = parseFloat(dot.style.left);
   const yPct = parseFloat(dot.style.top);
   const { text, color } = getMatrixLabel(xPct, yPct);

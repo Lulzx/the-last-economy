@@ -4,21 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 20 — Intelligent Macroeconomics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
 /* Puzzle cards */
 .puzzle-grid { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
-.puzzle-card { border: 1px solid #e5e5e0; border-radius: 8px; overflow: hidden; }
+.puzzle-card { border: 1px solid #e5e5e0; border-radius: 8px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.puzzle-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .puzzle-header { padding: 0.9rem 1.1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f5f5f3; transition: background 0.15s; }
 .puzzle-header:hover { background: #ebebea; }
 .puzzle-header h3 { margin: 0; font-size: 1rem; font-weight: 700; }
@@ -38,24 +42,35 @@ svg text { font-family: system-ui, sans-serif; }
 .alloc-sliders { margin: 1rem 0; }
 .alloc-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.6rem 0; font-size: 0.9rem; }
 .alloc-row label { width: 32px; font-weight: 700; flex-shrink: 0; font-size: 1rem; }
-.alloc-row input { flex: 1; }
+.alloc-row input[type=range] { flex: 1; accent-color: #2563eb; height: 6px; cursor: pointer; }
 .alloc-row .val { width: 36px; text-align: right; font-weight: 600; color: #333; }
 .alloc-total { font-size: 0.85rem; color: #888; margin: 0.25rem 0 1rem; }
 .alloc-total.over { color: #ef4444; font-weight: 600; }
 
 .scenario-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.scenario-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #6d28d9; border-radius: 6px; background: white; color: #6d28d9; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
-.scenario-btn.active, .scenario-btn:hover { background: #6d28d9; color: white; }
+.scenario-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; font-family: 'DM Sans', system-ui, sans-serif; }
+.scenario-btn.active, .scenario-btn:hover { background: #2563eb; color: white; }
 
 .product-display { text-align: center; margin: 1rem 0; }
-.product-num { font-size: 2.2rem; font-weight: 800; color: #6d28d9; }
-.product-formula { font-size: 0.8rem; color: #888; font-family: monospace; margin-top: 0.2rem; }
+.product-num { font-size: 2.2rem; font-weight: 800; color: #2563eb; }
+.product-formula { font-size: 0.8rem; color: #888; font-family: 'DM Mono', monospace; margin-top: 0.2rem; }
 .product-verdict { font-size: 0.95rem; font-weight: 600; margin-top: 0.3rem; }
 
 .score-bar { display: flex; align-items: flex-end; gap: 0.6rem; height: 100px; margin: 1rem 0; justify-content: center; }
 .score-bar-item { display: flex; flex-direction: column; align-items: center; flex: 1; max-width: 80px; }
 .score-bar-rect { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.4s; }
 .score-bar-label { font-size: 0.72rem; font-weight: 700; margin-top: 0.25rem; }
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .alloc-row { gap: 0.5rem; }
+  .alloc-row label { width: 24px; font-size: 0.9rem; }
+  .alloc-row .val { width: 30px; font-size: 0.85rem; }
+  .scenario-btns { flex-direction: column; }
+  .scenario-btn { text-align: center; }
+  .score-bar { gap: 0.4rem; }
+  .product-num { font-size: 1.8rem; }
+}
 </style>
 </head>
 <body>
@@ -118,7 +133,7 @@ svg text { font-family: system-ui, sans-serif; }
     <div class="score-bar" id="score-bar"></div>
 
     <div class="product-display">
-      <div class="product-num" id="product-num">—</div>
+      <div class="product-num" id="product-num">&mdash;</div>
       <div class="product-formula" id="product-formula"></div>
       <div class="product-verdict" id="product-verdict"></div>
     </div>
@@ -241,8 +256,14 @@ window.setScenario = function(sc) {
 
 window.updateAlloc = function(key) {
   const v = parseInt(document.getElementById('alloc-' + key).value);
-  allocState[key] = v;
-  document.getElementById('val-' + key).textContent = v;
+  const others = Object.keys(allocState).filter(k => k !== key);
+  const othersTotal = others.reduce((sum, k) => sum + allocState[k], 0);
+  const remaining = MAX_TOTAL - othersTotal;
+  const clamped = Math.min(v, remaining);
+
+  allocState[key] = clamped;
+  document.getElementById('alloc-' + key).value = clamped;
+  document.getElementById('val-' + key).textContent = clamped;
   renderAlloc();
 };
 
@@ -252,6 +273,13 @@ function renderAlloc() {
   const totalEl = document.getElementById('alloc-total');
   totalEl.textContent = `Total: ${total} / ${MAX_TOTAL}`;
   totalEl.className = 'alloc-total' + (total > MAX_TOTAL ? ' over' : '');
+
+  // Update slider max values to enforce budget
+  Object.keys(allocState).forEach(key => {
+    const others = Object.keys(allocState).filter(k => k !== key);
+    const othersTotal = others.reduce((sum, k) => sum + allocState[k], 0);
+    document.getElementById('alloc-' + key).max = MAX_TOTAL - othersTotal;
+  });
 
   // Bar chart
   const bar = document.getElementById('score-bar');
@@ -282,13 +310,13 @@ function renderAlloc() {
   // Product
   const product = Math.round(M * I * N * D / 1e6);
   document.getElementById('product-num').textContent = product.toLocaleString();
-  document.getElementById('product-formula').textContent = `${M} × ${I} × ${N} × ${D} / 10⁶ = ${product.toLocaleString()}`;
+  document.getElementById('product-formula').textContent = `${M} \u00d7 ${I} \u00d7 ${N} \u00d7 ${D} / 10\u2076 = ${product.toLocaleString()}`;
 
   // Scenario-specific verdict
   let verdict = '';
   const minVal = Math.min(M, I, N, D);
   if (minVal === 0) {
-    verdict = 'Collapse — a zero in any dimension nullifies all other capitals.';
+    verdict = 'Collapse \u2014 a zero in any dimension nullifies all other capitals.';
     document.getElementById('product-verdict').style.color = '#dc2626';
   } else if (currentScenario === 'gdp') {
     const shortTermGDP = M * 0.6 + I * 0.2 + N * 0.1 + D * 0.1;

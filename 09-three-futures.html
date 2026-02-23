@@ -4,33 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 16 — The Three Futures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
+.nav a:hover { text-decoration: underline; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
+.btn.active { background: #2563eb; color: white; }
 .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
-input[type="range"] { width: 100%; margin: 0.25rem 0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
 .stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
-.trajectory-label { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0.75rem 0; padding: 0.5rem; border-radius: 6px; }
+.trajectory-label { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0.75rem 0; padding: 0.5rem; border-radius: 6px; transition: all 0.3s ease; }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
 .seed-result { font-size: 0.9rem; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; border: 1px solid #e5e5e0; }
-.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: system-ui, sans-serif; margin: 1rem 0 0.5rem; }
+.countdown { font-size: 3rem; font-weight: 700; text-align: center; color: #2563eb; font-family: 'DM Mono', monospace; margin: 1rem 0 0.5rem; }
 .countdown-sub { text-align: center; font-size: 0.9rem; color: #888; }
+
+/* Scenario cards */
+.scenario-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.scenario-card { padding: 1rem; border-radius: 8px; border: 2px solid #e5e5e0; cursor: pointer; transition: all 0.2s ease; text-align: center; }
+.scenario-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.scenario-card.active { border-color: #2563eb; background: #eff6ff; }
+.scenario-card h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1rem; margin: 0.5rem 0 0.25rem; }
+.scenario-card p { font-size: 0.8rem; color: #666; margin: 0; }
+.scenario-icon { font-size: 1.5rem; }
+
+/* Comparison table */
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+.comparison-table th, .comparison-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e5e0; text-align: left; }
+.comparison-table th { font-weight: 600; background: #f5f5f3; }
+.comparison-table tr.highlight { background: #eff6ff; }
+
+/* Timeline */
+.timeline { position: relative; margin: 1.5rem 0; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 2px; background: #e5e5e0; }
+.timeline-event { position: relative; margin-bottom: 1.25rem; }
+.timeline-event::before { content: ''; position: absolute; left: -1.65rem; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%; background: #2563eb; border: 2px solid white; box-shadow: 0 0 0 2px #2563eb; }
+.timeline-event.feudal::before { background: #dc2626; box-shadow: 0 0 0 2px #dc2626; }
+.timeline-event.fragment::before { background: #ea580c; box-shadow: 0 0 0 2px #ea580c; }
+.timeline-event.symbiosis::before { background: #16a34a; box-shadow: 0 0 0 2px #16a34a; }
+.timeline-year { font-size: 0.8rem; font-weight: 700; color: #888; }
+.timeline-text { font-size: 0.9rem; margin-top: 0.15rem; }
 </style>
 </head>
 <body>
@@ -46,11 +77,64 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
 
   <p>Civilizations don&rsquo;t evolve gradually. They crystallize &mdash; suddenly, irreversibly. Right now our civilization is supercooled: liquid past its freezing point, waiting for a nucleation site. The crystal we become depends on choices made in a very small window.</p>
 
-  <!-- Panel 1+2: Phase Landscape with Parameter Sliders -->
+  <!-- Scenario Cards -->
+  <div class="panel">
+    <h2>Choose a Future</h2>
+    <p style="font-size:0.9rem; color:#666;">Click a scenario to explore what each future looks like.</p>
+    <div class="scenario-cards">
+      <div class="scenario-card" data-scenario="feudal" onclick="selectScenario('feudal')">
+        <div class="scenario-icon">&#x1F3F0;</div>
+        <h3>Digital Feudalism</h3>
+        <p>AI controlled by a handful of lords</p>
+      </div>
+      <div class="scenario-card" data-scenario="fragment" onclick="selectScenario('fragment')">
+        <div class="scenario-icon">&#x1F30D;</div>
+        <h3>Great Fragmentation</h3>
+        <p>Splintered blocs, digital borders</p>
+      </div>
+      <div class="scenario-card active" data-scenario="symbiosis" onclick="selectScenario('symbiosis')">
+        <div class="scenario-icon">&#x1F331;</div>
+        <h3>Human Symbiosis</h3>
+        <p>Shared intelligence, shared flourishing</p>
+      </div>
+    </div>
+
+    <div id="scenario-detail" style="margin-top:1rem;">
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Dimension</th><th id="col-feudal">Feudalism</th><th id="col-fragment">Fragmentation</th><th id="col-symbiosis" style="background:#eff6ff;">Symbiosis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AI ownership</td><td>3-5 corporations</td><td>National champions</td><td>Commons + open models</td></tr>
+          <tr><td>Wealth distribution</td><td>Neo-aristocracy</td><td>Regional inequality</td><td>Broad-based dividend</td></tr>
+          <tr><td>Governance</td><td>Corporate capture</td><td>Techno-nationalism</td><td>Transparent, participatory</td></tr>
+          <tr><td>Individual agency</td><td>Platform serfs</td><td>Walled citizens</td><td>Empowered symbiotes</td></tr>
+          <tr><td>Innovation rate</td><td>High but narrow</td><td>Duplicated effort</td><td>Combinatorial explosion</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="scenario-timeline" class="timeline">
+      <div class="timeline-event symbiosis">
+        <div class="timeline-year">2025-2027</div>
+        <div class="timeline-text">Open-source AI reaches parity; cooperative governance pilots begin</div>
+      </div>
+      <div class="timeline-event symbiosis">
+        <div class="timeline-year">2028-2030</div>
+        <div class="timeline-text">Symbiotic protocols standardized; first universal AI dividend trials</div>
+      </div>
+      <div class="timeline-event symbiosis">
+        <div class="timeline-year">2031-2035</div>
+        <div class="timeline-text">Post-scarcity transition in knowledge work; ecological restoration at scale</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Phase Landscape with Parameter Sliders -->
   <div class="panel">
     <h2>Phase Landscape</h2>
     <p style="font-size:0.9rem; color:#666;">Drag the marble or adjust the sliders to explore the attractor basins.</p>
-    <svg id="landscape-svg" width="600" height="400" style="display:block; max-width:100%; cursor:pointer;"></svg>
+    <svg id="landscape-svg" style="display:block; width:100%; max-width:600px; cursor:pointer;" viewBox="0 0 600 400"></svg>
     <div id="trajectory-label" class="trajectory-label" style="background:#fef2f2; color:#dc2626;">Current trajectory: Digital Feudalism</div>
 
     <div class="slider-row">
@@ -68,16 +152,70 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
       <div class="slider-label"><span>Opaque</span><span>Transparent</span></div>
       <input type="range" id="gov-slider" min="0" max="100" value="20">
     </div>
+
+    <div class="btn-group">
+      <button class="btn secondary" onclick="setPreset('feudal')">Preset: Feudalism</button>
+      <button class="btn secondary" onclick="setPreset('fragment')">Preset: Fragmentation</button>
+      <button class="btn secondary" onclick="setPreset('symbiosis')">Preset: Symbiosis</button>
+    </div>
+    <p class="caption">The landscape shows three attractor basins. Small changes in AI openness, wealth distribution, and governance transparency determine which future crystallizes.</p>
   </div>
+
+  <!-- Tipping Point Countdown -->
+  <div class="panel">
+    <h2>The Window Is Closing</h2>
+    <p style="font-size:0.9rem; color:#666;">Estimated time remaining in the decision window before path-lock.</p>
+    <div class="countdown" id="countdown">--</div>
+    <div class="countdown-sub">days until estimated crystallization</div>
+    <p class="caption">This is a conceptual estimate. The point is not the exact number but the narrowing window for collective choice. Every policy enacted, every model released, every institution built shifts the marble.</p>
+  </div>
+
+  <p>The crucial insight is that these futures are <em>not</em> equally likely. The default trajectory &mdash; do nothing, change nothing &mdash; leads to Digital Feudalism. The Great Fragmentation requires active but misguided intervention. Human Symbiosis requires <em>deliberate, coordinated, sustained</em> effort.</p>
+
+  <p>The next chapters map the institutions, policies, and technologies that can nudge the marble toward symbiosis &mdash; before the crystal sets.</p>
 
 </div>
 
 <script>
+// ========== Scenario Cards ==========
+const timelines = {
+  feudal: [
+    { year: '2025-2027', text: 'Consolidation wave: top 3 AI labs absorb competitors', cls: 'feudal' },
+    { year: '2028-2030', text: 'Platform dependency locks in; gig economy expands to knowledge work', cls: 'feudal' },
+    { year: '2031-2035', text: 'Neo-aristocracy crystallizes; social mobility collapses', cls: 'feudal' },
+  ],
+  fragment: [
+    { year: '2025-2027', text: 'Export controls escalate; regional AI stacks diverge', cls: 'fragment' },
+    { year: '2028-2030', text: 'Digital borders harden; interoperability collapses', cls: 'fragment' },
+    { year: '2031-2035', text: 'Balkanized internet; duplicated infrastructure, wasted potential', cls: 'fragment' },
+  ],
+  symbiosis: [
+    { year: '2025-2027', text: 'Open-source AI reaches parity; cooperative governance pilots begin', cls: 'symbiosis' },
+    { year: '2028-2030', text: 'Symbiotic protocols standardized; first universal AI dividend trials', cls: 'symbiosis' },
+    { year: '2031-2035', text: 'Post-scarcity transition in knowledge work; ecological restoration at scale', cls: 'symbiosis' },
+  ],
+};
+
+function selectScenario(scenario) {
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.scenario-card[data-scenario="${scenario}"]`).classList.add('active');
+
+  // Highlight column
+  ['feudal', 'fragment', 'symbiosis'].forEach(s => {
+    document.getElementById('col-' + s).style.background = s === scenario ? '#eff6ff' : '';
+  });
+
+  // Update timeline
+  const container = document.getElementById('scenario-timeline');
+  container.innerHTML = timelines[scenario].map(e =>
+    `<div class="timeline-event ${e.cls}"><div class="timeline-year">${e.year}</div><div class="timeline-text">${e.text}</div></div>`
+  ).join('');
+}
+
 // ========== Phase Landscape ==========
 (function(){
   const svg = d3.select('#landscape-svg');
   const w = 600, h = 400;
-  const margin = { t: 20, r: 20, b: 20, l: 20 };
 
   // Three attractor positions
   const attractors = [
@@ -120,6 +258,10 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
       .attr('fill', a.color).text(a.label);
   });
 
+  // Trail
+  const trail = svg.append('path').attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 1.5).attr('stroke-dasharray', '4,3').attr('opacity', 0.5);
+  let trailPoints = [];
+
   // Marble
   let marbleX = 180, marbleY = 280;
   const marble = svg.append('circle').attr('cx', marbleX).attr('cy', marbleY)
@@ -131,9 +273,13 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
 
   // Drag marble
   marble.call(d3.drag()
+    .on('start', function() { trailPoints = [{x: marbleX, y: marbleY}]; })
     .on('drag', function(event) {
       marbleX = Math.max(20, Math.min(w - 20, event.x));
       marbleY = Math.max(20, Math.min(h - 20, event.y));
+      trailPoints.push({x: marbleX, y: marbleY});
+      if (trailPoints.length > 80) trailPoints.shift();
+      trail.attr('d', d3.line().x(d => d.x).y(d => d.y).curve(d3.curveBasis)(trailPoints));
       updateMarble();
     })
   );
@@ -162,11 +308,12 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
     const wealth = +document.getElementById('wealth-slider').value;
     const gov = +document.getElementById('gov-slider').value;
 
-    // Map to x,y position
     marbleX = 100 + (wealth / 100) * 400 * 0.5 + ((100 - openness) / 100) * 200 * 0.5;
     marbleY = 350 - (gov / 100) * 200 - (openness / 100) * 100;
     marbleX = Math.max(40, Math.min(w - 40, marbleX));
     marbleY = Math.max(40, Math.min(h - 40, marbleY));
+    trailPoints = [];
+    trail.attr('d', '');
     updateMarble();
   }
 
@@ -178,7 +325,37 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
     });
   });
 
+  // Presets
+  window.setPreset = function(preset) {
+    const presets = {
+      feudal: { open: 10, wealth: 95, gov: 5 },
+      fragment: { open: 40, wealth: 60, gov: 30 },
+      symbiosis: { open: 90, wealth: 15, gov: 85 },
+    };
+    const p = presets[preset];
+    document.getElementById('open-slider').value = p.open;
+    document.getElementById('open-val').textContent = p.open;
+    document.getElementById('wealth-slider').value = p.wealth;
+    document.getElementById('wealth-val').textContent = p.wealth;
+    document.getElementById('gov-slider').value = p.gov;
+    document.getElementById('gov-val').textContent = p.gov;
+    computeMarbleFromSliders();
+  };
+
   updateTrajectory();
+})();
+
+// ========== Countdown ==========
+(function(){
+  // Conceptual crystallization date: end of 2030
+  const target = new Date('2030-12-31T00:00:00');
+  function update() {
+    const now = new Date();
+    const days = Math.max(0, Math.floor((target - now) / (1000 * 60 * 60 * 24)));
+    document.getElementById('countdown').textContent = days.toLocaleString();
+  }
+  update();
+  setInterval(update, 86400000);
 })();
 </script>
 </body>

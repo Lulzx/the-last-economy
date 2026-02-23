@@ -4,46 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction — The Thousand-Day Window</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.nav a:hover { text-decoration: underline; }
+.nav .disabled { color: #ccc; cursor: default; pointer-events: none; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
 .btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
 .btn.secondary:hover { background: #e5e5e0; }
-.btn.active { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn.active { background: #2563eb; color: white; outline: none; }
 .dash-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .futures-grid { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-.future-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: box-shadow 0.2s; }
+.future-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s ease; }
 .future-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.future-card.open { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
 .future-card .fc-header { display: flex; justify-content: space-between; align-items: center; }
-.future-card .fc-title { font-weight: 700; font-size: 1.05rem; }
+.future-card .fc-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1.05rem; }
 .future-card .fc-desc { font-size: 0.9rem; color: #555; margin-top: 0.25rem; }
 .future-card .fc-details { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f0f0ed; }
 .future-card .fc-details.open { display: block; }
 .future-card .fc-details ul { margin: 0; padding-left: 1.2rem; font-size: 0.9rem; color: #333; line-height: 1.8; }
-.future-card .fc-toggle { font-size: 1.2rem; color: #999; transition: transform 0.2s; }
+.future-card .fc-toggle { font-size: 1.2rem; color: #999; transition: transform 0.3s ease; }
 .future-card.open .fc-toggle { transform: rotate(45deg); }
-.countdown-number { font-size: 4rem; font-weight: 700; text-align: center; color: #1a1a1a; line-height: 1; padding: 1rem 0; }
+.countdown-number { font-family: 'Playfair Display', Georgia, serif; font-size: 4rem; font-weight: 700; text-align: center; color: #1a1a1a; line-height: 1; padding: 1rem 0; }
 .countdown-label { text-align: center; font-size: 0.85rem; color: #888; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; }
 .progress-wrap { background: #f0f0ed; border-radius: 4px; height: 8px; margin: 1rem 0 0.5rem; overflow: hidden; }
-.progress-bar { height: 100%; border-radius: 4px; background: #1a1a1a; transition: width 0.5s; }
+.progress-bar { height: 100%; border-radius: 4px; background: #2563eb; transition: width 0.5s; }
 .progress-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; }
 .note { font-size: 0.85rem; color: #888; font-style: italic; margin-top: 1rem; text-align: center; }
+input[type=range] { accent-color: #2563eb; }
+@media (max-width: 600px) {
+  .two-col { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 <nav class="nav">
-  <span style="color:#aaa">First page</span>
+  <span class="disabled">&larr; Previous</span>
   <a href="explorables.html">All Chapters</a>
   <a href="01-intelligence-inversion.html">Next &rarr;</a>
 </nav>
@@ -65,11 +75,11 @@ svg text { font-family: system-ui, sans-serif; }
     <div class="two-col" id="dashboard-charts">
       <div>
         <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="left-label">Stock Market Index</div>
-        <svg id="left-chart" width="100%" height="130"></svg>
+        <svg id="left-chart" style="width:100%;max-width:600px;" height="130"></svg>
       </div>
       <div>
         <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="right-label">Life Satisfaction Score</div>
-        <svg id="right-chart" width="100%" height="130"></svg>
+        <svg id="right-chart" style="width:100%;max-width:600px;" height="130"></svg>
       </div>
     </div>
     <p style="font-size:0.9rem;color:#555;margin-top:1rem;">The official dashboard shows a world on the rise. The human reality dashboard shows a world where the numbers no longer map to lived experience. Both are accurate. Neither is the whole picture.</p>

@@ -4,25 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cooperation Emerges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
 .btn:hover { background: #1d4ed8; }
-.btn.active { background: #1e40af; box-shadow: 0 0 0 2px #93c5fd; }
+.btn.active { background: #2563eb; color: white; box-shadow: 0 0 0 2px #93c5fd; }
 .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
 .stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
 .stat strong { color: #1a1a1a; }
-input[type="range"] { width: 100%; margin: 0.25rem 0; }
+input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; }
 .slider-row { margin: 0.75rem 0; }
 .slider-row label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
@@ -39,7 +42,7 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
 .caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
 .case-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; margin: 0.75rem 0; cursor: pointer; transition: all 0.2s; }
 .case-card:hover { border-color: #2563eb; }
-.case-card h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.case-card h3 { font-family: 'Playfair Display', Georgia, serif; margin: 0 0 0.25rem; font-size: 1rem; }
 .case-card .big-stat { font-size: 1.8rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
 .case-card .detail { display: none; font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
 .case-card.open .detail { display: block; }
@@ -84,7 +87,7 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
       <div><div class="val" id="pd-b-score">0</div><div class="lbl">B's Score</div></div>
       <div><div class="val" id="pd-coop">0%</div><div class="lbl">Mutual Cooperation</div></div>
     </div>
-    <svg id="pd-chart" width="600" height="160" style="display:block; max-width:100%;"></svg>
+    <svg id="pd-chart" style="display:block; width:100%; max-width:600px;" height="160"></svg>
   </div>
 
   <!-- Panel 2: Strategy Tournament -->
@@ -101,11 +104,11 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; }
     <h2>Topology &times; Cooperation</h2>
     <p style="font-size:0.9rem; color:#666;">Watch how defection (red) spreads through different network structures.</p>
     <div class="btn-group">
-      <button class="btn" onclick="runSpread('hub')">Hub-and-Spoke</button>
-      <button class="btn" onclick="runSpread('smallworld')">Small-World</button>
-      <button class="btn" onclick="runSpread('mesh')">Mesh</button>
+      <button class="btn" onclick="setTopology('hub')">Hub-and-Spoke</button>
+      <button class="btn" onclick="setTopology('smallworld')">Small-World</button>
+      <button class="btn" onclick="setTopology('mesh')">Mesh</button>
     </div>
-    <svg id="spread-svg" width="600" height="360" style="display:block; max-width:100%;"></svg>
+    <svg id="spread-svg" style="display:block; width:100%; max-width:600px;" height="360"></svg>
     <div id="spread-stat" class="stat" style="text-align:center;"></div>
   </div>
 
@@ -143,15 +146,12 @@ function runPD() {
   const rep = +document.getElementById('rep-slider').value / 100;
   const horizon = +document.getElementById('horizon-slider').value;
 
-  // Two rational agents using conditional cooperation
-  // With more visibility and longer horizon, cooperation emerges
   const coopProb = Math.min(0.95, rep * 0.6 + (horizon / 200) * 0.35 + (iters > 5 ? 0.1 : 0));
   let aScore = 0, bScore = 0, coopRounds = 0;
   const rounds = [];
   let aLastCoop = true, bLastCoop = true;
 
   for (let i = 0; i < iters; i++) {
-    // Shadow of the future: near end, tendency to defect
     const endEffect = (iters - i) < 3 && rep < 0.5 ? 0.7 : 0;
     const aCoop = Math.random() < (coopProb - endEffect) && (i === 0 || bLastCoop || Math.random() < rep * 0.3);
     const bCoop = Math.random() < (coopProb - endEffect) && (i === 0 || aLastCoop || Math.random() < rep * 0.3);
@@ -170,12 +170,14 @@ function runPD() {
   document.getElementById('pd-b-score').textContent = bScore;
   document.getElementById('pd-coop').textContent = Math.round(coopRounds / iters * 100) + '%';
 
-  // Draw chart
   const svg = d3.select('#pd-chart');
   svg.selectAll('*').remove();
-  const w = 600, h = 160, m = { t: 10, r: 10, b: 25, l: 30 };
+  const w = svg.node().clientWidth || 600;
+  const h = 160, m = { t: 10, r: 10, b: 25, l: 30 };
   const x = d3.scaleLinear().domain([0, iters - 1]).range([m.l, w - m.r]);
   const barW = Math.max(1, (w - m.l - m.r) / iters - 0.5);
+
+  svg.attr('viewBox', `0 0 ${w} ${h}`);
 
   svg.selectAll('.bar').data(rounds).enter().append('rect')
     .attr('x', d => x(d.round)).attr('y', m.t)
@@ -201,7 +203,6 @@ function runPD() {
 
 // ========== Panel 2: Strategy Tournament ==========
 function runTournament() {
-  // Each strategy plays all others in both player positions (full round-robin)
   const strategies = {
     'Always Defect': (myHist, theirHist) => false,
     'Always Cooperate': (myHist, theirHist) => true,
@@ -214,7 +215,6 @@ function runTournament() {
   const scores = {};
   names.forEach(n => scores[n] = 0);
 
-  // Play each pair from BOTH sides (A vs B and B vs A) for asymmetric strategies
   for (let i = 0; i < names.length; i++) {
     for (let j = 0; j < names.length; j++) {
       if (i === j) continue;
@@ -238,14 +238,30 @@ function runTournament() {
 }
 
 // ========== Panel 3: Topology x Cooperation ==========
+var activeTopology = null;
+
+function setTopology(type) {
+  // Update active button state
+  document.querySelectorAll('#spread-svg').forEach(el => el);
+  const btns = document.querySelectorAll('.btn-group .btn');
+  btns.forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  activeTopology = type;
+  runSpread(type);
+}
+
 function runSpread(type) {
   const N = 64;
   const cols = 8, rows = 8;
   const svg = d3.select('#spread-svg');
   svg.selectAll('*').remove();
-  const w = 600, h = 360;
-  const cw = 50, ch = 36;
-  const ox = (w - cols * cw) / 2, oy = 20;
+  const w = svg.node().clientWidth || 600;
+  const h = 360;
+  const cw = w / cols;
+  const ch = (h - 40) / rows;
+  const ox = 0, oy = 20;
+
+  svg.attr('viewBox', `0 0 ${w} ${h}`);
 
   // Build adjacency
   const adj = Array.from({ length: N }, () => []);
@@ -270,14 +286,13 @@ function runSpread(type) {
     }
   }
 
-  const state = Array(N).fill(true); // true = cooperate
-  // Initial defector
+  const state = Array(N).fill(true);
   const startDefector = type === 'hub' ? 0 : Math.floor(N / 2);
   state[startDefector] = false;
 
   const rects = svg.selectAll('rect').data(d3.range(N)).enter().append('rect')
-    .attr('x', (d) => ox + (d % cols) * cw)
-    .attr('y', (d) => oy + Math.floor(d / cols) * ch)
+    .attr('x', (d) => ox + (d % cols) * cw + 2)
+    .attr('y', (d) => oy + Math.floor(d / cols) * ch + 2)
     .attr('width', cw - 4).attr('height', ch - 4)
     .attr('rx', 4)
     .attr('fill', d => state[d] ? '#3b82f6' : '#ef4444');

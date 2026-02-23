@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 8 — The MIND Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
@@ -23,14 +26,29 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 
 .vitality-display { text-align: center; margin: 1.5rem 0; }
 .vitality-num { font-size: 2.5rem; font-weight: 800; }
-.vitality-formula { font-size: 0.85rem; color: #888; margin-top: 0.25rem; font-family: monospace; }
+.vitality-formula { font-size: 0.85rem; color: #888; margin-top: 0.25rem; font-family: 'DM Mono', monospace; }
 .health-bar { height: 16px; background: #e5e5e0; border-radius: 8px; margin: 1rem auto; max-width: 400px; overflow: hidden; }
 .health-fill { height: 100%; border-radius: 8px; transition: all 0.4s; }
 .collapse-warn { color: #dc2626; font-weight: 700; font-size: 1.1rem; text-align: center; min-height: 1.5em; margin-top: 0.5rem; }
 
+.multiplicative-collapse-banner {
+  display: none;
+  background: #fef2f2;
+  border: 1.5px solid #dc2626;
+  border-radius: 8px;
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.multiplicative-collapse-banner.visible { display: block; }
+
 .civ-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.civ-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
-.civ-btn.active, .civ-btn:hover { background: #2563eb; color: white; }
+.civ-btn { padding: 0.4rem 0.9rem; border: 1.5px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; font-family: 'DM Sans', system-ui, sans-serif; }
+.civ-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+.civ-btn:hover { background: #2563eb; color: white; }
 .civ-desc { font-size: 0.9rem; color: #555; min-height: 2.5em; margin-top: 0.75rem; }
 
 .model-toggle { display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem; }
@@ -47,6 +65,13 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .bar-label { font-size: 0.75rem; margin-top: 0.3rem; }
 
 .scale-toggle { display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem; }
+
+.btn { display: inline-block; padding: 0.5rem 1.2rem; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', system-ui, sans-serif; transition: background 0.2s; }
+.btn:hover { background: #1d4ed8; }
+
+.reset-row { text-align: center; margin-top: 1rem; }
+
+input[type=range] { accent-color: #2563eb; }
 </style>
 </head>
 <body>
@@ -73,6 +98,10 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
       <div class="vitality-formula" id="vitalityFormula">70 × 70 × 70 × 70 / 10⁶ = 2,401</div>
       <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
       <div class="collapse-warn" id="collapseWarn"></div>
+      <div class="multiplicative-collapse-banner" id="collapseBanner">Warning: Multiplicative collapse risk detected</div>
+    </div>
+    <div class="reset-row">
+      <button class="btn" id="resetBtn">Reset</button>
     </div>
   </div>
 
@@ -116,6 +145,8 @@ h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 </div>
 
 <script>
+const DEFAULTS = { M: 70, I: 70, N: 70, D: 70 };
+const LOW_THRESHOLD = 30;
 const state = { M: 70, I: 70, N: 70, D: 70, isMultiplicative: false, isPersonal: false };
 const colors = { M: '#ef4444', I: '#2563eb', N: '#22c55e', D: '#f59e0b' };
 const civLabels = {
@@ -238,8 +269,24 @@ function updateVitality() {
     warn.textContent = '';
   }
 
+  // Multiplicative collapse warning banner
+  const banner = document.getElementById('collapseBanner');
+  const lowCount = [M, I, N, D].filter(v => v <= LOW_THRESHOLD).length;
+  if (lowCount >= 2) {
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
+
   updateModelDisplay();
 }
+
+// ===== Reset Button =====
+document.getElementById('resetBtn').addEventListener('click', function() {
+  document.querySelectorAll('.civ-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('civDesc').textContent = 'Select a civilization to explore its capital profile.';
+  setDials(DEFAULTS.M, DEFAULTS.I, DEFAULTS.N, DEFAULTS.D, true);
+});
 
 // ===== Historical Civilizations =====
 document.querySelectorAll('.civ-btn').forEach(btn => {

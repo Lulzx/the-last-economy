@@ -4,40 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ch 7 — The Generative Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-body { background: #fafaf8; color: #1a1a1a; font-family: system-ui, sans-serif; margin: 0; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: Georgia, serif; line-height: 1.7; font-size: 1.05rem; }
+body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
+.panel-spacer { height: 1rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
 .nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
 .nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: system-ui, sans-serif; }
+svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
-.btn { background: #0d9488; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
-.btn:hover { background: #0f766e; }
-.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
+.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; }
+.btn:hover { background: #1d4ed8; }
+.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; cursor: pointer; }
 .btn.secondary:hover { background: #e5e5e0; }
 
-.step-counter { font-size: 1rem; font-weight: 700; color: #0d9488; text-align: center; margin: 0.75rem 0; }
+.step-counter { font-size: 1rem; font-weight: 700; color: #2563eb; text-align: center; margin: 0.75rem 0; }
 .noise-label { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 0.5rem; }
 
 /* Denoiser grid */
-#denoiser-svg { display: block; margin: 0 auto; }
+#denoiser-svg { display: block; margin: 0 auto; width: 100%; max-width: 300px; height: auto; }
 
 /* Economy mapping table */
 .mapping-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-.mapping-table th { background: #0d9488; color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+.mapping-table th { background: #2563eb; color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
 .mapping-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e5e0; vertical-align: top; }
 .mapping-table tr:last-child td { border-bottom: none; }
 .mapping-table tr:nth-child(even) td { background: #f5f5f3; }
 
 /* Gradient descent */
-#landscape-svg { display: block; margin: 0 auto; cursor: crosshair; }
-.loss-display { text-align: center; font-size: 1.2rem; font-weight: 700; color: #0d9488; margin: 0.5rem 0; }
+#landscape-svg { display: block; margin: 0 auto; cursor: crosshair; width: 100%; max-width: 600px; height: auto; }
+.loss-display { text-align: center; font-size: 1.2rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
 .loss-label { font-size: 0.85rem; color: #666; text-align: center; }
+
+input[type=range] { accent-color: #2563eb; }
 </style>
 </head>
 <body>
@@ -58,13 +64,15 @@ svg text { font-family: system-ui, sans-serif; }
     <h2>The Denoising Process</h2>
     <p style="font-size:0.9rem;color:#666;margin-top:0">Watch pure noise resolve into a recognizable pattern, step by step &mdash; just as economies crystallize order from chaos.</p>
     <div class="noise-label" id="noise-label">Noise Level: 100% &mdash; Step 0 / 10</div>
-    <svg id="denoiser-svg" width="300" height="300"></svg>
+    <svg id="denoiser-svg" viewBox="0 0 300 300"></svg>
     <div style="text-align:center;margin-top:1rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
       <button class="btn" id="denoise-btn" onclick="runDenoise()">Denoise</button>
       <button class="btn secondary" onclick="resetDenoise()">Reset</button>
     </div>
     <div class="step-counter" id="step-counter"></div>
   </div>
+
+  <div class="panel-spacer"></div>
 
   <!-- Panel 2: Economy as Denoiser -->
   <div class="panel">
@@ -98,11 +106,13 @@ svg text { font-family: system-ui, sans-serif; }
     </table>
   </div>
 
+  <div class="panel-spacer"></div>
+
   <!-- Panel 3: The Gradient Descent Landscape -->
   <div class="panel">
     <h2>The Gradient Descent Landscape</h2>
     <p style="font-size:0.9rem;color:#666;margin-top:0">Click anywhere to place the ball, then click "Optimize" to watch gradient descent find the minimum &mdash; simulating how an economy (or an AI) rolls toward lower-entropy states.</p>
-    <svg id="landscape-svg" width="600" height="300"></svg>
+    <svg id="landscape-svg" viewBox="0 0 600 300"></svg>
     <div class="loss-label">Current Loss</div>
     <div class="loss-display" id="loss-display">—</div>
     <div style="text-align:center;margin-top:0.75rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
@@ -160,7 +170,6 @@ svg text { font-family: system-ui, sans-serif; }
   }
 
   const svg = d3.select('#denoiser-svg')
-    .attr('width', svgSize).attr('height', svgSize)
     .attr('viewBox', `0 0 ${svgSize} ${svgSize}`);
 
   let noiseLevel = 1.0;
@@ -191,9 +200,9 @@ svg text { font-family: system-ui, sans-serif; }
 
   function getColor(r, c, noiseVal) {
     const tgt = target[r][c];
-    // Target color: teal for house walls, brown for door/windows, light background
+    // Target color: blue for house walls, brown for door/windows, light background
     let targetColor;
-    if (tgt === 1) targetColor = [13, 148, 136]; // teal
+    if (tgt === 1) targetColor = [37, 99, 235]; // #2563eb blue
     else if (tgt === 0.3) targetColor = [120, 80, 40]; // brown
     else targetColor = [240, 240, 238]; // background
 
@@ -269,9 +278,7 @@ svg text { font-family: system-ui, sans-serif; }
 (function() {
   const W = 600, H = 300;
   const svg = d3.select('#landscape-svg')
-    .attr('width', W).attr('height', H)
-    .attr('viewBox', `0 0 ${W} ${H}`)
-    .style('max-width', '100%');
+    .attr('viewBox', `0 0 ${W} ${H}`);
 
   // Loss function: multiple local minima
   function loss(x, y) {
@@ -328,7 +335,7 @@ svg text { font-family: system-ui, sans-serif; }
 
   const trail = svg.append('g').attr('class', 'trail');
   const ball = svg.append('circle').attr('r', 9)
-    .attr('fill', '#0d9488').attr('stroke', 'white').attr('stroke-width', 2.5)
+    .attr('fill', '#2563eb').attr('stroke', 'white').attr('stroke-width', 2.5)
     .attr('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))')
     .attr('cursor', 'grab');
 
@@ -390,7 +397,7 @@ svg text { font-family: system-ui, sans-serif; }
       // Add trail dot
       trail.append('circle')
         .attr('cx', ballX).attr('cy', ballY).attr('r', 2)
-        .attr('fill', '#0d9488').attr('opacity', 0.3 + (iter / ITERS) * 0.3);
+        .attr('fill', '#2563eb').attr('opacity', 0.3 + (iter / ITERS) * 0.3);
 
       ballX -= (gx / mag) * lr;
       ballY -= (gy / mag) * lr;
