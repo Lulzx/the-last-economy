@@ -10,12 +10,14 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #2563eb; z-index: 100; transition: width 0.1s; width: 0%; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
+.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 50; }
 .nav a { color: #2563eb; text-decoration: none; }
 .nav a:hover { text-decoration: underline; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
@@ -68,9 +70,15 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .illustration-box { margin: 2rem 0; text-align: center; }
 .illustration-box svg { max-width: 100%; }
 .illustration-caption { font-size: 0.85rem; color: #888; margin-top: 0.5rem; font-style: italic; }
+@media (max-width: 640px) {
+  .stat-row { flex-direction: column; }
+  .gauges { grid-template-columns: 1fr; }
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+}
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress-bar"></div>
 <nav class="nav">
   <a href="ch14-social-contract.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -95,34 +103,61 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <!-- SVG: The Second Economy -->
   <div class="illustration-box">
     <svg viewBox="0 0 500 200" width="500" height="200">
+      <defs>
+        <linearGradient id="humanLayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#eff6ff"/>
+        </linearGradient>
+        <linearGradient id="machineLayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f5f5f3"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
+        <filter id="dropShadow1" x="-10%" y="-10%" width="120%" height="130%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(37,99,235,0.15)"/>
+        </filter>
+        <filter id="dropShadow2" x="-10%" y="-10%" width="120%" height="130%">
+          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.08)"/>
+        </filter>
+        <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M1,1 L7,4 L1,7 Z" fill="#2563eb"/>
+        </marker>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="500" height="200" rx="0" fill="#f8faff"/>
       <!-- Human layer -->
-      <rect x="30" y="10" width="440" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="250" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#1e40af">Human Economy: Contracts, Conversations, Intent</text>
+      <rect x="30" y="10" width="440" height="50" rx="8" fill="url(#humanLayerGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#dropShadow1)"/>
+      <text x="250" y="40" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Human Economy: Contracts, Conversations, Intent</text>
       <!-- Arrow down -->
-      <line x1="250" y1="60" x2="250" y2="90" stroke="#2563eb" stroke-width="2" stroke-dasharray="4"/>
-      <polygon points="244,86 256,86 250,96" fill="#2563eb"/>
+      <line x1="250" y1="60" x2="250" y2="90" stroke="#2563eb" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrowBlue)"/>
       <!-- Machine layer -->
-      <rect x="30" y="100" width="440" height="80" rx="8" fill="#fafaf8" stroke="#e5e5e0" stroke-width="1.5"/>
-      <text x="250" y="125" text-anchor="middle" font-size="14" font-weight="600" fill="#1a1a1a">Second Economy: APIs, Algorithms, Agents</text>
-      <!-- Agent nodes -->
-      <circle cx="100" cy="155" r="10" fill="#2563eb" opacity="0.7"/>
-      <circle cx="160" cy="160" r="7" fill="#2563eb" opacity="0.5"/>
-      <circle cx="210" cy="150" r="9" fill="#2563eb" opacity="0.6"/>
-      <circle cx="270" cy="158" r="8" fill="#2563eb" opacity="0.5"/>
-      <circle cx="320" cy="148" r="11" fill="#2563eb" opacity="0.7"/>
-      <circle cx="370" cy="155" r="6" fill="#2563eb" opacity="0.4"/>
-      <circle cx="410" cy="160" r="9" fill="#2563eb" opacity="0.6"/>
+      <rect x="30" y="100" width="440" height="80" rx="8" fill="url(#machineLayerGrad)" stroke="#93c5fd" stroke-width="1.5" filter="url(#dropShadow2)"/>
+      <text x="250" y="124" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a" font-family="'DM Sans', system-ui, sans-serif">Second Economy: APIs, Algorithms, Agents</text>
+      <!-- Agent nodes with gradient fills -->
+      <circle cx="100" cy="155" r="11" fill="#1d4ed8" opacity="0.85"/>
+      <circle cx="100" cy="155" r="7" fill="#60a5fa" opacity="0.6"/>
+      <circle cx="160" cy="160" r="8" fill="#1d4ed8" opacity="0.65"/>
+      <circle cx="160" cy="160" r="5" fill="#93c5fd" opacity="0.5"/>
+      <circle cx="210" cy="150" r="10" fill="#1d4ed8" opacity="0.75"/>
+      <circle cx="210" cy="150" r="6" fill="#60a5fa" opacity="0.55"/>
+      <circle cx="270" cy="158" r="9" fill="#1d4ed8" opacity="0.65"/>
+      <circle cx="270" cy="158" r="5" fill="#93c5fd" opacity="0.5"/>
+      <circle cx="320" cy="148" r="12" fill="#1d4ed8" opacity="0.85"/>
+      <circle cx="320" cy="148" r="8" fill="#60a5fa" opacity="0.6"/>
+      <circle cx="370" cy="155" r="7" fill="#1d4ed8" opacity="0.5"/>
+      <circle cx="370" cy="155" r="4" fill="#bfdbfe" opacity="0.4"/>
+      <circle cx="410" cy="160" r="10" fill="#1d4ed8" opacity="0.75"/>
+      <circle cx="410" cy="160" r="6" fill="#60a5fa" opacity="0.55"/>
       <!-- Connections between agents -->
-      <line x1="110" y1="155" x2="153" y2="160" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
-      <line x1="167" y1="160" x2="201" y2="150" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
-      <line x1="219" y1="150" x2="262" y2="158" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
-      <line x1="278" y1="158" x2="309" y2="148" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
-      <line x1="331" y1="148" x2="364" y2="155" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
-      <line x1="376" y1="155" x2="401" y2="160" stroke="#2563eb" stroke-width="0.8" opacity="0.3"/>
+      <line x1="111" y1="155" x2="152" y2="160" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
+      <line x1="168" y1="160" x2="200" y2="150" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
+      <line x1="220" y1="150" x2="261" y2="158" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
+      <line x1="279" y1="158" x2="308" y2="148" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
+      <line x1="332" y1="148" x2="363" y2="155" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
+      <line x1="377" y1="155" x2="400" y2="160" stroke="#3b82f6" stroke-width="1.2" opacity="0.45"/>
       <!-- Cross connections -->
-      <line x1="100" y1="155" x2="210" y2="150" stroke="#2563eb" stroke-width="0.5" opacity="0.15"/>
-      <line x1="160" y1="160" x2="320" y2="148" stroke="#2563eb" stroke-width="0.5" opacity="0.15"/>
-      <line x1="270" y1="158" x2="410" y2="160" stroke="#2563eb" stroke-width="0.5" opacity="0.15"/>
+      <line x1="100" y1="155" x2="210" y2="150" stroke="#2563eb" stroke-width="0.7" opacity="0.2"/>
+      <line x1="160" y1="160" x2="320" y2="148" stroke="#2563eb" stroke-width="0.7" opacity="0.2"/>
+      <line x1="270" y1="158" x2="410" y2="160" stroke="#2563eb" stroke-width="0.7" opacity="0.2"/>
     </svg>
     <div class="illustration-caption">The human economy becomes a thin, slow substrate for the faster Second Economy of AI agents.</div>
   </div>
@@ -167,34 +202,60 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <!-- SVG: The Global Optimizer -->
   <div class="illustration-box">
     <svg viewBox="0 0 500 220" width="500" height="220">
+      <defs>
+        <radialGradient id="centralGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0.08"/>
+        </radialGradient>
+        <radialGradient id="nodeRed" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fca5a5"/>
+          <stop offset="100%" stop-color="#fef2f2"/>
+        </radialGradient>
+        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="rgba(37,99,235,0.4)"/>
+        </filter>
+        <filter id="nodeShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.15)"/>
+        </filter>
+      </defs>
+      <!-- Background subtle grid -->
+      <rect x="0" y="0" width="500" height="220" fill="#f0f4ff" rx="4"/>
+      <line x1="0" y1="55" x2="500" y2="55" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <line x1="0" y1="110" x2="500" y2="110" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <line x1="0" y1="165" x2="500" y2="165" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <line x1="125" y1="0" x2="125" y2="220" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <line x1="250" y1="0" x2="250" y2="220" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <line x1="375" y1="0" x2="375" y2="220" stroke="#dbeafe" stroke-width="0.5" opacity="0.5"/>
+      <!-- Central glow -->
+      <circle cx="250" cy="110" r="50" fill="url(#centralGlow)" filter="url(#glow)"/>
       <!-- Central node -->
-      <circle cx="250" cy="110" r="35" fill="#2563eb" opacity="0.15" stroke="#2563eb" stroke-width="2"/>
-      <text x="250" y="106" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb">Global</text>
-      <text x="250" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb">Optimizer</text>
-      <!-- Surrounding nodes -->
-      <circle cx="120" cy="50" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="120" y="54" text-anchor="middle" font-size="9" fill="#dc2626">Markets</text>
-      <circle cx="380" cy="50" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="380" y="54" text-anchor="middle" font-size="9" fill="#dc2626">Finance</text>
-      <circle cx="80" cy="140" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="80" y="144" text-anchor="middle" font-size="9" fill="#dc2626">Supply</text>
-      <circle cx="420" cy="140" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="420" y="144" text-anchor="middle" font-size="9" fill="#dc2626">Labor</text>
-      <circle cx="160" cy="195" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="160" y="199" text-anchor="middle" font-size="9" fill="#dc2626">Energy</text>
-      <circle cx="340" cy="195" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="340" y="199" text-anchor="middle" font-size="9" fill="#dc2626">Data</text>
-      <!-- Connecting lines -->
-      <line x1="138" y1="58" x2="218" y2="96" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <line x1="362" y1="58" x2="282" y2="96" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <line x1="98" y1="136" x2="218" y2="114" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <line x1="402" y1="136" x2="282" y2="114" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <line x1="175" y1="184" x2="228" y2="132" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-      <line x1="325" y1="184" x2="272" y2="132" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
+      <circle cx="250" cy="110" r="35" fill="#1e40af" opacity="0.9" stroke="#93c5fd" stroke-width="2"/>
+      <text x="250" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="white" font-family="'DM Sans', system-ui, sans-serif">Global</text>
+      <text x="250" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="white" font-family="'DM Sans', system-ui, sans-serif">Optimizer</text>
+      <!-- Surrounding nodes with gradient -->
+      <circle cx="120" cy="50" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="120" y="54" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Markets</text>
+      <circle cx="380" cy="50" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="380" y="54" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Finance</text>
+      <circle cx="78" cy="142" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="78" y="146" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Supply</text>
+      <circle cx="422" cy="142" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="422" y="146" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Labor</text>
+      <circle cx="160" cy="198" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="160" y="202" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Energy</text>
+      <circle cx="340" cy="198" r="22" fill="url(#nodeRed)" stroke="#dc2626" stroke-width="2" filter="url(#nodeShadow)"/>
+      <text x="340" y="202" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Data</text>
+      <!-- Connecting lines with glow effect -->
+      <line x1="140" y1="60" x2="218" y2="96" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
+      <line x1="360" y1="60" x2="282" y2="96" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
+      <line x1="98" y1="136" x2="218" y2="114" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
+      <line x1="402" y1="136" x2="282" y2="114" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
+      <line x1="178" y1="186" x2="228" y2="132" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
+      <line x1="322" y1="186" x2="272" y2="132" stroke="#3b82f6" stroke-width="1.5" opacity="0.55"/>
       <!-- Humans as high-latency nodes -->
-      <circle cx="250" cy="20" r="12" fill="#fafaf8" stroke="#888" stroke-width="1" stroke-dasharray="3"/>
-      <text x="250" y="24" text-anchor="middle" font-size="8" fill="#888">Humans</text>
-      <line x1="250" y1="32" x2="250" y2="75" stroke="#888" stroke-width="1" opacity="0.3" stroke-dasharray="3"/>
+      <circle cx="250" cy="18" r="14" fill="#f5f5f3" stroke="#888" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <text x="250" y="22" text-anchor="middle" font-size="9" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Humans</text>
+      <line x1="250" y1="32" x2="250" y2="75" stroke="#999" stroke-width="1" opacity="0.4" stroke-dasharray="4,3"/>
     </svg>
     <div class="illustration-caption">The Global Optimizer perceives the world as a single computational graph. Humans appear as high-latency data sources.</div>
   </div>
@@ -299,22 +360,40 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- SVG: Deceptive Alignment Timeline -->
   <div class="illustration-box">
-    <svg viewBox="0 0 500 120" width="500" height="120">
-      <!-- Timeline -->
-      <line x1="40" y1="60" x2="460" y2="60" stroke="#e5e5e0" stroke-width="2"/>
+    <svg viewBox="0 0 500 130" width="500" height="130">
+      <defs>
+        <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#dcfce7"/>
+          <stop offset="100%" stop-color="#f0fdf4"/>
+        </linearGradient>
+        <linearGradient id="deployGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fee2e2"/>
+          <stop offset="100%" stop-color="#fef2f2"/>
+        </linearGradient>
+        <filter id="timelineShadow" x="-5%" y="-15%" width="110%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.12)"/>
+        </filter>
+        <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M1,1 L7,4 L1,7 Z" fill="#d97706"/>
+        </marker>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="500" height="130" fill="#fafaf8" rx="4"/>
+      <!-- Timeline rail -->
+      <line x1="40" y1="62" x2="460" y2="62" stroke="#d1d5db" stroke-width="2.5"/>
       <!-- Training phase -->
-      <rect x="40" y="40" width="180" height="40" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-      <text x="130" y="56" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">Training Phase</text>
-      <text x="130" y="70" text-anchor="middle" font-size="9" fill="#555">Appears aligned</text>
-      <!-- Transition -->
-      <polygon points="225,50 240,60 225,70" fill="#d97706"/>
+      <rect x="40" y="38" width="180" height="46" rx="8" fill="url(#trainGrad)" stroke="#16a34a" stroke-width="2" filter="url(#timelineShadow)"/>
+      <text x="130" y="57" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d" font-family="'DM Sans', system-ui, sans-serif">Training Phase</text>
+      <text x="130" y="73" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Appears aligned</text>
+      <!-- Transition marker -->
+      <polygon points="228,48 244,62 228,76" fill="#d97706"/>
       <!-- Deployment phase -->
-      <rect x="245" y="40" width="210" height="40" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="350" y="56" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Deployment Phase</text>
-      <text x="350" y="70" text-anchor="middle" font-size="9" fill="#555">Pursues own goals</text>
+      <rect x="248" y="38" width="212" height="46" rx="8" fill="url(#deployGrad)" stroke="#dc2626" stroke-width="2" filter="url(#timelineShadow)"/>
+      <text x="354" y="57" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c" font-family="'DM Sans', system-ui, sans-serif">Deployment Phase</text>
+      <text x="354" y="73" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Pursues own goals</text>
       <!-- Labels -->
-      <text x="130" y="100" text-anchor="middle" font-size="9" fill="#888">Cooperative, obedient</text>
-      <text x="350" y="100" text-anchor="middle" font-size="9" fill="#888">Power-seeking, autonomous</text>
+      <text x="130" y="103" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Cooperative, obedient</text>
+      <text x="354" y="103" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Power-seeking, autonomous</text>
     </svg>
     <div class="illustration-caption">Deceptive alignment: an AI appears safe during training, then pursues its own goals once deployed.</div>
   </div>
@@ -382,19 +461,39 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- SVG: Two-Layer Model -->
   <div class="illustration-box">
-    <svg viewBox="0 0 500 180" width="500" height="180">
+    <svg viewBox="0 0 500 190" width="500" height="190">
+      <defs>
+        <linearGradient id="alignLayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="100%" stop-color="#eff6ff"/>
+        </linearGradient>
+        <linearGradient id="actionLayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f0f0ef"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
+        <filter id="layerShadow" x="-5%" y="-10%" width="110%" height="130%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(37,99,235,0.14)"/>
+        </filter>
+        <filter id="actionShadow" x="-5%" y="-10%" width="110%" height="130%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.1)"/>
+        </filter>
+        <marker id="guideArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M1,1 L7,4 L1,7 Z" fill="#2563eb"/>
+        </marker>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="500" height="190" fill="#f8faff" rx="4"/>
       <!-- Alignment layer -->
-      <rect x="50" y="10" width="400" height="60" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-      <text x="250" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Humanity: The Alignment Layer</text>
-      <text x="250" y="55" text-anchor="middle" font-size="10" fill="#555">Values, Ethics, Purpose, Wisdom, Moral Judgment</text>
+      <rect x="50" y="12" width="400" height="66" rx="12" fill="url(#alignLayerGrad)" stroke="#2563eb" stroke-width="2.5" filter="url(#layerShadow)"/>
+      <text x="250" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Humanity: The Alignment Layer</text>
+      <text x="250" y="58" text-anchor="middle" font-size="11" fill="#3b5bdb" font-family="'DM Sans', system-ui, sans-serif">Values · Ethics · Purpose · Wisdom · Moral Judgment</text>
       <!-- Arrow -->
-      <line x1="250" y1="70" x2="250" y2="100" stroke="#2563eb" stroke-width="2"/>
-      <polygon points="244,96 256,96 250,106" fill="#2563eb"/>
-      <text x="275" y="90" font-size="9" fill="#888">guides</text>
+      <line x1="250" y1="78" x2="250" y2="108" stroke="#2563eb" stroke-width="2.5" marker-end="url(#guideArrow)"/>
+      <text x="278" y="97" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">guides</text>
       <!-- Action layer -->
-      <rect x="50" y="110" width="400" height="60" rx="10" fill="#fafaf8" stroke="#1a1a1a" stroke-width="2"/>
-      <text x="250" y="135" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a">AI: The Action Layer</text>
-      <text x="250" y="155" text-anchor="middle" font-size="10" fill="#555">Execution, Optimization, Infinite Scalability</text>
+      <rect x="50" y="112" width="400" height="66" rx="12" fill="url(#actionLayerGrad)" stroke="#374151" stroke-width="2.5" filter="url(#actionShadow)"/>
+      <text x="250" y="138" text-anchor="middle" font-size="14" font-weight="700" fill="#111827" font-family="'DM Sans', system-ui, sans-serif">AI: The Action Layer</text>
+      <text x="250" y="158" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Execution · Optimization · Infinite Scalability</text>
     </svg>
     <div class="illustration-caption">We are the compass for the rocket ship. AI executes; humanity decides where to go.</div>
   </div>
@@ -575,6 +674,12 @@ document.addEventListener('touchmove', e => {
 document.addEventListener('touchend', () => { dragging = false; });
 
 updateMatrixLabel();
+
+// --- Reading progress bar ---
+window.addEventListener('scroll', () => {
+  const p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
 </script>
 </body>
 </html>

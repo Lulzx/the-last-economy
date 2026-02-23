@@ -10,12 +10,14 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #2563eb; z-index: 100; transition: width 0.1s; width: 0%; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
+.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 50; }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
@@ -51,13 +53,16 @@ input[type=range] { accent-color: #2563eb; }
 .stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
 .section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .transform-wrap { grid-template-columns: 1fr; }
-  .stat-row { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; flex-direction: column; }
+  .gauges { grid-template-columns: 1fr; }
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
 }
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress-bar"></div>
 <nav class="nav">
   <a href="09-three-futures.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -74,48 +79,73 @@ input[type=range] { accent-color: #2563eb; }
   </div>
 
   <!-- SVG: The Obsolete Machine -->
-  <svg viewBox="0 0 680 140" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="From fortress state to network state">
+  <svg viewBox="0 0 680 150" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="From fortress state to network state">
+    <defs>
+      <linearGradient id="fortressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fef9c3"/>
+        <stop offset="100%" stop-color="#fef3c7"/>
+      </linearGradient>
+      <linearGradient id="networkNodeBlue" cx="50%" cy="50%" r="50%" id="networkNodeBlue" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#60a5fa"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+      </linearGradient>
+      <linearGradient id="networkNodeGreen" cx="50%" cy="50%" r="50%" id="networkNodeGreen" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#4ade80"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <filter id="fortressShadow" x="-10%" y="-10%" width="120%" height="130%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(180,120,0,0.18)"/>
+      </filter>
+      <filter id="networkGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="rgba(37,99,235,0.3)"/>
+      </filter>
+      <marker id="obsoleteArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <path d="M1,1 L7,4 L1,7 Z" fill="#888"/>
+      </marker>
+    </defs>
+    <!-- Background -->
+    <rect x="0" y="0" width="680" height="150" fill="#f8faff" rx="4"/>
     <!-- Old fortress state -->
-    <rect x="40" y="30" width="100" height="80" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
-    <rect x="55" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
-    <rect x="77" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
-    <rect x="99" y="30" width="12" height="20" fill="#d97706" opacity="0.4"/>
-    <line x1="40" y1="50" x2="140" y2="50" stroke="#d97706" stroke-width="1" opacity="0.5"/>
-    <text x="90" y="78" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600">Fortress</text>
-    <text x="90" y="93" text-anchor="middle" font-size="10" fill="#92400e">State</text>
+    <rect x="40" y="25" width="108" height="90" rx="5" fill="url(#fortressGrad)" stroke="#d97706" stroke-width="2" filter="url(#fortressShadow)"/>
+    <rect x="56" y="25" width="13" height="22" rx="2" fill="#d97706" opacity="0.45"/>
+    <rect x="78" y="25" width="13" height="22" rx="2" fill="#d97706" opacity="0.45"/>
+    <rect x="100" y="25" width="13" height="22" rx="2" fill="#d97706" opacity="0.45"/>
+    <line x1="40" y1="47" x2="148" y2="47" stroke="#d97706" stroke-width="1" opacity="0.5"/>
+    <text x="94" y="76" text-anchor="middle" font-size="12" fill="#92400e" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Fortress</text>
+    <text x="94" y="92" text-anchor="middle" font-size="11" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">State</text>
     <!-- Arrow -->
-    <line x1="170" y1="70" x2="280" y2="70" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4"/>
-    <polygon points="280,65 295,70 280,75" fill="#888"/>
-    <text x="225" y="58" text-anchor="middle" font-size="9" fill="#888">obsolescence</text>
+    <line x1="172" y1="70" x2="282" y2="70" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#obsoleteArrow)"/>
+    <text x="227" y="58" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">obsolescence</text>
     <!-- Forces flowing through -->
-    <g opacity="0.6">
-      <circle cx="200" cy="40" r="3" fill="#2563eb"/><circle cx="220" cy="95" r="3" fill="#2563eb"/>
-      <circle cx="240" cy="50" r="3" fill="#2563eb"/><circle cx="260" cy="85" r="3" fill="#2563eb"/>
-      <text x="230" y="118" text-anchor="middle" font-size="8" fill="#2563eb">capital, data, ideas flow through walls</text>
+    <g opacity="0.7">
+      <circle cx="200" cy="38" r="4" fill="#2563eb"/><circle cx="222" cy="96" r="4" fill="#2563eb"/>
+      <circle cx="242" cy="48" r="4" fill="#2563eb"/><circle cx="262" cy="84" r="4" fill="#2563eb"/>
+      <text x="231" y="122" text-anchor="middle" font-size="8" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">capital, data, ideas flow through walls</text>
     </g>
-    <!-- New network state -->
-    <circle cx="400" cy="55" r="8" fill="#2563eb" opacity="0.8"/>
-    <circle cx="440" cy="35" r="8" fill="#16a34a" opacity="0.8"/>
-    <circle cx="460" cy="75" r="8" fill="#2563eb" opacity="0.8"/>
-    <circle cx="420" cy="90" r="8" fill="#16a34a" opacity="0.8"/>
-    <circle cx="380" cy="80" r="8" fill="#2563eb" opacity="0.8"/>
-    <circle cx="490" cy="55" r="6" fill="#16a34a" opacity="0.6"/>
-    <circle cx="360" cy="50" r="6" fill="#16a34a" opacity="0.6"/>
-    <line x1="400" y1="55" x2="440" y2="35" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-    <line x1="440" y1="35" x2="460" y2="75" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-    <line x1="460" y1="75" x2="420" y2="90" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-    <line x1="420" y1="90" x2="380" y2="80" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-    <line x1="380" y1="80" x2="400" y2="55" stroke="#2563eb" stroke-width="1" opacity="0.4"/>
-    <line x1="490" y1="55" x2="460" y2="75" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-    <line x1="360" y1="50" x2="380" y2="80" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-    <line x1="360" y1="50" x2="400" y2="55" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-    <line x1="490" y1="55" x2="440" y2="35" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-    <text x="425" y="118" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">Symbiotic Network State</text>
+    <!-- New network state nodes with gradients -->
+    <circle cx="400" cy="55" r="10" fill="#2563eb" opacity="0.88" filter="url(#networkGlow)"/>
+    <circle cx="440" cy="35" r="10" fill="#16a34a" opacity="0.85" filter="url(#networkGlow)"/>
+    <circle cx="462" cy="78" r="10" fill="#2563eb" opacity="0.88" filter="url(#networkGlow)"/>
+    <circle cx="422" cy="94" r="10" fill="#16a34a" opacity="0.85" filter="url(#networkGlow)"/>
+    <circle cx="380" cy="82" r="10" fill="#2563eb" opacity="0.88" filter="url(#networkGlow)"/>
+    <circle cx="494" cy="57" r="8" fill="#16a34a" opacity="0.65"/>
+    <circle cx="360" cy="50" r="8" fill="#16a34a" opacity="0.65"/>
+    <!-- Network connections -->
+    <line x1="400" y1="55" x2="440" y2="35" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+    <line x1="440" y1="35" x2="462" y2="78" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+    <line x1="462" y1="78" x2="422" y2="94" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+    <line x1="422" y1="94" x2="380" y2="82" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+    <line x1="380" y1="82" x2="400" y2="55" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+    <line x1="494" y1="57" x2="462" y2="78" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+    <line x1="360" y1="50" x2="380" y2="82" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+    <line x1="360" y1="50" x2="400" y2="55" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+    <line x1="494" y1="57" x2="440" y2="35" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+    <text x="427" y="124" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Symbiotic Network State</text>
     <!-- Right side: question -->
-    <text x="580" y="55" text-anchor="middle" font-size="10" fill="#555">Corporate</text>
-    <text x="580" y="68" text-anchor="middle" font-size="10" fill="#555">subsidiary?</text>
-    <text x="580" y="88" text-anchor="middle" font-size="10" fill="#555">Or evolved</text>
-    <text x="580" y="101" text-anchor="middle" font-size="10" fill="#555">gardener?</text>
+    <text x="590" y="52" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Corporate</text>
+    <text x="590" y="66" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">subsidiary?</text>
+    <text x="590" y="86" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Or evolved</text>
+    <text x="590" y="100" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">gardener?</text>
   </svg>
 
   <h2>The Obsolete Machine</h2>
@@ -214,43 +244,60 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Geometry Engineering Principles -->
   <svg viewBox="0 0 680 160" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="Five principles of geometry engineering">
+    <defs>
+      <linearGradient id="valleyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#d1fae5"/>
+        <stop offset="100%" stop-color="#a7f3d0"/>
+      </linearGradient>
+      <linearGradient id="defaultGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#dbeafe"/>
+        <stop offset="100%" stop-color="#eff6ff"/>
+      </linearGradient>
+      <filter id="iconShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.12)"/>
+      </filter>
+    </defs>
+    <!-- Background -->
+    <rect x="0" y="0" width="680" height="160" fill="#f8faff" rx="4"/>
     <!-- Valley (incentives) -->
     <g transform="translate(68,20)">
-      <path d="M-30,60 Q0,90 30,60" fill="none" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="0" cy="82" r="4" fill="#2563eb"/>
-      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Create valleys</text>
-      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(incentives)</text>
+      <path d="M-34,58 Q0,95 34,58" fill="url(#valleyGrad)" opacity="0.7"/>
+      <path d="M-34,58 Q0,95 34,58" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+      <circle cx="0" cy="85" r="6" fill="#2563eb" filter="url(#iconShadow)"/>
+      <text x="0" y="113" text-anchor="middle" font-size="10" fill="#166534" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Create valleys</text>
+      <text x="0" y="126" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">(incentives)</text>
     </g>
     <!-- Defaults -->
     <g transform="translate(204,20)">
-      <rect x="-20" y="50" width="40" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="0" y="70" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">ON</text>
-      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Change defaults</text>
-      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(nudge design)</text>
+      <rect x="-22" y="48" width="44" height="34" rx="6" fill="url(#defaultGrad)" stroke="#2563eb" stroke-width="2" filter="url(#iconShadow)"/>
+      <text x="0" y="70" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">ON</text>
+      <text x="0" y="113" text-anchor="middle" font-size="10" fill="#374151" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Change defaults</text>
+      <text x="0" y="126" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">(nudge design)</text>
     </g>
     <!-- Channels (infrastructure) -->
     <g transform="translate(340,20)">
-      <line x1="-25" y1="55" x2="25" y2="55" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
-      <line x1="-25" y1="65" x2="25" y2="65" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
-      <line x1="-25" y1="75" x2="25" y2="75" stroke="#2563eb" stroke-width="3" opacity="0.6"/>
-      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Carve channels</text>
-      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(infrastructure)</text>
+      <rect x="-28" y="46" width="56" height="36" rx="4" fill="#e0f2fe" opacity="0.5"/>
+      <line x1="-24" y1="54" x2="24" y2="54" stroke="#2563eb" stroke-width="3.5" opacity="0.7" stroke-linecap="round"/>
+      <line x1="-24" y1="64" x2="24" y2="64" stroke="#2563eb" stroke-width="3.5" opacity="0.7" stroke-linecap="round"/>
+      <line x1="-24" y1="74" x2="24" y2="74" stroke="#2563eb" stroke-width="3.5" opacity="0.7" stroke-linecap="round"/>
+      <text x="0" y="113" text-anchor="middle" font-size="10" fill="#374151" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Carve channels</text>
+      <text x="0" y="126" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">(infrastructure)</text>
     </g>
     <!-- Pruning (remove barriers) -->
     <g transform="translate(476,20)">
-      <line x1="-15" y1="55" x2="15" y2="80" stroke="#dc2626" stroke-width="2"/>
-      <line x1="15" y1="55" x2="-15" y2="80" stroke="#dc2626" stroke-width="2"/>
-      <rect x="-20" y="50" width="40" height="35" rx="2" fill="none" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="3,3"/>
-      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Prune deadwood</text>
-      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(deregulate)</text>
+      <rect x="-22" y="46" width="44" height="38" rx="3" fill="#fff1f2" stroke="#e5e5e0" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="-14" y1="52" x2="14" y2="80" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="14" y1="52" x2="-14" y2="80" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="0" y="113" text-anchor="middle" font-size="10" fill="#374151" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Prune deadwood</text>
+      <text x="0" y="126" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">(deregulate)</text>
     </g>
     <!-- Consensus -->
     <g transform="translate(612,20)">
-      <circle cx="-8" cy="62" r="6" fill="#16a34a" opacity="0.6"/>
-      <circle cx="8" cy="62" r="6" fill="#2563eb" opacity="0.6"/>
-      <circle cx="0" cy="75" r="6" fill="#d97706" opacity="0.6"/>
-      <text x="0" y="110" text-anchor="middle" font-size="9" fill="#555">Build consensus</text>
-      <text x="0" y="122" text-anchor="middle" font-size="8" fill="#888">(political will)</text>
+      <circle cx="-10" cy="60" r="8" fill="#16a34a" opacity="0.7" filter="url(#iconShadow)"/>
+      <circle cx="10" cy="60" r="8" fill="#2563eb" opacity="0.7" filter="url(#iconShadow)"/>
+      <circle cx="0" cy="76" r="8" fill="#d97706" opacity="0.7" filter="url(#iconShadow)"/>
+      <text x="0" y="113" text-anchor="middle" font-size="10" fill="#374151" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Build consensus</text>
+      <text x="0" y="126" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">(political will)</text>
     </g>
   </svg>
 
@@ -297,34 +344,51 @@ input[type=range] { accent-color: #2563eb; }
   <p>A nation is a vassal if it is a peripheral, low-trust, and easily disconnected node. Under this new definition, the most sovereign nations will not be the ones with the biggest armies. They will be the ones with the highest Network Capital &mdash; the countries whose legal systems are most trusted, whose universities produce the most foundational research, whose infrastructure is the most resilient.</p>
 
   <!-- SVG: Sovereignty comparison -->
-  <svg viewBox="0 0 680 130" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="Territorial vs topological sovereignty">
+  <svg viewBox="0 0 680 140" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="Territorial vs topological sovereignty">
+    <defs>
+      <linearGradient id="territorialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fef9c3"/>
+        <stop offset="100%" stop-color="#fef3c7"/>
+      </linearGradient>
+      <filter id="sovShadow" x="-10%" y="-10%" width="120%" height="130%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+      <filter id="nodeGlow2" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="rgba(37,99,235,0.35)"/>
+      </filter>
+      <marker id="transArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <path d="M1,1 L7,4 L1,7 Z" fill="#888"/>
+      </marker>
+    </defs>
+    <!-- Background -->
+    <rect x="0" y="0" width="680" height="140" fill="#f8faff" rx="4"/>
     <!-- Territorial -->
     <g transform="translate(0,10)">
-      <rect x="40" y="15" width="120" height="80" rx="2" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6,3"/>
-      <text x="100" y="50" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600">Territorial</text>
-      <text x="100" y="66" text-anchor="middle" font-size="9" fill="#92400e">Walls &amp; borders</text>
-      <text x="100" y="80" text-anchor="middle" font-size="9" fill="#92400e">Static, brittle</text>
+      <rect x="40" y="14" width="128" height="86" rx="4" fill="url(#territorialGrad)" stroke="#d97706" stroke-width="2" stroke-dasharray="7,4" filter="url(#sovShadow)"/>
+      <text x="104" y="48" text-anchor="middle" font-size="12" fill="#92400e" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Territorial</text>
+      <text x="104" y="66" text-anchor="middle" font-size="10" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">Walls &amp; borders</text>
+      <text x="104" y="82" text-anchor="middle" font-size="10" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif">Static, brittle</text>
     </g>
     <!-- Arrow -->
-    <line x1="190" y1="65" x2="280" y2="65" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4"/>
-    <polygon points="280,60 295,65 280,70" fill="#888"/>
-    <!-- Topological -->
+    <line x1="192" y1="67" x2="285" y2="67" stroke="#888" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#transArrow)"/>
+    <!-- Topological network -->
     <g transform="translate(320,10)">
-      <circle cx="80" cy="40" r="10" fill="#2563eb" opacity="0.8"/>
-      <circle cx="130" cy="30" r="7" fill="#16a34a" opacity="0.7"/>
-      <circle cx="50" cy="60" r="7" fill="#16a34a" opacity="0.7"/>
-      <circle cx="110" cy="70" r="7" fill="#16a34a" opacity="0.7"/>
-      <circle cx="160" cy="60" r="5" fill="#2563eb" opacity="0.5"/>
-      <circle cx="30" cy="35" r="5" fill="#2563eb" opacity="0.5"/>
-      <line x1="80" y1="40" x2="130" y2="30" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
-      <line x1="80" y1="40" x2="50" y2="60" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
-      <line x1="80" y1="40" x2="110" y2="70" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
-      <line x1="130" y1="30" x2="160" y2="60" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="50" y1="60" x2="30" y2="35" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="110" y1="70" x2="160" y2="60" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <line x1="50" y1="60" x2="110" y2="70" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
-      <text x="95" y="100" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">Topological</text>
-      <text x="95" y="114" text-anchor="middle" font-size="9" fill="#1e40af">Trusted nodes, open flows</text>
+      <circle cx="82" cy="40" r="13" fill="#2563eb" opacity="0.88" filter="url(#nodeGlow2)"/>
+      <circle cx="134" cy="30" r="9" fill="#16a34a" opacity="0.78"/>
+      <circle cx="52" cy="62" r="9" fill="#16a34a" opacity="0.78"/>
+      <circle cx="114" cy="74" r="9" fill="#16a34a" opacity="0.78"/>
+      <circle cx="162" cy="60" r="7" fill="#2563eb" opacity="0.55"/>
+      <circle cx="30" cy="36" r="7" fill="#2563eb" opacity="0.55"/>
+      <!-- Connections -->
+      <line x1="82" y1="40" x2="134" y2="30" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+      <line x1="82" y1="40" x2="52" y2="62" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+      <line x1="82" y1="40" x2="114" y2="74" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+      <line x1="134" y1="30" x2="162" y2="60" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+      <line x1="52" y1="62" x2="30" y2="36" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+      <line x1="114" y1="74" x2="162" y2="60" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+      <line x1="52" y1="62" x2="114" y2="74" stroke="#4ade80" stroke-width="1.2" opacity="0.4"/>
+      <text x="97" y="104" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Topological</text>
+      <text x="97" y="120" text-anchor="middle" font-size="10" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Trusted nodes, open flows</text>
     </g>
   </svg>
 
@@ -366,31 +430,55 @@ input[type=range] { accent-color: #2563eb; }
   <p>It is a state that understands that its ultimate purpose is not to produce value, but to cultivate the conditions for life itself to flourish.</p>
 
   <!-- SVG: Garden metaphor -->
-  <svg viewBox="0 0 680 120" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="The state as garden">
-    <!-- Ground -->
-    <rect x="40" y="80" width="600" height="30" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
-    <text x="340" y="100" text-anchor="middle" font-size="10" fill="#166534">fertile conditions: trust, commons, diversity, intelligence</text>
-    <!-- Flowers growing -->
-    <g opacity="0.8">
-      <line x1="100" y1="80" x2="100" y2="50" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="100" cy="44" r="8" fill="#2563eb" opacity="0.7"/>
-      <line x1="200" y1="80" x2="200" y2="40" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="200" cy="34" r="10" fill="#d97706" opacity="0.7"/>
-      <line x1="300" y1="80" x2="300" y2="55" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="300" cy="49" r="7" fill="#dc2626" opacity="0.5"/>
-      <line x1="400" y1="80" x2="400" y2="35" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="400" cy="29" r="9" fill="#16a34a" opacity="0.6"/>
-      <line x1="500" y1="80" x2="500" y2="48" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="500" cy="42" r="8" fill="#7c3aed" opacity="0.6"/>
-      <line x1="560" y1="80" x2="560" y2="58" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="560" cy="52" r="6" fill="#2563eb" opacity="0.5"/>
-      <line x1="150" y1="80" x2="150" y2="60" stroke="#16a34a" stroke-width="1.5"/>
-      <circle cx="150" cy="55" r="5" fill="#f59e0b" opacity="0.6"/>
-      <line x1="450" y1="80" x2="450" y2="52" stroke="#16a34a" stroke-width="1.5"/>
-      <circle cx="450" cy="47" r="6" fill="#ec4899" opacity="0.5"/>
+  <svg viewBox="0 0 680 130" style="width:100%;max-width:680px;margin:1.5rem 0;" aria-label="The state as garden">
+    <defs>
+      <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#d1fae5"/>
+        <stop offset="100%" stop-color="#a7f3d0"/>
+      </linearGradient>
+      <filter id="flowerGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(37,99,235,0.25)"/>
+      </filter>
+    </defs>
+    <!-- Sky background -->
+    <rect x="40" y="10" width="600" height="64" rx="4" fill="#f0f9ff" opacity="0.6"/>
+    <!-- Ground / soil -->
+    <rect x="40" y="74" width="600" height="36" rx="6" fill="url(#soilGrad)" stroke="#6ee7b7" stroke-width="1.5"/>
+    <text x="340" y="97" text-anchor="middle" font-size="11" fill="#065f46" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">fertile conditions: trust, commons, diversity, intelligence</text>
+    <!-- Flower stems and heads -->
+    <g opacity="0.88">
+      <!-- Flower 1 -->
+      <line x1="100" y1="74" x2="100" y2="46" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="100" cy="40" r="10" fill="#2563eb" filter="url(#flowerGlow)"/>
+      <circle cx="100" cy="40" r="5" fill="#93c5fd"/>
+      <!-- Flower 2 -->
+      <line x1="200" y1="74" x2="200" y2="34" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="200" cy="28" r="12" fill="#d97706" filter="url(#flowerGlow)"/>
+      <circle cx="200" cy="28" r="6" fill="#fbbf24"/>
+      <!-- Flower 3 -->
+      <line x1="300" y1="74" x2="300" y2="50" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="300" cy="44" r="9" fill="#dc2626" opacity="0.75" filter="url(#flowerGlow)"/>
+      <circle cx="300" cy="44" r="4" fill="#fca5a5"/>
+      <!-- Flower 4 -->
+      <line x1="400" y1="74" x2="400" y2="28" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="400" cy="22" r="11" fill="#16a34a" filter="url(#flowerGlow)"/>
+      <circle cx="400" cy="22" r="5" fill="#4ade80"/>
+      <!-- Flower 5 -->
+      <line x1="500" y1="74" x2="500" y2="42" stroke="#15803d" stroke-width="2.5"/>
+      <circle cx="500" cy="36" r="10" fill="#7c3aed" filter="url(#flowerGlow)"/>
+      <circle cx="500" cy="36" r="5" fill="#c4b5fd"/>
+      <!-- Flower 6 -->
+      <line x1="560" y1="74" x2="560" y2="52" stroke="#15803d" stroke-width="2"/>
+      <circle cx="560" cy="46" r="8" fill="#2563eb" opacity="0.65"/>
+      <!-- Small flower 1 -->
+      <line x1="150" y1="74" x2="150" y2="55" stroke="#15803d" stroke-width="1.5"/>
+      <circle cx="150" cy="50" r="6" fill="#f59e0b" opacity="0.75"/>
+      <!-- Small flower 2 -->
+      <line x1="450" y1="74" x2="450" y2="48" stroke="#15803d" stroke-width="1.5"/>
+      <circle cx="450" cy="43" r="7" fill="#ec4899" opacity="0.65"/>
     </g>
     <!-- Label -->
-    <text x="340" y="22" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600">A million different flowers</text>
+    <text x="340" y="22" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">A million different flowers</text>
   </svg>
 
 </div>
@@ -562,11 +650,11 @@ function renderGuardianLattice() {
   allNodes.forEach(node => {
     const pos = nodePos[node.id];
     const g = guardianSvg.append('g').attr('class', 'gnode-' + node.id);
-    g.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 14)
+    g.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 16)
       .attr('fill', node.type === 'oracle' ? '#2563eb' : '#16a34a')
-      .attr('opacity', 0.85).attr('stroke', 'white').attr('stroke-width', 2);
+      .attr('opacity', 0.88).attr('stroke', 'white').attr('stroke-width', 2.5);
     g.append('text').attr('x', pos.x).attr('y', pos.y + 4)
-      .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', 'white').attr('font-weight', 600)
+      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', 'white').attr('font-weight', 700)
       .text(node.label);
   });
 }
@@ -620,6 +708,12 @@ function runScenario() {
 
   nextStep();
 }
+
+// --- Reading progress bar ---
+window.addEventListener('scroll', () => {
+  const p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
 </script>
 </body>
 </html>

@@ -11,12 +11,13 @@
 <style>
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
+.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 h3 { font-family: 'Playfair Display', Georgia, serif; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 50; }
 .nav a { color: #2563eb; text-decoration: none; }
 .nav a:hover { text-decoration: underline; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
@@ -48,9 +49,17 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 .section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .stat-row .stat-callout { flex: 1; min-width: 180px; }
+
+/* Progress bar */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #2563eb; z-index: 100; transition: width 0.1s; }
+
+@media (max-width: 640px) {
+  .stat-row { flex-direction: column; }
+}
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress-bar"></div>
 <nav class="nav">
   <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -82,27 +91,54 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   </div>
 
   <!-- SVG: Red Queen illustration -->
-  <svg viewBox="0 0 600 140" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <svg viewBox="0 0 600 155" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
     <defs>
-      <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#dc2626"/></marker>
-      <marker id="arrowB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#2563eb"/></marker>
+      <radialGradient id="fastGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:#fecaca;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#fef2f2;stop-opacity:1"/>
+      </radialGradient>
+      <radialGradient id="slowGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:#bfdbfe;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#eff6ff;stop-opacity:1"/>
+      </radialGradient>
+      <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#dc2626"/>
+      </marker>
+      <marker id="arrowB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#2563eb"/>
+      </marker>
     </defs>
-    <!-- Runner 1 -->
-    <circle cx="120" cy="70" r="22" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
-    <text x="120" y="66" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">Fast</text>
-    <text x="120" y="78" text-anchor="middle" font-size="9" fill="#dc2626">Players</text>
-    <!-- Runner 2 -->
-    <circle cx="480" cy="70" r="22" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-    <text x="480" y="66" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600">Slow</text>
-    <text x="480" y="78" text-anchor="middle" font-size="9" fill="#2563eb">Game</text>
+    <rect width="600" height="155" fill="#fafaf8" rx="8"/>
+    <!-- Runner 1: Fast Players -->
+    <circle cx="120" cy="72" r="28" fill="url(#fastGrad)" stroke="#dc2626" stroke-width="2.5"/>
+    <!-- Lightning bolt icon inside Fast circle -->
+    <text x="120" y="68" text-anchor="middle" font-size="16" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
+    <text x="120" y="83" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Fast Players</text>
+    <!-- Runner 2: Slow Game -->
+    <circle cx="480" cy="72" r="28" fill="url(#slowGrad)" stroke="#2563eb" stroke-width="2.5"/>
+    <!-- Clock icon inside Slow circle -->
+    <text x="480" y="68" text-anchor="middle" font-size="16" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#x1F551;</text>
+    <text x="480" y="83" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Slow Game</text>
     <!-- Arrows -->
-    <line x1="148" y1="58" x2="452" y2="58" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrowR)" stroke-dasharray="4,3"/>
-    <line x1="452" y1="82" x2="148" y2="82" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowB)" stroke-dasharray="4,3"/>
-    <text x="300" y="52" text-anchor="middle" font-size="9" fill="#dc2626">Strategies optimize for current rules</text>
-    <text x="300" y="96" text-anchor="middle" font-size="9" fill="#2563eb">Rules evolve in response to strategies</text>
-    <!-- Treadmill line -->
-    <line x1="60" y1="110" x2="540" y2="110" stroke="#e5e5e0" stroke-width="2"/>
-    <text x="300" y="130" text-anchor="middle" font-size="10" fill="#888" font-style="italic">The finish line is always receding</text>
+    <line x1="153" y1="58" x2="447" y2="58" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowR)" stroke-dasharray="5,4"/>
+    <line x1="447" y1="86" x2="153" y2="86" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowB)" stroke-dasharray="5,4"/>
+    <text x="300" y="50" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Strategies optimize for current rules</text>
+    <text x="300" y="100" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Rules evolve in response to strategies</text>
+    <!-- Treadmill line with repeating pattern -->
+    <line x1="50" y1="118" x2="550" y2="118" stroke="#e5e5e0" stroke-width="2.5"/>
+    <line x1="70" y1="118" x2="80" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="110" y1="118" x2="120" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="150" y1="118" x2="160" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="190" y1="118" x2="200" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="230" y1="118" x2="240" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="270" y1="118" x2="280" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="310" y1="118" x2="320" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="350" y1="118" x2="360" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="390" y1="118" x2="400" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="430" y1="118" x2="440" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="470" y1="118" x2="480" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <line x1="510" y1="118" x2="520" y2="128" stroke="#e5e5e0" stroke-width="1.5"/>
+    <text x="300" y="145" text-anchor="middle" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The finish line is always receding</text>
   </svg>
 
   <hr class="section-divider">
@@ -132,26 +168,43 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The engines are not separate. They are fundamentally coupled. The outcomes of the Fast Engine &mdash; the daily wins and losses &mdash; provide the data that slowly rewrites the code of the Slow Engine. The new code of the Slow Engine then creates a new playing field for the Fast Engine. This is the co-evolutionary dance of history.</p>
 
   <!-- SVG: Dual Engine feedback loop -->
-  <svg viewBox="0 0 600 200" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <svg viewBox="0 0 600 215" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
     <defs>
-      <marker id="arrowFast" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#dc2626"/></marker>
-      <marker id="arrowSlow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#2563eb"/></marker>
+      <linearGradient id="fastBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fef2f2;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#fee2e2;stop-opacity:1"/>
+      </linearGradient>
+      <linearGradient id="slowBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1"/>
+      </linearGradient>
+      <marker id="arrowFast" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#dc2626"/>
+      </marker>
+      <marker id="arrowSlow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="#2563eb"/>
+      </marker>
     </defs>
+    <rect width="600" height="215" fill="#fafaf8" rx="8"/>
     <!-- Fast Engine box -->
-    <rect x="40" y="20" width="200" height="70" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
-    <text x="140" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">Fast Engine</text>
-    <text x="140" y="66" text-anchor="middle" font-size="10" fill="#b91c1c">Prices, trades, competition</text>
-    <text x="140" y="80" text-anchor="middle" font-size="9" fill="#999">minutes to months</text>
+    <rect x="40" y="20" width="210" height="80" rx="10" fill="url(#fastBoxGrad)" stroke="#dc2626" stroke-width="2.5"/>
+    <!-- Lightning bolt icon -->
+    <text x="60" y="55" font-size="22" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
+    <text x="155" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Fast Engine</text>
+    <text x="155" y="64" text-anchor="middle" font-size="11" fill="#b91c1c" font-family="'DM Sans', system-ui, sans-serif">Prices, trades, competition</text>
+    <text x="155" y="82" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">minutes to months</text>
     <!-- Slow Engine box -->
-    <rect x="360" y="110" width="200" height="70" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-    <text x="460" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Slow Engine</text>
-    <text x="460" y="156" text-anchor="middle" font-size="10" fill="#1d4ed8">Norms, beliefs, institutions</text>
-    <text x="460" y="170" text-anchor="middle" font-size="9" fill="#999">years to decades</text>
-    <!-- Connecting arrows -->
-    <path d="M240,65 Q340,30 370,120" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowFast)"/>
-    <text x="330" y="55" text-anchor="middle" font-size="9" fill="#dc2626">Outcomes become data</text>
-    <path d="M360,145 Q260,180 230,85" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowSlow)"/>
-    <text x="270" y="165" text-anchor="middle" font-size="9" fill="#2563eb">New rules reshape play</text>
+    <rect x="350" y="115" width="210" height="80" rx="10" fill="url(#slowBoxGrad)" stroke="#2563eb" stroke-width="2.5"/>
+    <!-- Gear icon -->
+    <text x="370" y="152" font-size="22" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
+    <text x="455" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Slow Engine</text>
+    <text x="455" y="164" text-anchor="middle" font-size="11" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif">Norms, beliefs, institutions</text>
+    <text x="455" y="182" text-anchor="middle" font-size="10" fill="#999" font-family="'DM Sans', system-ui, sans-serif">years to decades</text>
+    <!-- Connecting arrows (thicker, more elegant) -->
+    <path d="M250,65 Q350,30 360,125" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowFast)"/>
+    <text x="335" y="55" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Outcomes become data</text>
+    <path d="M350,150 Q250,185 240,95" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowSlow)"/>
+    <text x="265" y="178" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">New rules reshape play</text>
   </svg>
 
   <!-- === Interactive: The Two Clocks === -->
@@ -253,21 +306,41 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The <strong>Slow Engine is Training</strong>: periodically, the entire model is retrained on the vast dataset of its previous successes and failures. This is a slow, colossally expensive process that fundamentally changes the "rules" of the AI's "mind."</p>
 
   <!-- SVG: Inference vs Training -->
-  <svg viewBox="0 0 600 160" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <svg viewBox="0 0 600 175" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+    <defs>
+      <linearGradient id="inferGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fef2f2;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#fee2e2;stop-opacity:1"/>
+      </linearGradient>
+      <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1"/>
+      </linearGradient>
+    </defs>
+    <rect width="600" height="175" fill="#fafaf8" rx="8"/>
     <!-- Inference column -->
-    <rect x="30" y="15" width="240" height="130" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-    <text x="150" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">Inference (Fast)</text>
-    <text x="150" y="60" text-anchor="middle" font-size="10" fill="#666">Frozen weights</text>
-    <text x="150" y="76" text-anchor="middle" font-size="10" fill="#666">Answers in seconds</text>
-    <text x="150" y="92" text-anchor="middle" font-size="10" fill="#666">Executes current strategy</text>
-    <text x="150" y="115" text-anchor="middle" font-size="22" fill="#dc2626">&#9889;</text>
+    <rect x="25" y="15" width="255" height="145" rx="10" fill="url(#inferGrad)" stroke="#dc2626" stroke-width="2.5"/>
+    <text x="152" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Inference (Fast)</text>
+    <!-- Speed indicator: fast lines -->
+    <line x1="40" y1="58" x2="80" y2="58" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
+    <line x1="40" y1="64" x2="70" y2="64" stroke="#dc2626" stroke-width="2" opacity="0.3"/>
+    <line x1="40" y1="70" x2="85" y2="70" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
+    <text x="152" y="70" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Frozen weights</text>
+    <text x="152" y="88" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Answers in seconds</text>
+    <text x="152" y="106" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Executes current strategy</text>
+    <!-- Larger emoji for visual impact -->
+    <text x="152" y="138" text-anchor="middle" font-size="30" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">&#9889;</text>
     <!-- Training column -->
-    <rect x="330" y="15" width="240" height="130" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="450" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Training (Slow)</text>
-    <text x="450" y="60" text-anchor="middle" font-size="10" fill="#666">Updates all weights</text>
-    <text x="450" y="76" text-anchor="middle" font-size="10" fill="#666">Weeks of computation</text>
-    <text x="450" y="92" text-anchor="middle" font-size="10" fill="#666">Rewrites the rules</text>
-    <text x="450" y="115" text-anchor="middle" font-size="22" fill="#2563eb">&#9881;</text>
+    <rect x="320" y="15" width="255" height="145" rx="10" fill="url(#trainGrad)" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="448" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Training (Slow)</text>
+    <!-- Speed indicator: slow waves -->
+    <path d="M335,60 Q348,54 360,60 Q372,66 385,60" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
+    <path d="M335,68 Q348,62 360,68 Q372,74 385,68" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.3"/>
+    <text x="448" y="70" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Updates all weights</text>
+    <text x="448" y="88" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Weeks of computation</text>
+    <text x="448" y="106" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Rewrites the rules</text>
+    <!-- Larger emoji for visual impact -->
+    <text x="448" y="138" text-anchor="middle" font-size="30" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&#9881;</text>
   </svg>
 
   <div class="pullquote">
@@ -317,18 +390,24 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 
   <!-- SVG: Lock-in diagram -->
   <svg viewBox="0 0 600 130" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+    <defs>
+      <marker id="arrowLock" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#888"/>
+      </marker>
+    </defs>
+    <rect width="600" height="130" fill="#fafaf8" rx="8"/>
     <rect x="20" y="20" width="130" height="50" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
-    <text x="85" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#059669">Success</text>
-    <text x="85" y="56" text-anchor="middle" font-size="9" fill="#666">Fast Engine wins</text>
-    <line x1="150" y1="45" x2="190" y2="45" stroke="#888" stroke-width="1.5" marker-end="url(#arrowR)"/>
+    <text x="85" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#059669" font-family="'DM Sans', system-ui, sans-serif">Success</text>
+    <text x="85" y="56" text-anchor="middle" font-size="9" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Fast Engine wins</text>
+    <line x1="150" y1="45" x2="190" y2="45" stroke="#888" stroke-width="1.5" marker-end="url(#arrowLock)"/>
     <rect x="195" y="20" width="130" height="50" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
-    <text x="260" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">Hard-coding</text>
-    <text x="260" y="56" text-anchor="middle" font-size="9" fill="#666">Slow Engine locks in</text>
-    <line x1="325" y1="45" x2="365" y2="45" stroke="#888" stroke-width="1.5" marker-end="url(#arrowR)"/>
+    <text x="260" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">Hard-coding</text>
+    <text x="260" y="56" text-anchor="middle" font-size="9" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Slow Engine locks in</text>
+    <line x1="325" y1="45" x2="365" y2="45" stroke="#888" stroke-width="1.5" marker-end="url(#arrowLock)"/>
     <rect x="370" y="20" width="130" height="50" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
-    <text x="435" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Environment shifts</text>
-    <text x="435" y="56" text-anchor="middle" font-size="9" fill="#666">Locked strategy fails</text>
-    <text x="300" y="100" text-anchor="middle" font-size="10" fill="#888" font-style="italic">Optimization trap: success breeds rigidity breeds failure</text>
+    <text x="435" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Environment shifts</text>
+    <text x="435" y="56" text-anchor="middle" font-size="9" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Locked strategy fails</text>
+    <text x="300" y="100" text-anchor="middle" font-size="10" fill="#888" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Optimization trap: success breeds rigidity breeds failure</text>
   </svg>
 
   <p>This self-destructive optimization is driven by a deep psychological gravity: <strong>MIND-State Dependent Discounting</strong>. An agent with a fragile or deficient MIND portfolio &mdash; lacking material security, strong networks, or future options &mdash; is an agent living in a state of survival. They are compelled by their own systemic instability to discount the future heavily, prioritizing the immediate gains of the Fast Engine.</p>
@@ -349,21 +428,32 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
   <p>The <strong>Fast Engine</strong> of the market is a system designed for maximum <strong>information exploration</strong>. It is a high-entropy, high-discovery process. The <strong>Slow Engine</strong> of institutions is a system designed for information exploitation and compression. It takes successful discoveries and hard-codes them into low-cost routines. A social norm is a highly compressed algorithm for successful behavior.</p>
 
   <!-- SVG: Exploration vs Exploitation -->
-  <svg viewBox="0 0 600 150" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+  <svg viewBox="0 0 600 165" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;">
+    <defs>
+      <linearGradient id="exploreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fef2f2;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#fee2e2;stop-opacity:1"/>
+      </linearGradient>
+      <linearGradient id="exploitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#eff6ff;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#dbeafe;stop-opacity:1"/>
+      </linearGradient>
+    </defs>
+    <rect width="600" height="165" fill="#fafaf8" rx="8"/>
     <!-- Exploration side -->
-    <rect x="30" y="15" width="240" height="120" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-    <text x="150" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">Exploration</text>
-    <text x="150" y="60" text-anchor="middle" font-size="10" fill="#666">High entropy</text>
-    <text x="150" y="76" text-anchor="middle" font-size="10" fill="#666">High discovery</text>
-    <text x="150" y="92" text-anchor="middle" font-size="10" fill="#666">Market experimentation</text>
-    <text x="150" y="115" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">Fast Engine</text>
+    <rect x="25" y="15" width="255" height="135" rx="10" fill="url(#exploreGrad)" stroke="#dc2626" stroke-width="2.5"/>
+    <text x="152" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Exploration</text>
+    <text x="152" y="62" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">High entropy</text>
+    <text x="152" y="80" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">High discovery</text>
+    <text x="152" y="98" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Market experimentation</text>
+    <text x="152" y="126" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Fast Engine</text>
     <!-- Exploitation side -->
-    <rect x="330" y="15" width="240" height="120" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="450" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Exploitation</text>
-    <text x="450" y="60" text-anchor="middle" font-size="10" fill="#666">Low entropy</text>
-    <text x="450" y="76" text-anchor="middle" font-size="10" fill="#666">Low cost routines</text>
-    <text x="450" y="92" text-anchor="middle" font-size="10" fill="#666">Institutional compression</text>
-    <text x="450" y="115" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="600">Slow Engine</text>
+    <rect x="320" y="15" width="255" height="135" rx="10" fill="url(#exploitGrad)" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="448" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Exploitation</text>
+    <text x="448" y="62" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Low entropy</text>
+    <text x="448" y="80" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Low cost routines</text>
+    <text x="448" y="98" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Institutional compression</text>
+    <text x="448" y="126" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Slow Engine</text>
   </svg>
 
   <p>A living, intelligent economy must have both. The tension between them is the very definition of a learning system. Understanding this dynamic is the first step toward designing institutions that can actually navigate the unprecedented speed of the AI-driven world &mdash; which is the core challenge of our Symbiotic Blueprint.</p>
@@ -371,6 +461,12 @@ input[type="range"] { width: 100%; accent-color: #2563eb; }
 </div>
 
 <script>
+// ========== Progress Bar ==========
+window.addEventListener('scroll', () => {
+  const p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // --- Clock animation ---
 let clockFrame = null;
 let multValue = 1;

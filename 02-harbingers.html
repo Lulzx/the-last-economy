@@ -9,16 +9,69 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #d97706);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel {
+  background: white;
+  border: 1px solid #e5e5e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.panel:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+.panel-full {
+  background: white;
+  border-top: 1px solid #e5e5e0;
+  border-bottom: 1px solid #e5e5e0;
+  padding: 2rem;
+  margin: 2rem -1.5rem;
+}
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
+}
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
-.nav a { color: #2563eb; text-decoration: none; }
+
+/* ── Sticky nav with backdrop blur ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid #e5e5e0;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 250, 248, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.nav a { color: #2563eb; text-decoration: none; font-weight: 500; }
+.nav a:hover { text-decoration: underline; }
 
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .bar-label { font-size: 11px; fill: #555; }
@@ -64,11 +117,26 @@ input[type=range] { accent-color: #2563eb; }
 /* Pulse animation for critical gauges */
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
+/* Pulsing animation for tipping point circle */
+@keyframes tipPulse {
+  0%, 100% { r: 6; opacity: 1; }
+  50% { r: 9; opacity: 0.5; }
+}
+.tip-pulse {
+  animation: tipPulse 1.8s ease-in-out infinite;
+}
+
 /* Primary button */
 .btn { background: #2563eb; color: white; border: none; border-radius: 6px; padding: 0.5rem 1.2rem; cursor: pointer; font-size: 0.95rem; }
 
-/* Enrichment styles */
-.pullquote { border-left: 4px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; }
+/* ── Pullquote ── */
+.pullquote {
+  border-left: 5px solid #2563eb;
+  margin: 2rem 0;
+  padding: 1rem 1.75rem;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+}
 .pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
 .stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
 .stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 700; color: #2563eb; line-height: 1; }
@@ -79,9 +147,28 @@ input[type=range] { accent-color: #2563eb; }
 .illustration { display: flex; justify-content: center; margin: 2rem 0; }
 .epigraph { text-align: center; margin: 1.5rem 0 2.5rem; color: #555; font-size: 0.95rem; }
 .epigraph em { font-style: italic; }
+
+/* ── Mobile fixes ── */
+@media (max-width: 640px) {
+  .panel-full {
+    margin: 2rem 0;
+    border-radius: 8px;
+    border: 1px solid #e5e5e0;
+  }
+  .calc-cols {
+    flex-direction: column;
+  }
+  .stat-row {
+    flex-direction: column;
+  }
+  .gauges {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
 <nav class="nav">
   <a href="01-intelligence-inversion.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -106,19 +193,55 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Devil's staircase illustration -->
   <div class="illustration">
-    <svg viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="A staircase pattern showing gradual rise followed by sudden collapse, representing how systems fail">
+    <svg viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="A staircase pattern showing gradual rise followed by sudden collapse, representing how systems fail" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="stairGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#93c5fd"/>
           <stop offset="70%" stop-color="#2563eb"/>
           <stop offset="100%" stop-color="#ef4444"/>
         </linearGradient>
+        <!-- Area fill gradient: light blue fading to transparent at bottom -->
+        <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#93c5fd" stop-opacity="0"/>
+        </linearGradient>
+        <!-- Danger zone gradient -->
+        <linearGradient id="dangerGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0.04"/>
+        </linearGradient>
       </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="400" height="160" fill="#fafaf8"/>
+
+      <!-- Subtle horizontal grid lines -->
+      <line x1="20" y1="130" x2="380" y2="130" stroke="#e5e5e0" stroke-width="0.8"/>
+      <line x1="20" y1="105" x2="380" y2="105" stroke="#e5e5e0" stroke-width="0.8"/>
+      <line x1="20" y1="80" x2="380" y2="80" stroke="#e5e5e0" stroke-width="0.8"/>
+      <line x1="20" y1="55" x2="380" y2="55" stroke="#e5e5e0" stroke-width="0.8"/>
+      <line x1="20" y1="30" x2="380" y2="30" stroke="#e5e5e0" stroke-width="0.8"/>
+
+      <!-- Danger zone shaded region near collapse -->
+      <rect x="280" y="20" width="80" height="120" rx="4" fill="url(#dangerGrad)"/>
+      <text x="320" y="18" font-size="8" fill="#ef4444" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">danger zone</text>
+
+      <!-- Area under the staircase filled with gradient -->
+      <path d="M 30 130 L 80 130 L 80 110 L 130 110 L 130 90 L 180 90 L 180 65 L 230 65 L 230 40 L 280 40 L 280 25 L 310 25 L 340 130 Z" fill="url(#areaFill)"/>
+
+      <!-- Staircase path with gradient stroke -->
       <path d="M 30 130 L 80 130 L 80 110 L 130 110 L 130 90 L 180 90 L 180 65 L 230 65 L 230 40 L 280 40 L 280 25 L 310 25 L 340 130" fill="none" stroke="url(#stairGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="310" cy="25" r="4" fill="#ef4444"/>
-      <text x="315" y="22" font-size="10" fill="#ef4444" font-weight="600">Tipping point</text>
-      <text x="60" y="150" font-size="9" fill="#888">Gradual buildup</text>
-      <text x="310" y="150" font-size="9" fill="#888">Sudden collapse</text>
+
+      <!-- Tipping point circle with pulse animation -->
+      <circle cx="310" cy="25" r="6" fill="#ef4444" class="tip-pulse"/>
+      <!-- Outer ring for pulse effect (static, semi-transparent) -->
+      <circle cx="310" cy="25" r="10" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.35"/>
+
+      <text x="316" y="21" font-size="9" fill="#ef4444" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Tipping point</text>
+
+      <!-- Labels with small arrows -->
+      <text x="58" y="150" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Gradual buildup &#8594;</text>
+      <text x="270" y="150" font-size="9" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">&#8592; Sudden collapse</text>
     </svg>
   </div>
 
@@ -143,21 +266,63 @@ input[type=range] { accent-color: #2563eb; }
 
   <!-- SVG: Bouncing ball metaphor -->
   <div class="illustration">
-    <svg viewBox="0 0 400 120" width="400" height="120" role="img" aria-label="Three balls bouncing with decreasing resilience, showing critical slowing down">
+    <svg viewBox="0 0 400 130" width="400" height="130" role="img" aria-label="Three balls bouncing with decreasing resilience, showing critical slowing down" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Radial gradients for 3D ball effect -->
+        <radialGradient id="ballGreen" cx="35%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#4ade80"/>
+          <stop offset="100%" stop-color="#15803d"/>
+        </radialGradient>
+        <radialGradient id="ballAmber" cx="35%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#fcd34d"/>
+          <stop offset="100%" stop-color="#b45309"/>
+        </radialGradient>
+        <radialGradient id="ballRed" cx="35%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#f87171"/>
+          <stop offset="100%" stop-color="#b91c1c"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="400" height="130" fill="#fafaf8"/>
+
+      <!-- Ground line, thicker with subtle fill below -->
+      <line x1="10" y1="107" x2="390" y2="107" stroke="#d1d5db" stroke-width="2"/>
+      <rect x="10" y="107" width="380" height="16" fill="#f3f4f6" rx="0"/>
+
       <!-- Healthy bounce -->
-      <text x="60" y="15" font-size="9" fill="#16a34a" text-anchor="middle" font-weight="600">Healthy</text>
-      <path d="M 20 100 Q 40 30 60 100 Q 70 65 80 100 Q 85 80 90 100" fill="none" stroke="#16a34a" stroke-width="2"/>
-      <circle cx="90" cy="100" r="6" fill="#16a34a" opacity="0.7"/>
+      <!-- Shadow ellipse on ground -->
+      <ellipse cx="90" cy="108" rx="8" ry="2.5" fill="rgba(0,0,0,0.12)"/>
+      <!-- Bounce path with envelope feel -->
+      <path d="M 20 103 Q 40 28 60 103 Q 70 62 80 103 Q 85 78 90 103" fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="none"/>
+      <!-- Ball at rest -->
+      <circle cx="90" cy="101" r="6" fill="url(#ballGreen)"/>
+      <!-- Recovery time annotation -->
+      <text x="55" y="122" font-size="9" fill="#16a34a" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif">Fast recovery</text>
+
+      <!-- Label badge: Healthy -->
+      <rect x="35" y="6" width="52" height="16" rx="8" fill="#dcfce7"/>
+      <text x="61" y="18" font-size="9" fill="#16a34a" text-anchor="middle" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Healthy</text>
+
       <!-- Weakened bounce -->
-      <text x="200" y="15" font-size="9" fill="#d97706" text-anchor="middle" font-weight="600">Weakened</text>
-      <path d="M 160 100 Q 180 45 200 100 Q 215 75 230 100" fill="none" stroke="#d97706" stroke-width="2"/>
-      <circle cx="230" cy="100" r="6" fill="#d97706" opacity="0.7"/>
+      <ellipse cx="230" cy="108" rx="8" ry="2.5" fill="rgba(0,0,0,0.12)"/>
+      <path d="M 160 103 Q 180 42 200 103 Q 215 73 230 103" fill="none" stroke="#d97706" stroke-width="2"/>
+      <circle cx="230" cy="101" r="6" fill="url(#ballAmber)"/>
+      <text x="200" y="122" font-size="9" fill="#d97706" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif">Slower recovery</text>
+
+      <!-- Label badge: Weakened -->
+      <rect x="168" y="6" width="64" height="16" rx="8" fill="#fef3c7"/>
+      <text x="200" y="18" font-size="9" fill="#d97706" text-anchor="middle" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Weakened</text>
+
       <!-- Critical: no bounce -->
-      <text x="340" y="15" font-size="9" fill="#ef4444" text-anchor="middle" font-weight="600">Critical</text>
-      <path d="M 300 100 Q 320 55 340 100 L 380 100" fill="none" stroke="#ef4444" stroke-width="2"/>
-      <circle cx="380" cy="100" r="6" fill="#ef4444" opacity="0.7"/>
-      <!-- Ground line -->
-      <line x1="10" y1="105" x2="390" y2="105" stroke="#e5e5e0" stroke-width="1"/>
+      <ellipse cx="380" cy="108" rx="8" ry="2.5" fill="rgba(0,0,0,0.12)"/>
+      <path d="M 300 103 Q 320 52 340 103 L 380 103" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <circle cx="380" cy="101" r="6" fill="url(#ballRed)"/>
+      <text x="350" y="122" font-size="9" fill="#ef4444" text-anchor="middle" font-family="'DM Sans', system-ui, sans-serif">No recovery</text>
+
+      <!-- Label badge: Critical -->
+      <rect x="322" y="6" width="56" height="16" rx="8" fill="#fee2e2"/>
+      <text x="350" y="18" font-size="9" fill="#ef4444" text-anchor="middle" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Critical</text>
     </svg>
   </div>
 
@@ -420,6 +585,19 @@ input[type=range] { accent-color: #2563eb; }
 </div>
 
 <script>
+// ── Reading progress bar ──
+(function() {
+  const bar = document.getElementById('progress-bar');
+  function update() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
 // ── Critical Slowing Down ──
 (function() {
   const data = [

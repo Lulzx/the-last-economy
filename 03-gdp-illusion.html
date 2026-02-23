@@ -12,13 +12,16 @@
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
+.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s; }
 .panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 50; }
 .nav a { color: #2563eb; text-decoration: none; }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #2563eb; z-index: 100; transition: width 0.1s; }
 
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
@@ -59,9 +62,18 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .blame-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; font-size: 0.8rem; }
 .blame-legend span { display: flex; align-items: center; gap: 0.35rem; }
 .blame-legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+
+/* Mobile fixes */
+@media (max-width: 640px) {
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+  .stat-row { flex-direction: column; }
+  .calc-cols { flex-direction: column; }
+  .gauges { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress-bar"></div>
 <nav class="nav">
   <a href="seven-lies.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -81,36 +93,93 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 
   <p>This is the state of modern economics. We are flying a civilization through the storm of the century, guided by a dashboard that is not just broken, but criminally insane. That dashboard is called <strong>Gross Domestic Product</strong>.</p>
 
-  <!-- SVG: Broken Dashboard Illustration -->
+  <!-- SVG 1: Broken Cockpit Dashboard -->
   <div class="svg-illustration">
     <svg viewBox="0 0 400 200" width="400" height="200" role="img" aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
-      <!-- Cockpit frame -->
-      <rect x="20" y="20" width="360" height="160" rx="12" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
-      <!-- Dashboard panel -->
-      <rect x="40" y="40" width="320" height="120" rx="8" fill="#222"/>
-      <!-- Gauge 1: GDP - green, "all good" -->
-      <circle cx="110" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
-      <path d="M110 100 L110 65" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="110" cy="100" r="4" fill="#16a34a"/>
-      <text x="110" y="150" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">GDP</text>
-      <text x="110" y="73" text-anchor="middle" fill="#16a34a" font-size="8">GREAT</text>
-      <!-- Gauge 2: Wellbeing - red, critical -->
-      <circle cx="200" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
-      <path d="M200 100 L230 120" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="200" cy="100" r="4" fill="#ef4444"/>
-      <text x="200" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">Wellbeing</text>
-      <text x="218" y="128" text-anchor="start" fill="#ef4444" font-size="7">CRISIS</text>
-      <!-- Gauge 3: Planet - red, critical -->
-      <circle cx="290" cy="100" r="40" fill="none" stroke="#333" stroke-width="3"/>
-      <path d="M290 100 L318 115" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="290" cy="100" r="4" fill="#ef4444"/>
-      <text x="290" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">Planet</text>
-      <text x="306" y="122" text-anchor="start" fill="#ef4444" font-size="7">CRISIS</text>
-      <!-- Warning lights -->
-      <circle cx="55" cy="55" r="5" fill="#ef4444" opacity="0.9">
+      <defs>
+        <!-- Cockpit background gradient -->
+        <linearGradient id="cockpitBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a2e"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+        <!-- Dashboard panel texture -->
+        <linearGradient id="dashPanelGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="100%" stop-color="#1c1c1c"/>
+        </linearGradient>
+        <!-- Inner glow filter for frame -->
+        <filter id="frameGlow" x="-5%" y="-5%" width="110%" height="110%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+          <feFlood flood-color="#3b82f6" flood-opacity="0.15" result="color"/>
+          <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+          <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Red warning glow filter -->
+        <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Green gauge glow -->
+        <filter id="greenGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Cockpit frame with gradient -->
+      <rect x="20" y="20" width="360" height="160" rx="12" fill="url(#cockpitBg)" stroke="#333" stroke-width="2" filter="url(#frameGlow)"/>
+      <!-- Dashboard panel with texture -->
+      <rect x="40" y="40" width="320" height="120" rx="8" fill="url(#dashPanelGrad)"/>
+
+      <!-- === Gauge 1: GDP - green, "all good" === -->
+      <!-- Gauge scale arcs -->
+      <path d="M76 100 A34 34 0 0 1 144 100" fill="none" stroke="#1a3a1a" stroke-width="6" stroke-linecap="round"/>
+      <path d="M76 100 A34 34 0 0 1 110 66" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/>
+      <!-- Outer ring -->
+      <circle cx="110" cy="100" r="40" fill="none" stroke="#2a2a2a" stroke-width="3"/>
+      <circle cx="110" cy="100" r="34" fill="none" stroke="#1e3a1e" stroke-width="1" opacity="0.5"/>
+      <!-- Needle pointing to "GREAT" (up-left) -->
+      <path d="M110 100 L110 65" stroke="#16a34a" stroke-width="3" stroke-linecap="round" filter="url(#greenGlow)"/>
+      <circle cx="110" cy="100" r="5" fill="#16a34a"/>
+      <circle cx="110" cy="100" r="2" fill="#0f0f0f"/>
+      <text x="110" y="150" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">GDP</text>
+      <text x="110" y="73" text-anchor="middle" fill="#16a34a" font-size="8" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">GREAT</text>
+
+      <!-- === Gauge 2: Wellbeing - red, critical === -->
+      <path d="M166 100 A34 34 0 0 1 234 100" fill="none" stroke="#3a1a1a" stroke-width="6" stroke-linecap="round"/>
+      <path d="M200 134 A34 34 0 0 1 234 100" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="200" cy="100" r="40" fill="none" stroke="#2a2a2a" stroke-width="3"/>
+      <circle cx="200" cy="100" r="34" fill="none" stroke="#3a1e1e" stroke-width="1" opacity="0.5"/>
+      <path d="M200 100 L228 122" stroke="#ef4444" stroke-width="3" stroke-linecap="round" filter="url(#redGlow)"/>
+      <circle cx="200" cy="100" r="5" fill="#ef4444"/>
+      <circle cx="200" cy="100" r="2" fill="#0f0f0f"/>
+      <text x="200" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Wellbeing</text>
+      <!-- Warning triangle -->
+      <path d="M189 54 L200 36 L211 54 Z" fill="#ef4444" opacity="0.9"/>
+      <text x="200" y="51" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">!</text>
+      <!-- CRITICAL label -->
+      <text x="200" y="68" text-anchor="middle" fill="#ef4444" font-size="7" font-weight="700" letter-spacing="1" font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
+
+      <!-- === Gauge 3: Planet - red, critical === -->
+      <path d="M256 100 A34 34 0 0 1 324 100" fill="none" stroke="#3a1a1a" stroke-width="6" stroke-linecap="round"/>
+      <path d="M290 134 A34 34 0 0 1 324 100" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="290" cy="100" r="40" fill="none" stroke="#2a2a2a" stroke-width="3"/>
+      <circle cx="290" cy="100" r="34" fill="none" stroke="#3a1e1e" stroke-width="1" opacity="0.5"/>
+      <path d="M290 100 L316 117" stroke="#ef4444" stroke-width="3" stroke-linecap="round" filter="url(#redGlow)"/>
+      <circle cx="290" cy="100" r="5" fill="#ef4444"/>
+      <circle cx="290" cy="100" r="2" fill="#0f0f0f"/>
+      <text x="290" y="150" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Planet</text>
+      <!-- Warning triangle -->
+      <path d="M279 54 L290 36 L301 54 Z" fill="#ef4444" opacity="0.9"/>
+      <text x="290" y="51" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">!</text>
+      <!-- CRITICAL label -->
+      <text x="290" y="68" text-anchor="middle" fill="#ef4444" font-size="7" font-weight="700" letter-spacing="1" font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
+
+      <!-- Warning lights - larger, glowing -->
+      <circle cx="55" cy="55" r="7" fill="#ef4444" opacity="0.9" filter="url(#redGlow)">
         <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.2s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="345" cy="55" r="5" fill="#ef4444" opacity="0.3">
+      <circle cx="345" cy="55" r="7" fill="#ef4444" opacity="0.3" filter="url(#redGlow)">
         <animate attributeName="opacity" values="0.3;0.9;0.3" dur="1.2s" repeatCount="indefinite"/>
       </circle>
     </svg>
@@ -161,39 +230,58 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <!-- ═════════════════════════════════ -->
   <h2>When Measurement Destroys Reality</h2>
 
-  <!-- SVG: Goodhart's Law feedback loop -->
+  <!-- SVG 2: Goodhart's Law feedback loop -->
   <div class="svg-illustration">
-    <svg viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
-      <!-- Arrows forming a cycle -->
+    <svg viewBox="0 0 440 180" width="440" height="180" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
       <defs>
-        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
           <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
         </marker>
+        <marker id="arrowhead-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
+        </marker>
+        <filter id="boxShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.12)"/>
+        </filter>
       </defs>
-      <!-- Box 1: Measure -->
-      <rect x="20" y="55" width="100" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="70" y="77" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600">Measure</text>
-      <text x="70" y="93" text-anchor="middle" fill="#1e40af" font-size="9">chosen</text>
-      <!-- Arrow 1->2 -->
-      <line x1="120" y1="70" x2="148" y2="50" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-      <!-- Box 2: Target -->
-      <rect x="150" y="15" width="100" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-      <text x="200" y="37" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600">Becomes</text>
-      <text x="200" y="53" text-anchor="middle" fill="#1e40af" font-size="9">a target</text>
-      <!-- Arrow 2->3 -->
-      <line x1="250" y1="50" x2="278" y2="70" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-      <!-- Box 3: Distorts -->
-      <rect x="280" y="55" width="100" height="50" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-      <text x="330" y="77" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="600">Distorts</text>
-      <text x="330" y="93" text-anchor="middle" fill="#ef4444" font-size="9">behavior</text>
-      <!-- Arrow 3->4 -->
-      <line x1="330" y1="105" x2="250" y2="125" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-      <!-- Box 4: Corrupts -->
-      <rect x="150" y="110" width="100" height="50" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-      <text x="200" y="132" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="600">Corrupts</text>
-      <text x="200" y="148" text-anchor="middle" fill="#ef4444" font-size="9">the measure</text>
-      <!-- Arrow 4->1 (closing the loop) -->
-      <line x1="150" y1="125" x2="120" y2="100" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="440" height="180" rx="12" fill="#f8faff"/>
+
+      <!-- Central label -->
+      <text x="220" y="88" text-anchor="middle" fill="#94a3b8" font-size="11" font-style="italic" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Goodhart's Law</text>
+
+      <!-- Box 1: Measure (blue) -->
+      <rect x="20" y="63" width="110" height="54" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#boxShadow)"/>
+      <text x="75" y="85" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Measure</text>
+      <text x="75" y="101" text-anchor="middle" fill="#3b82f6" font-size="9" font-family="'DM Sans', system-ui, sans-serif">chosen</text>
+
+      <!-- Arrow 1->2 (curved bezier) -->
+      <path d="M130 78 C160 55, 185 40, 215 28" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead-blue)"/>
+
+      <!-- Box 2: Becomes Target (blue) -->
+      <rect x="165" y="10" width="110" height="54" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#boxShadow)"/>
+      <text x="220" y="32" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Becomes</text>
+      <text x="220" y="48" text-anchor="middle" fill="#3b82f6" font-size="9" font-family="'DM Sans', system-ui, sans-serif">a target</text>
+
+      <!-- Arrow 2->3 (curved bezier) -->
+      <path d="M275 38 C305 40, 330 55, 348 72" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+
+      <!-- Box 3: Distorts (red) -->
+      <rect x="310" y="63" width="110" height="54" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5" filter="url(#boxShadow)"/>
+      <text x="365" y="85" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Distorts</text>
+      <text x="365" y="101" text-anchor="middle" fill="#ef4444" font-size="9" font-family="'DM Sans', system-ui, sans-serif">behavior</text>
+
+      <!-- Arrow 3->4 (curved bezier) -->
+      <path d="M348 117 C320 140, 295 152, 265 158" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+
+      <!-- Box 4: Corrupts (red) -->
+      <rect x="165" y="116" width="110" height="54" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5" filter="url(#boxShadow)"/>
+      <text x="220" y="138" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Corrupts</text>
+      <text x="220" y="154" text-anchor="middle" fill="#ef4444" font-size="9" font-family="'DM Sans', system-ui, sans-serif">the measure</text>
+
+      <!-- Arrow 4->1 closing the loop (curved bezier) -->
+      <path d="M165 152 C135 148, 110 135, 92 118" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead-red)"/>
     </svg>
   </div>
 
@@ -213,22 +301,79 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
   <h2>The Abundance Paradox</h2>
   <p>Our dashboard's most fatal flaw is its complete inability to process good news. Our system is designed to measure transactions involving scarce goods. It is therefore structurally blind to abundance. When something becomes abundant and free, our dashboard does not just fail to see its value; it registers its arrival as a <em>negative event</em>.</p>
 
-  <!-- SVG: Abundance vs GDP -->
+  <!-- SVG 3: Real Value vs GDP (area chart with divergence zone) -->
   <div class="svg-illustration">
     <svg viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="As real value rises through abundance, GDP registers it as decline">
+      <defs>
+        <!-- Green gradient fill under Real Value curve -->
+        <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#16a34a" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#16a34a" stop-opacity="0.03"/>
+        </linearGradient>
+        <!-- Red gradient fill under GDP curve -->
+        <linearGradient id="redAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0.18"/>
+        </linearGradient>
+        <!-- Divergence zone fill -->
+        <linearGradient id="divergeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.0"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.18"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Light background -->
+      <rect x="0" y="0" width="400" height="180" rx="10" fill="#f9fafb"/>
+
+      <!-- Grid lines -->
+      <line x1="60" y1="30" x2="370" y2="30" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="60" y1="60" x2="370" y2="60" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="60" y1="90" x2="370" y2="90" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="60" y1="120" x2="370" y2="120" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="150" y1="20" x2="150" y2="150" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="240" y1="20" x2="240" y2="150" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="330" y1="20" x2="330" y2="150" stroke="#e5e7eb" stroke-width="0.8"/>
+
+      <!-- Title -->
+      <text x="215" y="16" text-anchor="middle" fill="#374151" font-size="11" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Real Value vs. GDP as Abundance Grows</text>
+
       <!-- Axes -->
-      <line x1="60" y1="150" x2="370" y2="150" stroke="#ccc" stroke-width="1"/>
-      <line x1="60" y1="150" x2="60" y2="20" stroke="#ccc" stroke-width="1"/>
-      <text x="215" y="175" text-anchor="middle" fill="#888" font-size="10">Time</text>
-      <text x="15" y="85" text-anchor="middle" fill="#888" font-size="10" transform="rotate(-90,15,85)">Value</text>
-      <!-- Real value curve (rising) -->
-      <path d="M60 130 Q150 120 200 90 Q260 55 360 30" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
-      <text x="362" y="25" fill="#16a34a" font-size="10" font-weight="600">Real value</text>
-      <!-- GDP curve (declining) -->
-      <path d="M60 130 Q150 132 200 135 Q260 140 360 145" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
-      <text x="362" y="148" fill="#ef4444" font-size="10" font-weight="600">GDP</text>
+      <line x1="60" y1="150" x2="370" y2="150" stroke="#9ca3af" stroke-width="1.5"/>
+      <line x1="60" y1="150" x2="60" y2="22" stroke="#9ca3af" stroke-width="1.5"/>
+      <text x="215" y="168" text-anchor="middle" fill="#6b7280" font-size="10" font-weight="500" font-family="'DM Sans', system-ui, sans-serif">Time</text>
+      <text x="18" y="90" text-anchor="middle" fill="#6b7280" font-size="10" font-weight="500" font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,18,90)">Value</text>
+
+      <!-- Shaded divergence zone between curves -->
+      <path d="M60 130 Q150 120 200 90 Q260 55 360 30 L360 145 Q260 140 200 135 Q150 132 60 130 Z" fill="url(#divergeGrad)" opacity="0.7"/>
+
+      <!-- Green area fill under Real Value curve -->
+      <path d="M60 130 Q150 120 200 90 Q260 55 360 30 L360 150 L60 150 Z" fill="url(#greenAreaGrad)"/>
+
+      <!-- Red area fill under GDP curve -->
+      <path d="M60 130 Q150 132 200 135 Q260 140 360 145 L360 150 L60 150 Z" fill="url(#redAreaGrad)"/>
+
+      <!-- Real value curve (rising) - thicker -->
+      <path d="M60 130 Q150 120 200 90 Q260 55 360 30" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- GDP curve (declining) - thicker -->
+      <path d="M60 130 Q150 132 200 135 Q260 140 360 145" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- Data point circles on Real Value curve -->
+      <circle cx="60" cy="130" r="4" fill="white" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="200" cy="90" r="4" fill="white" stroke="#16a34a" stroke-width="2"/>
+      <circle cx="360" cy="30" r="4" fill="white" stroke="#16a34a" stroke-width="2"/>
+
+      <!-- Data point circles on GDP curve -->
+      <circle cx="60" cy="130" r="3.5" fill="white" stroke="#ef4444" stroke-width="2"/>
+      <circle cx="200" cy="135" r="3.5" fill="white" stroke="#ef4444" stroke-width="2"/>
+      <circle cx="360" cy="145" r="3.5" fill="white" stroke="#ef4444" stroke-width="2"/>
+
+      <!-- Labels -->
+      <text x="365" y="26" fill="#16a34a" font-size="10" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Real value</text>
+      <text x="365" y="149" fill="#ef4444" font-size="10" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">GDP</text>
+
       <!-- Annotation -->
-      <text x="200" y="115" text-anchor="middle" fill="#888" font-size="9" font-style="italic">The better things get, the worse GDP looks</text>
+      <text x="210" y="112" text-anchor="middle" fill="#6b7280" font-size="9" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The better things get, the worse GDP looks</text>
     </svg>
   </div>
 
@@ -326,6 +471,12 @@ svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 </div>
 
 <script>
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // Scrub interaction
 document.querySelectorAll('.scrub').forEach(el => {
   let startX, startVal;

@@ -16,6 +16,7 @@ body {
   font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .prose {
@@ -25,9 +26,20 @@ body {
   line-height: 1.75;
 }
 
+nav {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e0;
+  position: sticky;
+  top: 0;
+  background: rgba(250,250,248,0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 50;
+}
+
 header {
   text-align: center;
-  padding: 80px 24px 48px;
+  padding: 72px 24px 48px;
 }
 
 header h1 {
@@ -46,7 +58,7 @@ header .subtitle {
 }
 
 header .intro {
-  font-size: 1.05rem;
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
   color: #333;
 }
 
@@ -63,6 +75,7 @@ header .intro {
 }
 .scrub:hover {
   background: rgba(37, 99, 235, 0.08);
+  border-radius: 2px;
 }
 
 .grid-section {
@@ -78,18 +91,19 @@ header .intro {
 }
 
 @media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
 }
 @media (max-width: 560px) {
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; gap: 14px; }
   header { padding: 48px 20px 32px; }
+  .grid-section { padding: 16px 16px 60px; }
 }
 
 .card {
   background: #fff;
   border: 1px solid #e5e5e0;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
@@ -100,13 +114,18 @@ header .intro {
   cursor: pointer;
 }
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+.card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .card-accent {
   width: 100%;
   height: 4px;
+  flex-shrink: 0;
 }
 
 .card-viz {
@@ -114,6 +133,7 @@ header .intro {
   width: 100%;
   overflow: hidden;
   background: #fafaf8;
+  flex-shrink: 0;
 }
 .card-viz svg {
   display: block;
@@ -147,6 +167,7 @@ header .intro {
   font-weight: 700;
   margin-bottom: 6px;
   letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .card-question {
@@ -156,6 +177,7 @@ header .intro {
   flex: 1;
   margin-bottom: 12px;
   font-style: italic;
+  line-height: 1.55;
 }
 
 .card-link {

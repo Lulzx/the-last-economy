@@ -12,11 +12,12 @@
 body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
 .prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
 .scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
+.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
 h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
 .chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; }
+.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); z-index: 50; }
 .nav a { color: #2563eb; text-decoration: none; }
 svg text { font-family: 'DM Sans', system-ui, sans-serif; }
 .btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
@@ -55,9 +56,20 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 .section-divider { border: none; border-top: 1px solid #e5e5e0; margin: 3rem 0; }
 .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .stat-row .stat-callout { flex: 1; min-width: 180px; }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #2563eb; z-index: 100; transition: width 0.1s; }
+
+/* Mobile fixes */
+@media (max-width: 640px) {
+  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
+  .stat-row { flex-direction: column; }
+  .calc-cols { flex-direction: column; }
+  .gauges { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress-bar"></div>
 <nav class="nav">
   <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
   <a href="explorables.html">All Chapters</a>
@@ -82,34 +94,66 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>In 1950, when this was formalized at the RAND Corporation, it became the cold logic of the Cold War. Whatever the Soviets do, we are better off building more bombs. Whatever we do, they are better off building more bombs. The Nash Equilibrium is a planet of rubble.</p>
 
-  <!-- SVG: From Defection to Cooperation -->
-  <svg viewBox="0 0 600 140" style="width:100%; max-width:600px; display:block; margin:2rem auto;">
+  <!-- SVG 1: From Defection to Cooperation -->
+  <svg viewBox="0 0 600 150" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Evolution from defection to cooperation across game types">
     <defs>
-      <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <marker id="arrow-blue-c" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
         <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
       </marker>
+      <!-- Red gradient for One-Shot/Defect box -->
+      <linearGradient id="defectGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fecaca"/>
+        <stop offset="100%" stop-color="#fef2f2"/>
+      </linearGradient>
+      <!-- Yellow gradient for Tit-for-Tat box -->
+      <linearGradient id="titGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fef9c3"/>
+        <stop offset="100%" stop-color="#fefce8"/>
+      </linearGradient>
+      <!-- Blue gradient for Cooperate/Symbiotic box -->
+      <linearGradient id="coopGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#bfdbfe"/>
+        <stop offset="100%" stop-color="#eff6ff"/>
+      </linearGradient>
     </defs>
-    <!-- One-shot game -->
-    <rect x="20" y="20" width="160" height="100" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="100" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">One-Shot Game</text>
-    <text x="100" y="72" text-anchor="middle" font-size="11" fill="#555">No memory, no future</text>
-    <text x="100" y="92" text-anchor="middle" font-size="18" font-weight="700" fill="#ef4444">Defect</text>
-    <!-- Arrow -->
-    <line x1="195" y1="70" x2="235" y2="70" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
-    <text x="215" y="58" text-anchor="middle" font-size="9" fill="#2563eb">+ iteration</text>
-    <!-- Iterated game -->
-    <rect x="245" y="20" width="160" height="100" rx="8" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
-    <text x="325" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e">Iterated Game</text>
-    <text x="325" y="72" text-anchor="middle" font-size="11" fill="#555">Memory + reputation</text>
-    <text x="325" y="92" text-anchor="middle" font-size="18" font-weight="700" fill="#eab308">Tit-for-Tat</text>
-    <!-- Arrow -->
-    <line x1="420" y1="70" x2="460" y2="70" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
-    <text x="440" y="58" text-anchor="middle" font-size="9" fill="#2563eb">+ topology</text>
-    <!-- Symbiotic game -->
-    <rect x="470" y="20" width="120" height="100" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="530" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af">Symbiotic</text>
-    <text x="530" y="72" text-anchor="middle" font-size="11" fill="#555">Network effects</text>
-    <text x="530" y="92" text-anchor="middle" font-size="18" font-weight="700" fill="#2563eb">Cooperate</text>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="600" height="150" rx="12" fill="#f8faff"/>
+
+    <!-- One-shot game box (taller) -->
+    <rect x="15" y="15" width="165" height="110" rx="10" fill="url(#defectGrad)" stroke="#ef4444" stroke-width="2"/>
+    <!-- Symbol -->
+    <text x="98" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">&#10007;</text>
+    <text x="98" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">One-Shot Game</text>
+    <text x="98" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No memory, no future</text>
+    <text x="98" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">Defect</text>
+    <text x="98" y="117" text-anchor="middle" font-size="9" fill="#9f1239" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Rational doom</text>
+
+    <!-- Arrow 1 (thicker, more prominent) -->
+    <path d="M185 70 L215 70" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue-c)"/>
+    <text x="200" y="60" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">+ iteration</text>
+
+    <!-- Iterated game box -->
+    <rect x="220" y="15" width="165" height="110" rx="10" fill="url(#titGrad)" stroke="#eab308" stroke-width="2"/>
+    <!-- Symbol -->
+    <text x="303" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#eab308" font-family="'DM Sans', system-ui, sans-serif">&#8596;</text>
+    <text x="303" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e" font-family="'DM Sans', system-ui, sans-serif">Iterated Game</text>
+    <text x="303" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Memory + reputation</text>
+    <text x="303" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#eab308" font-family="'DM Sans', system-ui, sans-serif">Tit-for-Tat</text>
+    <text x="303" y="117" text-anchor="middle" font-size="9" fill="#92400e" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Reciprocal clarity</text>
+
+    <!-- Arrow 2 (thicker) -->
+    <path d="M390 70 L420 70" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue-c)"/>
+    <text x="405" y="60" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">+ topology</text>
+
+    <!-- Symbiotic game box -->
+    <rect x="425" y="15" width="160" height="110" rx="10" fill="url(#coopGrad)" stroke="#2563eb" stroke-width="2"/>
+    <!-- Symbol -->
+    <text x="505" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">&#10003;</text>
+    <text x="505" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Symbiotic</text>
+    <text x="505" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Network effects</text>
+    <text x="505" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Cooperate</text>
+    <text x="505" y="117" text-anchor="middle" font-size="9" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Positive-sum</text>
   </svg>
 
   <p>But then, in the 1980s, the political scientist Robert Axelrod did something beautiful. He ran a tournament &mdash; not with prisoners, but with computer programs. He invited strategists to submit algorithms that would compete in an iterated Prisoner&rsquo;s Dilemma, a game played thousands of times. The winner shocked everyone. It was the simplest program submitted, a four-line piece of code called &ldquo;Tit for Tat.&rdquo; Cooperate on the first move, then do whatever your opponent did last.</p>
@@ -178,30 +222,65 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>Western observers in the 19th century were baffled by the potlatch &mdash; a vast ceremonial feast held by the Kwakwaka&rsquo;wakw and other Indigenous peoples of the Pacific Northwest. Here was a society where chiefs would spend years accumulating immense wealth, only to give it all away, or even dramatically destroy it, in a single, massive ceremony. To the scarcity mindset of the colonial administrator, this was madness. They banned it, missing the genius entirely.</p>
 
-  <!-- SVG: Capital Transmutation -->
-  <svg viewBox="0 0 600 160" style="width:100%; max-width:600px; display:block; margin:2rem auto;">
+  <!-- SVG 2: Capital Transmutation (Material → Network) -->
+  <svg viewBox="0 0 600 170" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Potlatch transforms Material Capital into Network Capital">
     <defs>
-      <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <marker id="arrow-green-p" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
         <path d="M0,0 L8,4 L0,8 Z" fill="#16a34a"/>
       </marker>
+      <!-- Red-orange gradient for Material Capital -->
+      <linearGradient id="materialGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fed7aa"/>
+        <stop offset="100%" stop-color="#fef2f2"/>
+      </linearGradient>
+      <!-- Blue-indigo gradient for Network Capital -->
+      <linearGradient id="networkGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#c7d2fe"/>
+        <stop offset="100%" stop-color="#eff6ff"/>
+      </linearGradient>
     </defs>
-    <!-- Material Capital -->
-    <rect x="30" y="30" width="150" height="100" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="105" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">Material Capital</text>
-    <text x="105" y="80" text-anchor="middle" font-size="11" fill="#555">1,000 blankets</text>
-    <text x="105" y="98" text-anchor="middle" font-size="10" fill="#888">Rivalrous, depletable</text>
-    <!-- Arrow -->
-    <line x1="195" y1="80" x2="255" y2="80" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arrow-green)"/>
-    <text x="225" y="68" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">Potlatch</text>
-    <!-- Network Capital -->
-    <rect x="270" y="30" width="150" height="100" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="345" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">Network Capital</text>
-    <text x="345" y="80" text-anchor="middle" font-size="11" fill="#555">1,000 obligations</text>
-    <text x="345" y="98" text-anchor="middle" font-size="10" fill="#888">Non-rivalrous, resilient</text>
-    <!-- Insight -->
-    <text x="495" y="60" text-anchor="middle" font-size="11" fill="#555">The richest chief =</text>
-    <text x="495" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb">strongest web of</text>
-    <text x="495" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb">relationships</text>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="600" height="170" rx="12" fill="#fffef7"/>
+
+    <!-- Material Capital box -->
+    <rect x="20" y="20" width="165" height="120" rx="10" fill="url(#materialGrad)" stroke="#ea580c" stroke-width="1.5"/>
+    <!-- Textile/blanket icon suggestion -->
+    <rect x="48" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5"/>
+    <rect x="73" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.35"/>
+    <rect x="98" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5"/>
+    <text x="103" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#7c2d12" font-family="'DM Sans', system-ui, sans-serif">Material Capital</text>
+    <text x="103" y="92" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1,000 blankets</text>
+    <text x="103" y="110" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Rivalrous, depletable</text>
+    <text x="103" y="128" text-anchor="middle" font-size="9" fill="#c2410c" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Hoarding = isolation</text>
+
+    <!-- Potlatch arrow (bolder) -->
+    <path d="M188 80 L248 80" fill="none" stroke="#16a34a" stroke-width="4" marker-end="url(#arrow-green-p)"/>
+    <text x="218" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">Potlatch</text>
+    <text x="218" y="96" text-anchor="middle" font-size="9" fill="#15803d" font-family="'DM Sans', system-ui, sans-serif">give away</text>
+
+    <!-- Network Capital box -->
+    <rect x="258" y="20" width="165" height="120" rx="10" fill="url(#networkGrad)" stroke="#4f46e5" stroke-width="1.5"/>
+    <!-- Network dots visualization -->
+    <circle cx="295" cy="45" r="4" fill="#4f46e5" opacity="0.7"/>
+    <circle cx="315" cy="38" r="4" fill="#4f46e5" opacity="0.7"/>
+    <circle cx="335" cy="48" r="4" fill="#4f46e5" opacity="0.7"/>
+    <circle cx="320" cy="58" r="4" fill="#4f46e5" opacity="0.7"/>
+    <line x1="295" y1="45" x2="315" y2="38" stroke="#4f46e5" stroke-width="1.2" opacity="0.5"/>
+    <line x1="315" y1="38" x2="335" y2="48" stroke="#4f46e5" stroke-width="1.2" opacity="0.5"/>
+    <line x1="295" y1="45" x2="320" y2="58" stroke="#4f46e5" stroke-width="1.2" opacity="0.5"/>
+    <line x1="335" y1="48" x2="320" y2="58" stroke="#4f46e5" stroke-width="1.2" opacity="0.5"/>
+    <line x1="315" y1="38" x2="320" y2="58" stroke="#4f46e5" stroke-width="1.2" opacity="0.5"/>
+    <text x="341" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#1e1b4b" font-family="'DM Sans', system-ui, sans-serif">Network Capital</text>
+    <text x="341" y="92" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1,000 obligations</text>
+    <text x="341" y="110" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Non-rivalrous, resilient</text>
+    <text x="341" y="128" text-anchor="middle" font-size="9" fill="#3730a3" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Sharing = abundance</text>
+
+    <!-- Callout box for insight on the right -->
+    <rect x="440" y="38" width="148" height="78" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+    <text x="514" y="58" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">The richest chief =</text>
+    <text x="514" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">strongest web of</text>
+    <text x="514" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">relationships</text>
   </svg>
 
   <p>The potlatch was not about destroying wealth. It was about <em>transmuting</em> it. When a chief gave away a thousand blankets, he was not losing a thousand blankets. He was purchasing a thousand strands of social obligation. He was broadcasting a signal of his capacity and his generosity, creating a network of allies. They were not playing a zero-sum game for a fixed pool of resources. They were playing a positive-sum game to increase the resilience and prosperity of the entire network.</p>
@@ -255,23 +334,70 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 
   <p>Intelligent Game Theory introduces a new, higher equilibrium: the <strong>Symbiotic Equilibrium</strong>. This is a state where the system&rsquo;s overall health is maximized. In this state, an individual agent cannot improve its own long-term prospects by taking an action that degrades the health of the network.</p>
 
-  <!-- SVG: Nash vs Symbiotic Equilibrium -->
-  <svg viewBox="0 0 600 170" style="width:100%; max-width:600px; display:block; margin:2rem auto;">
-    <!-- Nash Equilibrium -->
-    <rect x="30" y="20" width="240" height="130" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="150" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">Nash Equilibrium</text>
-    <text x="150" y="75" text-anchor="middle" font-size="11" fill="#555">No player can improve alone</text>
-    <text x="150" y="95" text-anchor="middle" font-size="11" fill="#555">Selfish stability</text>
-    <text x="150" y="120" text-anchor="middle" font-size="11" fill="#888">Can be globally terrible</text>
-    <!-- Symbiotic Equilibrium -->
-    <rect x="330" y="20" width="240" height="130" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-    <text x="450" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">Symbiotic Equilibrium</text>
-    <text x="450" y="75" text-anchor="middle" font-size="11" fill="#555">System health is maximized</text>
-    <text x="450" y="95" text-anchor="middle" font-size="11" fill="#555">No gain from degrading network</text>
-    <text x="450" y="120" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="600">Locally + globally optimal</text>
-    <!-- Arrow between them -->
-    <text x="300" y="85" text-anchor="middle" font-size="22" fill="#16a34a">&#8594;</text>
-    <text x="300" y="105" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="600">Goal of policy</text>
+  <!-- SVG 3: Nash vs Symbiotic Equilibrium -->
+  <svg viewBox="0 0 600 180" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Nash Equilibrium versus Symbiotic Equilibrium">
+    <defs>
+      <!-- Nash muted red gradient -->
+      <linearGradient id="nashGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fecaca"/>
+        <stop offset="100%" stop-color="#fef2f2"/>
+      </linearGradient>
+      <!-- Symbiotic vibrant blue-green gradient -->
+      <linearGradient id="symbioticGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a7f3d0"/>
+        <stop offset="100%" stop-color="#dbeafe"/>
+      </linearGradient>
+      <!-- Symbiotic glow animation filter -->
+      <filter id="symbGlow" x="-15%" y="-15%" width="130%" height="130%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+        <feFlood flood-color="#2563eb" flood-opacity="0.2" result="color"/>
+        <feComposite in="color" in2="blur" operator="in" result="glow"/>
+        <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="600" height="180" rx="12" fill="#f8faff"/>
+
+    <!-- Nash Equilibrium box (rounded more) -->
+    <rect x="20" y="18" width="248" height="144" rx="12" fill="url(#nashGrad)" stroke="#ef4444" stroke-width="1.5"/>
+    <!-- Isolated sad dots metaphor -->
+    <circle cx="65" cy="52" r="6" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="95" cy="45" r="6" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="125" cy="52" r="6" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
+    <!-- No connections between dots (isolated) -->
+    <text x="144" y="52" text-anchor="middle" fill="#ef4444" font-size="9" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">isolated</text>
+    <!-- Box text -->
+    <text x="144" y="78" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">Nash Equilibrium</text>
+    <text x="144" y="100" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No player can improve alone</text>
+    <text x="144" y="118" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Selfish stability</text>
+    <text x="144" y="148" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Can be globally terrible</text>
+
+    <!-- Arrow (larger, more prominent) -->
+    <text x="300" y="97" text-anchor="middle" font-size="28" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">&#8594;</text>
+    <text x="300" y="115" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Goal of policy</text>
+
+    <!-- Symbiotic Equilibrium box (animated glow) -->
+    <rect x="332" y="18" width="248" height="144" rx="12" fill="url(#symbioticGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#symbGlow)">
+      <animate attributeName="stroke-opacity" values="1;0.4;1" dur="2.5s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Connected happy network dots metaphor -->
+    <circle cx="370" cy="48" r="5.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
+    <circle cx="395" cy="40" r="5.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
+    <circle cx="420" cy="50" r="5.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
+    <circle cx="407" cy="63" r="5.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
+    <!-- Connections between dots -->
+    <line x1="370" y1="48" x2="395" y2="40" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+    <line x1="395" y1="40" x2="420" y2="50" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+    <line x1="370" y1="48" x2="407" y2="63" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+    <line x1="420" y1="50" x2="407" y2="63" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+    <line x1="395" y1="40" x2="407" y2="63" stroke="#059669" stroke-width="1.5" opacity="0.7"/>
+    <text x="445" y="52" text-anchor="start" fill="#059669" font-size="9" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">connected</text>
+    <!-- Box text -->
+    <text x="456" y="78" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Symbiotic Equilibrium</text>
+    <text x="456" y="100" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">System health is maximized</text>
+    <text x="456" y="118" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No gain from degrading network</text>
+    <text x="456" y="148" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Locally + globally optimal</text>
   </svg>
 
   <div class="pullquote">
@@ -345,6 +471,12 @@ input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
 </div>
 
 <script>
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const p = document.documentElement;
+  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+});
+
 // ========== Panel 1: Prisoner's Dilemma ==========
 function runPD() {
   const iters = +document.getElementById('iter-slider').value;

@@ -47,7 +47,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 max(5vw, 24px);
+  padding: 0 max(5vw, 20px);
   overflow: hidden;
 }
 
@@ -68,18 +68,20 @@ body {
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: clamp(0.6rem, 1.5vw, 0.7rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--amber);
   margin-bottom: 2rem;
   opacity: 0;
   animation: fadeUp 0.8s ease forwards 0.2s;
+  /* prevent overflow on very small screens */
+  word-break: break-word;
 }
 
 .hero-title {
   font-family: var(--serif);
-  font-size: clamp(3rem, 8vw, 7.5rem);
+  font-size: clamp(2.4rem, 8vw, 7.5rem);
   font-weight: 900;
   line-height: 0.95;
   letter-spacing: -0.02em;
@@ -91,7 +93,7 @@ body {
 
 .hero-title .line-sub {
   display: block;
-  font-size: clamp(1.4rem, 3vw, 2.8rem);
+  font-size: clamp(1.1rem, 3vw, 2.8rem);
   font-weight: 400;
   font-style: italic;
   color: var(--text-secondary);
@@ -103,7 +105,7 @@ body {
 .hero-title .accent-amber { color: var(--amber); }
 
 .hero-tagline {
-  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-size: clamp(0.95rem, 2vw, 1.35rem);
   font-weight: 400;
   color: var(--text-secondary);
   max-width: 560px;
@@ -135,19 +137,23 @@ body {
   background: #2563eb;
   color: #fff;
   font-family: var(--sans);
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 0.85rem 1.8rem;
-  border-radius: 6px;
+  font-size: clamp(0.88rem, 2vw, 0.95rem);
+  font-weight: 600;
+  padding: 0.9rem 1.8rem;
+  border-radius: 8px;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.2);
+  box-shadow: 0 2px 12px rgba(37,99,235,0.25), 0 1px 3px rgba(37,99,235,0.15);
+  white-space: nowrap;
 }
 .btn-primary:hover {
   background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
@@ -157,21 +163,27 @@ body {
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 2vw, 0.9rem);
   font-weight: 500;
-  padding: 0.85rem 1.4rem;
-  border-radius: 6px;
+  padding: 0.9rem 1.4rem;
+  border-radius: 8px;
   text-decoration: none;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+  white-space: nowrap;
 }
-.btn-secondary:hover { color: var(--text); border-color: #ccc; background: rgba(0,0,0,0.02); }
+.btn-secondary:hover {
+  color: var(--text);
+  border-color: #bbb;
+  background: rgba(0,0,0,0.03);
+  transform: translateY(-1px);
+}
 
 .scroll-hint {
   position: absolute;
   bottom: 2.5rem;
-  left: max(5vw, 24px);
+  left: max(5vw, 20px);
   z-index: 2;
   display: flex;
   align-items: center;
@@ -195,7 +207,7 @@ body {
   background: var(--bg2);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 2.5rem max(5vw, 24px);
+  padding: 2.5rem max(5vw, 20px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -214,7 +226,7 @@ body {
 
 .countdown-number {
   font-family: var(--serif);
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2rem, 6vw, 4.5rem);
   font-weight: 700;
   color: var(--amber);
   line-height: 1;
@@ -230,7 +242,7 @@ body {
 
 .countdown-bar-wrap {
   flex: 1;
-  min-width: 200px;
+  min-width: 180px;
   max-width: 400px;
 }
 
@@ -251,13 +263,14 @@ body {
 .countdown-note {
   font-size: 0.8rem;
   color: var(--muted);
-  max-width: 300px;
+  max-width: 280px;
   font-style: italic;
+  line-height: 1.6;
 }
 
 /* ── SECTIONS ── */
 section {
-  padding: 7rem max(5vw, 24px);
+  padding: 7rem max(5vw, 20px);
 }
 
 .section-label {
@@ -271,7 +284,7 @@ section {
 
 .section-title {
   font-family: var(--serif);
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -281,7 +294,7 @@ section {
 }
 
 .section-body {
-  font-size: 1.05rem;
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
   color: var(--text-secondary);
   max-width: 620px;
   line-height: 1.75;
@@ -304,7 +317,7 @@ section {
   padding: 3rem;
   background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(37,99,235,0.03));
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .premise-quote::before {
@@ -322,7 +335,7 @@ section {
 
 .premise-quote blockquote {
   font-family: var(--serif);
-  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
   font-style: italic;
   line-height: 1.65;
   color: var(--text);
@@ -351,12 +364,12 @@ section {
 
 .concepts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1px;
   max-width: 1200px;
   margin: 0 auto;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -365,7 +378,7 @@ section {
   background: var(--bg);
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -397,7 +410,7 @@ section {
 
 .concept-title {
   font-family: var(--serif);
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--text);
@@ -451,7 +464,7 @@ section {
   max-width: 1200px;
   margin: 0 auto;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -461,7 +474,7 @@ section {
   overflow: hidden;
   background: var(--bg);
   border-right: 1px solid var(--border);
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
   cursor: pointer;
 }
 
@@ -486,7 +499,7 @@ section {
 
 .future-title {
   font-family: var(--serif);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.2;
@@ -525,7 +538,7 @@ section {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   text-align: center;
-  padding: 8rem max(5vw, 24px);
+  padding: 8rem max(5vw, 20px);
 }
 
 .explorables-section .section-title {
@@ -574,7 +587,7 @@ section {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 7rem max(5vw, 24px);
+  padding: 7rem max(5vw, 20px);
 }
 
 .author-visual {
@@ -588,7 +601,7 @@ section {
   inset: 0;
   background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.06));
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .author-initials {
@@ -612,7 +625,7 @@ section {
   padding: 1.25rem 1.5rem;
   background: rgba(250,250,248,0.95);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   backdrop-filter: blur(10px);
 }
 
@@ -640,7 +653,7 @@ section {
 .philosophy-band {
   background: var(--bg2);
   border-top: 1px solid var(--border);
-  padding: 4rem max(5vw, 24px);
+  padding: 4rem max(5vw, 20px);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 3rem;
@@ -675,7 +688,7 @@ section {
 
 /* ── FOOTER ── */
 footer {
-  padding: 3rem max(5vw, 24px);
+  padding: 3rem max(5vw, 20px);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -695,6 +708,7 @@ footer {
   display: flex;
   gap: 2rem;
   list-style: none;
+  flex-wrap: wrap;
 }
 
 .footer-nav a {
@@ -738,15 +752,37 @@ footer {
 }
 
 /* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .futures-grid { grid-template-columns: 1fr 1fr; }
+  .future-card:nth-child(3) { grid-column: 1 / -1; }
+}
+
 @media (max-width: 768px) {
   .premise { grid-template-columns: 1fr; }
   .futures-grid { grid-template-columns: 1fr; }
   .author-section { grid-template-columns: 1fr; }
-  .philosophy-band { grid-template-columns: 1fr; }
+  .philosophy-band { grid-template-columns: 1fr; gap: 2.5rem; }
   .future-card { border-right: none; }
   .author-visual { max-width: 100%; aspect-ratio: 3/2; }
   .countdown-band { flex-direction: column; gap: 1.5rem; }
   .countdown-bar-wrap { max-width: 100%; width: 100%; }
+  .countdown-note { max-width: 100%; }
+  section { padding: 5rem max(5vw, 20px); }
+  .explorables-section { padding: 5rem max(5vw, 20px); }
+  .hero-content { padding: 100px 0 60px; }
+}
+
+@media (max-width: 480px) {
+  .hero-content { padding: 80px 0 60px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .scroll-hint { display: none; }
+  section { padding: 4rem max(5vw, 20px); }
+  .author-section { padding: 4rem max(5vw, 20px); }
+  .eyebrow { font-size: 0.58rem; letter-spacing: 0.12em; }
+  .premise-quote { padding: 2rem 1.5rem; }
+  .philosophy-band { padding: 3rem max(5vw, 20px); }
+  .chapter-pills { gap: 0.4rem; }
 }
 </style>
 </head>
