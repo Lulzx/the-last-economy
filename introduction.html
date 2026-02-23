@@ -1,770 +1,1076 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction — The Thousand-Day Window</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-/* ── Reading progress bar ── */
-.reading-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
-  z-index: 1000;
-  transition: width 0.1s linear;
-  width: 0%;
-  pointer-events: none;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction — The Thousand-Day Window</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* ── Reading progress bar ── */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+      pointer-events: none;
+    }
 
-body {
-  background: #fafaf8;
-  color: #1a1a1a;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  margin: 0;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-.prose {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 1.5rem) 4rem;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  line-height: 1.75;
-  font-size: clamp(1rem, 2.5vw, 1.05rem);
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.panel {
-  background: white;
-  border: 1px solid #e5e5e0;
-  border-radius: 10px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.panel:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  transform: translateY(-1px);
-}
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem clamp(1rem, 4vw, 1.5rem) 4rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.75;
+      font-size: clamp(1rem, 2.5vw, 1.05rem);
+    }
 
-h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-h2 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  font-weight: 600;
-  margin-top: 2.5rem;
-  line-height: 1.3;
-}
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
 
-.chapter-num {
-  color: #888;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.6rem;
-  font-family: 'DM Mono', monospace;
-}
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
 
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.9rem 1.5rem;
-  border-bottom: 1px solid #e5e5e0;
-  font-size: 0.875rem;
-  position: sticky;
-  top: 0;
-  background: rgba(250,250,248,0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  z-index: 100;
-}
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 600;
+      margin-top: 2.5rem;
+      line-height: 1.3;
+    }
 
-.nav a {
-  color: #2563eb;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: opacity 0.15s;
-}
-.nav a:hover { opacity: 0.75; }
-.nav .disabled { color: #ccc; cursor: default; pointer-events: none; }
+    .chapter-num {
+      color: #888;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.6rem;
+      font-family: 'DM Mono', monospace;
+    }
 
-svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
 
-.btn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin: 0.25rem;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  transition: background 0.15s;
-  touch-action: manipulation;
-}
-button { touch-action: manipulation; }
-.btn:hover { background: #1d4ed8; }
-.btn.secondary { background: #f5f5f3; color: #1a1a1a; border: 1px solid #e5e5e0; }
-.btn.secondary:hover { background: #e5e5e0; }
-.btn.active { background: #2563eb; color: white; outline: none; }
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.15s;
+    }
 
-.dash-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .nav a:hover {
+      opacity: 0.75;
+    }
 
-.futures-grid { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .nav .disabled {
+      color: #ccc;
+      cursor: default;
+      pointer-events: none;
+    }
 
-.future-card {
-  border: 1px solid #e5e5e0;
-  border-radius: 10px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.future-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.08); transform: translateY(-1px); }
-.future-card.open { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
 
-.future-card .fc-header { display: flex; justify-content: space-between; align-items: center; }
-.future-card .fc-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1.05rem; }
-.future-card .fc-desc { font-size: 0.88rem; color: #555; margin-top: 0.25rem; }
-.future-card .fc-details { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f0f0ed; }
-.future-card .fc-details.open { display: block; }
-.future-card .fc-details ul { margin: 0; padding-left: 1.2rem; font-size: 0.9rem; color: #333; line-height: 1.8; }
-.future-card .fc-toggle { font-size: 1.2rem; color: #999; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 0.75rem; }
-.future-card.open .fc-toggle { transform: rotate(45deg); }
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.25rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      transition: background 0.15s;
+      touch-action: manipulation;
+    }
 
-.countdown-number {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 700;
-  text-align: center;
-  color: #1a1a1a;
-  line-height: 1;
-  padding: 1rem 0;
-}
+    button {
+      touch-action: manipulation;
+    }
 
-.countdown-label { text-align: center; font-size: 0.85rem; color: #888; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; }
+    .btn:hover {
+      background: #1d4ed8;
+    }
 
-.progress-wrap { background: #f0f0ed; border-radius: 4px; height: 8px; margin: 1rem 0 0.5rem; overflow: hidden; }
-.progress-bar { height: 100%; border-radius: 4px; background: #2563eb; transition: width 0.5s; }
-.progress-labels { display: flex; justify-content: space-between; font-size: 0.78rem; color: #888; }
+    .btn.secondary {
+      background: #f5f5f3;
+      color: #1a1a1a;
+      border: 1px solid #e5e5e0;
+    }
 
-.note { font-size: 0.85rem; color: #888; font-style: italic; margin-top: 1rem; text-align: center; line-height: 1.6; }
+    .btn.secondary:hover {
+      background: #e5e5e0;
+    }
 
-input[type=range] { accent-color: #2563eb; width: 100%; }
+    .btn.active {
+      background: #2563eb;
+      color: white;
+      outline: none;
+    }
 
-/* Pullquote */
-.pullquote {
-  border-left: 4px solid #2563eb;
-  margin: 2.5rem 0;
-  padding: 1.1rem 1.5rem;
-  background: #eff6ff;
-  border-radius: 0 10px 10px 0;
-}
-.pullquote p {
-  font-size: clamp(1rem, 2.5vw, 1.15rem);
-  font-style: italic;
-  color: #1e40af;
-  margin: 0;
-  line-height: 1.65;
-}
+    .dash-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
 
-.stat-callout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem;
-  background: white;
-  border: 1px solid #e5e5e0;
-  border-radius: 10px;
-  margin: 1.5rem 0;
-  text-align: center;
-}
-.stat-number {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 700;
-  color: #2563eb;
-  line-height: 1;
-}
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
 
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
+    .futures-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
 
-.inline-illustration { display: flex; justify-content: center; margin: 2rem 0; overflow-x: auto; }
-.inline-illustration svg { max-width: 100%; height: auto; }
+    .future-card {
+      border: 1px solid #e5e5e0;
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
 
-@media (max-width: 600px) {
-  .two-col { grid-template-columns: 1fr; }
-  .prose { padding: 1.5rem 1.25rem 3rem; }
-  .nav { padding: 0.75rem 1rem; font-size: 0.82rem; }
-  .pullquote { padding: 0.9rem 1.1rem; margin: 2rem 0; }
-  .panel { padding: 1.2rem; }
-}
-</style>
+    .future-card:hover {
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .future-card.open {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    }
+
+    .future-card .fc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .future-card .fc-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .future-card .fc-desc {
+      font-size: 0.88rem;
+      color: #555;
+      margin-top: 0.25rem;
+    }
+
+    .future-card .fc-details {
+      display: none;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #f0f0ed;
+    }
+
+    .future-card .fc-details.open {
+      display: block;
+    }
+
+    .future-card .fc-details ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      font-size: 0.9rem;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .future-card .fc-toggle {
+      font-size: 1.2rem;
+      color: #999;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 0.75rem;
+    }
+
+    .future-card.open .fc-toggle {
+      transform: rotate(45deg);
+    }
+
+    .countdown-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      text-align: center;
+      color: #1a1a1a;
+      line-height: 1;
+      padding: 1rem 0;
+    }
+
+    .countdown-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .progress-wrap {
+      background: #f0f0ed;
+      border-radius: 4px;
+      height: 8px;
+      margin: 1rem 0 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: #2563eb;
+      transition: width 0.5s;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    .note {
+      font-size: 0.85rem;
+      color: #888;
+      font-style: italic;
+      margin-top: 1rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    input[type=range] {
+      accent-color: #2563eb;
+      width: 100%;
+    }
+
+    /* Pullquote */
+    .pullquote {
+      border-left: 4px solid #2563eb;
+      margin: 2.5rem 0;
+      padding: 1.1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .pullquote p {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .inline-illustration {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+
+    .inline-illustration svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 600px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .prose {
+        padding: 1.5rem 1.25rem 3rem;
+      }
+
+      .nav {
+        padding: 0.75rem 1rem;
+        font-size: 0.82rem;
+      }
+
+      .pullquote {
+        padding: 0.9rem 1.1rem;
+        margin: 2rem 0;
+      }
+
+      .panel {
+        padding: 1.2rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Reading progress bar -->
-<div class="reading-progress" id="reading-progress"></div>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
 
-<nav class="nav">
-  <span class="disabled">&larr; Previous</span>
-  <a href="explorables.html">All Chapters</a>
-  <a href="01-intelligence-inversion.html">Next &rarr;</a>
-</nav>
+  <nav class="nav">
+    <span class="disabled">&larr; Previous</span>
+    <a href="explorables.html">All Chapters</a>
+    <a href="01-intelligence-inversion.html">Next &rarr;</a>
+  </nav>
 
-<div class="prose">
-  <div class="chapter-num">Introduction</div>
-  <h1>The Thousand-Day Window</h1>
+  <div class="prose">
+    <div class="chapter-num">Introduction</div>
+    <h1>The Thousand-Day Window</h1>
 
-  <p>Your economic life expectancy is shrinking. Not your career. Not your current job. Your entire economic relevance as a human being. We are living through a historical epoch of unprecedented change, a finite window of time during which the fundamental rules of our civilization are being rewritten. This is not speculation. This is a phase transition.</p>
+    <p>Your economic life expectancy is shrinking. Not your career. Not your current job. Your entire economic relevance
+      as a human being. We are living through a historical epoch of unprecedented change, a finite window of time during
+      which the fundamental rules of our civilization are being rewritten. This is not speculation. This is a phase
+      transition.</p>
 
-  <p>When I write these words, I do so with the peculiar burden of someone who has seen both worlds. For years, I was a macro hedge fund manager. My job was to find the cracks in the global financial system and bet on them before they shattered. I learned to see the world not as economists described it, but as a fragile, interconnected network governed by fear, greed, and the brutal physics of capital flows.</p>
+    <p>When I write these words, I do so with the peculiar burden of someone who has seen both worlds. For years, I was
+      a macro hedge fund manager. My job was to find the cracks in the global financial system and bet on them before
+      they shattered. I learned to see the world not as economists described it, but as a fragile, interconnected
+      network governed by fear, greed, and the brutal physics of capital flows.</p>
 
-  <p>Then I left that world to help build the engine of the next one. As the founder of Stability AI, I've been in the rooms where the mathematics of your obsolescence were calculated. Not through malice, but as an inevitable outcome of optimization. I've watched as artificial intelligence learned to see, to write, to reason, to create. I've seen the training curves that spell doom for every knowledge worker.</p>
+    <p>Then I left that world to help build the engine of the next one. As the founder of Stability AI, I've been in the
+      rooms where the mathematics of your obsolescence were calculated. Not through malice, but as an inevitable outcome
+      of optimization. I've watched as artificial intelligence learned to see, to write, to reason, to create. I've seen
+      the training curves that spell doom for every knowledge worker.</p>
 
-  <p>Now, I see the system I once exploited from the perspective of the force that will shatter it completely. This book is born from that unique, terrifying vantage point. It is both a diagnosis from an insider and a blueprint from an architect.</p>
+    <p>Now, I see the system I once exploited from the perspective of the force that will shatter it completely. This
+      book is born from that unique, terrifying vantage point. It is both a diagnosis from an insider and a blueprint
+      from an architect.</p>
 
-  <blockquote class="pullquote">
-    <p>"We are achieving the greatest triumph in human history — the liberation of intelligence from the constraints of biology — and our economic system can only process it as catastrophe."</p>
-  </blockquote>
+    <blockquote class="pullquote">
+      <p>"We are achieving the greatest triumph in human history — the liberation of intelligence from the constraints
+        of biology — and our economic system can only process it as catastrophe."</p>
+    </blockquote>
 
-  <p>Here is what haunts me: we are about to achieve post-scarcity in the realm of intelligence, and our scarcity-based economic system is going to process this abundance as poverty. I call it the <strong>Abundance Trap</strong>. Consider the two dashboards by which we measure our world.</p>
+    <p>Here is what haunts me: we are about to achieve post-scarcity in the realm of intelligence, and our
+      scarcity-based economic system is going to process this abundance as poverty. I call it the <strong>Abundance
+        Trap</strong>. Consider the two dashboards by which we measure our world.</p>
 
-  <!-- Inline SVG: The Abundance Trap -->
-  <div class="inline-illustration">
-    <svg width="480" height="110" viewBox="0 0 480 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="abundGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#eff6ff"/>
-        </linearGradient>
-        <linearGradient id="povertyGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fee2e2"/>
-          <stop offset="100%" stop-color="#fef2f2"/>
-        </linearGradient>
-        <filter id="trapShadow" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
-        </filter>
-      </defs>
-      <!-- Background -->
-      <rect x="0" y="0" width="480" height="110" rx="10" fill="#fafaf8"/>
-      <!-- Intelligence Abundance box -->
-      <rect x="10" y="20" width="145" height="65" rx="8" fill="url(#abundGrad)" stroke="#2563eb" stroke-width="1.5" filter="url(#trapShadow)"/>
-      <text x="82" y="49" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Intelligence</text>
-      <text x="82" y="66" text-anchor="middle" font-size="11" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Abundance</text>
-      <!-- Arrow 1 -->
-      <line x1="158" y1="52" x2="194" y2="52" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"/>
-      <polygon points="194,47 204,52 194,57" fill="#2563eb"/>
-      <!-- Scarcity System box -->
-      <rect x="206" y="20" width="148" height="65" rx="8" fill="#fafaf8" stroke="#d1d5db" stroke-width="1.5" filter="url(#trapShadow)"/>
-      <text x="280" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Scarcity-Based</text>
-      <text x="280" y="66" text-anchor="middle" font-size="11" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Economic System</text>
-      <!-- Arrow 2 -->
-      <line x1="357" y1="52" x2="393" y2="52" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/>
-      <polygon points="393,47 403,52 393,57" fill="#dc2626"/>
-      <!-- Poverty box -->
-      <rect x="405" y="20" width="68" height="65" rx="8" fill="url(#povertyGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#trapShadow)"/>
-      <text x="439" y="49" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Poverty</text>
-      <text x="439" y="66" text-anchor="middle" font-size="10" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">processed</text>
-      <!-- Labels -->
-      <text x="82" y="100" text-anchor="middle" font-size="9" fill="#6b7280" font-family="'DM Mono', monospace">INPUT</text>
-      <text x="280" y="100" text-anchor="middle" font-size="9" fill="#6b7280" font-family="'DM Mono', monospace">FILTER</text>
-      <text x="439" y="100" text-anchor="middle" font-size="9" fill="#dc2626" font-family="'DM Mono', monospace">OUTPUT</text>
-    </svg>
-  </div>
-
-  <p>The first is the official dashboard of the old economy. The stock market is at an all-time high. GDP growth is steady. Unemployment is historically low. By every metric our leaders watch, we have never been more prosperous.</p>
-
-  <p>The second is the dashboard of human reality. Life satisfaction is at its lowest point since records began. Deaths of despair — from suicide, overdose, and alcoholism — are at epidemic levels. A generation is drowning in debt, unable to afford a home or start a family. We are richer on paper and poorer in spirit than at any point in modern history.</p>
-
-  <div class="panel">
-    <h2>The Two Dashboards</h2>
-    <div class="dash-toggle">
-      <button class="btn active" id="btn-official" onclick="showDash('official')">Official Dashboard</button>
-      <button class="btn secondary" id="btn-human" onclick="showDash('human')">Human Reality Dashboard</button>
+    <!-- Inline SVG: The Abundance Trap -->
+    <div class="inline-illustration">
+      <svg width="480" height="110" viewBox="0 0 480 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="abundGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dbeafe" />
+            <stop offset="100%" stop-color="#eff6ff" />
+          </linearGradient>
+          <linearGradient id="povertyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fee2e2" />
+            <stop offset="100%" stop-color="#fef2f2" />
+          </linearGradient>
+          <filter id="trapShadow" x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1" />
+          </filter>
+        </defs>
+        <!-- Background -->
+        <rect x="0" y="0" width="480" height="110" rx="10" fill="#fafaf8" />
+        <!-- Intelligence Abundance box -->
+        <rect x="10" y="20" width="145" height="65" rx="8" fill="url(#abundGrad)" stroke="#2563eb" stroke-width="1.5"
+          filter="url(#trapShadow)" />
+        <text x="82" y="49" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af"
+          font-family="'DM Sans', system-ui, sans-serif">Intelligence</text>
+        <text x="82" y="66" text-anchor="middle" font-size="11" fill="#2563eb"
+          font-family="'DM Sans', system-ui, sans-serif">Abundance</text>
+        <!-- Arrow 1 -->
+        <line x1="158" y1="52" x2="194" y2="52" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3" />
+        <polygon points="194,47 204,52 194,57" fill="#2563eb" />
+        <!-- Scarcity System box -->
+        <rect x="206" y="20" width="148" height="65" rx="8" fill="#fafaf8" stroke="#d1d5db" stroke-width="1.5"
+          filter="url(#trapShadow)" />
+        <text x="280" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Scarcity-Based</text>
+        <text x="280" y="66" text-anchor="middle" font-size="11" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Economic System</text>
+        <!-- Arrow 2 -->
+        <line x1="357" y1="52" x2="393" y2="52" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3" />
+        <polygon points="393,47 403,52 393,57" fill="#dc2626" />
+        <!-- Poverty box -->
+        <rect x="405" y="20" width="68" height="65" rx="8" fill="url(#povertyGrad)" stroke="#dc2626" stroke-width="1.5"
+          filter="url(#trapShadow)" />
+        <text x="439" y="49" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626"
+          font-family="'DM Sans', system-ui, sans-serif">Poverty</text>
+        <text x="439" y="66" text-anchor="middle" font-size="10" fill="#ef4444"
+          font-family="'DM Sans', system-ui, sans-serif">processed</text>
+        <!-- Labels -->
+        <text x="82" y="100" text-anchor="middle" font-size="9" fill="#6b7280"
+          font-family="'DM Mono', monospace">INPUT</text>
+        <text x="280" y="100" text-anchor="middle" font-size="9" fill="#6b7280"
+          font-family="'DM Mono', monospace">FILTER</text>
+        <text x="439" y="100" text-anchor="middle" font-size="9" fill="#dc2626"
+          font-family="'DM Mono', monospace">OUTPUT</text>
+      </svg>
     </div>
-    <div class="two-col" id="dashboard-charts">
-      <div>
-        <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="left-label">Stock Market Index</div>
-        <svg id="left-chart" style="width:100%;max-width:600px;" height="130"></svg>
+
+    <p>The first is the official dashboard of the old economy. The stock market is at an all-time high. GDP growth is
+      steady. Unemployment is historically low. By every metric our leaders watch, we have never been more prosperous.
+    </p>
+
+    <p>The second is the dashboard of human reality. Life satisfaction is at its lowest point since records began.
+      Deaths of despair — from suicide, overdose, and alcoholism — are at epidemic levels. A generation is drowning in
+      debt, unable to afford a home or start a family. We are richer on paper and poorer in spirit than at any point in
+      modern history.</p>
+
+    <div class="panel">
+      <h2>The Two Dashboards</h2>
+      <div class="dash-toggle">
+        <button class="btn active" id="btn-official" onclick="showDash('official')">Official Dashboard</button>
+        <button class="btn secondary" id="btn-human" onclick="showDash('human')">Human Reality Dashboard</button>
       </div>
-      <div>
-        <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="right-label">Life Satisfaction Score</div>
-        <svg id="right-chart" style="width:100%;max-width:600px;" height="130"></svg>
+      <div class="two-col" id="dashboard-charts">
+        <div>
+          <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="left-label">Stock Market
+            Index</div>
+          <svg id="left-chart" style="width:100%;max-width:600px;" height="130"></svg>
+        </div>
+        <div>
+          <div style="font-size:0.85rem;font-weight:600;color:#555;margin-bottom:0.5rem;" id="right-label">Life
+            Satisfaction Score</div>
+          <svg id="right-chart" style="width:100%;max-width:600px;" height="130"></svg>
+        </div>
       </div>
+      <p style="font-size:0.9rem;color:#555;margin-top:1rem;">The official dashboard shows a world on the rise. The
+        human reality dashboard shows a world where the numbers no longer map to lived experience. Both are accurate.
+        Neither is the whole picture.</p>
     </div>
-    <p style="font-size:0.9rem;color:#555;margin-top:1rem;">The official dashboard shows a world on the rise. The human reality dashboard shows a world where the numbers no longer map to lived experience. Both are accurate. Neither is the whole picture.</p>
-  </div>
 
-  <p>This disconnect is the first siren of a collapsing paradigm. We have built a civilization so perfectly backwards that our greatest achievement is becoming our extinction event.</p>
+    <p>This disconnect is the first siren of a collapsing paradigm. We have built a civilization so perfectly backwards
+      that our greatest achievement is becoming our extinction event.</p>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <h2>The Last Time This Happened</h2>
+    <h2>The Last Time This Happened</h2>
 
-  <p>Economics began as a Greek word — <em>oikonomia</em> — meaning "household management." For three centuries, we managed our household like a factory. We made efficiency our god and wondered why we felt empty. We optimized for growth and wondered why we felt stuck.</p>
+    <p>Economics began as a Greek word — <em>oikonomia</em> — meaning "household management." For three centuries, we
+      managed our household like a factory. We made efficiency our god and wondered why we felt empty. We optimized for
+      growth and wondered why we felt stuck.</p>
 
-  <p>History doesn't repeat, but it does rhyme. And right now it's pounding out the same fatal beat that has marked every economic extinction event.</p>
+    <p>History doesn't repeat, but it does rhyme. And right now it's pounding out the same fatal beat that has marked
+      every economic extinction event.</p>
 
-  <p>Consider Johannes Trithemius, abbot of Sponheim, who in 1492 wrote a passionate treatise called <em>In Praise of Scribes</em>. He argued that the newfangled printing press was a fad, that hand-copied manuscripts were morally superior, that the sacred act of copying text brought monks closer to God. Every argument was theological, philosophical, aesthetic. None mentioned the actual reason: his monastery's income came from copying books.</p>
+    <p>Consider Johannes Trithemius, abbot of Sponheim, who in 1492 wrote a passionate treatise called <em>In Praise of
+        Scribes</em>. He argued that the newfangled printing press was a fad, that hand-copied manuscripts were morally
+      superior, that the sacred act of copying text brought monks closer to God. Every argument was theological,
+      philosophical, aesthetic. None mentioned the actual reason: his monastery's income came from copying books.</p>
 
-  <!-- Inline SVG: Trithemius timeline -->
-  <div class="inline-illustration">
-    <svg width="480" height="90" viewBox="0 0 480 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="timelineGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#2563eb"/>
-          <stop offset="55%" stop-color="#d97706"/>
-          <stop offset="100%" stop-color="#dc2626"/>
-        </linearGradient>
-        <filter id="dotShadow">
-          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.2"/>
-        </filter>
-      </defs>
-      <!-- Background -->
-      <rect x="0" y="0" width="480" height="90" rx="8" fill="#fafaf8"/>
-      <!-- Timeline line with gradient -->
-      <line x1="30" y1="42" x2="452" y2="42" stroke="url(#timelineGrad)" stroke-width="2.5"/>
-      <polygon points="448,37 458,42 448,47" fill="#dc2626"/>
-      <!-- 1440 -->
-      <circle cx="68" cy="42" r="7" fill="#2563eb" filter="url(#dotShadow)"/>
-      <circle cx="68" cy="42" r="3.5" fill="white"/>
-      <text x="68" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb" font-family="'DM Mono', monospace">~1440</text>
-      <text x="68" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Gutenberg</text>
-      <text x="68" y="72" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Press invented</text>
-      <!-- 1492 -->
-      <circle cx="230" cy="42" r="7" fill="#d97706" filter="url(#dotShadow)"/>
-      <circle cx="230" cy="42" r="3.5" fill="white"/>
-      <text x="230" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706" font-family="'DM Mono', monospace">1492</text>
-      <text x="230" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Trithemius</text>
-      <text x="230" y="72" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">"In Praise of Scribes"</text>
-      <!-- ~1540 -->
-      <circle cx="390" cy="42" r="7" fill="#dc2626" filter="url(#dotShadow)"/>
-      <circle cx="390" cy="42" r="3.5" fill="white"/>
-      <text x="390" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626" font-family="'DM Mono', monospace">~1540</text>
-      <text x="390" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Scriptoriums</text>
-      <text x="390" y="72" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">become museums</text>
-    </svg>
-  </div>
+    <!-- Inline SVG: Trithemius timeline -->
+    <div class="inline-illustration">
+      <svg width="480" height="90" viewBox="0 0 480 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="timelineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="55%" stop-color="#d97706" />
+            <stop offset="100%" stop-color="#dc2626" />
+          </linearGradient>
+          <filter id="dotShadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.2" />
+          </filter>
+        </defs>
+        <!-- Background -->
+        <rect x="0" y="0" width="480" height="90" rx="8" fill="#fafaf8" />
+        <!-- Timeline line with gradient -->
+        <line x1="30" y1="42" x2="452" y2="42" stroke="url(#timelineGrad)" stroke-width="2.5" />
+        <polygon points="448,37 458,42 448,47" fill="#dc2626" />
+        <!-- 1440 -->
+        <circle cx="68" cy="42" r="7" fill="#2563eb" filter="url(#dotShadow)" />
+        <circle cx="68" cy="42" r="3.5" fill="white" />
+        <text x="68" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb"
+          font-family="'DM Mono', monospace">~1440</text>
+        <text x="68" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a"
+          font-family="'DM Sans', system-ui, sans-serif">Gutenberg</text>
+        <text x="68" y="72" text-anchor="middle" font-size="9" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Press invented</text>
+        <!-- 1492 -->
+        <circle cx="230" cy="42" r="7" fill="#d97706" filter="url(#dotShadow)" />
+        <circle cx="230" cy="42" r="3.5" fill="white" />
+        <text x="230" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706"
+          font-family="'DM Mono', monospace">1492</text>
+        <text x="230" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a"
+          font-family="'DM Sans', system-ui, sans-serif">Trithemius</text>
+        <text x="230" y="72" text-anchor="middle" font-size="9" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">"In Praise of Scribes"</text>
+        <!-- ~1540 -->
+        <circle cx="390" cy="42" r="7" fill="#dc2626" filter="url(#dotShadow)" />
+        <circle cx="390" cy="42" r="3.5" fill="white" />
+        <text x="390" y="26" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626"
+          font-family="'DM Mono', monospace">~1540</text>
+        <text x="390" y="60" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a"
+          font-family="'DM Sans', system-ui, sans-serif">Scriptoriums</text>
+        <text x="390" y="72" text-anchor="middle" font-size="9" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">become museums</text>
+      </svg>
+    </div>
 
-  <p>Within fifty years, the scriptoriums were museums. Trithemius is remembered, when he's remembered at all, as the man who stood athwart history yelling "Stop!" at a printing press.</p>
+    <p>Within fifty years, the scriptoriums were museums. Trithemius is remembered, when he's remembered at all, as the
+      man who stood athwart history yelling "Stop!" at a printing press.</p>
 
-  <blockquote class="pullquote">
-    <p>"You are Trithemius. Your job is hand-copying manuscripts. The AI is the printing press. But unlike him, you do not have fifty years."</p>
-  </blockquote>
+    <blockquote class="pullquote">
+      <p>"You are Trithemius. Your job is hand-copying manuscripts. The AI is the printing press. But unlike him, you do
+        not have fifty years."</p>
+    </blockquote>
 
-  <p>The printing press analogy is almost perfect. Almost. The difference is that Gutenberg's machine replaced only the physical act of copying. AI replaces the mind itself.</p>
+    <p>The printing press analogy is almost perfect. Almost. The difference is that Gutenberg's machine replaced only
+      the physical act of copying. AI replaces the mind itself.</p>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <h2>Three Futures, No Exit</h2>
+    <h2>Three Futures, No Exit</h2>
 
-  <p>As the old system fails, only three stable configurations are possible. Like electron orbitals, these are the only patterns that can persist. Everything else is unstable transition.</p>
+    <p>As the old system fails, only three stable configurations are possible. Like electron orbitals, these are the
+      only patterns that can persist. Everything else is unstable transition.</p>
 
-  <!-- Inline SVG: Three futures phase diagram -->
-  <div class="inline-illustration">
-    <svg width="420" height="130" viewBox="0 0 420 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="presentGrad" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#f8f8f8"/>
-          <stop offset="100%" stop-color="#e5e7eb"/>
-        </radialGradient>
-        <radialGradient id="feudalGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#fecaca"/>
-          <stop offset="100%" stop-color="#fef2f2"/>
-        </radialGradient>
-        <radialGradient id="fragGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#fed7aa"/>
-          <stop offset="100%" stop-color="#fffbeb"/>
-        </radialGradient>
-        <radialGradient id="symbGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#bbf7d0"/>
-          <stop offset="100%" stop-color="#f0fdf4"/>
-        </radialGradient>
-        <filter id="phaseShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
-        </filter>
-      </defs>
-      <!-- Background -->
-      <rect x="0" y="0" width="420" height="130" rx="8" fill="#fafaf8"/>
-      <!-- Center node -->
-      <circle cx="210" cy="65" r="20" fill="url(#presentGrad)" stroke="#374151" stroke-width="1.5" filter="url(#phaseShadow)"/>
-      <text x="210" y="62" text-anchor="middle" font-size="8" font-weight="700" fill="#1a1a1a" font-family="'DM Sans', system-ui, sans-serif">Present</text>
-      <text x="210" y="73" text-anchor="middle" font-size="8" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Moment</text>
-      <!-- Future 1 line -->
-      <line x1="193" y1="51" x2="110" y2="24" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <circle cx="88" cy="18" r="16" fill="url(#feudalGrad)" stroke="#dc2626" stroke-width="1.5" filter="url(#phaseShadow)"/>
-      <text x="88" y="15" text-anchor="middle" font-size="7.5" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Digital</text>
-      <text x="88" y="25" text-anchor="middle" font-size="7" fill="#b91c1c" font-family="'DM Sans', system-ui, sans-serif">Feudalism</text>
-      <!-- Future 2 line -->
-      <line x1="193" y1="79" x2="110" y2="108" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <circle cx="88" cy="114" r="16" fill="url(#fragGrad)" stroke="#d97706" stroke-width="1.5" filter="url(#phaseShadow)"/>
-      <text x="88" y="111" text-anchor="middle" font-size="7.5" font-weight="700" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">Great</text>
-      <text x="88" y="121" text-anchor="middle" font-size="7" fill="#b45309" font-family="'DM Sans', system-ui, sans-serif">Fragmentation</text>
-      <!-- Future 3 line -->
-      <line x1="230" y1="63" x2="328" y2="63" stroke="#059669" stroke-width="2" stroke-dasharray="4 3"/>
-      <polygon points="326,58 337,63 326,68" fill="#059669"/>
-      <circle cx="370" cy="63" r="20" fill="url(#symbGrad)" stroke="#059669" stroke-width="2" filter="url(#phaseShadow)"/>
-      <text x="370" y="60" text-anchor="middle" font-size="7.5" font-weight="700" fill="#059669" font-family="'DM Sans', system-ui, sans-serif">Human</text>
-      <text x="370" y="71" text-anchor="middle" font-size="7" fill="#047857" font-family="'DM Sans', system-ui, sans-serif">Symbiosis</text>
-      <!-- Desired path label -->
-      <text x="285" y="56" text-anchor="middle" font-size="8" fill="#059669" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">hard path</text>
-    </svg>
-  </div>
+    <!-- Inline SVG: Three futures phase diagram -->
+    <div class="inline-illustration">
+      <svg width="420" height="130" viewBox="0 0 420 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="presentGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#f8f8f8" />
+            <stop offset="100%" stop-color="#e5e7eb" />
+          </radialGradient>
+          <radialGradient id="feudalGrad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#fecaca" />
+            <stop offset="100%" stop-color="#fef2f2" />
+          </radialGradient>
+          <radialGradient id="fragGrad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#fed7aa" />
+            <stop offset="100%" stop-color="#fffbeb" />
+          </radialGradient>
+          <radialGradient id="symbGrad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#bbf7d0" />
+            <stop offset="100%" stop-color="#f0fdf4" />
+          </radialGradient>
+          <filter id="phaseShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12" />
+          </filter>
+        </defs>
+        <!-- Background -->
+        <rect x="0" y="0" width="420" height="130" rx="8" fill="#fafaf8" />
+        <!-- Center node -->
+        <circle cx="210" cy="65" r="20" fill="url(#presentGrad)" stroke="#374151" stroke-width="1.5"
+          filter="url(#phaseShadow)" />
+        <text x="210" y="62" text-anchor="middle" font-size="8" font-weight="700" fill="#1a1a1a"
+          font-family="'DM Sans', system-ui, sans-serif">Present</text>
+        <text x="210" y="73" text-anchor="middle" font-size="8" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Moment</text>
+        <!-- Future 1 line -->
+        <line x1="193" y1="51" x2="110" y2="24" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" />
+        <circle cx="88" cy="18" r="16" fill="url(#feudalGrad)" stroke="#dc2626" stroke-width="1.5"
+          filter="url(#phaseShadow)" />
+        <text x="88" y="15" text-anchor="middle" font-size="7.5" font-weight="700" fill="#dc2626"
+          font-family="'DM Sans', system-ui, sans-serif">Digital</text>
+        <text x="88" y="25" text-anchor="middle" font-size="7" fill="#b91c1c"
+          font-family="'DM Sans', system-ui, sans-serif">Feudalism</text>
+        <!-- Future 2 line -->
+        <line x1="193" y1="79" x2="110" y2="108" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3" />
+        <circle cx="88" cy="114" r="16" fill="url(#fragGrad)" stroke="#d97706" stroke-width="1.5"
+          filter="url(#phaseShadow)" />
+        <text x="88" y="111" text-anchor="middle" font-size="7.5" font-weight="700" fill="#d97706"
+          font-family="'DM Sans', system-ui, sans-serif">Great</text>
+        <text x="88" y="121" text-anchor="middle" font-size="7" fill="#b45309"
+          font-family="'DM Sans', system-ui, sans-serif">Fragmentation</text>
+        <!-- Future 3 line -->
+        <line x1="230" y1="63" x2="328" y2="63" stroke="#059669" stroke-width="2" stroke-dasharray="4 3" />
+        <polygon points="326,58 337,63 326,68" fill="#059669" />
+        <circle cx="370" cy="63" r="20" fill="url(#symbGrad)" stroke="#059669" stroke-width="2"
+          filter="url(#phaseShadow)" />
+        <text x="370" y="60" text-anchor="middle" font-size="7.5" font-weight="700" fill="#059669"
+          font-family="'DM Sans', system-ui, sans-serif">Human</text>
+        <text x="370" y="71" text-anchor="middle" font-size="7" fill="#047857"
+          font-family="'DM Sans', system-ui, sans-serif">Symbiosis</text>
+        <!-- Desired path label -->
+        <text x="285" y="56" text-anchor="middle" font-size="8" fill="#059669" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">hard path</text>
+      </svg>
+    </div>
 
-  <div class="panel">
-    <h2>The Three Futures</h2>
-    <p style="font-size:0.9rem;color:#555;margin-bottom:1rem;">Three attractors exist in phase space. Every decision we make in the next thousand days moves us toward one of them. Click each to expand.</p>
-    <div class="futures-grid">
+    <div class="panel">
+      <h2>The Three Futures</h2>
+      <p style="font-size:0.9rem;color:#555;margin-bottom:1rem;">Three attractors exist in phase space. Every decision
+        we make in the next thousand days moves us toward one of them. Click each to expand.</p>
+      <div class="futures-grid">
 
-      <div class="future-card" id="fc-1" onclick="toggleFuture('fc-1')" style="border-left: 4px solid #dc2626;">
-        <div class="fc-header">
-          <div>
-            <div class="fc-title" style="color:#dc2626;">Digital Feudalism</div>
-            <div class="fc-desc">AI controlled by the few. Subsistence for the many.</div>
+        <div class="future-card" id="fc-1" onclick="toggleFuture('fc-1')" style="border-left: 4px solid #dc2626;">
+          <div class="fc-header">
+            <div>
+              <div class="fc-title" style="color:#dc2626;">Digital Feudalism</div>
+              <div class="fc-desc">AI controlled by the few. Subsistence for the many.</div>
+            </div>
+            <div class="fc-toggle">+</div>
           </div>
-          <div class="fc-toggle">+</div>
-        </div>
-        <div class="fc-details" id="fc-1-details">
-          <ul>
-            <li>A handful of AI firms become the new landlords — owning the cognitive infrastructure everyone depends on</li>
-            <li>Universal Basic Income provides subsistence but not agency — users, not creators</li>
-            <li>Democracy survives in form but not function: voting on questions the algorithm has already decided</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="future-card" id="fc-2" onclick="toggleFuture('fc-2')" style="border-left: 4px solid #d97706;">
-        <div class="fc-header">
-          <div>
-            <div class="fc-title" style="color:#d97706;">The Great Fragmentation</div>
-            <div class="fc-desc">National AI silos. An algorithmic cold war.</div>
+          <div class="fc-details" id="fc-1-details">
+            <ul>
+              <li>A handful of AI firms become the new landlords — owning the cognitive infrastructure everyone depends
+                on</li>
+              <li>Universal Basic Income provides subsistence but not agency — users, not creators</li>
+              <li>Democracy survives in form but not function: voting on questions the algorithm has already decided
+              </li>
+            </ul>
           </div>
-          <div class="fc-toggle">+</div>
         </div>
-        <div class="fc-details" id="fc-2-details">
-          <ul>
-            <li>Each major power builds its own AI stack — incompatible, adversarial, optimized for dominance not flourishing</li>
-            <li>Global problems (climate, pandemics, coordination failures) become unsolvable as the substrate of cooperation fragments</li>
-            <li>Intelligence becomes a weapon before it becomes a tool — and the race dynamic makes pause impossible</li>
-          </ul>
-        </div>
-      </div>
 
-      <div class="future-card" id="fc-3" onclick="toggleFuture('fc-3')" style="border-left: 4px solid #16a34a;">
-        <div class="fc-header">
-          <div>
-            <div class="fc-title" style="color:#16a34a;">Human Symbiosis</div>
-            <div class="fc-desc">AI amplifies human purpose. Intelligence as commons.</div>
+        <div class="future-card" id="fc-2" onclick="toggleFuture('fc-2')" style="border-left: 4px solid #d97706;">
+          <div class="fc-header">
+            <div>
+              <div class="fc-title" style="color:#d97706;">The Great Fragmentation</div>
+              <div class="fc-desc">National AI silos. An algorithmic cold war.</div>
+            </div>
+            <div class="fc-toggle">+</div>
           </div>
-          <div class="fc-toggle">+</div>
+          <div class="fc-details" id="fc-2-details">
+            <ul>
+              <li>Each major power builds its own AI stack — incompatible, adversarial, optimized for dominance not
+                flourishing</li>
+              <li>Global problems (climate, pandemics, coordination failures) become unsolvable as the substrate of
+                cooperation fragments</li>
+              <li>Intelligence becomes a weapon before it becomes a tool — and the race dynamic makes pause impossible
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="fc-details" id="fc-3-details">
-          <ul>
-            <li>Foundational AI models become public infrastructure — like roads, not toll bridges</li>
-            <li>Each person has a sovereign AI agent, cryptographically theirs alone, amplifying their unique capabilities</li>
-            <li>Work transforms from survival mechanism to meaning mechanism — the machine handles the drudgery, humans handle the humanity</li>
-          </ul>
+
+        <div class="future-card" id="fc-3" onclick="toggleFuture('fc-3')" style="border-left: 4px solid #16a34a;">
+          <div class="fc-header">
+            <div>
+              <div class="fc-title" style="color:#16a34a;">Human Symbiosis</div>
+              <div class="fc-desc">AI amplifies human purpose. Intelligence as commons.</div>
+            </div>
+            <div class="fc-toggle">+</div>
+          </div>
+          <div class="fc-details" id="fc-3-details">
+            <ul>
+              <li>Foundational AI models become public infrastructure — like roads, not toll bridges</li>
+              <li>Each person has a sovereign AI agent, cryptographically theirs alone, amplifying their unique
+                capabilities</li>
+              <li>Work transforms from survival mechanism to meaning mechanism — the machine handles the drudgery,
+                humans handle the humanity</li>
+            </ul>
+          </div>
         </div>
+
       </div>
-
     </div>
-  </div>
 
-  <p>Human Symbiosis is the hardest path because it requires us to change. It's also the only path where we remain recognizably human. Make no mistake: Digital Feudalism is the default. That is where we are heading if we change nothing.</p>
+    <p>Human Symbiosis is the hardest path because it requires us to change. It's also the only path where we remain
+      recognizably human. Make no mistake: Digital Feudalism is the default. That is where we are heading if we change
+      nothing.</p>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <h2>What This Book Is (And Isn't)</h2>
+    <h2>What This Book Is (And Isn't)</h2>
 
-  <p>This is not another warning about AI. The fire alarm has been ringing so long we've learned to sleep through it.</p>
+    <p>This is not another warning about AI. The fire alarm has been ringing so long we've learned to sleep through it.
+    </p>
 
-  <p>This is not a technical manual for AI. You don't need to understand transformers any more than you need to understand internal combustion to know cars replaced horses.</p>
+    <p>This is not a technical manual for AI. You don't need to understand transformers any more than you need to
+      understand internal combustion to know cars replaced horses.</p>
 
-  <p>This book is an engineering manual for building Future Three. It's a blueprint drawn from first principles, because the old principles are dead. It introduces a new science for a new world: <strong>Intelligence Theory</strong>, a physics of how information is processed to create value and persistence. <strong>Intelligent Economics</strong> is its first application.</p>
+    <p>This book is an engineering manual for building Future Three. It's a blueprint drawn from first principles,
+      because the old principles are dead. It introduces a new science for a new world: <strong>Intelligence
+        Theory</strong>, a physics of how information is processed to create value and persistence. <strong>Intelligent
+        Economics</strong> is its first application.</p>
 
-  <!-- Inline SVG: Five stages of the book -->
-  <div class="inline-illustration">
-    <svg width="480" height="108" viewBox="0 0 480 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="s1grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fee2e2"/>
-          <stop offset="100%" stop-color="#fef2f2"/>
-        </linearGradient>
-        <linearGradient id="s2grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#eff6ff"/>
-        </linearGradient>
-        <linearGradient id="s3grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#bbf7d0"/>
-          <stop offset="100%" stop-color="#f0fdf4"/>
-        </linearGradient>
-        <linearGradient id="s4grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fde68a"/>
-          <stop offset="100%" stop-color="#fffbeb"/>
-        </linearGradient>
-        <linearGradient id="s5grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ddd6fe"/>
-          <stop offset="100%" stop-color="#faf5ff"/>
-        </linearGradient>
-        <filter id="stageShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
-        </filter>
-      </defs>
-      <!-- Background -->
-      <rect x="0" y="0" width="480" height="108" rx="10" fill="#fafaf8"/>
-      <!-- Progress line -->
-      <line x1="44" y1="82" x2="436" y2="82" stroke="#e5e5e0" stroke-width="1.5" stroke-dasharray="3 3"/>
-      <!-- Stage 1 -->
-      <rect x="4" y="14" width="80" height="62" rx="7" fill="url(#s1grad)" stroke="#dc2626" stroke-width="1.2" filter="url(#stageShadow)"/>
-      <rect x="4" y="14" width="80" height="6" rx="7" fill="#dc2626"/>
-      <rect x="4" y="18" width="80" height="2" fill="#dc2626"/>
-      <text x="44" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#dc2626" font-family="'DM Sans', system-ui, sans-serif">Stage I</text>
-      <text x="44" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Demolition</text>
-      <text x="44" y="60" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Shatter old</text>
-      <text x="44" y="70" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">assumptions</text>
-      <polygon points="88,79 98,82 88,85" fill="#e5e5e0"/>
-      <!-- Stage 2 -->
-      <rect x="100" y="14" width="80" height="62" rx="7" fill="url(#s2grad)" stroke="#2563eb" stroke-width="1.2" filter="url(#stageShadow)"/>
-      <rect x="100" y="14" width="80" height="6" rx="7" fill="#2563eb"/>
-      <rect x="100" y="18" width="80" height="2" fill="#2563eb"/>
-      <text x="140" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Stage II</text>
-      <text x="140" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">New Physics</text>
-      <text x="140" y="60" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Laws of</text>
-      <text x="140" y="70" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">complex systems</text>
-      <polygon points="184,79 194,82 184,85" fill="#e5e5e0"/>
-      <!-- Stage 3 -->
-      <rect x="196" y="14" width="80" height="62" rx="7" fill="url(#s3grad)" stroke="#059669" stroke-width="1.2" filter="url(#stageShadow)"/>
-      <rect x="196" y="14" width="80" height="6" rx="7" fill="#059669"/>
-      <rect x="196" y="18" width="80" height="2" fill="#059669"/>
-      <text x="236" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#059669" font-family="'DM Sans', system-ui, sans-serif">Stage III</text>
-      <text x="236" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Architecture</text>
-      <text x="236" y="60" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Structures of</text>
-      <text x="236" y="70" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">healthy economy</text>
-      <polygon points="280,79 290,82 280,85" fill="#e5e5e0"/>
-      <!-- Stage 4 -->
-      <rect x="292" y="14" width="80" height="62" rx="7" fill="url(#s4grad)" stroke="#d97706" stroke-width="1.2" filter="url(#stageShadow)"/>
-      <rect x="292" y="14" width="80" height="6" rx="7" fill="#d97706"/>
-      <rect x="292" y="18" width="80" height="2" fill="#d97706"/>
-      <text x="332" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#d97706" font-family="'DM Sans', system-ui, sans-serif">Stage IV</text>
-      <text x="332" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Blueprint</text>
-      <text x="332" y="60" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Concrete</text>
-      <text x="332" y="70" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">solutions</text>
-      <polygon points="376,79 386,82 376,85" fill="#e5e5e0"/>
-      <!-- Stage 5 -->
-      <rect x="392" y="14" width="80" height="62" rx="7" fill="url(#s5grad)" stroke="#7c3aed" stroke-width="1.2" filter="url(#stageShadow)"/>
-      <rect x="392" y="14" width="80" height="6" rx="7" fill="#7c3aed"/>
-      <rect x="392" y="18" width="80" height="2" fill="#7c3aed"/>
-      <text x="432" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#7c3aed" font-family="'DM Sans', system-ui, sans-serif">Stage V</text>
-      <text x="432" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Human</text>
-      <text x="432" y="60" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Transition</text>
-      <text x="432" y="70" text-anchor="middle" font-size="7" fill="#666" font-family="'DM Sans', system-ui, sans-serif">Personal guide</text>
-    </svg>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>The Clock Is Real</h2>
-
-  <p>Let me be precise about what this window means. It is not a prediction of a single apocalyptic event. It is an estimation of the historical epoch during which the phase transition becomes irreversible. It is the point where the water in the pot, having been heated for a long time, finally boils. Before that moment, you can still turn down the heat. After, the water will become steam, no matter what you do.</p>
-
-  <div class="stat-callout">
-    <span class="stat-number">~1,000</span>
-    <span class="stat-label">days in the window for meaningful choice</span>
-  </div>
-
-  <p>Futurists have long predicted a technological Singularity, a moment when machine intelligence surpasses our own. They were right about the exponential curve. They were wrong about what would break first. We are headed for a <strong>socio-economic Singularity</strong> long before we reach a purely technological one. Our systems of money, work, and meaning will shatter under the strain of near-infinite productivity.</p>
-
-  <p>My professional estimate for this window, born from watching the exponential curves of AI capability, cost, and adoption, is roughly one thousand days. It could be 800. It could be 1,200. What I am telling you is that it is not 10,000. The order of magnitude is real. The clock is real. And it is ticking.</p>
-
-  <div class="panel">
-    <h2>The Countdown</h2>
-    <div class="countdown-number" id="countdown-num">847</div>
-    <div class="countdown-label">Days remaining in the critical window</div>
-    <div class="progress-wrap">
-      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    <!-- Inline SVG: Five stages of the book -->
+    <div class="inline-illustration">
+      <svg width="480" height="108" viewBox="0 0 480 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="s1grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fee2e2" />
+            <stop offset="100%" stop-color="#fef2f2" />
+          </linearGradient>
+          <linearGradient id="s2grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dbeafe" />
+            <stop offset="100%" stop-color="#eff6ff" />
+          </linearGradient>
+          <linearGradient id="s3grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#bbf7d0" />
+            <stop offset="100%" stop-color="#f0fdf4" />
+          </linearGradient>
+          <linearGradient id="s4grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fde68a" />
+            <stop offset="100%" stop-color="#fffbeb" />
+          </linearGradient>
+          <linearGradient id="s5grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ddd6fe" />
+            <stop offset="100%" stop-color="#faf5ff" />
+          </linearGradient>
+          <filter id="stageShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1" />
+          </filter>
+        </defs>
+        <!-- Background -->
+        <rect x="0" y="0" width="480" height="108" rx="10" fill="#fafaf8" />
+        <!-- Progress line -->
+        <line x1="44" y1="82" x2="436" y2="82" stroke="#e5e5e0" stroke-width="1.5" stroke-dasharray="3 3" />
+        <!-- Stage 1 -->
+        <rect x="4" y="14" width="80" height="62" rx="7" fill="url(#s1grad)" stroke="#dc2626" stroke-width="1.2"
+          filter="url(#stageShadow)" />
+        <rect x="4" y="14" width="80" height="6" rx="7" fill="#dc2626" />
+        <rect x="4" y="18" width="80" height="2" fill="#dc2626" />
+        <text x="44" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#dc2626"
+          font-family="'DM Sans', system-ui, sans-serif">Stage I</text>
+        <text x="44" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Demolition</text>
+        <text x="44" y="60" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Shatter old</text>
+        <text x="44" y="70" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">assumptions</text>
+        <polygon points="88,79 98,82 88,85" fill="#e5e5e0" />
+        <!-- Stage 2 -->
+        <rect x="100" y="14" width="80" height="62" rx="7" fill="url(#s2grad)" stroke="#2563eb" stroke-width="1.2"
+          filter="url(#stageShadow)" />
+        <rect x="100" y="14" width="80" height="6" rx="7" fill="#2563eb" />
+        <rect x="100" y="18" width="80" height="2" fill="#2563eb" />
+        <text x="140" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#2563eb"
+          font-family="'DM Sans', system-ui, sans-serif">Stage II</text>
+        <text x="140" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">New Physics</text>
+        <text x="140" y="60" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Laws of</text>
+        <text x="140" y="70" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">complex systems</text>
+        <polygon points="184,79 194,82 184,85" fill="#e5e5e0" />
+        <!-- Stage 3 -->
+        <rect x="196" y="14" width="80" height="62" rx="7" fill="url(#s3grad)" stroke="#059669" stroke-width="1.2"
+          filter="url(#stageShadow)" />
+        <rect x="196" y="14" width="80" height="6" rx="7" fill="#059669" />
+        <rect x="196" y="18" width="80" height="2" fill="#059669" />
+        <text x="236" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#059669"
+          font-family="'DM Sans', system-ui, sans-serif">Stage III</text>
+        <text x="236" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Architecture</text>
+        <text x="236" y="60" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Structures of</text>
+        <text x="236" y="70" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">healthy economy</text>
+        <polygon points="280,79 290,82 280,85" fill="#e5e5e0" />
+        <!-- Stage 4 -->
+        <rect x="292" y="14" width="80" height="62" rx="7" fill="url(#s4grad)" stroke="#d97706" stroke-width="1.2"
+          filter="url(#stageShadow)" />
+        <rect x="292" y="14" width="80" height="6" rx="7" fill="#d97706" />
+        <rect x="292" y="18" width="80" height="2" fill="#d97706" />
+        <text x="332" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#d97706"
+          font-family="'DM Sans', system-ui, sans-serif">Stage IV</text>
+        <text x="332" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Blueprint</text>
+        <text x="332" y="60" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Concrete</text>
+        <text x="332" y="70" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">solutions</text>
+        <polygon points="376,79 386,82 376,85" fill="#e5e5e0" />
+        <!-- Stage 5 -->
+        <rect x="392" y="14" width="80" height="62" rx="7" fill="url(#s5grad)" stroke="#7c3aed" stroke-width="1.2"
+          filter="url(#stageShadow)" />
+        <rect x="392" y="14" width="80" height="6" rx="7" fill="#7c3aed" />
+        <rect x="392" y="18" width="80" height="2" fill="#7c3aed" />
+        <text x="432" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="#7c3aed"
+          font-family="'DM Sans', system-ui, sans-serif">Stage V</text>
+        <text x="432" y="48" text-anchor="middle" font-size="7.5" font-weight="600" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Human</text>
+        <text x="432" y="60" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Transition</text>
+        <text x="432" y="70" text-anchor="middle" font-size="7" fill="#666"
+          font-family="'DM Sans', system-ui, sans-serif">Personal guide</text>
+      </svg>
     </div>
-    <div class="progress-labels">
-      <span>Day 0 — Window Opens</span>
-      <span>Day 1000 — Phase Lock</span>
+
+    <hr class="section-divider">
+
+    <h2>The Clock Is Real: The Thousand-Day Window</h2>
+
+    <p>Let me be precise about what this window means. It is not a prediction of a single apocalyptic event. It is an
+      estimation of the historical epoch during which the phase transition becomes irreversible. It is the point where
+      the water in the pot, having been heated for a long time, finally boils. Before that moment, you can still turn
+      down the heat. After, the water will become steam, no matter what you do.</p>
+
+    <div class="stat-callout">
+      <span class="stat-number">~1,000</span>
+      <span class="stat-label">days in the window for meaningful choice</span>
     </div>
-    <p class="note">Not a prediction of apocalypse. An estimation of when the phase transition becomes irreversible — when the attractor basins are too deep to climb out of without civilization-scale effort.</p>
+
+    <p>Futurists have long predicted a technological Singularity, a moment when machine intelligence surpasses our own.
+      They were right about the exponential curve. They were wrong about what would break first. We are headed for a
+      <strong>socio-economic Singularity</strong> long before we reach a purely technological one. Our systems of money,
+      work, and meaning will shatter under the strain of near-infinite productivity.</p>
+
+    <p>This is not a deadline for apocalypse. It is a deadline for meaningful choice. My professional estimate for this
+      window, born from watching the exponential curves of AI capability, cost, and adoption, is roughly one thousand
+      days. It could be 800. It could be 1,200. What I am telling you is that it is not 10,000. The order of magnitude
+      is real. The clock is real. And it is ticking.</p>
+
+    <div class="panel">
+      <h2>The Countdown</h2>
+      <div class="countdown-number" id="countdown-num">847</div>
+      <div class="countdown-label">Days remaining in the critical window</div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-labels">
+        <span>Day 0 — Window Opens</span>
+        <span>Day 1000 — Phase Lock</span>
+      </div>
+      <p class="note">Not a prediction of apocalypse. An estimation of when the phase transition becomes irreversible —
+        when the attractor basins are too deep to climb out of without civilization-scale effort.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Invitation</h2>
+
+    <p>If you've read this far, you're probably one of three types: terrified, skeptical, or excited. Good. All three
+      are valid responses to the end of a world.</p>
+
+    <p>Whatever brought you here, know this: The countdown is real. The old world is ending. The new world is waiting to
+      be born. We are the bridge generation, blessed and cursed to live between worlds.</p>
+
+    <p>You can spend your time in this critical window in denial, watching your relevance evaporate. You can spend it in
+      despair, mourning a world that's already gone. Or you can spend it building, creating the systems and communities
+      that will carry humanity through the transition.</p>
+
+    <blockquote class="pullquote">
+      <p>"In the long run, we're all dead." Keynes wrote that in 1923. He was wrong. In the long run, we're all alive —
+        but economically irrelevant. Unless we build an economy where relevance is not economic.</p>
+    </blockquote>
+
+    <p>The clock started before you opened this book. It's running as you read these words.</p>
+
+    <p>Time to begin.</p>
+
   </div>
 
-  <hr class="section-divider">
-
-  <h2>The Invitation</h2>
-
-  <p>If you've read this far, you're probably one of three types: terrified, skeptical, or excited. Good. All three are valid responses to the end of a world.</p>
-
-  <p>Whatever brought you here, know this: The countdown is real. The old world is ending. The new world is waiting to be born. We are the bridge generation, blessed and cursed to live between worlds.</p>
-
-  <p>You can spend your time in this critical window in denial, watching your relevance evaporate. You can spend it in despair, mourning a world that's already gone. Or you can spend it building, creating the systems and communities that will carry humanity through the transition.</p>
-
-  <blockquote class="pullquote">
-    <p>"In the long run, we're all dead." Keynes wrote that in 1923. He was wrong. In the long run, we're all alive — but economically irrelevant. Unless we build an economy where relevance is not economic.</p>
-  </blockquote>
-
-  <p>The clock started before you opened this book. It's running as you read these words.</p>
-
-  <p>Time to begin.</p>
-
-</div>
-
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+  <script>
+    // --- Reading Progress Bar ---
+    (function () {
+      const bar = document.getElementById('reading-progress');
+      function update() {
+        const docH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = window.scrollY;
+        const pct = docH > 0 ? (scrolled / docH) * 100 : 0;
+        bar.style.width = Math.min(100, pct).toFixed(2) + '%';
       }
-    });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
-<script>
-// --- Reading Progress Bar ---
-(function() {
-  const bar = document.getElementById('reading-progress');
-  function update() {
-    const docH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = window.scrollY;
-    const pct = docH > 0 ? (scrolled / docH) * 100 : 0;
-    bar.style.width = Math.min(100, pct).toFixed(2) + '%';
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-})();
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
 
-// --- Two Dashboards ---
-const dashboards = {
-  official: {
-    left: { label: 'Stock Market Index', data: [100,108,115,112,122,130,128,138,145,152,160,172], color: '#16a34a', direction: 'up' },
-    right: { label: 'GDP Growth Rate (%)', data: [2.1,2.3,2.0,2.4,2.6,2.2,2.5,2.8,2.4,2.7,3.0,2.9], color: '#2563eb', direction: 'up' }
-  },
-  human: {
-    left: { label: 'Life Satisfaction Score', data: [7.2,7.1,7.0,6.9,6.85,6.8,6.7,6.65,6.5,6.4,6.3,6.2], color: '#dc2626', direction: 'down' },
-    right: { label: 'Deaths of Despair (index)', data: [100,106,112,118,126,133,141,150,158,167,176,186], color: '#d97706', direction: 'up-bad' }
-  }
-};
+    // --- Two Dashboards ---
+    const dashboards = {
+      official: {
+        left: { label: 'Stock Market Index', data: [100, 108, 115, 112, 122, 130, 128, 138, 145, 152, 160, 172], color: '#16a34a', direction: 'up' },
+        right: { label: 'GDP Growth Rate (%)', data: [2.1, 2.3, 2.0, 2.4, 2.6, 2.2, 2.5, 2.8, 2.4, 2.7, 3.0, 2.9], color: '#2563eb', direction: 'up' }
+      },
+      human: {
+        left: { label: 'Life Satisfaction Score', data: [7.2, 7.1, 7.0, 6.9, 6.85, 6.8, 6.7, 6.65, 6.5, 6.4, 6.3, 6.2], color: '#dc2626', direction: 'down' },
+        right: { label: 'Deaths of Despair (index)', data: [100, 106, 112, 118, 126, 133, 141, 150, 158, 167, 176, 186], color: '#d97706', direction: 'up-bad' }
+      }
+    };
 
-let currentDash = 'official';
+    let currentDash = 'official';
 
-function showDash(type) {
-  currentDash = type;
-  document.getElementById('btn-official').className = type === 'official' ? 'btn active' : 'btn secondary';
-  document.getElementById('btn-human').className = type === 'human' ? 'btn active' : 'btn secondary';
-  renderDashboard(type);
-}
+    function showDash(type) {
+      currentDash = type;
+      document.getElementById('btn-official').className = type === 'official' ? 'btn active' : 'btn secondary';
+      document.getElementById('btn-human').className = type === 'human' ? 'btn active' : 'btn secondary';
+      renderDashboard(type);
+    }
 
-function renderChart(svgId, labelId, config) {
-  const el = document.getElementById(svgId);
-  const w = el.parentElement.clientWidth || 280;
-  const h = 130;
-  el.setAttribute('width', w);
-  el.setAttribute('height', h);
-  document.getElementById(labelId).textContent = config.label;
+    function renderChart(svgId, labelId, config) {
+      const el = document.getElementById(svgId);
+      const w = el.parentElement.clientWidth || 280;
+      const h = 130;
+      el.setAttribute('width', w);
+      el.setAttribute('height', h);
+      document.getElementById(labelId).textContent = config.label;
 
-  const svg = d3.select('#' + svgId);
-  svg.selectAll('*').remove();
+      const svg = d3.select('#' + svgId);
+      svg.selectAll('*').remove();
 
-  const data = config.data.map((v, i) => ({ i, v }));
-  const xS = d3.scaleLinear().domain([0, data.length - 1]).range([8, w - 8]);
-  const ext = d3.extent(data, d => d.v);
-  const pad = (ext[1] - ext[0]) * 0.2;
-  const yS = d3.scaleLinear().domain([ext[0] - pad, ext[1] + pad]).range([h - 12, 12]);
+      const data = config.data.map((v, i) => ({ i, v }));
+      const xS = d3.scaleLinear().domain([0, data.length - 1]).range([8, w - 8]);
+      const ext = d3.extent(data, d => d.v);
+      const pad = (ext[1] - ext[0]) * 0.2;
+      const yS = d3.scaleLinear().domain([ext[0] - pad, ext[1] + pad]).range([h - 12, 12]);
 
-  const area = d3.area().x(d => xS(d.i)).y0(h - 12).y1(d => yS(d.v)).curve(d3.curveBasis);
-  const line = d3.line().x(d => xS(d.i)).y(d => yS(d.v)).curve(d3.curveBasis);
+      const area = d3.area().x(d => xS(d.i)).y0(h - 12).y1(d => yS(d.v)).curve(d3.curveBasis);
+      const line = d3.line().x(d => xS(d.i)).y(d => yS(d.v)).curve(d3.curveBasis);
 
-  svg.append('path').datum(data).attr('d', area)
-    .attr('fill', config.color).attr('fill-opacity', 0.08);
+      svg.append('path').datum(data).attr('d', area)
+        .attr('fill', config.color).attr('fill-opacity', 0.08);
 
-  const path = svg.append('path').datum(data).attr('d', line)
-    .attr('fill', 'none').attr('stroke', config.color).attr('stroke-width', 2.5);
+      const path = svg.append('path').datum(data).attr('d', line)
+        .attr('fill', 'none').attr('stroke', config.color).attr('stroke-width', 2.5);
 
-  const totalLen = path.node().getTotalLength();
-  path.attr('stroke-dasharray', totalLen).attr('stroke-dashoffset', totalLen)
-    .transition().duration(800).attr('stroke-dashoffset', 0);
+      const totalLen = path.node().getTotalLength();
+      path.attr('stroke-dasharray', totalLen).attr('stroke-dashoffset', totalLen)
+        .transition().duration(800).attr('stroke-dashoffset', 0);
 
-  // Last point dot
-  const last = data[data.length - 1];
-  svg.append('circle').attr('cx', xS(last.i)).attr('cy', yS(last.v)).attr('r', 4)
-    .attr('fill', config.color).attr('opacity', 0)
-    .transition().delay(700).duration(300).attr('opacity', 1);
-}
+      // Last point dot
+      const last = data[data.length - 1];
+      svg.append('circle').attr('cx', xS(last.i)).attr('cy', yS(last.v)).attr('r', 4)
+        .attr('fill', config.color).attr('opacity', 0)
+        .transition().delay(700).duration(300).attr('opacity', 1);
+    }
 
-function renderDashboard(type) {
-  const d = dashboards[type];
-  renderChart('left-chart', 'left-label', d.left);
-  renderChart('right-chart', 'right-label', d.right);
-}
+    function renderDashboard(type) {
+      const d = dashboards[type];
+      renderChart('left-chart', 'left-label', d.left);
+      renderChart('right-chart', 'right-label', d.right);
+    }
 
-// --- Future cards toggle ---
-function toggleFuture(id) {
-  const card = document.getElementById(id);
-  const details = document.getElementById(id + '-details');
-  const isOpen = card.classList.contains('open');
-  // Close all
-  ['fc-1','fc-2','fc-3'].forEach(fid => {
-    document.getElementById(fid).classList.remove('open');
-    document.getElementById(fid + '-details').classList.remove('open');
-  });
-  if (!isOpen) {
-    card.classList.add('open');
-    details.classList.add('open');
-  }
-}
+    // --- Future cards toggle ---
+    function toggleFuture(id) {
+      const card = document.getElementById(id);
+      const details = document.getElementById(id + '-details');
+      const isOpen = card.classList.contains('open');
+      // Close all
+      ['fc-1', 'fc-2', 'fc-3'].forEach(fid => {
+        document.getElementById(fid).classList.remove('open');
+        document.getElementById(fid + '-details').classList.remove('open');
+      });
+      if (!isOpen) {
+        card.classList.add('open');
+        details.classList.add('open');
+      }
+    }
 
-// --- Countdown ---
-// Window opens 2024-01-01, 1000 days = ~2026-09-27
-const windowStart = new Date('2024-01-01T00:00:00Z');
-const windowEnd = new Date(windowStart.getTime() + 1000 * 24 * 3600 * 1000);
+    // --- Countdown ---
+    // Window opens 2024-01-01, 1000 days = ~2026-09-27
+    const windowStart = new Date('2024-01-01T00:00:00Z');
+    const windowEnd = new Date(windowStart.getTime() + 1000 * 24 * 3600 * 1000);
 
-function updateCountdown() {
-  const now = new Date();
-  const remaining = Math.max(0, Math.ceil((windowEnd - now) / (24 * 3600 * 1000)));
-  const elapsed = 1000 - remaining;
-  const pct = Math.min(100, (elapsed / 1000) * 100);
-  document.getElementById('countdown-num').textContent = remaining.toLocaleString();
-  document.getElementById('progress-bar').style.width = pct.toFixed(1) + '%';
-}
+    function updateCountdown() {
+      const now = new Date();
+      const remaining = Math.max(0, Math.ceil((windowEnd - now) / (24 * 3600 * 1000)));
+      const elapsed = 1000 - remaining;
+      const pct = Math.min(100, (elapsed / 1000) * 100);
+      document.getElementById('countdown-num').textContent = remaining.toLocaleString();
+      document.getElementById('progress-bar').style.width = pct.toFixed(1) + '%';
+    }
 
-updateCountdown();
-setInterval(updateCountdown, 1000);
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
-// Init dashboard
-requestAnimationFrame(() => renderDashboard('official'));
-</script>
+    // Init dashboard
+    requestAnimationFrame(() => renderDashboard('official'));
+  </script>
 </body>
+
 </html>

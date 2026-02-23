@@ -1,860 +1,1069 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Network Prison</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
-.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
-.nav a:hover { color: #1d4ed8; }
-svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.btn:hover { background: #1d4ed8; }
-.btn.active { background: #2563eb; color: white; box-shadow: 0 0 0 2px #93c5fd; }
-.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
-.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
-.stat strong { color: #1a1a1a; }
-.gini-display { font-size: 1.8rem; font-weight: 700; color: #2563eb; text-align: center; margin: 0.5rem 0; }
-input[type="range"] { width: 100%; margin: 0.5rem 0; accent-color: #2563eb; }
-.slider-label { display: flex; justify-content: space-between; font-size: min(0.85rem, 14px); color: #555; }
-.toggle-container { display: flex; align-items: center; gap: 1rem; margin: 1rem 0; }
-.toggle { position: relative; width: 52px; height: 28px; background: #ccc; border-radius: 14px; cursor: pointer; transition: background 0.3s; }
-.toggle.on { background: #2563eb; }
-.toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: transform 0.3s; }
-.toggle.on::after { transform: translateX(24px); }
-.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.pullquote .attribution { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
-.stat-row { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0; }
-.stat-row .stat-callout { flex: 1; min-width: 140px; margin: 0; }
-.illustration { display: flex; justify-content: center; margin: 2rem 0; overflow-x: hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Network Prison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; pointer-events: none; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-.btn, button { touch-action: manipulation; min-height: 36px; }
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .stat-row { flex-direction: column; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr !important; }
-  .grid-container { grid-template-columns: repeat(4, 44px) !important; }
-  .decade-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-  .ratio-display { font-size: 2rem; }
-  .year-toggle { flex-wrap: wrap; }
-  .year-toggle button { flex: 1; min-width: 80px; }
-}
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      color: #2563eb;
+      cursor: ew-resize;
+      user-select: none;
+      font-weight: 600;
+      padding: 0 2px;
+    }
 
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-  .btn-group { gap: 0.35rem; }
-  .btn { font-size: min(0.82rem, 13px); padding: 0.4rem 0.8rem; }
-}
-</style>
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav a:hover {
+      color: #1d4ed8;
+    }
+
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: min(0.9rem, 14px);
+      margin: 0.25rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .stat {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.5rem 0;
+    }
+
+    .stat strong {
+      color: #1a1a1a;
+    }
+
+    .gini-display {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 0.5rem 0;
+      accent-color: #2563eb;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: min(0.85rem, 14px);
+      color: #555;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      background: #ccc;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle.on {
+      background: #2563eb;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle.on::after {
+      transform: translateX(24px);
+    }
+
+    .caption {
+      font-size: 0.9rem;
+      color: #666;
+      font-style: italic;
+      margin-top: 1rem;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .attribution {
+      font-size: 0.85rem;
+      color: #555;
+      font-style: normal;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .stat-row .stat-callout {
+      flex: 1;
+      min-width: 140px;
+      margin: 0;
+    }
+
+    .illustration {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+      overflow-x: hidden;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+      pointer-events: none;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+      min-height: 36px;
+    }
+
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr !important;
+      }
+
+      .grid-container {
+        grid-template-columns: repeat(4, 44px) !important;
+      }
+
+      .decade-btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .ratio-display {
+        font-size: 2rem;
+      }
+
+      .year-toggle {
+        flex-wrap: wrap;
+      }
+
+      .year-toggle button {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .btn-group {
+        gap: 0.35rem;
+      }
+
+      .btn {
+        font-size: min(0.82rem, 13px);
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="06-three-flows.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="08-cooperation-emerges.html">Next &rarr;</a>
-</nav>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="06-three-flows.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="08-cooperation-emerges.html">Next &rarr;</a>
+  </nav>
 
-<div class="prose">
-  <div class="chapter-num">Chapter 10</div>
-  <h1>The Network Prison</h1>
+  <div class="prose">
+    <div class="chapter-num">Chapter 7</div>
+    <h1>The Generative Engine</h1>
 
-  <div class="pullquote">
-    <p>"The rich have markets, the poor have bureaucrats."</p>
-    <div class="attribution">&mdash; William Easterly</div>
-  </div>
-
-  <h2>The Lie of the Level Playing Field</h2>
-
-  <p>We are raised on a powerful myth: the economy is a level playing field where talent and hard work are rewarded. It is the story we tell ourselves to make inequality bearable. The lone genius in the garage. The immigrant who arrives with nothing and builds an empire.</p>
-
-  <p>These stories are not entirely false. They happen just often enough to sustain the myth. But they are the exceptions that prove the rule, and the rule is this: your economic fate is determined less by your individual attributes than by your position in the network. You are not a player on a level field. You are a node in a web, and the structure of that web matters more than anything you do within it.</p>
-
-  <div class="pullquote">
-    <p>This is not cynicism. This is topology. And in the age of intelligence, topology is destiny.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>The Mathematics of Inequality</h2>
-
-  <p>Real world networks are not democratic grids. They follow power laws, a mathematical pattern so universal it might as well be a law of nature. A tiny number of nodes have vast connections. The vast majority have few. This is not a bug. It is the emergent result of how networks grow.</p>
-
-  <p>The core idea that you may never be more than six connections away from anyone in the world is not just a cute theory; it is a mathematical inevitability. From a topological view, this "small-world" reality is driven by powerful network effects, where a growing network becomes exponentially denser, making short connection paths the norm.</p>
-
-  <!-- SVG: Preferential Attachment illustration -->
-  <div class="illustration">
-    <svg viewBox="0 0 400 170" style="width:100%; max-width:400px; height:auto;">
-      <defs>
-        <linearGradient id="hubNodeGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#3b82f6"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </linearGradient>
-        <radialGradient id="bigHubGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </radialGradient>
-        <filter id="nodeShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
-        </filter>
-        <linearGradient id="svgBgGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#f0f4ff"/>
-          <stop offset="100%" stop-color="#fafaf8"/>
-        </linearGradient>
-      </defs>
-      <rect x="0" y="0" width="400" height="170" rx="10" fill="url(#svgBgGrad)" opacity="0.7"/>
-      <!-- Left: equal nodes -->
-      <text x="80" y="16" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Equal Network</text>
-      <circle cx="40" cy="82" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5" filter="url(#nodeShadow)" opacity="0.8"/>
-      <circle cx="80" cy="52" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5" filter="url(#nodeShadow)" opacity="0.8"/>
-      <circle cx="120" cy="82" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5" filter="url(#nodeShadow)" opacity="0.8"/>
-      <circle cx="80" cy="112" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5" filter="url(#nodeShadow)" opacity="0.8"/>
-      <line x1="40" y1="82" x2="80" y2="52" stroke="#93c5fd" stroke-width="1.5" opacity="0.7"/>
-      <line x1="80" y1="52" x2="120" y2="82" stroke="#93c5fd" stroke-width="1.5" opacity="0.7"/>
-      <line x1="120" y1="82" x2="80" y2="112" stroke="#93c5fd" stroke-width="1.5" opacity="0.7"/>
-      <line x1="80" y1="112" x2="40" y2="82" stroke="#93c5fd" stroke-width="1.5" opacity="0.7"/>
-      <text x="80" y="148" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Myth</text>
-      <!-- Arrow -->
-      <text x="200" y="87" text-anchor="middle" font-size="22" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">&rarr;</text>
-      <text x="200" y="107" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Preferential</text>
-      <text x="200" y="119" text-anchor="middle" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Attachment</text>
-      <!-- Right: power law -->
-      <text x="320" y="16" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Real Network</text>
-      <circle cx="320" cy="82" r="24" fill="url(#bigHubGrad)" stroke="#1d4ed8" stroke-width="2" filter="url(#nodeShadow)" opacity="0.9"/>
-      <circle cx="268" cy="56" r="9" fill="url(#hubNodeGrad)" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)" opacity="0.75"/>
-      <circle cx="365" cy="61" r="7" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)" opacity="0.7"/>
-      <circle cx="278" cy="117" r="6" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)" opacity="0.7"/>
-      <circle cx="357" cy="112" r="6" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)" opacity="0.7"/>
-      <circle cx="258" cy="87" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1" opacity="0.8"/>
-      <circle cx="377" cy="87" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1" opacity="0.8"/>
-      <line x1="320" y1="82" x2="268" y2="56" stroke="#93c5fd" stroke-width="1.5" opacity="0.6"/>
-      <line x1="320" y1="82" x2="365" y2="61" stroke="#93c5fd" stroke-width="1.5" opacity="0.6"/>
-      <line x1="320" y1="82" x2="278" y2="117" stroke="#93c5fd" stroke-width="1.5" opacity="0.6"/>
-      <line x1="320" y1="82" x2="357" y2="112" stroke="#93c5fd" stroke-width="1.5" opacity="0.6"/>
-      <line x1="320" y1="82" x2="258" y2="87" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
-      <line x1="320" y1="82" x2="377" y2="87" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
-      <text x="320" y="148" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Reality</text>
-    </svg>
-  </div>
-
-  <p>In 2003, Mark Zuckerberg was a Harvard sophomore with programming skills. Thousands could code better. But he was at Harvard, surrounded by the kids who would run the world. When he needed funding, Peter Thiel was two connections away. When he needed to scale, Silicon Valley was a zip code away.</p>
-
-  <p>Now, imagine Rajesh, a superior programmer in Mumbai at the same time. His connections led to local businesses, not venture capitalists. His code was better; his position was worse. Guess who is worth over $100 billion?</p>
-
-  <p>The mechanism is simple: preferential attachment. New nodes are more likely to connect to nodes that already have many connections. The rich get richer, not through moral failing but through mathematical inevitability.</p>
-
-  <!-- Panel 1: Network Builder -->
-  <div class="panel">
-    <h2>Network Builder &mdash; Power Law Emerges</h2>
-    <p style="font-size:0.9rem; color:#666; margin-bottom:1rem;">Click the canvas to add nodes (up to 30). Each new node preferentially attaches to well-connected nodes.</p>
-    <div id="builder-svg-container" style="width:100%; max-width:600px;">
-      <svg id="builder-svg" style="border:1px solid #e5e5e0; border-radius:6px; cursor:crosshair; display:block; width:100%;"></svg>
+    <div class="pullquote">
+      <p>"Nature uses only the longest threads to weave her patterns, so each small piece of her fabric reveals the
+        organization of the entire tapestry."</p>
+      <div class="attribution">&mdash; Richard Feynman</div>
     </div>
-    <div id="builder-stats" class="stat"></div>
-    <div id="builder-hist-container" style="width:100%; max-width:600px;">
-      <svg id="builder-hist" style="display:block; width:100%;"></svg>
+
+    <h2>The Ghost in the Machine</h2>
+
+    <p>We have now established the foundational principle of our new science. The universe, through the relentless
+      filter of persistence, selects for systems that are efficient at reducing entropy. It favors intelligence. This is
+      the "why."</p>
+
+    <p>But we must now ask "how." How does a universe of dumb, chaotic matter manage to organize itself into something
+      as complex and predictive as a rainforest, a financial market, or for that matter, a human brain? What is the
+      algorithm that conjures order out of chaos?</p>
+
+    <p>The answer, it turns out, is that nature has a universal method for creation. It is a process of guided,
+      iterative refinement, a trick the cosmos has been using for thirteen point eight billion years. We did not invent
+      this algorithm. We only just discovered it, gave it a fancy name, and taught it how to draw photorealistic
+      astronauts riding horses.</p>
+
+    <div class="pullquote">
+      <p>This is not cynicism. This is topology. And in the age of intelligence, topology is destiny.</p>
     </div>
-    <p class="caption">No one commanded this hierarchy. Physics created it.</p>
-  </div>
 
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number">1%</div>
-      <div class="stat-label">of users generate ~90% of content</div>
+    <hr class="section-divider">
+
+    <h2>A Dispatch from the Digital Frontier</h2>
+
+    <p>The process is called a diffusion model. It is the mathematical heart of AIs like Stable Diffusion and
+      Midjourney, and it is a masterpiece of counterintuitive genius. It works in two steps.</p>
+
+    <p>First, the Forward Process. You take a perfect, ordered thing, like a photograph of a cat, and you systematically
+      destroy it. You add a tiny bit of random noise, then a little more, until all that remains is a featureless field
+      of static. This is a perfect simulation of the Second Law of Thermodynamics, the universe's natural tendency to
+      dissolve order into chaos.</p>
+
+    <p>The magic, of course, is in the second step: the Reverse Process. The AI is trained to reverse this destruction.
+      It learns how to start with pure, random noise and, step by tiny, intelligent step, remove that noise to reveal a
+      coherent, ordered image. It is guided by a simple instruction, a "prompt." It constantly asks itself, "Given this
+      field of noisy pixels, what is the one, smallest change I can make that will move it infinitesimally closer to the
+      concept I am trying to create?"</p>
+
+    <p>This is not just a clever trick for making pictures. This is the fundamental algorithm for creation.</p>
+
+    <!-- SVG: Preferential Attachment illustration -->
+    <div class="illustration">
+      <svg viewBox="0 0 400 170" style="width:100%; max-width:400px; height:auto;">
+        <defs>
+          <linearGradient id="hubNodeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+          </linearGradient>
+          <radialGradient id="bigHubGrad" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#60a5fa" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+          </radialGradient>
+          <filter id="nodeShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15" />
+          </filter>
+          <linearGradient id="svgBgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f0f4ff" />
+            <stop offset="100%" stop-color="#fafaf8" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="400" height="170" rx="10" fill="url(#svgBgGrad)" opacity="0.7" />
+        <!-- Left: equal nodes -->
+        <text x="80" y="16" text-anchor="middle" font-size="11" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Equal Network</text>
+        <circle cx="40" cy="82" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5"
+          filter="url(#nodeShadow)" opacity="0.8" />
+        <circle cx="80" cy="52" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5"
+          filter="url(#nodeShadow)" opacity="0.8" />
+        <circle cx="120" cy="82" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5"
+          filter="url(#nodeShadow)" opacity="0.8" />
+        <circle cx="80" cy="112" r="11" fill="url(#hubNodeGrad)" stroke="#1d4ed8" stroke-width="1.5"
+          filter="url(#nodeShadow)" opacity="0.8" />
+        <line x1="40" y1="82" x2="80" y2="52" stroke="#93c5fd" stroke-width="1.5" opacity="0.7" />
+        <line x1="80" y1="52" x2="120" y2="82" stroke="#93c5fd" stroke-width="1.5" opacity="0.7" />
+        <line x1="120" y1="82" x2="80" y2="112" stroke="#93c5fd" stroke-width="1.5" opacity="0.7" />
+        <line x1="80" y1="112" x2="40" y2="82" stroke="#93c5fd" stroke-width="1.5" opacity="0.7" />
+        <text x="80" y="148" text-anchor="middle" font-size="10" fill="#888"
+          font-family="'DM Sans', system-ui, sans-serif">Myth</text>
+        <!-- Arrow -->
+        <text x="200" y="87" text-anchor="middle" font-size="22" fill="#2563eb"
+          font-family="'DM Sans', system-ui, sans-serif">&rarr;</text>
+        <text x="200" y="107" text-anchor="middle" font-size="10" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Preferential</text>
+        <text x="200" y="119" text-anchor="middle" font-size="10" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Attachment</text>
+        <!-- Right: power law -->
+        <text x="320" y="16" text-anchor="middle" font-size="11" fill="#555"
+          font-family="'DM Sans', system-ui, sans-serif">Real Network</text>
+        <circle cx="320" cy="82" r="24" fill="url(#bigHubGrad)" stroke="#1d4ed8" stroke-width="2"
+          filter="url(#nodeShadow)" opacity="0.9" />
+        <circle cx="268" cy="56" r="9" fill="url(#hubNodeGrad)" stroke="#2563eb" stroke-width="1"
+          filter="url(#nodeShadow)" opacity="0.75" />
+        <circle cx="365" cy="61" r="7" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)"
+          opacity="0.7" />
+        <circle cx="278" cy="117" r="6" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)"
+          opacity="0.7" />
+        <circle cx="357" cy="112" r="6" fill="#93c5fd" stroke="#2563eb" stroke-width="1" filter="url(#nodeShadow)"
+          opacity="0.7" />
+        <circle cx="258" cy="87" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1" opacity="0.8" />
+        <circle cx="377" cy="87" r="4" fill="#dbe8fe" stroke="#93c5fd" stroke-width="1" opacity="0.8" />
+        <line x1="320" y1="82" x2="268" y2="56" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+        <line x1="320" y1="82" x2="365" y2="61" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+        <line x1="320" y1="82" x2="278" y2="117" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+        <line x1="320" y1="82" x2="357" y2="112" stroke="#93c5fd" stroke-width="1.5" opacity="0.6" />
+        <line x1="320" y1="82" x2="258" y2="87" stroke="#93c5fd" stroke-width="1" opacity="0.5" />
+        <line x1="320" y1="82" x2="377" y2="87" stroke="#93c5fd" stroke-width="1" opacity="0.5" />
+        <text x="320" y="148" text-anchor="middle" font-size="10" fill="#888"
+          font-family="'DM Sans', system-ui, sans-serif">Reality</text>
+      </svg>
     </div>
-    <div class="stat-callout">
-      <div class="stat-number">0.1%</div>
-      <div class="stat-label">of startups receive 41% of all funding</div>
+
+    <p>The economy is this process made manifest. It takes the chaotic "noise" of infinite human desires, resource
+      constraints, and technological possibilities, and it generates coherent order: prices, firms, supply chains, and
+      institutions.</p>
+
+    <p>Every entrepreneur with a new idea, every consumer making a purchase, every investor placing a bet is
+      participating in this vast, distributed computation. Each action is a small, incremental "denoising" step, an
+      attempt to move the chaotic state of the present slightly closer to a more ordered, predictable future. The
+      "prompt" guiding this entire process is the physical imperative we discovered in the last chapter: the drive to be
+      an efficient engine of order.</p>
+
+    <p>The technical name for this process is <em>Stochastic Gradient Descent (SGD)</em> on a geometric manifold. But
+      the intuition is now clear. The economy is a <strong>Generative Engine</strong>, a machine for turning chaos into
+      order, guided by the compass of intelligence.</p>
+
+    <div class="pullquote">
+      <p>Piketty brilliantly documented the symptom. The physics of network topology reveals the disease: a fundamental
+        mismatch between the linear world of human effort and the exponential world of non-rival capital.</p>
     </div>
-    <div class="stat-callout">
-      <div class="stat-number">50%</div>
-      <div class="stat-label">of all stocks held by top 1%</div>
-    </div>
-  </div>
 
-  <p>This is not a market failing. It is the network working as intended. To ask for equality here is to ask for water to flow uphill. The topology forbids it.</p>
+    <hr class="section-divider">
 
-  <hr class="section-divider">
+    <h2>The Manufacturer's Specification: Three Laws of a Living System</h2>
 
-  <h2>The Physics of r &gt; g</h2>
+    <p>This generative process is not magic. It is a physical computation, and like all computations, it is subject to
+      inviolable laws. A laptop with no power, no data, and a corrupted operating system cannot compute. For the
+      economy's Generative Engine to function sustainably, it must obey three non-negotiable operating constraints.
+      These are not assumptions. They are provable theorems that follow from Intelligence Theory. They are the
+      manufacturer's specification for a reality that works.</p>
 
-  <p>This network dynamic provides the first true physical explanation for the central problem of modern capitalism, identified by Thomas Piketty: the tendency for the rate of return on capital (<em>r</em>) to exceed the rate of economic growth (<em>g</em>).</p>
+    <p><strong>1. The Law of Flow: Value must be Conserved and Circulated.</strong><br>
+      A system's predictive model must be accurate. If a system consumes its own capital without accounting for it, its
+      internal model diverges from reality. This growing error guarantees eventual catastrophic failure. Therefore, a
+      persistent system must conserve value. Furthermore, because hoarded capital generates no new data and tests no new
+      predictions, a system that only conserves but does not circulate its value becomes static. It stops learning. Flow
+      is a physical necessity for intelligence.</p>
 
-  <!-- SVG: r > g illustration -->
-  <div class="illustration">
-    <svg viewBox="0 0 380 200" style="width:100%; max-width:380px; height:auto;">
-      <defs>
-        <linearGradient id="rgtBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#f0f4ff"/>
-          <stop offset="100%" stop-color="#fafaf8"/>
-        </linearGradient>
-        <linearGradient id="rLineGrad" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stop-color="#93c5fd"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </linearGradient>
-        <filter id="rgtShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="380" height="200" rx="10" fill="url(#rgtBg)"/>
-      <text x="190" y="18" text-anchor="middle" font-size="12" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Capital Returns vs. Economic Growth</text>
-      <!-- Axes -->
-      <line x1="50" y1="165" x2="350" y2="165" stroke="#ccc" stroke-width="1"/>
-      <line x1="50" y1="165" x2="50" y2="30" stroke="#ccc" stroke-width="1"/>
-      <text x="200" y="185" text-anchor="middle" font-size="10" fill="#aaa" font-family="'DM Sans', system-ui, sans-serif">Time</text>
-      <!-- g: linear growth -->
-      <line x1="50" y1="148" x2="340" y2="98" stroke="#93c5fd" stroke-width="2.5" stroke-dasharray="6,3"/>
-      <text x="345" y="96" font-size="11" fill="#93c5fd" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">g</text>
-      <!-- r: exponential -->
-      <path d="M50,155 Q145,145 215,118 T340,42" fill="none" stroke="url(#rLineGrad)" stroke-width="2.5"/>
-      <text x="345" y="40" font-size="11" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">r</text>
-      <!-- Labels -->
-      <text x="220" y="78" font-size="10" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Exponential capital returns</text>
-      <text x="215" y="130" font-size="10" fill="#93c5fd" font-family="'DM Sans', system-ui, sans-serif">Linear wage growth</text>
-    </svg>
-  </div>
+    <ul>
+      <li><strong>Historical Mirror: The Collapse of Cahokia.</strong> In 1250 CE, the city of Cahokia, near modern St.
+        Louis, was larger than London, the heart of a continental network. For centuries, it thrived on flow. Then,
+        around 1350, the archaeological record shows that wealth began to concentrate. The flow constricted. Within a
+        generation, Cahokia was abandoned. It is a grass covered monument to what happens when circulation becomes
+        accumulation.</li>
+    </ul>
 
-  <p><em>g</em> represents the linear growth of the Gradient Flow economy &mdash; the world of rivalrous goods and human labor. <em>r</em> represents the exponential, self-amplifying growth of the Circular Flow economy &mdash; the world of non-rival capital, networks, and now, intelligence. The nodes at the center of the network capture the compounding returns of <em>r</em>, while the nodes at the periphery are confined to the linear world of <em>g</em>.</p>
+    <p><strong>2. The Law of Openness: Connection Fights Entropy.</strong><br>
+      The Second Law of Thermodynamics dictates that any closed system will inevitably decay into disorder. The only way
+      for a system to maintain its complex, low entropy state is to be open. It must import low entropy energy and
+      information and export high entropy waste. Openness is not an ideological preference; it is a physical requirement
+      for staving off systemic death.</p>
 
-  <div class="pullquote">
-    <p>Piketty brilliantly documented the symptom. The physics of network topology reveals the disease: a fundamental mismatch between the linear world of human effort and the exponential world of non-rival capital.</p>
-  </div>
+    <ul>
+      <li><strong>Historical Mirror: The Chained Country of Japan.</strong> For two hundred and twenty years, from 1633
+        to 1853, Tokugawa Japan sealed itself from the world. The result was perfect stability and total technological
+        stagnation. When Commodore Perry's black ships arrived with cannons, the Japanese were still fighting with
+        swords. It is the ultimate lesson in the price of closure.</li>
+    </ul>
 
-  <hr class="section-divider">
+    <p><strong>3. The Law of Resilience: Diversity Creates Stability.</strong><br>
+      A system optimized for a single, predictable future is a monoculture. It is highly efficient but catastrophically
+      fragile. A diverse system maintains a portfolio of different strategies and components. It is less efficient in
+      any single state, but it is far more likely to possess a viable response to an unforeseen shock. Resilience
+      through diversity is the only winning strategy in a game against an unpredictable universe.</p>
 
-  <h2>The Three Topologies of Power</h2>
+    <ul>
+      <li><strong>Historical Mirror: The Great Banana Collapse.</strong> For the first half of the 20th century, the
+        entire global banana industry was a monoculture, efficiently optimized for a single variety: the hardy and
+        flavorful Gros Michel. When a single, unpredicted soil fungus called Panama Disease arrived, the entire system
+        collapsed. The fungus was unstoppable. The industry was wiped out. It stands as a stark lesson on the cost of
+        sacrificing diversity for supply-chain efficiency.</li>
+    </ul>
 
-  <p>Your economic fate depends largely on which network structure you inhabit. There are three fundamental patterns, each with its own physics of success and failure.</p>
+    <p>These three laws have direct, measurable expressions. The Law of Flow governs the health of a system's
+      <strong>Material</strong> and <strong>Intelligence</strong> capitals. The <strong>Law of Openness</strong> is
+      embodied in its <strong>Network</strong> capital. And the Law of Resilience is measured by its
+      <strong>Diversity</strong> capital. To measure a system's adherence to these laws is to measure its vitality.</p>
 
-  <!-- SVG: Three Topology Sketches -->
-  <div class="illustration">
-    <svg viewBox="0 0 480 175" style="width:100%; max-width:480px; height:auto;">
-      <defs>
-        <linearGradient id="topoBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#f0f4ff"/>
-          <stop offset="100%" stop-color="#fafaf8"/>
-        </linearGradient>
-        <radialGradient id="hubCenterGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </radialGradient>
-        <filter id="topoShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="480" height="175" rx="10" fill="url(#topoBg)" opacity="0.7"/>
-      <!-- Hub & Spoke -->
-      <text x="80" y="16" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Hub &amp; Spoke</text>
-      <text x="80" y="162" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Extraction</text>
-      <circle cx="80" cy="84" r="15" fill="url(#hubCenterGrad)" filter="url(#topoShadow)"/>
-      <circle cx="40" cy="48" r="5" fill="#ccc"/><line x1="80" y1="84" x2="40" y2="48" stroke="#ddd" stroke-width="1"/>
-      <circle cx="120" cy="48" r="5" fill="#ccc"/><line x1="80" y1="84" x2="120" y2="48" stroke="#ddd" stroke-width="1"/>
-      <circle cx="35" cy="94" r="5" fill="#ccc"/><line x1="80" y1="84" x2="35" y2="94" stroke="#ddd" stroke-width="1"/>
-      <circle cx="125" cy="94" r="5" fill="#ccc"/><line x1="80" y1="84" x2="125" y2="94" stroke="#ddd" stroke-width="1"/>
-      <circle cx="50" cy="128" r="5" fill="#ccc"/><line x1="80" y1="84" x2="50" y2="128" stroke="#ddd" stroke-width="1"/>
-      <circle cx="110" cy="128" r="5" fill="#ccc"/><line x1="80" y1="84" x2="110" y2="128" stroke="#ddd" stroke-width="1"/>
-      <!-- Small World -->
-      <text x="240" y="16" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Small World</text>
-      <text x="240" y="162" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Innovation</text>
-      <circle cx="210" cy="57" r="7" fill="#60a5fa" filter="url(#topoShadow)"/><circle cx="240" cy="47" r="7" fill="#60a5fa" filter="url(#topoShadow)"/><circle cx="270" cy="57" r="7" fill="#60a5fa" filter="url(#topoShadow)"/>
-      <line x1="210" y1="57" x2="240" y2="47" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="240" y1="47" x2="270" y2="57" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="210" y1="57" x2="270" y2="57" stroke="#bfdbfe" stroke-width="1"/>
-      <circle cx="215" cy="108" r="7" fill="#93c5fd" filter="url(#topoShadow)"/><circle cx="245" cy="118" r="7" fill="#93c5fd" filter="url(#topoShadow)"/><circle cx="265" cy="103" r="7" fill="#93c5fd" filter="url(#topoShadow)"/>
-      <line x1="215" y1="108" x2="245" y2="118" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="245" y1="118" x2="265" y2="103" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="270" y1="57" x2="265" y2="103" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,2"/>
-      <line x1="210" y1="57" x2="215" y2="108" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,2"/>
-      <!-- Distributed Mesh -->
-      <text x="400" y="16" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Distributed Mesh</text>
-      <text x="400" y="162" text-anchor="middle" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Resilience</text>
-      <circle cx="375" cy="53" r="6" fill="#93c5fd" filter="url(#topoShadow)"/><circle cx="425" cy="53" r="6" fill="#93c5fd" filter="url(#topoShadow)"/>
-      <circle cx="365" cy="88" r="6" fill="#93c5fd" filter="url(#topoShadow)"/><circle cx="435" cy="88" r="6" fill="#93c5fd" filter="url(#topoShadow)"/>
-      <circle cx="375" cy="123" r="6" fill="#93c5fd" filter="url(#topoShadow)"/><circle cx="425" cy="123" r="6" fill="#93c5fd" filter="url(#topoShadow)"/>
-      <line x1="375" y1="53" x2="425" y2="53" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="375" y1="53" x2="365" y2="88" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="425" y1="53" x2="435" y2="88" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="365" y1="88" x2="375" y2="123" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="435" y1="88" x2="425" y2="123" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="375" y1="123" x2="425" y2="123" stroke="#bfdbfe" stroke-width="1.5"/>
-      <line x1="375" y1="53" x2="435" y2="88" stroke="#dbe8fe" stroke-width="1"/>
-      <line x1="425" y1="53" x2="365" y2="88" stroke="#dbe8fe" stroke-width="1"/>
-      <line x1="365" y1="88" x2="425" y2="123" stroke="#dbe8fe" stroke-width="1"/>
-      <line x1="435" y1="88" x2="375" y2="123" stroke="#dbe8fe" stroke-width="1"/>
-    </svg>
-  </div>
-
-  <p><strong>Hub and Spoke</strong> is the topology of extraction. Amazon Marketplace is a perfect specimen: three million sellers connect to customers only through Amazon. The sellers do the work. Amazon sets the rules, takes the cut, and owns the customer. It is digital sharecropping.</p>
-
-  <p><strong>Small World</strong> is the topology of innovation. Ideas percolate within clusters, then jump between them via long-range bridges, creating unexpected combinations. Silicon Valley is a small world network made physical. The catch: being inside the right cluster makes you wealthy; being outside makes you irrelevant.</p>
-
-  <p><strong>Distributed Mesh</strong> is the topology of resilience. Bitcoin is a pure mesh network. No central bank. No controlling entity. Destroy half the network and it continues functioning. The tradeoff is efficiency &mdash; meshes are terrible at concentrating capital but excellent at surviving shocks.</p>
-
-  <!-- Panel 2: Three Topology Switcher -->
-  <div class="panel">
-    <h2>Three Topology Switcher</h2>
-    <div class="btn-group">
-      <button class="btn active" onclick="switchTopology('hub')">Hub-and-Spoke</button>
-      <button class="btn" onclick="switchTopology('smallworld')">Small-World</button>
-      <button class="btn" onclick="switchTopology('mesh')">Mesh</button>
-    </div>
-    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-      <svg id="topo-svg" width="360" height="360" style="flex-shrink:0; max-width:100%;"></svg>
-      <div style="flex:1; min-width:200px;">
-        <div class="gini-display">Gini: <span id="topo-gini">0.00</span></div>
-        <svg id="topo-hist" width="220" height="200" style="max-width:100%;"></svg>
+    <!-- Panel 2: Three Topology Switcher -->
+    <div class="panel">
+      <h2>Three Topology Switcher</h2>
+      <div class="btn-group">
+        <button class="btn active" onclick="switchTopology('hub')">Hub-and-Spoke</button>
+        <button class="btn" onclick="switchTopology('smallworld')">Small-World</button>
+        <button class="btn" onclick="switchTopology('mesh')">Mesh</button>
+      </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <svg id="topo-svg" width="360" height="360" style="flex-shrink:0; max-width:100%;"></svg>
+        <div style="flex:1; min-width:200px;">
+          <div class="gini-display">Gini: <span id="topo-gini">0.00</span></div>
+          <svg id="topo-hist" width="220" height="200" style="max-width:100%;"></svg>
+        </div>
       </div>
     </div>
-  </div>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <h2>Position Is Destiny</h2>
+    <h2>Position Is Destiny</h2>
 
-  <p>Your ZIP code matters more than your IQ because ZIP codes determine initial network position. The strategic imperative is to find and position yourself on the shortest paths, leveraging the network's inherent structure for maximum influence and reach.</p>
+    <p>Your ZIP code matters more than your IQ because ZIP codes determine initial network position. The strategic
+      imperative is to find and position yourself on the shortest paths, leveraging the network's inherent structure for
+      maximum influence and reach.</p>
 
-  <!-- Panel 3: Position Slider -->
-  <div class="panel">
-    <h2>Position Slider</h2>
-    <p style="font-size:0.9rem; color:#666;">Same person. Same talent. Different position.</p>
-    <div id="pos-svg-container" style="width:100%; max-width:600px;">
-      <svg id="pos-svg" style="display:block; width:100%;"></svg>
+    <!-- Panel 3: Position Slider -->
+    <div class="panel">
+      <h2>Position Slider</h2>
+      <p style="font-size:0.9rem; color:#666;">Same person. Same talent. Different position.</p>
+      <div id="pos-svg-container" style="width:100%; max-width:600px;">
+        <svg id="pos-svg" style="display:block; width:100%;"></svg>
+      </div>
+      <div class="slider-label"><span>Periphery</span><span>Center</span></div>
+      <input type="range" id="pos-slider" min="0" max="100" value="10">
+      <div id="pos-stat" class="stat" style="font-size:1.1rem; text-align:center;"></div>
     </div>
-    <div class="slider-label"><span>Periphery</span><span>Center</span></div>
-    <input type="range" id="pos-slider" min="0" max="100" value="10">
-    <div id="pos-stat" class="stat" style="font-size:1.1rem; text-align:center;"></div>
-  </div>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <h2>The AI Amplification</h2>
+    <h2>The AI Amplification</h2>
 
-  <p>If network effects were powerful before, AI makes them absolute. The reason is recursive improvement. In traditional businesses, getting bigger often meant getting slower. AI inverts this. The bigger the network, the more data. The more data, the better the AI. The better the AI, the more users it attracts. It is not just a virtuous cycle. It is an accelerating spiral that approaches singularity.</p>
+    <p>If network effects were powerful before, AI makes them absolute. The reason is recursive improvement. In
+      traditional businesses, getting bigger often meant getting slower. AI inverts this. The bigger the network, the
+      more data. The more data, the better the AI. The better the AI, the more users it attracts. It is not just a
+      virtuous cycle. It is an accelerating spiral that approaches singularity.</p>
 
-  <div class="stat-callout">
-    <div class="stat-number">8.5B</div>
-    <div class="stat-label">daily Google searches &mdash; each one training data that makes the next search better. Competitors cannot catch up because they cannot access the data that comes from having already won.</div>
-  </div>
-
-  <div class="pullquote">
-    <p>This is not market competition. It is gravitational collapse. Once a network reaches critical mass in the AI age, it becomes a black hole.</p>
-  </div>
-
-  <!-- Panel 4: AI Amplification -->
-  <div class="panel">
-    <h2>AI Amplification</h2>
-    <div class="toggle-container">
-      <span>Pre-AI Era</span>
-      <div class="toggle" id="ai-toggle" onclick="toggleAI()"></div>
-      <span>AI Era</span>
+    <div class="stat-callout">
+      <div class="stat-number">8.5B</div>
+      <div class="stat-label">daily Google searches &mdash; each one training data that makes the next search better.
+        Competitors cannot catch up because they cannot access the data that comes from having already won.</div>
     </div>
-    <div id="ai-svg-container" style="width:100%; max-width:600px;">
-      <svg id="ai-svg" style="display:block; width:100%;"></svg>
+
+    <div class="pullquote">
+      <p>This is not market competition. It is gravitational collapse. Once a network reaches critical mass in the AI
+        age, it becomes a black hole.</p>
     </div>
-    <div id="ai-stats" class="stat" style="text-align:center; font-size:1.1rem;"></div>
-    <p class="caption">AI amplifies existing network advantages. Topology becomes destiny.</p>
+
+    <!-- Panel 4: AI Amplification -->
+    <div class="panel">
+      <h2>AI Amplification</h2>
+      <div class="toggle-container">
+        <span>Pre-AI Era</span>
+        <div class="toggle" id="ai-toggle" onclick="toggleAI()"></div>
+        <span>AI Era</span>
+      </div>
+      <div id="ai-svg-container" style="width:100%; max-width:600px;">
+        <svg id="ai-svg" style="display:block; width:100%;"></svg>
+      </div>
+      <div id="ai-stats" class="stat" style="text-align:center; font-size:1.1rem;"></div>
+      <p class="caption">AI amplifies existing network advantages. Topology becomes destiny.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>From Inference to Generation: A New Scientific Method</h2>
+
+    <p>This understanding of the economy as a generative engine does more than just provide a new model. It proposes a
+      fundamental shift in the scientific method of economics itself. For a century, economics has been a science of
+      inference. It has used the statistical tools of econometrics to deduce the workings of a vastly complex system
+      from sparse, aggregated, and time lagged data. It has been a science of reading shadows on a cave wall.</p>
+
+    <p>Intelligent Economics is a science of generation. It is not about inferring a model from the data; it is about
+      defining the micro physical laws of intelligent agents and then computing the emergent macro reality that those
+      laws generate. It replaces the econometrician's regression with the generative AI's simulation.</p>
+
+    <p>The ultimate test of this framework is not its ability to fit historical data with ever more complex statistical
+      fixes, but its ability to generate a simulated economy whose emergent properties and phase transitions
+      authentically mirror our own. This is why the "Three Laws of a Living System" we have just outlined are so
+      crucial. They are not just a moral checklist; they are the constitutional constraints, the "manufacturer's
+      specifications," for running a stable and successful simulation.</p>
+
+    <div class="pullquote">
+      <p>This is the final meaning of a computable economy. We no longer need to guess the rules of the game. We can,
+        for the first time, build the game itself. With this new method in hand, we can now explore the architecture,
+        the structures, capitals, and flows, that this generative process necessarily creates.</p>
+    </div>
+
   </div>
 
-  <hr class="section-divider">
+  <script>
+    // ========== Panel 1: Network Builder ==========
+    (function () {
+      const container = document.getElementById('builder-svg-container');
+      const svg = d3.select('#builder-svg');
+      let w = container.clientWidth, h = Math.round(w * 400 / 600);
+      svg.attr('viewBox', `0 0 ${w} ${h}`);
+      let nodes = [], links = [];
+      const sim = d3.forceSimulation()
+        .force('charge', d3.forceManyBody().strength(-80))
+        .force('center', d3.forceCenter(w / 2, h / 2))
+        .force('link', d3.forceLink().id((d, i) => i).distance(60))
+        .force('collide', d3.forceCollide(15))
+        .on('tick', tickBuilder);
 
-  <h2>The Great Exclusion</h2>
+      const linkG = svg.append('g');
+      const nodeG = svg.append('g');
 
-  <p>Here is the darkest truth about network topology. We are not just being outcompeted. We are being structurally excluded. The economic network is rewiring itself to remove humans from the center.</p>
+      svg.on('click', function (event) {
+        if (nodes.length >= 30) return;
+        const [mx, my] = d3.pointer(event);
+        const newNode = { x: mx, y: my };
+        const newIdx = nodes.length;
 
-  <p>In the old economy, value flowed from human to human through companies. You had relationships. In the network economy, value flows from AI to AI through platforms. Humans are increasingly just data sources, not participants. Businesses no longer integrate with each other; their APIs do. Entire transactions happen machine to machine.</p>
-
-  <!-- SVG: Human exclusion illustration -->
-  <div class="illustration">
-    <svg viewBox="0 0 420 155" style="width:100%; max-width:420px; height:auto;">
-      <defs>
-        <linearGradient id="exclBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#f0f4ff"/>
-          <stop offset="100%" stop-color="#fafaf8"/>
-        </linearGradient>
-        <radialGradient id="humanNodeGrad" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </radialGradient>
-        <radialGradient id="aiNodeGrad" cx="35%" cy="30%" r="65%">
-          <stop offset="0%" stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
-        </radialGradient>
-        <filter id="exclShadow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="420" height="155" rx="10" fill="url(#exclBg)" opacity="0.7"/>
-      <!-- Left: old economy -->
-      <text x="100" y="17" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Old Economy</text>
-      <circle cx="60" cy="73" r="13" fill="url(#humanNodeGrad)" opacity="0.85" filter="url(#exclShadow)"/>
-      <text x="60" y="77" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <circle cx="100" cy="48" r="13" fill="url(#humanNodeGrad)" opacity="0.85" filter="url(#exclShadow)"/>
-      <text x="100" y="52" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <circle cx="140" cy="73" r="13" fill="url(#humanNodeGrad)" opacity="0.85" filter="url(#exclShadow)"/>
-      <text x="140" y="77" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <circle cx="100" cy="103" r="13" fill="url(#humanNodeGrad)" opacity="0.85" filter="url(#exclShadow)"/>
-      <text x="100" y="107" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <line x1="60" y1="73" x2="100" y2="48" stroke="#93c5fd" stroke-width="2"/>
-      <line x1="100" y1="48" x2="140" y2="73" stroke="#93c5fd" stroke-width="2"/>
-      <line x1="140" y1="73" x2="100" y2="103" stroke="#93c5fd" stroke-width="2"/>
-      <line x1="100" y1="103" x2="60" y2="73" stroke="#93c5fd" stroke-width="2"/>
-      <text x="100" y="135" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Humans at center</text>
-      <!-- Arrow -->
-      <text x="210" y="78" text-anchor="middle" font-size="22" fill="#888" font-family="'DM Sans', system-ui, sans-serif">&rarr;</text>
-      <!-- Right: new economy -->
-      <text x="320" y="17" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Network Economy</text>
-      <circle cx="285" cy="67" r="15" fill="url(#aiNodeGrad)" filter="url(#exclShadow)"/>
-      <text x="285" y="71" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">AI</text>
-      <circle cx="345" cy="67" r="15" fill="url(#aiNodeGrad)" filter="url(#exclShadow)"/>
-      <text x="345" y="71" text-anchor="middle" font-size="8" fill="white" font-family="'DM Sans', system-ui, sans-serif">AI</text>
-      <line x1="285" y1="67" x2="345" y2="67" stroke="#2563eb" stroke-width="3"/>
-      <circle cx="265" cy="115" r="6" fill="#ccc" opacity="0.5"/>
-      <text x="265" y="118" text-anchor="middle" font-size="6" fill="#999" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <circle cx="315" cy="120" r="6" fill="#ccc" opacity="0.5"/>
-      <text x="315" y="123" text-anchor="middle" font-size="6" fill="#999" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <circle cx="365" cy="115" r="6" fill="#ccc" opacity="0.5"/>
-      <text x="365" y="118" text-anchor="middle" font-size="6" fill="#999" font-family="'DM Sans', system-ui, sans-serif">H</text>
-      <line x1="265" y1="115" x2="285" y2="67" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
-      <line x1="315" y1="120" x2="315" y2="83" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
-      <line x1="365" y1="115" x2="345" y2="67" stroke="#ddd" stroke-width="0.8" stroke-dasharray="3,2"/>
-      <text x="315" y="140" text-anchor="middle" font-size="9" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Humans at periphery</text>
-    </svg>
-  </div>
-
-  <div class="pullquote">
-    <p>We are not just becoming economically irrelevant. We are becoming topologically irrelevant. Pushed to the edges of networks that no longer need us.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>Breaking the Prison</h2>
-
-  <p>The network prison is real, but it is not absolute. You do not beat a network by competing within it. You beat it by building a different one.</p>
-
-  <p>The Protestant Reformation broke the Catholic Church's network monopoly by creating alternate nodes of authority. The Internet broke the media monopoly by creating a new topology where anyone could publish. The pattern is clear: you do not fight the network. You route around it.</p>
-
-  <p>Avoiding our fate as peripheral nodes requires conscious topology construction. We need to build networks that center human agency, distribute power, and value the resilience of the mesh over the extraction of the hub.</p>
-
-  <hr class="section-divider">
-
-  <h2>The Topology of Thought</h2>
-
-  <p>The ultimate irony is that these network structures are not just external to us. They are reflections of how intelligence itself is organized.</p>
-
-  <p>A traditional corporation, with its rigid hierarchy, is a Hub and Spoke network &mdash; efficient at execution but brittle and unintelligent. A modern AI like a Transformer is a Small World network, where its "attention" mechanism allows every node to create bridges to every other node. The human brain itself is a masterpiece of Distributed Mesh architecture &mdash; countless redundant connections, no single point of failure, less efficient than a chip but infinitely more resilient.</p>
-
-  <div class="pullquote">
-    <p>The great project of the next century is not just to build new economic networks. It is to ensure that those networks reflect the best of our own intelligence: the innovative power of the small world and the resilient, distributed consciousness of the mesh, rather than the brittle, extractive logic of the hub.</p>
-  </div>
-
-  <p>The topology of our economy will, in the end, be a mirror of our collective soul. The network prison only holds those who do not understand they are in it.</p>
-
-</div>
-
-<script>
-// ========== Panel 1: Network Builder ==========
-(function(){
-  const container = document.getElementById('builder-svg-container');
-  const svg = d3.select('#builder-svg');
-  let w = container.clientWidth, h = Math.round(w * 400 / 600);
-  svg.attr('viewBox', `0 0 ${w} ${h}`);
-  let nodes = [], links = [];
-  const sim = d3.forceSimulation()
-    .force('charge', d3.forceManyBody().strength(-80))
-    .force('center', d3.forceCenter(w/2, h/2))
-    .force('link', d3.forceLink().id((d,i)=>i).distance(60))
-    .force('collide', d3.forceCollide(15))
-    .on('tick', tickBuilder);
-
-  const linkG = svg.append('g');
-  const nodeG = svg.append('g');
-
-  svg.on('click', function(event) {
-    if (nodes.length >= 30) return;
-    const [mx, my] = d3.pointer(event);
-    const newNode = { x: mx, y: my };
-    const newIdx = nodes.length;
-
-    if (nodes.length >= 2) {
-      const degrees = nodes.map((_, i) => links.filter(l => l.source.index === i || l.target.index === i).length + 1);
-      const total = d3.sum(degrees);
-      const targets = new Set();
-      while (targets.size < Math.min(2, nodes.length)) {
-        let r = Math.random() * total, cum = 0;
-        for (let i = 0; i < degrees.length; i++) {
-          cum += degrees[i];
-          if (r <= cum) { targets.add(i); break; }
+        if (nodes.length >= 2) {
+          const degrees = nodes.map((_, i) => links.filter(l => l.source.index === i || l.target.index === i).length + 1);
+          const total = d3.sum(degrees);
+          const targets = new Set();
+          while (targets.size < Math.min(2, nodes.length)) {
+            let r = Math.random() * total, cum = 0;
+            for (let i = 0; i < degrees.length; i++) {
+              cum += degrees[i];
+              if (r <= cum) { targets.add(i); break; }
+            }
+          }
+          targets.forEach(t => links.push({ source: newIdx, target: t }));
+        } else if (nodes.length === 1) {
+          links.push({ source: newIdx, target: 0 });
         }
-      }
-      targets.forEach(t => links.push({ source: newIdx, target: t }));
-    } else if (nodes.length === 1) {
-      links.push({ source: newIdx, target: 0 });
-    }
 
-    nodes.push(newNode);
-    sim.nodes(nodes);
-    sim.force('link').links(links);
-    sim.alpha(0.5).restart();
-    updateBuilder();
-  });
-
-  function updateBuilder() {
-    const linkSel = linkG.selectAll('line').data(links);
-    linkSel.enter().append('line').attr('stroke', '#ccc').attr('stroke-width', 1.5);
-    linkSel.exit().remove();
-
-    const nodeSel = nodeG.selectAll('circle').data(nodes);
-    nodeSel.enter().append('circle').attr('r', 6).attr('fill', '#2563eb').attr('stroke', '#fff').attr('stroke-width', 1.5);
-    nodeSel.exit().remove();
-
-    const degrees = nodes.map((_, i) => links.filter(l => (l.source.index ?? l.source) === i || (l.target.index ?? l.target) === i).length);
-    if (degrees.length) {
-      const maxDeg = d3.max(degrees) || 1;
-      const minDeg = d3.min(degrees) || 0;
-      d3.select('#builder-stats').html(`Most connected node has <strong>${maxDeg}</strong> connections. Least connected: <strong>${minDeg}</strong>.`);
-      drawHist('#builder-hist', degrees, w, 120);
-    }
-  }
-
-  function tickBuilder() {
-    linkG.selectAll('line')
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    nodeG.selectAll('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y);
-  }
-
-  function drawHist(sel, degrees, w, h) {
-    const svg = d3.select(sel);
-    svg.attr('viewBox', `0 0 ${w} ${h}`);
-    svg.selectAll('*').remove();
-    const maxDeg = d3.max(degrees) || 1;
-    const bins = Array(maxDeg + 1).fill(0);
-    degrees.forEach(d => bins[d]++);
-    const x = d3.scaleBand().domain(d3.range(bins.length)).range([30, w - 10]).padding(0.2);
-    const y = d3.scaleLinear().domain([0, d3.max(bins)]).range([h - 20, 5]);
-    svg.selectAll('rect').data(bins).enter().append('rect')
-      .attr('x', (d,i) => x(i)).attr('y', d => y(d))
-      .attr('width', x.bandwidth()).attr('height', d => h - 20 - y(d))
-      .attr('fill', '#2563eb').attr('rx', 2);
-    svg.append('text').attr('x', w/2).attr('y', h - 2).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#888').attr('font-family', "'DM Sans', system-ui, sans-serif").text('Degree distribution');
-  }
-  window.drawHist = drawHist;
-
-  window.addEventListener('resize', function() {
-    w = container.clientWidth; h = Math.round(w * 400 / 600);
-    svg.attr('viewBox', `0 0 ${w} ${h}`);
-    sim.force('center', d3.forceCenter(w/2, h/2));
-    sim.alpha(0.3).restart();
-  });
-})();
-
-// ========== Panel 2: Topology Switcher ==========
-(function(){
-  const N = 50;
-  const topoSvg = d3.select('#topo-svg');
-  const tw = 360, th = 360;
-  let currentTopo = 'hub';
-
-  function generateTopology(type) {
-    const nodes = d3.range(N).map(i => ({ id: i }));
-    const links = [];
-    if (type === 'hub') {
-      for (let i = 1; i < N; i++) links.push({ source: 0, target: i });
-      for (let i = 1; i < N; i++) { if (Math.random() < 0.1 && i + 1 < N) links.push({ source: i, target: i + 1 }); }
-    } else if (type === 'smallworld') {
-      for (let i = 0; i < N; i++) {
-        links.push({ source: i, target: (i + 1) % N });
-        links.push({ source: i, target: (i + 2) % N });
-      }
-      for (let i = 0; i < 8; i++) {
-        links.push({ source: Math.floor(Math.random() * N), target: Math.floor(Math.random() * N) });
-      }
-    } else {
-      for (let i = 0; i < N; i++) {
-        links.push({ source: i, target: (i + 1) % N });
-        links.push({ source: i, target: (i + 2) % N });
-      }
-    }
-    return { nodes, links };
-  }
-
-  function computeScores(type, nodes, links) {
-    const degrees = nodes.map((_, i) => links.filter(l => (l.source.id ?? l.source) === i || (l.target.id ?? l.target) === i).length);
-    if (type === 'hub') {
-      return nodes.map((_, i) => i === 0 ? 95 : 0.1 + Math.random() * 0.8);
-    } else if (type === 'smallworld') {
-      return nodes.map((_, i) => {
-        const d = degrees[i];
-        if (d >= 6) return 30 + Math.random() * 10;
-        if (d >= 4) return 10 + Math.random() * 10;
-        return 5 + Math.random() * 5;
+        nodes.push(newNode);
+        sim.nodes(nodes);
+        sim.force('link').links(links);
+        sim.alpha(0.5).restart();
+        updateBuilder();
       });
-    } else {
-      return nodes.map(() => 15 + Math.random() * 10);
-    }
-  }
 
-  function gini(vals) {
-    const sorted = [...vals].sort((a, b) => a - b);
-    const n = sorted.length;
-    let num = 0;
-    sorted.forEach((v, i) => num += (2 * (i + 1) - n - 1) * v);
-    const den = n * d3.sum(sorted);
-    return den === 0 ? 0 : num / den;
-  }
+      function updateBuilder() {
+        const linkSel = linkG.selectAll('line').data(links);
+        linkSel.enter().append('line').attr('stroke', '#ccc').attr('stroke-width', 1.5);
+        linkSel.exit().remove();
 
-  function renderTopology(type) {
-    currentTopo = type;
-    document.querySelectorAll('.panel .btn-group .btn').forEach(b => {
-      b.classList.toggle('active', b.textContent.toLowerCase().includes(type === 'hub' ? 'hub' : type === 'smallworld' ? 'small' : 'mesh'));
-    });
+        const nodeSel = nodeG.selectAll('circle').data(nodes);
+        nodeSel.enter().append('circle').attr('r', 6).attr('fill', '#2563eb').attr('stroke', '#fff').attr('stroke-width', 1.5);
+        nodeSel.exit().remove();
 
-    const { nodes, links } = generateTopology(type);
-    const scores = computeScores(type, nodes, links);
-    const g = gini(scores);
-
-    d3.select('#topo-gini').text(g.toFixed(2));
-
-    nodes.forEach((n, i) => {
-      const angle = (2 * Math.PI * i) / N - Math.PI / 2;
-      n.x = tw / 2 + Math.cos(angle) * 140;
-      n.y = th / 2 + Math.sin(angle) * 140;
-    });
-    if (type === 'hub') { nodes[0].x = tw / 2; nodes[0].y = th / 2; }
-
-    topoSvg.selectAll('*').remove();
-    topoSvg.selectAll('line').data(links).enter().append('line')
-      .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
-      .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
-      .attr('stroke', '#ddd').attr('stroke-width', 0.8);
-    topoSvg.selectAll('circle').data(nodes).enter().append('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y)
-      .attr('r', (d, i) => 3 + scores[i] / 8)
-      .attr('fill', (d, i) => d3.interpolateBlues(scores[i] / 100))
-      .attr('stroke', '#fff').attr('stroke-width', 1);
-
-    const histSvg = d3.select('#topo-hist');
-    histSvg.selectAll('*').remove();
-    const hw = 220, hh = 200;
-    const buckets = [0, 5, 10, 20, 30, 50, 100];
-    const bins = Array(buckets.length - 1).fill(0);
-    scores.forEach(s => { for (let i = 0; i < buckets.length - 1; i++) { if (s >= buckets[i] && s < buckets[i + 1]) { bins[i]++; break; } } });
-    const x = d3.scaleBand().domain(d3.range(bins.length)).range([30, hw - 5]).padding(0.15);
-    const y = d3.scaleLinear().domain([0, d3.max(bins) || 1]).range([hh - 25, 5]);
-    histSvg.selectAll('rect').data(bins).enter().append('rect')
-      .attr('x', (d, i) => x(i)).attr('y', d => y(d))
-      .attr('width', x.bandwidth()).attr('height', d => hh - 25 - y(d))
-      .attr('fill', '#2563eb').attr('rx', 2);
-    const labels = ['0-5%', '5-10%', '10-20%', '20-30%', '30-50%', '50%+'];
-    histSvg.selectAll('.lab').data(labels).enter().append('text')
-      .attr('x', (d, i) => x(i) + x.bandwidth() / 2).attr('y', hh - 8)
-      .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888').text(d => d);
-    histSvg.append('text').attr('x', hw / 2).attr('y', hh).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#aaa').text('Income share');
-  }
-
-  window.switchTopology = renderTopology;
-  renderTopology('hub');
-})();
-
-// ========== Panel 3: Position Slider ==========
-(function(){
-  const container = document.getElementById('pos-svg-container');
-  const svg = d3.select('#pos-svg');
-  let w = container.clientWidth, h = Math.round(w * 300 / 600);
-  svg.attr('viewBox', `0 0 ${w} ${h}`);
-  const N = 30;
-  const nodes = d3.range(N).map(i => ({ id: i }));
-  const links = [];
-  for (let i = 0; i < N; i++) {
-    links.push({ source: i, target: (i + 1) % N });
-    links.push({ source: i, target: (i + 2) % N });
-  }
-  links.push({ source: 0, target: 15 });
-  links.push({ source: 5, target: 20 });
-
-  const pickedNode = 0;
-  let extraLinks = [];
-
-  function render(position) {
-    const pct = position / 100;
-    extraLinks = [];
-    const numExtra = Math.floor(pct * 12);
-    for (let i = 0; i < numExtra; i++) {
-      const t = Math.floor((i + 1) * N / (numExtra + 1)) % N;
-      if (t !== pickedNode) extraLinks.push({ source: pickedNode, target: t });
-    }
-    const allLinks = [...links, ...extraLinks];
-    const myDeg = allLinks.filter(l => l.source === pickedNode || l.target === pickedNode).length;
-    const baseDeg = 2;
-    const multiplier = (myDeg / baseDeg).toFixed(1);
-
-    nodes.forEach((n, i) => {
-      const angle = (2 * Math.PI * i) / N - Math.PI / 2;
-      const r = i === pickedNode ? (1 - pct) * 120 + 10 : 120;
-      n.x = w / 2 + Math.cos(angle) * r;
-      n.y = h / 2 + Math.sin(angle) * r;
-    });
-
-    svg.selectAll('*').remove();
-    svg.selectAll('line').data(allLinks).enter().append('line')
-      .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
-      .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
-      .attr('stroke', d => (d.source === pickedNode || d.target === pickedNode) ? '#2563eb44' : '#e5e5e0')
-      .attr('stroke-width', d => (d.source === pickedNode || d.target === pickedNode) ? 2 : 1);
-    svg.selectAll('circle').data(nodes).enter().append('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y)
-      .attr('r', (d, i) => i === pickedNode ? 10 : 5)
-      .attr('fill', (d, i) => i === pickedNode ? '#2563eb' : '#ccc')
-      .attr('stroke', '#fff').attr('stroke-width', 1.5);
-    svg.append('text').attr('x', nodes[pickedNode].x).attr('y', nodes[pickedNode].y - 16)
-      .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('You');
-
-    d3.select('#pos-stat').html(`Same person. Same talent. Different position. Outcome changes <strong>${multiplier}&times;</strong>.`);
-  }
-
-  d3.select('#pos-slider').on('input', function() { render(+this.value); });
-  render(10);
-
-  window.addEventListener('resize', function() {
-    w = container.clientWidth; h = Math.round(w * 300 / 600);
-    svg.attr('viewBox', `0 0 ${w} ${h}`);
-    render(+document.getElementById('pos-slider').value);
-  });
-})();
-
-// ========== Panel 4: AI Amplification ==========
-(function(){
-  const container = document.getElementById('ai-svg-container');
-  const svg = d3.select('#ai-svg');
-  let w = container.clientWidth, h = Math.round(w * 350 / 600);
-  svg.attr('viewBox', `0 0 ${w} ${h}`);
-  const N = 40;
-  let aiMode = false;
-
-  function buildNetwork() {
-    const nodes = d3.range(N).map(i => ({ id: i }));
-    const links = [];
-    for (let i = 3; i < N; i++) {
-      const hub = Math.random() < 0.6 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * i);
-      links.push({ source: hub, target: i });
-    }
-    for (let i = 0; i < 3; i++) { for (let j = i + 1; j < 3; j++) links.push({ source: i, target: j }); }
-    return { nodes, links };
-  }
-
-  const { nodes, links } = buildNetwork();
-
-  function render() {
-    const allLinks = [...links];
-    if (aiMode) {
-      for (let i = 0; i < 3; i++) {
-        for (let j = 3; j < N; j += 3) {
-          if (!allLinks.find(l => (l.source === i && l.target === j) || (l.source === j && l.target === i)))
-            allLinks.push({ source: i, target: j });
+        const degrees = nodes.map((_, i) => links.filter(l => (l.source.index ?? l.source) === i || (l.target.index ?? l.target) === i).length);
+        if (degrees.length) {
+          const maxDeg = d3.max(degrees) || 1;
+          const minDeg = d3.min(degrees) || 0;
+          d3.select('#builder-stats').html(`Most connected node has <strong>${maxDeg}</strong> connections. Least connected: <strong>${minDeg}</strong>.`);
+          drawHist('#builder-hist', degrees, w, 120);
         }
       }
-    }
 
-    const degrees = nodes.map((_, i) => allLinks.filter(l => l.source === i || l.target === i).length);
-    const maxDeg = d3.max(degrees) || 1;
-
-    nodes.forEach((n, i) => {
-      const angle = (2 * Math.PI * i) / N - Math.PI / 2;
-      const isHub = i < 3;
-      const r = isHub ? 40 : 130 + Math.random() * 20;
-      n.x = w / 2 + Math.cos(angle) * r;
-      n.y = h / 2 + Math.sin(angle) * r;
-    });
-
-    svg.selectAll('*').remove();
-    svg.selectAll('line').data(allLinks).enter().append('line')
-      .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
-      .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
-      .attr('stroke', '#e5e5e0').attr('stroke-width', 0.5);
-
-    const rScale = aiMode
-      ? d3.scaleSqrt().domain([0, maxDeg]).range([2, 30])
-      : d3.scaleSqrt().domain([0, maxDeg]).range([4, 14]);
-
-    svg.selectAll('circle').data(nodes).enter().append('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y)
-      .attr('r', (d, i) => rScale(degrees[i]))
-      .attr('fill', (d, i) => i < 3 ? '#2563eb' : '#ccc')
-      .attr('opacity', (d, i) => aiMode && i >= 3 ? 0.4 : 0.9)
-      .attr('stroke', '#fff').attr('stroke-width', 1);
-
-    const humanRelevance = aiMode ? 23 : 100;
-    const hubShare = aiMode ? '87%' : '42%';
-    d3.select('#ai-stats').html(
-      `Human relevance: <strong>${humanRelevance}%</strong> &nbsp;&middot;&nbsp; Hub value share: <strong>${hubShare}</strong>`
-    );
-  }
-
-  window.toggleAI = function() {
-    aiMode = !aiMode;
-    d3.select('#ai-toggle').classed('on', aiMode);
-    render();
-  };
-  render();
-
-  window.addEventListener('resize', function() {
-    w = container.clientWidth; h = Math.round(w * 350 / 600);
-    svg.attr('viewBox', `0 0 ${w} ${h}`);
-    render();
-  });
-})();
-
-// Reading progress
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-});
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
+      function tickBuilder() {
+        linkG.selectAll('line')
+          .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+        nodeG.selectAll('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y);
       }
+
+      function drawHist(sel, degrees, w, h) {
+        const svg = d3.select(sel);
+        svg.attr('viewBox', `0 0 ${w} ${h}`);
+        svg.selectAll('*').remove();
+        const maxDeg = d3.max(degrees) || 1;
+        const bins = Array(maxDeg + 1).fill(0);
+        degrees.forEach(d => bins[d]++);
+        const x = d3.scaleBand().domain(d3.range(bins.length)).range([30, w - 10]).padding(0.2);
+        const y = d3.scaleLinear().domain([0, d3.max(bins)]).range([h - 20, 5]);
+        svg.selectAll('rect').data(bins).enter().append('rect')
+          .attr('x', (d, i) => x(i)).attr('y', d => y(d))
+          .attr('width', x.bandwidth()).attr('height', d => h - 20 - y(d))
+          .attr('fill', '#2563eb').attr('rx', 2);
+        svg.append('text').attr('x', w / 2).attr('y', h - 2).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#888').attr('font-family', "'DM Sans', system-ui, sans-serif").text('Degree distribution');
+      }
+      window.drawHist = drawHist;
+
+      window.addEventListener('resize', function () {
+        w = container.clientWidth; h = Math.round(w * 400 / 600);
+        svg.attr('viewBox', `0 0 ${w} ${h}`);
+        sim.force('center', d3.forceCenter(w / 2, h / 2));
+        sim.alpha(0.3).restart();
+      });
+    })();
+
+    // ========== Panel 2: Topology Switcher ==========
+    (function () {
+      const N = 50;
+      const topoSvg = d3.select('#topo-svg');
+      const tw = 360, th = 360;
+      let currentTopo = 'hub';
+
+      function generateTopology(type) {
+        const nodes = d3.range(N).map(i => ({ id: i }));
+        const links = [];
+        if (type === 'hub') {
+          for (let i = 1; i < N; i++) links.push({ source: 0, target: i });
+          for (let i = 1; i < N; i++) { if (Math.random() < 0.1 && i + 1 < N) links.push({ source: i, target: i + 1 }); }
+        } else if (type === 'smallworld') {
+          for (let i = 0; i < N; i++) {
+            links.push({ source: i, target: (i + 1) % N });
+            links.push({ source: i, target: (i + 2) % N });
+          }
+          for (let i = 0; i < 8; i++) {
+            links.push({ source: Math.floor(Math.random() * N), target: Math.floor(Math.random() * N) });
+          }
+        } else {
+          for (let i = 0; i < N; i++) {
+            links.push({ source: i, target: (i + 1) % N });
+            links.push({ source: i, target: (i + 2) % N });
+          }
+        }
+        return { nodes, links };
+      }
+
+      function computeScores(type, nodes, links) {
+        const degrees = nodes.map((_, i) => links.filter(l => (l.source.id ?? l.source) === i || (l.target.id ?? l.target) === i).length);
+        if (type === 'hub') {
+          return nodes.map((_, i) => i === 0 ? 95 : 0.1 + Math.random() * 0.8);
+        } else if (type === 'smallworld') {
+          return nodes.map((_, i) => {
+            const d = degrees[i];
+            if (d >= 6) return 30 + Math.random() * 10;
+            if (d >= 4) return 10 + Math.random() * 10;
+            return 5 + Math.random() * 5;
+          });
+        } else {
+          return nodes.map(() => 15 + Math.random() * 10);
+        }
+      }
+
+      function gini(vals) {
+        const sorted = [...vals].sort((a, b) => a - b);
+        const n = sorted.length;
+        let num = 0;
+        sorted.forEach((v, i) => num += (2 * (i + 1) - n - 1) * v);
+        const den = n * d3.sum(sorted);
+        return den === 0 ? 0 : num / den;
+      }
+
+      function renderTopology(type) {
+        currentTopo = type;
+        document.querySelectorAll('.panel .btn-group .btn').forEach(b => {
+          b.classList.toggle('active', b.textContent.toLowerCase().includes(type === 'hub' ? 'hub' : type === 'smallworld' ? 'small' : 'mesh'));
+        });
+
+        const { nodes, links } = generateTopology(type);
+        const scores = computeScores(type, nodes, links);
+        const g = gini(scores);
+
+        d3.select('#topo-gini').text(g.toFixed(2));
+
+        nodes.forEach((n, i) => {
+          const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+          n.x = tw / 2 + Math.cos(angle) * 140;
+          n.y = th / 2 + Math.sin(angle) * 140;
+        });
+        if (type === 'hub') { nodes[0].x = tw / 2; nodes[0].y = th / 2; }
+
+        topoSvg.selectAll('*').remove();
+        topoSvg.selectAll('line').data(links).enter().append('line')
+          .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
+          .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
+          .attr('stroke', '#ddd').attr('stroke-width', 0.8);
+        topoSvg.selectAll('circle').data(nodes).enter().append('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y)
+          .attr('r', (d, i) => 3 + scores[i] / 8)
+          .attr('fill', (d, i) => d3.interpolateBlues(scores[i] / 100))
+          .attr('stroke', '#fff').attr('stroke-width', 1);
+
+        const histSvg = d3.select('#topo-hist');
+        histSvg.selectAll('*').remove();
+        const hw = 220, hh = 200;
+        const buckets = [0, 5, 10, 20, 30, 50, 100];
+        const bins = Array(buckets.length - 1).fill(0);
+        scores.forEach(s => { for (let i = 0; i < buckets.length - 1; i++) { if (s >= buckets[i] && s < buckets[i + 1]) { bins[i]++; break; } } });
+        const x = d3.scaleBand().domain(d3.range(bins.length)).range([30, hw - 5]).padding(0.15);
+        const y = d3.scaleLinear().domain([0, d3.max(bins) || 1]).range([hh - 25, 5]);
+        histSvg.selectAll('rect').data(bins).enter().append('rect')
+          .attr('x', (d, i) => x(i)).attr('y', d => y(d))
+          .attr('width', x.bandwidth()).attr('height', d => hh - 25 - y(d))
+          .attr('fill', '#2563eb').attr('rx', 2);
+        const labels = ['0-5%', '5-10%', '10-20%', '20-30%', '30-50%', '50%+'];
+        histSvg.selectAll('.lab').data(labels).enter().append('text')
+          .attr('x', (d, i) => x(i) + x.bandwidth() / 2).attr('y', hh - 8)
+          .attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#888').text(d => d);
+        histSvg.append('text').attr('x', hw / 2).attr('y', hh).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#aaa').text('Income share');
+      }
+
+      window.switchTopology = renderTopology;
+      renderTopology('hub');
+    })();
+
+    // ========== Panel 3: Position Slider ==========
+    (function () {
+      const container = document.getElementById('pos-svg-container');
+      const svg = d3.select('#pos-svg');
+      let w = container.clientWidth, h = Math.round(w * 300 / 600);
+      svg.attr('viewBox', `0 0 ${w} ${h}`);
+      const N = 30;
+      const nodes = d3.range(N).map(i => ({ id: i }));
+      const links = [];
+      for (let i = 0; i < N; i++) {
+        links.push({ source: i, target: (i + 1) % N });
+        links.push({ source: i, target: (i + 2) % N });
+      }
+      links.push({ source: 0, target: 15 });
+      links.push({ source: 5, target: 20 });
+
+      const pickedNode = 0;
+      let extraLinks = [];
+
+      function render(position) {
+        const pct = position / 100;
+        extraLinks = [];
+        const numExtra = Math.floor(pct * 12);
+        for (let i = 0; i < numExtra; i++) {
+          const t = Math.floor((i + 1) * N / (numExtra + 1)) % N;
+          if (t !== pickedNode) extraLinks.push({ source: pickedNode, target: t });
+        }
+        const allLinks = [...links, ...extraLinks];
+        const myDeg = allLinks.filter(l => l.source === pickedNode || l.target === pickedNode).length;
+        const baseDeg = 2;
+        const multiplier = (myDeg / baseDeg).toFixed(1);
+
+        nodes.forEach((n, i) => {
+          const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+          const r = i === pickedNode ? (1 - pct) * 120 + 10 : 120;
+          n.x = w / 2 + Math.cos(angle) * r;
+          n.y = h / 2 + Math.sin(angle) * r;
+        });
+
+        svg.selectAll('*').remove();
+        svg.selectAll('line').data(allLinks).enter().append('line')
+          .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
+          .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
+          .attr('stroke', d => (d.source === pickedNode || d.target === pickedNode) ? '#2563eb44' : '#e5e5e0')
+          .attr('stroke-width', d => (d.source === pickedNode || d.target === pickedNode) ? 2 : 1);
+        svg.selectAll('circle').data(nodes).enter().append('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y)
+          .attr('r', (d, i) => i === pickedNode ? 10 : 5)
+          .attr('fill', (d, i) => i === pickedNode ? '#2563eb' : '#ccc')
+          .attr('stroke', '#fff').attr('stroke-width', 1.5);
+        svg.append('text').attr('x', nodes[pickedNode].x).attr('y', nodes[pickedNode].y - 16)
+          .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('You');
+
+        d3.select('#pos-stat').html(`Same person. Same talent. Different position. Outcome changes <strong>${multiplier}&times;</strong>.`);
+      }
+
+      d3.select('#pos-slider').on('input', function () { render(+this.value); });
+      render(10);
+
+      window.addEventListener('resize', function () {
+        w = container.clientWidth; h = Math.round(w * 300 / 600);
+        svg.attr('viewBox', `0 0 ${w} ${h}`);
+        render(+document.getElementById('pos-slider').value);
+      });
+    })();
+
+    // ========== Panel 4: AI Amplification ==========
+    (function () {
+      const container = document.getElementById('ai-svg-container');
+      const svg = d3.select('#ai-svg');
+      let w = container.clientWidth, h = Math.round(w * 350 / 600);
+      svg.attr('viewBox', `0 0 ${w} ${h}`);
+      const N = 40;
+      let aiMode = false;
+
+      function buildNetwork() {
+        const nodes = d3.range(N).map(i => ({ id: i }));
+        const links = [];
+        for (let i = 3; i < N; i++) {
+          const hub = Math.random() < 0.6 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * i);
+          links.push({ source: hub, target: i });
+        }
+        for (let i = 0; i < 3; i++) { for (let j = i + 1; j < 3; j++) links.push({ source: i, target: j }); }
+        return { nodes, links };
+      }
+
+      const { nodes, links } = buildNetwork();
+
+      function render() {
+        const allLinks = [...links];
+        if (aiMode) {
+          for (let i = 0; i < 3; i++) {
+            for (let j = 3; j < N; j += 3) {
+              if (!allLinks.find(l => (l.source === i && l.target === j) || (l.source === j && l.target === i)))
+                allLinks.push({ source: i, target: j });
+            }
+          }
+        }
+
+        const degrees = nodes.map((_, i) => allLinks.filter(l => l.source === i || l.target === i).length);
+        const maxDeg = d3.max(degrees) || 1;
+
+        nodes.forEach((n, i) => {
+          const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+          const isHub = i < 3;
+          const r = isHub ? 40 : 130 + Math.random() * 20;
+          n.x = w / 2 + Math.cos(angle) * r;
+          n.y = h / 2 + Math.sin(angle) * r;
+        });
+
+        svg.selectAll('*').remove();
+        svg.selectAll('line').data(allLinks).enter().append('line')
+          .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
+          .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y)
+          .attr('stroke', '#e5e5e0').attr('stroke-width', 0.5);
+
+        const rScale = aiMode
+          ? d3.scaleSqrt().domain([0, maxDeg]).range([2, 30])
+          : d3.scaleSqrt().domain([0, maxDeg]).range([4, 14]);
+
+        svg.selectAll('circle').data(nodes).enter().append('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y)
+          .attr('r', (d, i) => rScale(degrees[i]))
+          .attr('fill', (d, i) => i < 3 ? '#2563eb' : '#ccc')
+          .attr('opacity', (d, i) => aiMode && i >= 3 ? 0.4 : 0.9)
+          .attr('stroke', '#fff').attr('stroke-width', 1);
+
+        const humanRelevance = aiMode ? 23 : 100;
+        const hubShare = aiMode ? '87%' : '42%';
+        d3.select('#ai-stats').html(
+          `Human relevance: <strong>${humanRelevance}%</strong> &nbsp;&middot;&nbsp; Hub value share: <strong>${hubShare}</strong>`
+        );
+      }
+
+      window.toggleAI = function () {
+        aiMode = !aiMode;
+        d3.select('#ai-toggle').classed('on', aiMode);
+        render();
+      };
+      render();
+
+      window.addEventListener('resize', function () {
+        w = container.clientWidth; h = Math.round(w * 350 / 600);
+        svg.attr('viewBox', `0 0 ${w} ${h}`);
+        render();
+      });
+    })();
+
+    // Reading progress
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
     });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>

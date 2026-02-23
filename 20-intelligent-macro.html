@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 20 — Intelligent Macroeconomics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ── Progress bar ── */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    body {
+      background: #fafaf8;
+      color: #1a1a1a;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+    }
+
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .panel:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Sticky nav with backdrop blur ── */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e5e5e0;
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: rgba(250, 250, 248, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    /* Enrichment styles */
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .attribution {
+      font-size: 0.85rem;
+      color: #6b7280;
+      font-style: normal;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e5e5e0;
+      margin: 3rem 0;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-row .stat-callout {
+      flex: 1;
+      margin: 0;
+    }
+
+    /* Puzzle cards */
+    .puzzle-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .puzzle-card {
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .puzzle-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .puzzle-header {
+      padding: 0.9rem 1.1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f5f5f3;
+      transition: background 0.15s;
+    }
+
+    .puzzle-header:hover {
+      background: #ebebea;
+    }
+
+    .puzzle-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .puzzle-header .puzzle-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .puzzle-body {
+      display: none;
+      padding: 1rem 1.1rem;
+      border-top: 1px solid #e5e5e0;
+    }
+
+    .puzzle-card.open .puzzle-body {
+      display: block;
+    }
+
+    .puzzle-card.open .puzzle-toggle {
+      transform: rotate(180deg);
+    }
+
+    .puzzle-toggle {
+      transition: transform 0.2s;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .old-explanation {
+      background: #f5f5f3;
+      border-left: 3px solid #ccc;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .old-explanation .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #aaa;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .mind-explanation {
+      border-left: 3px solid #6d28d9;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 4px 4px 0;
+      background: #faf5ff;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .mind-explanation .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6d28d9;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .culprit-bars {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      align-items: flex-end;
+      height: 60px;
+    }
+
+    .culprit-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 3px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      transition: height 0.5s;
+    }
+
+    /* MIND Allocation Game */
+    .alloc-sliders {
+      margin: 1rem 0;
+    }
+
+    .alloc-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.6rem 0;
+      font-size: 0.9rem;
+    }
+
+    .alloc-row label {
+      width: 32px;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .alloc-row input[type=range] {
+      flex: 1;
+      accent-color: #2563eb;
+      height: 6px;
+      cursor: pointer;
+    }
+
+    .alloc-row .val {
+      width: 36px;
+      text-align: right;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .alloc-total {
+      font-size: 0.85rem;
+      color: #888;
+      margin: 0.25rem 0 1rem;
+    }
+
+    .alloc-total.over {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    .scenario-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .scenario-btn {
+      padding: 0.4rem 0.9rem;
+      border: 1.5px solid #2563eb;
+      border-radius: 6px;
+      background: white;
+      color: #2563eb;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .scenario-btn.active,
+    .scenario-btn:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    .product-display {
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .product-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .product-formula {
+      font-size: 0.8rem;
+      color: #888;
+      font-family: 'DM Mono', monospace;
+      margin-top: 0.2rem;
+    }
+
+    .product-verdict {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    .score-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.6rem;
+      height: 100px;
+      margin: 1rem 0;
+      justify-content: center;
+    }
+
+    .score-bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      max-width: 80px;
+    }
+
+    .score-bar-rect {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.4s;
+    }
+
+    .score-bar-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    /* Mobile breakpoints */
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr !important;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .ratio-display {
+        font-size: 2rem;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .alloc-row {
+        gap: 0.5rem;
+      }
+
+      .alloc-row label {
+        width: 24px;
+        font-size: 0.9rem;
+      }
+
+      .alloc-row .val {
+        width: 30px;
+        font-size: 0.85rem;
+      }
+
+      .scenario-btns {
+        flex-direction: column;
+      }
+
+      .scenario-btn {
+        text-align: center;
+      }
+
+      .score-bar {
+        gap: 0.4rem;
+      }
+
+      .product-num {
+        font-size: 1.8rem;
+      }
+
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="progress-bar"></div>
+  <nav class="nav">
+    <a href="19-nucleation.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="21-after-economics.html">Next &rarr;</a>
+  </nav>
+
+  <div class="prose">
+    <div class="chapter-num">Chapter 20</div>
+    <h1>Intelligent Macroeconomics</h1>
+
+    <div class="pullquote">
+      <p>&ldquo;The whole of science is nothing more than a refinement of everyday thinking.&rdquo;</p>
+      <div class="attribution">&mdash; Albert Einstein</div>
+    </div>
+
+    <!-- Section: The Birth of the Second Mind -->
+    <h2>The Birth of the Second Mind</h2>
+
+    <p>On December 31, 1600, Queen Elizabeth I signed a charter that gave birth to a new kind of life on Earth. She
+      called it the East India Company. It was not human. It was an artificial being, a &ldquo;corporate person,&rdquo;
+      capable of living forever and pursuing a single, simple objective: profit. It was our first, slow, mechanical
+      attempt at artificial intelligence.</p>
+
+    <!-- SVG: Timeline of corporate evolution — enhanced -->
+    <svg viewBox="0 0 680 120" style="width:100%;margin:1.5rem 0;" aria-label="Timeline from corporation to AI">
+      <defs>
+        <linearGradient id="timelineGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="50%" stop-color="#7c3aed" />
+          <stop offset="100%" stop-color="#2563eb" />
+        </linearGradient>
+        <linearGradient id="tlBgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8faff" />
+          <stop offset="100%" stop-color="#eef2ff" />
+        </linearGradient>
+        <radialGradient id="tlNodeGrad1" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="100%" stop-color="#2563eb" />
+        </radialGradient>
+        <radialGradient id="tlNodeGradLast" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#a78bfa" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </radialGradient>
+        <filter id="tl-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.15" />
+        </filter>
+        <filter id="tl-glow">
+          <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#7c3aed" flood-opacity="0.4" />
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="680" height="120" rx="8" fill="url(#tlBgGrad)" />
+      <!-- Subtle horizontal grid -->
+      <line x1="10" y1="62" x2="670" y2="62" stroke="#dbeafe" stroke-width="0.5" opacity="0.6" />
+      <!-- Timeline line -->
+      <line x1="40" y1="62" x2="648" y2="62" stroke="url(#timelineGrad)" stroke-width="3" />
+      <!-- Node 1: 1600 -->
+      <circle cx="80" cy="62" r="9" fill="url(#tlNodeGrad1)" filter="url(#tl-shadow)" />
+      <text x="80" y="92" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">1600</text>
+      <text x="80" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a"
+        font-family="'DM Sans', system-ui, sans-serif">Corporation</text>
+      <!-- Node 2: 1900s -->
+      <circle cx="260" cy="62" r="9" fill="url(#tlNodeGrad1)" filter="url(#tl-shadow)" opacity="0.85" />
+      <text x="260" y="92" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">1900s</text>
+      <text x="260" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a1a"
+        font-family="'DM Sans', system-ui, sans-serif">Industrial GDP</text>
+      <!-- Node 3: 1970s -->
+      <circle cx="440" cy="62" r="9" fill="url(#tlNodeGrad1)" filter="url(#tl-shadow)" opacity="0.9" />
+      <text x="440" y="92" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">1970s</text>
+      <text x="440" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#d97706"
+        font-family="'DM Sans', system-ui, sans-serif">Wage Decoupling</text>
+      <!-- Node 4: 2020s — highlighted with glow -->
+      <circle cx="600" cy="62" r="12" fill="url(#tlNodeGradLast)" filter="url(#tl-glow)">
+        <animate attributeName="r" values="12;14;12" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <text x="600" y="94" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700"
+        font-family="'DM Sans', system-ui, sans-serif">2020s</text>
+      <text x="600" y="43" text-anchor="middle" font-size="11" font-weight="700" fill="#7c3aed"
+        font-family="'Playfair Display', Georgia, serif">Fast AI</text>
+      <polygon points="648,62 638,55 638,69" fill="url(#timelineGrad)" />
+    </svg>
+
+    <p>For the last four hundred years, the entire story of macroeconomics has been the story of us &mdash; the slow,
+      complex, biological minds &mdash; trying to understand and control the behavior of these strange, powerful, and
+      increasingly alien corporate minds we had created. We built a science of ghosts, chasing phantom aggregates like
+      &ldquo;total output,&rdquo; because we were trying to understand the weather of a world inhabited by these new
+      gods, without ever understanding the gods themselves.</p>
+
+    <p>Intelligent Macroeconomics is not a better model for this world. It is a better science because it finally gives
+      us the tools to see these entities for what they are: <strong>intelligent agents competing in a portfolio game of
+        MIND capitals</strong>. With this lens, the great mysteries of the last century do not just become solvable;
+      they become simple.</p>
+
+    <div class="stat-callout">
+      <div class="stat-number">400+</div>
+      <div class="stat-label">Years of &ldquo;slow AI&rdquo; &mdash; the corporate mind &mdash; shaping macroeconomics
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <p>The great economic mysteries of the 20th century become simple when you use the right instrument. The Solow
+      Residual, wage stagnation, financial crises &mdash; each one dissolves when you measure the right capitals. GDP
+      saw noise. MIND sees signal.</p>
+
+    <!-- Panel 1: The Macro Puzzle Explainer -->
+    <div class="panel">
+      <h2>The Macro Puzzle Explainer</h2>
+      <p style="font-size:0.9rem;color:#666;margin-top:0">Click each puzzle to reveal why conventional economics was
+        stumped &mdash; and how MIND capitals dissolve the mystery.</p>
+      <div class="puzzle-grid" id="puzzle-grid"></div>
+    </div>
+
+    <!-- Prose: The Puzzle of Growth -->
+    <h2>The Puzzle of Growth: The Ghost in the Machine</h2>
+
+    <p>The first great mystery was growth itself. After World War II, economies grew at a rate that defied explanation.
+      The Nobel laureate Robert Solow found that most of this growth was a &ldquo;residual&rdquo; he attributed to a
+      generic &ldquo;technology.&rdquo; It was like crediting a bountiful harvest to &ldquo;good weather&rdquo; without
+      understanding the sun.</p>
+
+    <div class="pullquote">
+      <p>The &ldquo;ghost in the machine&rdquo; of growth was the explosive, unmeasured accumulation of Intelligence
+        Capital and Network Capital within corporate beings. The Solow Residual was the shadow cast by invisible
+        capitals on the low-resolution dashboard of GDP.</p>
+    </div>
+
+    <!-- Prose: The Puzzle of Wages -->
+    <h2>The Puzzle of Wages: The Broken Bargain</h2>
+
+    <p>For a generation, the bargain held: as corporate beings grew more productive, so did their human components.
+      Then, around 1973, the link shattered. Productivity continued its climb, but wages for the median worker
+      flatlined.</p>
+
+    <!-- SVG: Productivity vs Wages divergence — enhanced -->
+    <svg viewBox="0 0 680 200" style="width:100%;margin:1.5rem 0;"
+      aria-label="Productivity vs wages divergence since 1973">
+      <defs>
+        <linearGradient id="chartBgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8faff" />
+          <stop offset="100%" stop-color="#f0f4ff" />
+        </linearGradient>
+        <linearGradient id="prodFillGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2563eb" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0" />
+        </linearGradient>
+        <linearGradient id="wageFillGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+        </linearGradient>
+        <filter id="chart-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.12" />
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="680" height="200" rx="8" fill="url(#chartBgGrad)" />
+      <text x="340" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a"
+        font-family="'Playfair Display', Georgia, serif">The Third Economic Inversion</text>
+      <!-- Subtle grid lines -->
+      <line x1="60" y1="75" x2="640" y2="75" stroke="#dbeafe" stroke-width="0.5" opacity="0.7" />
+      <line x1="60" y1="115" x2="640" y2="115" stroke="#dbeafe" stroke-width="0.5" opacity="0.7" />
+      <!-- Area fills under lines -->
+      <polygon points="60,145 180,125 300,105 420,75 540,45 640,35 640,165 60,165" fill="url(#prodFillGrad)" />
+      <polygon points="60,145 180,125 300,122 420,120 540,118 640,116 640,165 60,165" fill="url(#wageFillGrad)" />
+      <!-- Axes -->
+      <line x1="60" y1="165" x2="640" y2="165" stroke="#ccc" stroke-width="1" />
+      <line x1="60" y1="35" x2="60" y2="165" stroke="#ccc" stroke-width="1" />
+      <!-- Productivity line (rising) — thicker, prominent -->
+      <polyline points="60,145 180,125 300,105 420,75 540,45 640,35" fill="none" stroke="#2563eb" stroke-width="3"
+        stroke-linecap="round" stroke-linejoin="round" />
+      <text x="645" y="37" font-size="10" fill="#2563eb" font-weight="700"
+        font-family="'DM Sans', system-ui, sans-serif">Productivity</text>
+      <!-- Wages line (flat after 1973) -->
+      <polyline points="60,145 180,125 300,122 420,120 540,118 640,116" fill="none" stroke="#ef4444" stroke-width="2.5"
+        stroke-dasharray="6,3" stroke-linecap="round" />
+      <text x="645" y="118" font-size="10" fill="#ef4444" font-weight="700"
+        font-family="'DM Sans', system-ui, sans-serif">Wages</text>
+      <!-- Gap annotation -->
+      <line x1="540" y1="45" x2="540" y2="118" stroke="#d97706" stroke-width="1" stroke-dasharray="3,3" opacity="0.8" />
+      <text x="546" y="85" font-size="9" fill="#d97706" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Gap</text>
+      <!-- 1973 marker -->
+      <line x1="180" y1="35" x2="180" y2="165" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,4" />
+      <text x="180" y="182" text-anchor="middle" font-size="10" fill="#d97706" font-weight="700"
+        font-family="'DM Sans', system-ui, sans-serif">1973</text>
+      <text x="180" y="194" text-anchor="middle" font-size="8" fill="#888"
+        font-family="'DM Sans', system-ui, sans-serif">decoupling begins</text>
+      <!-- Axis labels -->
+      <text x="60" y="182" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">1950</text>
+      <text x="640" y="182" font-size="9" fill="#888" text-anchor="end"
+        font-family="'DM Sans', system-ui, sans-serif">2020</text>
+    </svg>
+
+    <p>The chasm was the direct accounting trace of the <strong>Third Economic Inversion</strong>. The corporate beings
+      discovered that the most effective way to grow was no longer by enhancing rivalrous human labor, but by investing
+      in non-rivalrous, infinitely scalable capital like software. The &ldquo;Productivity-Pay Gap&rdquo; was the sound
+      of the corporate mind decoupling its fate from the fate of its human parts.</p>
+
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number">1973</div>
+        <div class="stat-label">Year the productivity-wage link shattered</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number" style="font-size:2.2rem;">&#8734;</div>
+        <div class="stat-label">Scalability of non-rivalrous software capital</div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Prose: Stability and Inflation -->
+    <h2>The Puzzle of Stability: The Lost Map of Inflation</h2>
+
+    <p>The central bankers believed they had found a magic map: the Phillips Curve, a stable trade-off between inflation
+      and unemployment. Then, in the 1970s, the map burst into flames with &ldquo;stagflation.&rdquo;</p>
+
+    <p>Inflation is not primarily a monetary problem. It is a structural one. It is a symptom of a critical lack of
+      <strong>Diversity Capital (D)</strong>. The &ldquo;Great Moderation&rdquo; was a period where corporate minds
+      optimized their supply chains for maximum efficiency, stripping out every redundancy. The inflation of the 2020s
+      was the predictable fever of this low-diversity system when struck by a series of shocks.
+    </p>
+
+    <!-- Prose: Finance -->
+    <h2>The Puzzle of Finance: The Tail Wags the Dog</h2>
+
+    <p>As the 20th century closed, the financial sector became the dominant mind itself. The puzzle was the
+      <strong>Equity Premium</strong>: why did the returns on owning shares in corporate beings so vastly outperform the
+      returns on lending to the governments that chartered them?
+    </p>
+
+    <div class="pullquote">
+      <p>Stocks and bonds are claims on entirely different parts of the corporate mind. A government bond is a claim on
+        a nation&rsquo;s stable Harmonic Flow. A stock is a claim on a company&rsquo;s ability to generate explosive
+        Circular Flow. The equity premium is the market&rsquo;s rational price for the difference between linear
+        stability and non-linear, exponential creation.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Prose: New Puzzles of the Intelligent Age -->
+    <h2>The New Puzzles of the Intelligent Age</h2>
+
+    <p>These puzzles defined the macroeconomic landscape of the world built by the &ldquo;slow AI&rdquo; of the
+      corporation. But the arrival of true, &ldquo;fast AI&rdquo; does not just solve these old riddles; it creates a
+      set of new, even stranger ones that will define the 21st century.</p>
+
+    <!-- SVG: Three new puzzles — enhanced -->
+    <svg viewBox="0 0 680 240" style="width:100%;margin:1.5rem 0;"
+      aria-label="Three new puzzles of the intelligent age">
+      <defs>
+        <linearGradient id="puzzleBgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8faff" />
+          <stop offset="100%" stop-color="#f0f4ff" />
+        </linearGradient>
+        <linearGradient id="deflGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="100%" stop-color="#dbeafe" />
+        </linearGradient>
+        <linearGradient id="negGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fca5a5" />
+          <stop offset="100%" stop-color="#fee2e2" />
+        </linearGradient>
+        <linearGradient id="evaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fcd34d" />
+          <stop offset="100%" stop-color="#fffbeb" />
+        </linearGradient>
+        <filter id="puzzle-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.15" />
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="680" height="240" rx="8" fill="url(#puzzleBgGrad)" />
+      <!-- Deflationary Spiral -->
+      <rect x="10" y="12" width="200" height="216" rx="10" fill="url(#deflGrad)" stroke="#3b82f6" stroke-width="1.5"
+        filter="url(#puzzle-shadow)" />
+      <text x="110" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8"
+        font-family="'Playfair Display', Georgia, serif">Deflationary Spiral</text>
+      <line x1="30" y1="54" x2="190" y2="54" stroke="#bfdbfe" stroke-width="1" />
+      <!-- Spiral shape -->
+      <path d="M110,75 Q148,80 140,108 Q132,136 100,126 Q68,116 76,92 Q84,68 110,72" fill="none" stroke="#2563eb"
+        stroke-width="2.5" />
+      <polygon points="108,74 118,70 114,82" fill="#2563eb" />
+      <!-- Spiral center dot -->
+      <circle cx="110" cy="100" r="4" fill="#2563eb" opacity="0.5">
+        <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <text x="110" y="158" text-anchor="middle" font-size="9.5" fill="#1e3a8a"
+        font-family="'DM Sans', system-ui, sans-serif">
+        <tspan x="110" dy="0">AI drives the cost of</tspan>
+        <tspan x="110" dy="15">intelligence toward zero.</tspan>
+        <tspan x="110" dy="15">What becomes of price?</tspan>
+      </text>
+      <!-- Negative Value Worker -->
+      <rect x="240" y="12" width="200" height="216" rx="10" fill="url(#negGrad)" stroke="#dc2626" stroke-width="1.5"
+        filter="url(#puzzle-shadow)" />
+      <text x="340" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626"
+        font-family="'Playfair Display', Georgia, serif">Negative Value Worker</text>
+      <line x1="260" y1="54" x2="420" y2="54" stroke="#fca5a5" stroke-width="1" />
+      <!-- Person icon with minus symbol -->
+      <circle cx="340" cy="84" r="14" fill="none" stroke="#dc2626" stroke-width="2.5" />
+      <line x1="330" y1="84" x2="350" y2="84" stroke="#dc2626" stroke-width="3" stroke-linecap="round" />
+      <line x1="340" y1="98" x2="340" y2="128" stroke="#dc2626" stroke-width="2.5" />
+      <line x1="328" y1="110" x2="352" y2="110" stroke="#dc2626" stroke-width="2" opacity="0.7" />
+      <line x1="328" y1="120" x2="340" y2="128" stroke="#dc2626" stroke-width="2" />
+      <line x1="352" y1="120" x2="340" y2="128" stroke="#dc2626" stroke-width="2" />
+      <text x="340" y="158" text-anchor="middle" font-size="9.5" fill="#7f1d1d"
+        font-family="'DM Sans', system-ui, sans-serif">
+        <tspan x="340" dy="0">When hiring a human</tspan>
+        <tspan x="340" dy="15">introduces more cost than</tspan>
+        <tspan x="340" dy="15">benefit. Labor as liability.</tspan>
+      </text>
+      <!-- Evaporating Assets -->
+      <rect x="470" y="12" width="200" height="216" rx="10" fill="url(#evaGrad)" stroke="#d97706" stroke-width="1.5"
+        filter="url(#puzzle-shadow)" />
+      <text x="570" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e"
+        font-family="'Playfair Display', Georgia, serif">Evaporating Assets</text>
+      <line x1="490" y1="54" x2="650" y2="54" stroke="#fde68a" stroke-width="1" />
+      <!-- Fading blocks — animated opacity -->
+      <rect x="542" y="68" width="22" height="22" rx="3" fill="#d97706" opacity="0.95" />
+      <rect x="568" y="78" width="22" height="22" rx="3" fill="#d97706" opacity="0.65" />
+      <rect x="552" y="98" width="22" height="22" rx="3" fill="#d97706" opacity="0.35">
+        <animate attributeName="opacity" values="0.35;0.1;0.35" dur="2.5s" repeatCount="indefinite" />
+      </rect>
+      <rect x="576" y="112" width="22" height="14" rx="3" fill="#d97706" opacity="0.15">
+        <animate attributeName="opacity" values="0.15;0.04;0.15" dur="2s" repeatCount="indefinite" />
+      </rect>
+      <text x="570" y="158" text-anchor="middle" font-size="9.5" fill="#78350f"
+        font-family="'DM Sans', system-ui, sans-serif">
+        <tspan x="570" dy="0">A software update can</tspan>
+        <tspan x="570" dy="15">render a factory worthless</tspan>
+        <tspan x="570" dy="15">overnight. Capital in flux.</tspan>
+      </text>
+    </svg>
+
+    <hr class="section-divider">
+
+    <!-- Panel 2: MIND Capital Allocation Game -->
+    <div class="panel">
+      <h2>MIND Capital Allocation Game</h2>
+      <p style="font-size:0.9rem;color:#666;margin-top:0">You are a civilizational steward with 400 points to distribute
+        across M, I, N, D. Choose a scenario and optimize. The MIND product is M &times; I &times; N &times; D &divide;
+        10&sup6;.</p>
+
+      <div class="scenario-btns">
+        <button class="scenario-btn active" id="scen-gdp" onclick="setScenario('gdp')">Maximize Short-term GDP</button>
+        <button class="scenario-btn" id="scen-resilience" onclick="setScenario('resilience')">Maximize Long-term
+          Resilience</button>
+        <button class="scenario-btn" id="scen-ai" onclick="setScenario('ai')">Survive AI Transition</button>
+      </div>
+
+      <div id="scenario-desc"
+        style="font-size:0.9rem;color:#555;margin-bottom:1rem;padding:0.6rem 0.8rem;background:#f5f5f3;border-radius:6px;">
+        Push Material Capital high: short-term GDP maximization rewards physical and financial accumulation.</div>
+
+      <div class="alloc-sliders">
+        <div class="alloc-row">
+          <label style="color:#ef4444;">M</label>
+          <input type="range" id="alloc-M" min="0" max="400" value="130" oninput="updateAlloc('M')">
+          <span class="val" id="val-M">130</span>
+        </div>
+        <div class="alloc-row">
+          <label style="color:#2563eb;">I</label>
+          <input type="range" id="alloc-I" min="0" max="400" value="90" oninput="updateAlloc('I')">
+          <span class="val" id="val-I">90</span>
+        </div>
+        <div class="alloc-row">
+          <label style="color:#22c55e;">N</label>
+          <input type="range" id="alloc-N" min="0" max="400" value="90" oninput="updateAlloc('N')">
+          <span class="val" id="val-N">90</span>
+        </div>
+        <div class="alloc-row">
+          <label style="color:#f59e0b;">D</label>
+          <input type="range" id="alloc-D" min="0" max="400" value="90" oninput="updateAlloc('D')">
+          <span class="val" id="val-D">90</span>
+        </div>
+      </div>
+      <div class="alloc-total" id="alloc-total">Total: 400 / 400</div>
+
+      <div class="score-bar" id="score-bar"></div>
+
+      <div class="product-display">
+        <div class="product-num" id="product-num">&mdash;</div>
+        <div class="product-formula" id="product-formula"></div>
+        <div class="product-verdict" id="product-verdict"></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Prose: The New Goal -->
+    <h2>The New Goal: Taming the Second and Third Minds</h2>
+
+    <p>The task of the old macroeconomics was to understand the &ldquo;Second Mind&rdquo; of the corporation. The task
+      of Intelligent Macroeconomics is twofold. First, it must act as the steward of the ecosystem in which these
+      now-AI-powered corporate beings operate, using the tools of geometry engineering to create a landscape where the
+      health of the corporation and the health of the society are realigned.</p>
+
+    <p>But its second, and more profound, task is to prepare for the emergence of the <strong>&ldquo;Third
+        Mind&rdquo;</strong>: the autonomous, non-human, machine-to-machine economy itself. How do you conduct monetary
+      policy in an economy run by algorithms? How do you ensure financial stability when the most important financial
+      actors are non-conscious agent swarms?</p>
+
+    <!-- SVG: Three Minds evolution — enhanced -->
+    <svg viewBox="0 0 680 155" style="width:100%;margin:1.5rem 0;" aria-label="Evolution from First to Third Mind">
+      <defs>
+        <linearGradient id="mindBgGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#eff6ff" />
+          <stop offset="50%" stop-color="#f5f3ff" />
+          <stop offset="100%" stop-color="#fef2f2" />
+        </linearGradient>
+        <radialGradient id="mind1Grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="100%" stop-color="#2563eb" />
+        </radialGradient>
+        <radialGradient id="mind2Grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#c4b5fd" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </radialGradient>
+        <radialGradient id="mind3Grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fca5a5" />
+          <stop offset="100%" stop-color="#dc2626" />
+        </radialGradient>
+        <filter id="mind-shadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="6" flood-opacity="0.18" />
+        </filter>
+        <filter id="mind3-glow">
+          <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#dc2626" flood-opacity="0.35" />
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="680" height="155" rx="8" fill="url(#mindBgGrad)" />
+      <!-- First Mind: Human -->
+      <circle cx="110" cy="62" r="38" fill="url(#mind1Grad)" stroke="#2563eb" stroke-width="2"
+        filter="url(#mind-shadow)" />
+      <text x="110" y="57" text-anchor="middle" font-size="24" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">&#x1F9E0;</text>
+      <text x="110" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">Human</text>
+      <text x="110" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af"
+        font-family="'DM Sans', system-ui, sans-serif">First Mind</text>
+      <text x="110" y="132" text-anchor="middle" font-size="9" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Biological</text>
+      <!-- Arrow 1 -->
+      <line x1="158" y1="62" x2="230" y2="62" stroke="#a5b4fc" stroke-width="2.5" />
+      <polygon points="230,62 222,56 222,68" fill="#a5b4fc" />
+      <!-- Second Mind: Corporation -->
+      <circle cx="295" cy="62" r="38" fill="url(#mind2Grad)" stroke="#7c3aed" stroke-width="2"
+        filter="url(#mind-shadow)" />
+      <text x="295" y="59" text-anchor="middle" font-size="20" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">&#x25B2;</text>
+      <text x="295" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">Corp</text>
+      <text x="295" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#5b21b6"
+        font-family="'DM Sans', system-ui, sans-serif">Second Mind</text>
+      <text x="295" y="132" text-anchor="middle" font-size="9" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Slow AI (1600)</text>
+      <!-- Arrow 2 -->
+      <line x1="343" y1="62" x2="415" y2="62" stroke="#fca5a5" stroke-width="2.5" />
+      <polygon points="415,62 407,56 407,68" fill="#fca5a5" />
+      <!-- Third Mind: Machine Economy — with pulse animation -->
+      <circle cx="480" cy="62" r="38" fill="url(#mind3Grad)" stroke="#dc2626" stroke-width="2"
+        filter="url(#mind3-glow)">
+        <animate attributeName="r" values="38;41;38" dur="2.2s" repeatCount="indefinite" />
+      </circle>
+      <text x="480" y="60" text-anchor="middle" font-size="18" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">&#x2731;</text>
+      <text x="480" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="white"
+        font-family="'DM Sans', system-ui, sans-serif">M2M</text>
+      <text x="480" y="118" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b"
+        font-family="'DM Sans', system-ui, sans-serif">Third Mind</text>
+      <text x="480" y="132" text-anchor="middle" font-size="9" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Fast AI (2020s)</text>
+    </svg>
+
+    <div class="pullquote">
+      <p>This is the new frontier. It is the science of managing not just a national portfolio of MIND capitals, but of
+        stewarding a planetary transition between two different forms of intelligence.</p>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+  <script>
+    // ── Progress bar ──
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+    });
+
+    // ========== Panel 1: Puzzle Cards ==========
+    const puzzles = [
+      {
+        name: 'The Solow Residual',
+        badge: 'Growth Theory',
+        badgeColor: '#2563eb',
+        old: 'Technology — a black box that economists labeled "total factor productivity" and couldn\'t explain. Growth happened, but nobody knew why.',
+        mind: 'It was unmeasured Intelligence Capital (I) + Network Capital (N) accumulating inside corporations. When firms learned, when networks thickened, when knowledge compounded — GDP rose, but none of it appeared in the models.',
+        culprits: { M: 15, I: 55, N: 30, D: 0 }
+      },
+      {
+        name: 'The Great Wage Stagnation',
+        badge: 'Distribution',
+        badgeColor: '#d97706',
+        old: 'Globalization / Skills gap — wages stagnated because workers couldn\'t compete with cheap foreign labor or didn\'t have the right skills for new jobs.',
+        mind: 'Material Capital (M) gains were captured by capital owners while Network Capital (N) became monopolized by platform firms, breaking the M↔I feedback loop. Workers got productivity gains in the real economy; capital owners captured the MIND surplus.',
+        culprits: { M: 40, I: 15, N: 40, D: 5 }
+      },
+      {
+        name: 'The 2008 Crash',
+        badge: 'Financial Crisis',
+        badgeColor: '#dc2626',
+        old: 'Subprime mortgages — a localized housing bubble that somehow became a global catastrophe through poorly understood financial instruments.',
+        mind: 'Network Capital (N = trust) collapsed. When trust in financial instruments hit zero, the MIND product = 0 regardless of M, I, or D. The entire financial system is a trust network — and trust is binary at the system level. One zero nullifies everything.',
+        culprits: { M: 5, I: 5, N: 80, D: 10 }
+      },
+      {
+        name: 'The Great Stagnation',
+        badge: 'Secular Stagnation',
+        badgeColor: '#7c3aed',
+        old: 'Low-hanging fruit is picked — we exhausted the easy technological gains of the 20th century (electricity, automobiles, antibiotics) and have nothing comparable to drive growth.',
+        mind: 'Democratic Capital (D) erosion prevented coordination on new public goods. Low D blocked I from being deployed at scale: AI, clean energy, and biotech exist but cannot be mobilized without collective decision-making capacity. The bottleneck is governance, not ideas.',
+        culprits: { M: 10, I: 25, N: 15, D: 50 }
+      }
+    ];
+
+    const capitalColors = { M: '#ef4444', I: '#2563eb', N: '#22c55e', D: '#f59e0b' };
+
+    const puzzleGrid = document.getElementById('puzzle-grid');
+    puzzles.forEach((p, idx) => {
+      const card = document.createElement('div');
+      card.className = 'puzzle-card';
+
+      // Build culprit bars HTML
+      const maxCulprit = Math.max(...Object.values(p.culprits));
+      const barsHtml = Object.entries(p.culprits).map(([k, v]) => {
+        const h = Math.round((v / maxCulprit) * 56);
+        return `<div class="culprit-bar" style="height:${h}px;background:${capitalColors[k]};">${k}</div>`;
+      }).join('');
+
+      card.innerHTML = `
+    <div class="puzzle-header" onclick="togglePuzzle(${idx})">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <h3>${p.name}</h3>
+        <span class="puzzle-badge" style="background:${p.badgeColor}18;color:${p.badgeColor};">${p.badge}</span>
+      </div>
+      <span class="puzzle-toggle">&#9660;</span>
+    </div>
+    <div class="puzzle-body">
+      <div class="old-explanation">
+        <div class="label">Old Explanation</div>
+        ${p.old}
+      </div>
+      <div class="mind-explanation">
+        <div class="label">MIND Explanation</div>
+        ${p.mind}
+      </div>
+      <div style="font-size:0.82rem;color:#888;margin-bottom:0.25rem;">Which capital was the culprit?</div>
+      <div class="culprit-bars">${barsHtml}</div>
+    </div>
+  `;
+      puzzleGrid.appendChild(card);
+    });
+
+    window.togglePuzzle = function (idx) {
+      const cards = document.querySelectorAll('.puzzle-card');
+      cards[idx].classList.toggle('open');
+    };
+
+    // ========== Panel 2: MIND Allocation Game ==========
+    const allocState = { M: 130, I: 90, N: 90, D: 90 };
+    const capitalColorArr = ['#ef4444', '#2563eb', '#22c55e', '#f59e0b'];
+    const MAX_TOTAL = 400;
+
+    const scenarioDescs = {
+      gdp: 'Push Material Capital high: short-term GDP maximization rewards physical and financial accumulation.',
+      resilience: 'Balance all four capitals: long-term resilience requires no single dimension falling near zero.',
+      ai: 'Weight Intelligence and Network Capital: surviving an AI transition means investing in human cognition and coordination infrastructure.'
+    };
+
+    const scenarioTargets = {
+      gdp: { M: 180, I: 70, N: 80, D: 70 },
+      resilience: { M: 100, I: 100, N: 100, D: 100 },
+      ai: { M: 70, I: 140, N: 130, D: 60 }
+    };
+
+    let currentScenario = 'gdp';
+
+    window.setScenario = function (sc) {
+      currentScenario = sc;
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('scen-' + sc).classList.add('active');
+      document.getElementById('scenario-desc').textContent = scenarioDescs[sc];
+
+      const t = scenarioTargets[sc];
+      Object.entries(t).forEach(([k, v]) => {
+        allocState[k] = v;
+        document.getElementById('alloc-' + k).value = v;
+        document.getElementById('val-' + k).textContent = v;
+      });
+      renderAlloc();
+    };
+
+    window.updateAlloc = function (key) {
+      const v = parseInt(document.getElementById('alloc-' + key).value);
+      const others = Object.keys(allocState).filter(k => k !== key);
+      const othersTotal = others.reduce((sum, k) => sum + allocState[k], 0);
+      const remaining = MAX_TOTAL - othersTotal;
+      const clamped = Math.min(v, remaining);
+
+      allocState[key] = clamped;
+      document.getElementById('alloc-' + key).value = clamped;
+      document.getElementById('val-' + key).textContent = clamped;
+      renderAlloc();
+    };
+
+    function renderAlloc() {
+      const { M, I, N, D } = allocState;
+      const total = M + I + N + D;
+      const totalEl = document.getElementById('alloc-total');
+      totalEl.textContent = `Total: ${total} / ${MAX_TOTAL}`;
+      totalEl.className = 'alloc-total' + (total > MAX_TOTAL ? ' over' : '');
+
+      // Update slider max values to enforce budget
+      Object.keys(allocState).forEach(key => {
+        const others = Object.keys(allocState).filter(k => k !== key);
+        const othersTotal = others.reduce((sum, k) => sum + allocState[k], 0);
+        document.getElementById('alloc-' + key).max = MAX_TOTAL - othersTotal;
+      });
+
+      // Bar chart
+      const bar = document.getElementById('score-bar');
+      bar.innerHTML = '';
+      const vals = [
+        { k: 'M', v: M, label: 'Material', color: '#ef4444' },
+        { k: 'I', v: I, label: 'Intellect', color: '#2563eb' },
+        { k: 'N', v: N, label: 'Network', color: '#22c55e' },
+        { k: 'D', v: D, label: 'Democratic', color: '#f59e0b' }
+      ];
+      const maxV = Math.max(...vals.map(d => d.v), 1);
+      vals.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'score-bar-item';
+        const rect = document.createElement('div');
+        rect.className = 'score-bar-rect';
+        rect.style.height = Math.round((d.v / maxV) * 90) + 'px';
+        rect.style.background = d.color;
+        const lbl = document.createElement('div');
+        lbl.className = 'score-bar-label';
+        lbl.style.color = d.color;
+        lbl.textContent = d.k;
+        item.appendChild(rect);
+        item.appendChild(lbl);
+        bar.appendChild(item);
+      });
+
+      // Product
+      const product = Math.round(M * I * N * D / 1e6);
+      document.getElementById('product-num').textContent = product.toLocaleString();
+      document.getElementById('product-formula').textContent = `${M} \u00d7 ${I} \u00d7 ${N} \u00d7 ${D} / 10\u2076 = ${product.toLocaleString()}`;
+
+      // Scenario-specific verdict
+      let verdict = '';
+      const minVal = Math.min(M, I, N, D);
+      if (minVal === 0) {
+        verdict = 'Collapse \u2014 a zero in any dimension nullifies all other capitals.';
+        document.getElementById('product-verdict').style.color = '#dc2626';
+      } else if (currentScenario === 'gdp') {
+        const shortTermGDP = M * 0.6 + I * 0.2 + N * 0.1 + D * 0.1;
+        if (M > 150) verdict = `Short-term GDP optimized (score: ${Math.round(shortTermGDP)}). But fragility is rising.`;
+        else verdict = `GDP score: ${Math.round(shortTermGDP)}. Push Material Capital higher for short-term gains.`;
+        document.getElementById('product-verdict').style.color = '#d97706';
+      } else if (currentScenario === 'resilience') {
+        const balance = product / Math.max(1, (M + I + N + D) / 4 ** 4 * 1e6);
+        if (minVal > 80) verdict = `High resilience. No single point of failure. MIND product: ${product.toLocaleString()}.`;
+        else verdict = `Resilience limited by weakest capital (min: ${minVal}). Balance more evenly.`;
+        document.getElementById('product-verdict').style.color = minVal > 80 ? '#16a34a' : '#f59e0b';
+      } else {
+        const aiScore = I * 0.4 + N * 0.35 + D * 0.15 + M * 0.1;
+        if (I + N > 200) verdict = `AI transition readiness: strong (score: ${Math.round(aiScore)}). Intelligence + Network primed.`;
+        else verdict = `AI readiness score: ${Math.round(aiScore)}. Increase I and N to navigate the transition.`;
+        document.getElementById('product-verdict').style.color = I + N > 200 ? '#16a34a' : '#6d28d9';
+      }
+      if (minVal > 0) document.getElementById('product-verdict').textContent = verdict;
+      else document.getElementById('product-verdict').textContent = verdict;
+    }
+
+    renderAlloc();
+  </script>
+</body>
+
+</html>

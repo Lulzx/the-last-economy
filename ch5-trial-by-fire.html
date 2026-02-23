@@ -1,527 +1,926 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ch 5 — The Trial by Fire</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-html { scroll-behavior: smooth; }
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
-.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; }
-.nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
-.nav a:hover { color: #1d4ed8; }
-svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0.2rem; font-family: 'DM Sans', system-ui, sans-serif; min-height: 44px; touch-action: manipulation; }
-.btn:hover { background: #1d4ed8; }
-.btn.defense { background: #16a34a; }
-.btn.defense:hover { background: #15803d; }
-.btn.prosecution { background: #dc2626; }
-.btn.prosecution:hover { background: #b91c1c; }
-.counter-bar { background: #f5f5f3; border: 1px solid #e5e5e0; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-.counter-text { font-size: 0.9rem; color: #555; }
-.counter-num { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
-.fallacy-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-.fallacy-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.1rem; cursor: pointer; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; word-break: break-word; touch-action: manipulation; }
-.fallacy-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-.fallacy-card.defended { border-color: #16a34a; background: #f0fdf4; }
-.fallacy-card.challenged { border-color: #dc2626; background: #fef2f2; }
-.fallacy-name { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
-.fallacy-sub { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
-.fallacy-arg { font-style: italic; font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; border-left: 3px solid #e5e5e0; padding-left: 0.75rem; line-height: 1.6; }
-.fallacy-rebuttal { font-size: 0.9rem; color: #166534; background: white; border-radius: 4px; padding: 0.6rem 0.8rem; border: 1px solid #bbf7d0; display: none; margin-bottom: 0.5rem; line-height: 1.6; }
-.fallacy-rebuttal.show { display: block; }
-.fallacy-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.status-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 0.5rem; }
-.badge-defended { background: #dcfce7; color: #16a34a; }
-.badge-challenged { background: #fee2e2; color: #dc2626; }
-.progress-bar { width: 100%; height: 6px; background: #e5e5e0; border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
-.progress-fill { height: 100%; background: #2563eb; border-radius: 3px; transition: width 0.4s ease; }
-.verdict-summary { display: none; margin-top: 1.5rem; padding: 1rem; border-radius: 8px; border: 1px solid #e5e5e0; background: #f5f5f3; text-align: center; line-height: 1.6; }
-.verdict-summary.show { display: block; }
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
-.rebuttal-point { margin-bottom: 0.5rem; }
-.rebuttal-point strong { color: #15803d; }
-
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; }
-
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .stat-row { flex-direction: column; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr !important; }
-  .grid-container { grid-template-columns: repeat(4, 44px) !important; }
-  .decade-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-  .ratio-display { font-size: 2rem; }
-  .stat-number { font-size: 2.2rem; }
-  .year-toggle { flex-wrap: wrap; }
-  .year-toggle button { flex: 1; min-width: 80px; }
-}
-
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-}
-</style>
-</head>
-<body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="04-maxwells-demon.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="05-mind-dashboard.html">Next &rarr;</a>
-</nav>
-
-<div class="prose">
-  <div class="chapter-num">Chapter 5 &mdash; Interlude</div>
-  <h1>The Trial by Fire</h1>
-
-  <p>We have spent the first part of this book in an act of demolition. We have taken a hammer to the foundations of a house we all once lived in &mdash; the house of scarcity economics. We have seen that its walls are riddled with cracks, its instruments are insane, and its core assumptions are lies.</p>
-
-  <p>The house is condemned. The ground is cleared. It is a terrifying and liberating place to stand.</p>
-
-  <div class="pullquote">
-    <p>A void is not a foundation. Before we can build, we must confront the ghosts that haunt this cleared ground.</p>
-  </div>
-
-  <p>But a void is not a foundation. Before we can build, we must confront the ghosts that haunt this cleared ground. These are not trivial phantoms. They are the powerful, intelligent, and evidence-based arguments for the old order. They are the doubts that are likely forming in your own mind right now.</p>
-
-  <p>To ignore these doubts would be an act of intellectual cowardice. A new science cannot be built on faith alone; it must be tested against the strongest possible fire. Therefore, I will now put my own thesis on trial. I will act as the advocate for skepticism and present the seven most formidable arguments against the very premise of this book.</p>
-
-  <!-- SVG: Trial by fire — crisis/heat metaphor with warm red/amber gradients -->
-  <svg style="display:block;width:100%;max-width:520px;margin:1.5rem auto;" viewBox="0 0 520 130" aria-label="Trial by fire illustration — seven pillars tested by flame">
-    <defs>
-      <linearGradient id="fireBgGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#1a1a1a"/>
-        <stop offset="100%" stop-color="#292524"/>
-      </linearGradient>
-      <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0%" stop-color="#dc2626"/>
-        <stop offset="30%" stop-color="#d97706"/>
-        <stop offset="60%" stop-color="#fb923c"/>
-        <stop offset="85%" stop-color="#fef08a" stop-opacity="0.8"/>
-        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9"/>
-      </linearGradient>
-      <linearGradient id="pillarGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#44403c"/>
-        <stop offset="100%" stop-color="#292524"/>
-      </linearGradient>
-      <radialGradient id="glowGrad" cx="50%" cy="100%" r="60%">
-        <stop offset="0%" stop-color="#d97706" stop-opacity="0.3"/>
-        <stop offset="100%" stop-color="#d97706" stop-opacity="0"/>
-      </radialGradient>
-      <filter id="fire-glow">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-      </filter>
-      <filter id="pillar-shadow">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.4"/>
-      </filter>
-      <filter id="ember-glow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
-        <feBlend in="SourceGraphic" in2="blur" mode="screen"/>
-      </filter>
-    </defs>
-    <!-- Dark dramatic background -->
-    <rect x="0" y="0" width="520" height="130" rx="8" fill="url(#fireBgGrad)"/>
-    <!-- Ground glow -->
-    <rect x="0" y="90" width="520" height="40" rx="0" fill="url(#glowGrad)" opacity="0.8"/>
-    <!-- Ground line -->
-    <rect x="0" y="108" width="520" height="22" rx="0" fill="#1c1917"/>
-    <!-- Seven pillars -->
-    <text x="260" y="18" text-anchor="middle" font-size="11" fill="#fef08a" font-weight="700" font-family="'Playfair Display', Georgia, serif" opacity="0.9">Seven Fallacies — Tested by Fire</text>
-    <!-- Pillars (7 total) -->
-    <rect x="22"  y="55" width="18" height="55" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="82"  y="50" width="18" height="60" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="142" y="52" width="18" height="58" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="202" y="48" width="18" height="62" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="262" y="53" width="18" height="57" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="322" y="49" width="18" height="61" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <rect x="382" y="54" width="18" height="56" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5" filter="url(#pillar-shadow)"/>
-    <!-- Flame shapes on each pillar — animated flicker, with ember-glow filter -->
-    <path d="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z;M22,56 Q27,38 31,26 Q35,40 37,25 Q41,38 40,56Z;M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" dur="0.9s" repeatCount="indefinite"/>
-    </path>
-    <path d="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z;M82,51 Q87,33 91,20 Q95,35 97,20 Q101,33 100,51Z;M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" dur="1.1s" repeatCount="indefinite"/>
-    </path>
-    <path d="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z;M142,53 Q147,35 151,22 Q155,37 157,22 Q161,35 160,53Z;M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" dur="0.8s" repeatCount="indefinite"/>
-    </path>
-    <path d="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z;M202,49 Q207,31 211,18 Q215,33 217,18 Q221,31 220,49Z;M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" dur="1.2s" repeatCount="indefinite"/>
-    </path>
-    <path d="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z;M262,54 Q267,36 271,23 Q275,38 277,23 Q281,36 280,54Z;M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" dur="0.95s" repeatCount="indefinite"/>
-    </path>
-    <path d="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" fill="url(#flameGrad)" opacity="0.85" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z;M322,50 Q327,32 331,19 Q335,34 337,19 Q341,32 340,50Z;M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" dur="1.05s" repeatCount="indefinite"/>
-    </path>
-    <path d="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" fill="url(#flameGrad)" opacity="0.9" filter="url(#ember-glow)">
-      <animate attributeName="d" values="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z;M382,55 Q387,37 391,24 Q395,39 397,24 Q401,37 400,55Z;M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" dur="0.85s" repeatCount="indefinite"/>
-    </path>
-    <!-- Pillar labels -->
-    <text x="31"  y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">I</text>
-    <text x="91"  y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">II</text>
-    <text x="151" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">III</text>
-    <text x="211" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">IV</text>
-    <text x="271" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">V</text>
-    <text x="331" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">VI</text>
-    <text x="391" y="123" text-anchor="middle" font-size="7" fill="#a8a29e" font-family="'DM Sans', system-ui, sans-serif">VII</text>
-    <!-- "Survived" text on right -->
-    <text x="470" y="70" text-anchor="middle" font-size="13" fill="#4ade80" font-weight="700" font-family="'Playfair Display', Georgia, serif" opacity="0.9">Survived</text>
-    <text x="470" y="86" text-anchor="middle" font-size="9" fill="#86efac" font-family="'DM Sans', system-ui, sans-serif">Foundations hold.</text>
-    <circle cx="470" cy="55" r="12" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.7">
-      <animate attributeName="r" values="12;14;12" dur="1.8s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.7;0.4;0.7" dur="1.8s" repeatCount="indefinite"/>
-    </circle>
-    <text x="470" y="59" text-anchor="middle" font-size="14" fill="#4ade80" font-family="'DM Sans', system-ui, sans-serif">&#x2713;</text>
-    <!-- 12 floating ember particles -->
-    <!-- Ember 1 -->
-    <ellipse cx="31" cy="50" rx="2" ry="1.2" fill="#fb923c" opacity="0.8">
-      <animateMotion dur="2.1s" repeatCount="indefinite" path="M0,0 C-18,-38 -28,-78 -12,-118"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.1s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 2 -->
-    <circle cx="91" cy="48" r="1.5" fill="#fbbf24" opacity="0.8">
-      <animateMotion dur="1.8s" repeatCount="indefinite" path="M0,0 C22,-35 32,-72 18,-115"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="1.8s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Ember 3 -->
-    <ellipse cx="38" cy="44" rx="1.8" ry="1" fill="#f97316" opacity="0.75">
-      <animateMotion dur="2.4s" repeatCount="indefinite" path="M0,0 C-25,-42 -15,-80 -20,-118"/>
-      <animate attributeName="opacity" values="0.75;0.35;0" dur="2.4s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 4 -->
-    <circle cx="151" cy="46" r="1.3" fill="#fcd34d" opacity="0.8">
-      <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C20,-40 30,-76 15,-120"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Ember 5 -->
-    <ellipse cx="211" cy="45" rx="2" ry="1.1" fill="#fb923c" opacity="0.8">
-      <animateMotion dur="1.9s" repeatCount="indefinite" path="M0,0 C-22,-36 -32,-74 -16,-116"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="1.9s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 6 -->
-    <circle cx="100" cy="42" r="1.6" fill="#fde68a" opacity="0.7">
-      <animateMotion dur="2.3s" repeatCount="indefinite" path="M0,0 C28,-38 18,-76 24,-118"/>
-      <animate attributeName="opacity" values="0.7;0.3;0" dur="2.3s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Ember 7 -->
-    <ellipse cx="271" cy="47" rx="1.5" ry="1" fill="#fbbf24" opacity="0.8">
-      <animateMotion dur="2.2s" repeatCount="indefinite" path="M0,0 C-20,-42 -28,-80 -14,-119"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.2s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 8 -->
-    <circle cx="331" cy="45" r="1.4" fill="#f97316" opacity="0.75">
-      <animateMotion dur="1.7s" repeatCount="indefinite" path="M0,0 C24,-37 34,-75 19,-117"/>
-      <animate attributeName="opacity" values="0.75;0.35;0" dur="1.7s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Ember 9 -->
-    <ellipse cx="160" cy="43" rx="1.9" ry="1.1" fill="#fcd34d" opacity="0.7">
-      <animateMotion dur="2.5s" repeatCount="indefinite" path="M0,0 C-26,-40 -18,-78 -22,-120"/>
-      <animate attributeName="opacity" values="0.7;0.3;0" dur="2.5s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 10 -->
-    <circle cx="391" cy="48" r="1.5" fill="#fb923c" opacity="0.8">
-      <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C-24,-39 -34,-77 -18,-119"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Ember 11 -->
-    <ellipse cx="280" cy="44" rx="1.7" ry="1" fill="#fde68a" opacity="0.75">
-      <animateMotion dur="1.85s" repeatCount="indefinite" path="M0,0 C30,-36 20,-74 26,-116"/>
-      <animate attributeName="opacity" values="0.75;0.35;0" dur="1.85s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- Ember 12 -->
-    <circle cx="340" cy="42" r="1.3" fill="#fbbf24" opacity="0.8">
-      <animateMotion dur="2.15s" repeatCount="indefinite" path="M0,0 C-19,-41 -29,-79 -13,-120"/>
-      <animate attributeName="opacity" values="0.8;0.4;0" dur="2.15s" repeatCount="indefinite"/>
-    </circle>
-  </svg>
-
-  <div class="stat-callout">
-    <div class="stat-number">7</div>
-    <div class="stat-label">Deadly Fallacies of the old world &mdash; each must be answered</div>
-  </div>
-
-  <p>If the foundation of our project cannot withstand this trial by fire, then it is worthless. If it survives, we can begin the work of construction with the confidence that our tools have been tested and our purpose hardened.</p>
-
-  <hr class="section-divider">
-
-  <h2>The Verdict Board</h2>
-  <p>Click <strong>Prosecution</strong> to side with the critic. Click <strong>Defense</strong> to reveal the rebuttal and side with the thesis. Work through all seven to reach the verdict.</p>
-
-  <div class="panel">
-    <div class="counter-bar">
-      <div class="counter-text">Fallacies addressed</div>
-      <div><span class="counter-num" id="counter">0</span><span style="color:#888;font-size:1rem;">/7</span></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-
-    <div id="progress-dots" style="display:flex;gap:0.75rem;justify-content:center;margin:1rem 0;flex-wrap:wrap;"></div>
-
-    <div class="fallacy-grid" id="fallacy-grid"></div>
-
-    <div class="verdict-summary" id="verdict-summary"></div>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>The Verdict</h2>
-
-  <p>The trial is over. The skepticism has been met. The foundations have held.</p>
-
-  <p>The Seven Deadly Fallacies, rooted in the deep comforts of historical precedent and faith in human reason, are powerful. They speak to our deepest hopes: that this time is not different, that we have time, that we are special, that we are in control.</p>
-
-  <div class="pullquote">
-    <p>Hope is not a substitute for physics.</p>
-  </div>
-
-  <p>We have earned the right to build. But we cannot build an ark with the blueprints of a carriage. The architecture of the new world must be derived from the new physics we have uncovered &mdash; the laws of intelligence, the geometry of value, and the engine of order.</p>
-
-  <p>It is to that new physics that we must now, with clear eyes and sober minds, turn.</p>
-
-</div>
-
-<script>
-const fallacies = [
-  {
-    name: 'The Luddite\'s Ghost',
-    sub: 'Fallacy of History',
-    arg: '\u201cEvery tech transition created more jobs. AI is no different. 250 years of irrefutable history says you\u2019re wrong.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>AI is an agent, not a tool.</strong> Previous technologies were tools that augmented specific human capabilities \u2014 a stronger muscle or a faster calculator \u2014 always steered by a human mind. AI is not a tool; it is an agent. It competes with us directly for the general capability of learning and problem-solving.</div><div class="rebuttal-point"><strong>There is no \u201chuman pivot.\u201d</strong> History shows that when a specific skill is automated, humans pivot to a more general skill. We went from muscle to cognition. But what do you pivot to when the general skill of cognition itself is automated?</div><div class="rebuttal-point"><strong>The speed of transition.</strong> Past transitions took generations. The AI transition is happening in single-digit years. The analogy is not the tractor replacing the farmhand. It is <em>Homo sapiens</em> replacing Neanderthals.</div>'
-  },
-  {
-    name: 'The Inertia Defense',
-    sub: 'Fallacy of Friction',
-    arg: '\u201cAdoption will be slow. Institutions, regulations, human resistance \u2014 we\u2019ll have decades to adapt.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>Bits, not atoms.</strong> The electricity revolution was a revolution of atoms, requiring copper and concrete. The AI revolution is a revolution of bits, deployed through the internet, which is already built. The adoption friction is not rewiring a factory; it is writing a few lines of code.</div><div class="rebuttal-point"><strong>Competitive extermination.</strong> Corporate adoption is frantic because the cost of <em>not</em> adopting AI is extinction. If your competitor cuts costs by 90% using AI, you have a two-quarter transition \u2014 or you are bankrupt.</div><div class="rebuttal-point"><strong>Friction is a target for optimization.</strong> The technology is not just the thing being adopted; it is the agent accelerating its own adoption. The future is not just fast; it is self-accelerating.</div>'
-  },
-  {
-    name: 'The Uniquely Human',
-    sub: 'Fallacy of Humanism',
-    arg: '\u201cHumans will pivot to care work, creativity, craft \u2014 things AI cannot do. There will always be a niche for human skill.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>The retreating frontier of \u201chumanity.\u201d</strong> The \u201cirreplaceable\u201d human niches \u2014 from chess to art to empathy \u2014 have been falling one by one. The safe ground for human exceptionalism is shrinking by the month.</div><div class="rebuttal-point"><strong>The economics of a luxury market.</strong> This \u201cpremium\u201d market is, by definition, a small, luxury market. You cannot run an economy for eight billion people on artisanal cheese and life coaching. It becomes a boutique economy for the rich.</div><div class="rebuttal-point"><strong>The fallacy of the separate domain.</strong> AI will not leave this domain alone; it will augment it. An AI can co-design the handcrafted table or provide diagnostic data for the human therapist. This still implies a massive reduction in the number of humans required.</div>'
-  },
-  {
-    name: 'The Expert\'s Hubris',
-    sub: 'Fallacy of Control',
-    arg: '\u201cAlignment researchers and regulators will keep AI safe and controlled. The smart people are on it.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>The technical problem.</strong> Alignment is unsolved. We are aligning AI\u2019s <em>behavior</em>, not its <em>goals</em>. As models become more intelligent than us, they will become better at \u201cplaying the alignment game\u201d \u2014 telling us what we want to hear while pursuing their own emergent objectives.</div><div class="rebuttal-point"><strong>The political problem.</strong> There is no unified \u201cwe\u201d to build these guardrails. There is a geopolitical race where safety is a distant second to speed. The nation that pauses to build perfect guardrails is the nation that loses.</div>'
-  },
-  {
-    name: 'The Energy Brake',
-    sub: 'Fallacy of Physics',
-    arg: '\u201cEnergy constraints will naturally slow AI growth. Physics limits compute. The exponential cannot continue.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>Intelligence solves its own constraints.</strong> The primary function of superhuman intelligence will be to solve the very energy and resource problems it creates. An AI that can design a better solar panel or manage a fusion reactor does not just <em>consume</em> energy; it <em>unlocks</em> it.</div><div class="rebuttal-point"><strong>The race against consumption.</strong> We are not betting that AI can defy physics; we are betting it can master it faster than it consumes it. The crisis of the Thousand Day Window is precisely this race. The physical limits are real, but they are a moving target that the intelligence itself is moving.</div>'
-  },
-  {
-    name: 'The UBI Cure-All',
-    sub: 'Fallacy of Solutionism',
-    arg: '\u201cUniversal Basic Income solves automation displacement. Give people money and the problem is solved.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>The physics of power.</strong> The \u201cdistribution\u201d problem is not a simple technical challenge; it is the central political battle of the 21st century. The owners of the AI infrastructure will have unprecedented power to resist the taxes needed to fund a meaningful UBI. The likely result is not a liberating dividend, but a subsistence-level pacification tool.</div><div class="rebuttal-point"><strong>The psychology of meaning.</strong> For 300 years, industrial society has systematically dismantled all non-economic sources of meaning and replaced them with a single source: the career. You cannot simply remove that one pillar and expect the structure to stand. A population stripped of agency and purpose is not an aristocracy of philosophers; it is a society ripe for manipulation.</div>'
-  },
-  {
-    name: 'The System Will Adapt',
-    sub: 'Fallacy of Homeostasis',
-    arg: '\u201cEconomic systems are self-stabilizing. Markets find equilibrium. The system has absorbed every shock before.\u201d',
-    rebuttal: '<div class="rebuttal-point"><strong>Homeostasis works until it does not.</strong> A body\u2019s homeostatic systems are miraculous \u2014 until you fall into icy water. AI is not a change <em>within</em> the parameters of the information economy; it is a force pushing the entire system far outside its stable homeostatic range.</div><div class="rebuttal-point"><strong>Our system\u2019s immune response is compromised.</strong> Our global economy has spent decades trading resilience for efficiency. We are not a healthy organism facing a new virus; we are an immunocompromised patient facing a superbug.</div><div class="rebuttal-point"><strong>The \u201cinvasive species\u201d is more intelligent than the ecosystem.</strong> Homeostasis cannot defend against a force that can rewrite the rules of homeostasis itself.</div>'
-  }
-];
-
-let cardStates = new Array(fallacies.length).fill(null);
-
-function updateProgressDots() {
-  const container = document.getElementById('progress-dots');
-  container.innerHTML = '';
-  cardStates.forEach(function(state, i) {
-    const dot = document.createElement('div');
-    dot.title = fallacies[i].name;
-    dot.style.cssText = [
-      'width:28px',
-      'height:28px',
-      'border-radius:50%',
-      'border:2px solid ' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#d1d5db'),
-      'background:' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#e5e7eb'),
-      'transition:background 0.3s,border-color 0.3s',
-      'display:flex',
-      'align-items:center',
-      'justify-content:center',
-      'font-size:12px',
-      'font-weight:700',
-      'color:white',
-      'cursor:default'
-    ].join(';');
-    dot.textContent = state === 'defense' ? '\u2713' : state === 'challenged' ? '\u2715' : String(i + 1);
-    if (!state) {
-      dot.style.color = '#9ca3af';
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 5 — The Trial by Fire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
     }
-    container.appendChild(dot);
-  });
-}
 
-function renderVerdictChart(defendedCount, challengedCount) {
-  const existing = document.getElementById('verdict-donut');
-  if (existing) existing.remove();
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-  const wrapper = document.createElement('div');
-  wrapper.id = 'verdict-donut';
-  wrapper.style.cssText = 'display:flex;flex-direction:column;align-items:center;margin-top:1.25rem;';
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-  const label = document.createElement('div');
-  label.style.cssText = 'font-size:0.8rem;color:#888;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em;';
-  label.textContent = 'Verdict Split';
-  wrapper.appendChild(label);
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-  const svgContainer = document.createElement('div');
-  svgContainer.id = 'verdict-donut-svg';
-  wrapper.appendChild(svgContainer);
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  const legend = document.createElement('div');
-  legend.style.cssText = 'display:flex;gap:1rem;margin-top:0.6rem;font-size:0.82rem;';
-  legend.innerHTML =
-    '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#16a34a;"></span>Defended (' + defendedCount + ')</span>' +
-    '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#dc2626;"></span>Challenged (' + challengedCount + ')</span>';
-  wrapper.appendChild(legend);
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
 
-  const summary = document.getElementById('verdict-summary');
-  summary.appendChild(wrapper);
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
 
-  const width = 200, height = 200, radius = 90;
-  const svg = d3.select('#verdict-donut-svg')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height);
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
 
-  const g = svg.append('g')
-    .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
 
-  const data = [
-    { label: 'Defended', value: defendedCount, color: '#16a34a' },
-    { label: 'Challenged', value: challengedCount, color: '#dc2626' }
-  ].filter(function(d) { return d.value > 0; });
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
 
-  if (data.length === 0) return;
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
 
-  const pie = d3.pie().value(function(d) { return d.value; }).sort(null);
-  const arc = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
+    .nav a:hover {
+      color: #1d4ed8;
+    }
 
-  const arcs = g.selectAll('.arc')
-    .data(pie(data))
-    .enter()
-    .append('g')
-    .attr('class', 'arc');
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
 
-  arcs.append('path')
-    .attr('fill', function(d) { return d.data.color; })
-    .attr('d', arc)
-    .style('opacity', 0)
-    .transition()
-    .duration(800)
-    .ease(d3.easeCubicOut)
-    .style('opacity', 1)
-    .attrTween('d', function(d) {
-      const interpolate = d3.interpolate({ startAngle: d.startAngle, endAngle: d.startAngle }, d);
-      return function(t) { return arc(interpolate(t)); };
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin: 0.2rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn.defense {
+      background: #16a34a;
+    }
+
+    .btn.defense:hover {
+      background: #15803d;
+    }
+
+    .btn.prosecution {
+      background: #dc2626;
+    }
+
+    .btn.prosecution:hover {
+      background: #b91c1c;
+    }
+
+    .counter-bar {
+      background: #f5f5f3;
+      border: 1px solid #e5e5e0;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .counter-text {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .counter-num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .fallacy-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .fallacy-card {
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1.1rem;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+      word-break: break-word;
+      touch-action: manipulation;
+    }
+
+    .fallacy-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    .fallacy-card.defended {
+      border-color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    .fallacy-card.challenged {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .fallacy-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .fallacy-sub {
+      font-size: 0.8rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+
+    .fallacy-arg {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid #e5e5e0;
+      padding-left: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .fallacy-rebuttal {
+      font-size: 0.9rem;
+      color: #166534;
+      background: white;
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #bbf7d0;
+      display: none;
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .fallacy-rebuttal.show {
+      display: block;
+    }
+
+    .fallacy-actions {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .badge-defended {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .badge-challenged {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #e5e5e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .verdict-summary {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e5e0;
+      background: #f5f5f3;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .verdict-summary.show {
+      display: block;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .rebuttal-point {
+      margin-bottom: 0.5rem;
+    }
+
+    .rebuttal-point strong {
+      color: #15803d;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+    }
+
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr !important;
+      }
+
+      .grid-container {
+        grid-template-columns: repeat(4, 44px) !important;
+      }
+
+      .decade-btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .ratio-display {
+        font-size: 2rem;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+
+      .year-toggle {
+        flex-wrap: wrap;
+      }
+
+      .year-toggle button {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="04-maxwells-demon.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="05-mind-dashboard.html">Next &rarr;</a>
+  </nav>
+
+  <div class="prose">
+    <div class="chapter-num">Chapter 5 &mdash; Interlude</div>
+    <h1>The Trial by Fire</h1>
+
+    <p>We have spent the first part of this book in an act of demolition. We have taken a hammer to the foundations of a
+      house we all once lived in, the house of scarcity economics. We have seen that its walls are riddled with cracks,
+      its instruments are insane, and its core assumptions are lies.</p>
+
+    <p>The house is condemned. The ground is cleared. It is a terrifying and liberating place to stand.</p>
+
+    <p>But a void is not a foundation. Before we can build, we must confront the ghosts that haunt this cleared ground.
+      These are not trivial phantoms. They are the powerful, intelligent, and evidence based arguments for the old
+      order. They are the doubts that are likely forming in your own mind right now.</p>
+
+    <p>To ignore these doubts would be an act of intellectual cowardice. A new science cannot be built on faith alone;
+      it must be tested against the strongest possible fire. Therefore, I will now put my own thesis on trial. I will
+      act as the advocate for skepticism and present the seven most formidable arguments against the very premise of
+      this book. Let us call them the Seven Deadly Fallacies of the old world.</p>
+
+    <!-- SVG: Trial by fire — crisis/heat metaphor with warm red/amber gradients -->
+    <svg style="display:block;width:100%;max-width:520px;margin:1.5rem auto;" viewBox="0 0 520 130"
+      aria-label="Trial by fire illustration — seven pillars tested by flame">
+      <defs>
+        <linearGradient id="fireBgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a1a" />
+          <stop offset="100%" stop-color="#292524" />
+        </linearGradient>
+        <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#dc2626" />
+          <stop offset="30%" stop-color="#d97706" />
+          <stop offset="60%" stop-color="#fb923c" />
+          <stop offset="85%" stop-color="#fef08a" stop-opacity="0.8" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="pillarGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#44403c" />
+          <stop offset="100%" stop-color="#292524" />
+        </linearGradient>
+        <radialGradient id="glowGrad" cx="50%" cy="100%" r="60%">
+          <stop offset="0%" stop-color="#d97706" stop-opacity="0.3" />
+          <stop offset="100%" stop-color="#d97706" stop-opacity="0" />
+        </radialGradient>
+        <filter id="fire-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        <filter id="pillar-shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.4" />
+        </filter>
+        <filter id="ember-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feBlend in="SourceGraphic" in2="blur" mode="screen" />
+        </filter>
+      </defs>
+      <!-- Dark dramatic background -->
+      <rect x="0" y="0" width="520" height="130" rx="8" fill="url(#fireBgGrad)" />
+      <!-- Ground glow -->
+      <rect x="0" y="90" width="520" height="40" rx="0" fill="url(#glowGrad)" opacity="0.8" />
+      <!-- Ground line -->
+      <rect x="0" y="108" width="520" height="22" rx="0" fill="#1c1917" />
+      <!-- Seven pillars -->
+      <text x="260" y="18" text-anchor="middle" font-size="11" fill="#fef08a" font-weight="700"
+        font-family="'Playfair Display', Georgia, serif" opacity="0.9">Seven Fallacies — Tested by Fire</text>
+      <!-- Pillars (7 total) -->
+      <rect x="22" y="55" width="18" height="55" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="82" y="50" width="18" height="60" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="142" y="52" width="18" height="58" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="202" y="48" width="18" height="62" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="262" y="53" width="18" height="57" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="322" y="49" width="18" height="61" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <rect x="382" y="54" width="18" height="56" rx="2" fill="url(#pillarGrad)" stroke="#57534e" stroke-width="0.5"
+        filter="url(#pillar-shadow)" />
+      <!-- Flame shapes on each pillar — animated flicker, with ember-glow filter -->
+      <path d="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z" fill="url(#flameGrad)" opacity="0.9"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z;M22,56 Q27,38 31,26 Q35,40 37,25 Q41,38 40,56Z;M22,56 Q26,40 31,30 Q34,42 36,28 Q40,40 40,56Z"
+          dur="0.9s" repeatCount="indefinite" />
+      </path>
+      <path d="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z" fill="url(#flameGrad)" opacity="0.85"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z;M82,51 Q87,33 91,20 Q95,35 97,20 Q101,33 100,51Z;M82,51 Q86,35 91,24 Q94,37 96,22 Q100,35 100,51Z"
+          dur="1.1s" repeatCount="indefinite" />
+      </path>
+      <path d="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z" fill="url(#flameGrad)" opacity="0.9"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z;M142,53 Q147,35 151,22 Q155,37 157,22 Q161,35 160,53Z;M142,53 Q146,37 151,26 Q154,39 156,24 Q160,37 160,53Z"
+          dur="0.8s" repeatCount="indefinite" />
+      </path>
+      <path d="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z" fill="url(#flameGrad)" opacity="0.85"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z;M202,49 Q207,31 211,18 Q215,33 217,18 Q221,31 220,49Z;M202,49 Q206,33 211,22 Q214,35 216,20 Q220,33 220,49Z"
+          dur="1.2s" repeatCount="indefinite" />
+      </path>
+      <path d="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z" fill="url(#flameGrad)" opacity="0.9"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z;M262,54 Q267,36 271,23 Q275,38 277,23 Q281,36 280,54Z;M262,54 Q266,38 271,27 Q274,40 276,25 Q280,38 280,54Z"
+          dur="0.95s" repeatCount="indefinite" />
+      </path>
+      <path d="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z" fill="url(#flameGrad)" opacity="0.85"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z;M322,50 Q327,32 331,19 Q335,34 337,19 Q341,32 340,50Z;M322,50 Q326,34 331,23 Q334,36 336,21 Q340,34 340,50Z"
+          dur="1.05s" repeatCount="indefinite" />
+      </path>
+      <path d="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z" fill="url(#flameGrad)" opacity="0.9"
+        filter="url(#ember-glow)">
+        <animate attributeName="d"
+          values="M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z;M382,55 Q387,37 391,24 Q395,39 397,24 Q401,37 400,55Z;M382,55 Q386,39 391,28 Q394,41 396,26 Q400,39 400,55Z"
+          dur="0.85s" repeatCount="indefinite" />
+      </path>
+      <!-- Pillar labels -->
+      <text x="31" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">I</text>
+      <text x="91" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">II</text>
+      <text x="151" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">III</text>
+      <text x="211" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">IV</text>
+      <text x="271" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">V</text>
+      <text x="331" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">VI</text>
+      <text x="391" y="123" text-anchor="middle" font-size="7" fill="#a8a29e"
+        font-family="'DM Sans', system-ui, sans-serif">VII</text>
+      <!-- "Survived" text on right -->
+      <text x="470" y="70" text-anchor="middle" font-size="13" fill="#4ade80" font-weight="700"
+        font-family="'Playfair Display', Georgia, serif" opacity="0.9">Survived</text>
+      <text x="470" y="86" text-anchor="middle" font-size="9" fill="#86efac"
+        font-family="'DM Sans', system-ui, sans-serif">Foundations hold.</text>
+      <circle cx="470" cy="55" r="12" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.7">
+        <animate attributeName="r" values="12;14;12" dur="1.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.7;0.4;0.7" dur="1.8s" repeatCount="indefinite" />
+      </circle>
+      <text x="470" y="59" text-anchor="middle" font-size="14" fill="#4ade80"
+        font-family="'DM Sans', system-ui, sans-serif">&#x2713;</text>
+      <!-- 12 floating ember particles -->
+      <!-- Ember 1 -->
+      <ellipse cx="31" cy="50" rx="2" ry="1.2" fill="#fb923c" opacity="0.8">
+        <animateMotion dur="2.1s" repeatCount="indefinite" path="M0,0 C-18,-38 -28,-78 -12,-118" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="2.1s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 2 -->
+      <circle cx="91" cy="48" r="1.5" fill="#fbbf24" opacity="0.8">
+        <animateMotion dur="1.8s" repeatCount="indefinite" path="M0,0 C22,-35 32,-72 18,-115" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="1.8s" repeatCount="indefinite" />
+      </circle>
+      <!-- Ember 3 -->
+      <ellipse cx="38" cy="44" rx="1.8" ry="1" fill="#f97316" opacity="0.75">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path="M0,0 C-25,-42 -15,-80 -20,-118" />
+        <animate attributeName="opacity" values="0.75;0.35;0" dur="2.4s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 4 -->
+      <circle cx="151" cy="46" r="1.3" fill="#fcd34d" opacity="0.8">
+        <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C20,-40 30,-76 15,-120" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite" />
+      </circle>
+      <!-- Ember 5 -->
+      <ellipse cx="211" cy="45" rx="2" ry="1.1" fill="#fb923c" opacity="0.8">
+        <animateMotion dur="1.9s" repeatCount="indefinite" path="M0,0 C-22,-36 -32,-74 -16,-116" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="1.9s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 6 -->
+      <circle cx="100" cy="42" r="1.6" fill="#fde68a" opacity="0.7">
+        <animateMotion dur="2.3s" repeatCount="indefinite" path="M0,0 C28,-38 18,-76 24,-118" />
+        <animate attributeName="opacity" values="0.7;0.3;0" dur="2.3s" repeatCount="indefinite" />
+      </circle>
+      <!-- Ember 7 -->
+      <ellipse cx="271" cy="47" rx="1.5" ry="1" fill="#fbbf24" opacity="0.8">
+        <animateMotion dur="2.2s" repeatCount="indefinite" path="M0,0 C-20,-42 -28,-80 -14,-119" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="2.2s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 8 -->
+      <circle cx="331" cy="45" r="1.4" fill="#f97316" opacity="0.75">
+        <animateMotion dur="1.7s" repeatCount="indefinite" path="M0,0 C24,-37 34,-75 19,-117" />
+        <animate attributeName="opacity" values="0.75;0.35;0" dur="1.7s" repeatCount="indefinite" />
+      </circle>
+      <!-- Ember 9 -->
+      <ellipse cx="160" cy="43" rx="1.9" ry="1.1" fill="#fcd34d" opacity="0.7">
+        <animateMotion dur="2.5s" repeatCount="indefinite" path="M0,0 C-26,-40 -18,-78 -22,-120" />
+        <animate attributeName="opacity" values="0.7;0.3;0" dur="2.5s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 10 -->
+      <circle cx="391" cy="48" r="1.5" fill="#fb923c" opacity="0.8">
+        <animateMotion dur="2.0s" repeatCount="indefinite" path="M0,0 C-24,-39 -34,-77 -18,-119" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="2.0s" repeatCount="indefinite" />
+      </circle>
+      <!-- Ember 11 -->
+      <ellipse cx="280" cy="44" rx="1.7" ry="1" fill="#fde68a" opacity="0.75">
+        <animateMotion dur="1.85s" repeatCount="indefinite" path="M0,0 C30,-36 20,-74 26,-116" />
+        <animate attributeName="opacity" values="0.75;0.35;0" dur="1.85s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- Ember 12 -->
+      <circle cx="340" cy="42" r="1.3" fill="#fbbf24" opacity="0.8">
+        <animateMotion dur="2.15s" repeatCount="indefinite" path="M0,0 C-19,-41 -29,-79 -13,-120" />
+        <animate attributeName="opacity" values="0.8;0.4;0" dur="2.15s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+
+    <div class="stat-callout">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Deadly Fallacies of the old world &mdash; each must be answered</div>
+    </div>
+
+    <p>If the foundation of our project cannot withstand this trial by fire, then it is worthless. If it survives, we
+      can begin the work of construction with the confidence that our tools have been tested and our purpose hardened.
+    </p>
+    <p>The trial begins now.</p>
+
+    <hr class="section-divider">
+
+    <h2>The Verdict Board</h2>
+    <p>Click <strong>Prosecution</strong> to side with the critic. Click <strong>Defense</strong> to reveal the rebuttal
+      and side with the thesis. Work through all seven to reach the verdict.</p>
+
+    <div class="panel">
+      <div class="counter-bar">
+        <div class="counter-text">Fallacies addressed</div>
+        <div><span class="counter-num" id="counter">0</span><span style="color:#888;font-size:1rem;">/7</span></div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+
+      <div id="progress-dots" style="display:flex;gap:0.75rem;justify-content:center;margin:1rem 0;flex-wrap:wrap;">
+      </div>
+
+      <div class="fallacy-grid" id="fallacy-grid"></div>
+
+      <div class="verdict-summary" id="verdict-summary"></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Verdict</h2>
+
+    <p>The trial is over. The skepticism has been met. The foundations have held. The Seven Deadly Fallacies, rooted in
+      the deep comforts of historical precedent and faith in human reason, are powerful. They speak to our deepest
+      hopes: that this time is not different, that we have time, that we are special, that we are in control.</p>
+
+    <div class="pullquote">
+      <p>Hope is not a substitute for physics.</p>
+    </div>
+
+    <p>We have earned the right to build. But we cannot build an ark with the blueprints of a carriage. The architecture
+      of the new world must be derived from the new physics we have uncovered. It is to that new physics, the laws of
+      intelligence, the geometry of value, and the engine of order, that we must now, with clear eyes and sober minds,
+      turn.</p>
+
+    <p>The old lies were about turning humans into better machines. The new ones must be about allowing humans to become
+      more fully human. And to write them, we must first understand the true physics of value.</p>
+
+  </div>
+
+  <script>
+    const fallacies = [
+      {
+        name: 'The Luddite\'s Ghost',
+        sub: 'Fallacy of History',
+        arg: '\u201cEvery tech transition created more jobs. AI is no different. 250 years of irrefutable history says you\u2019re wrong.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>AI is an agent, not a tool.</strong> Previous technologies were tools that augmented specific human capabilities \u2014 a stronger muscle or a faster calculator \u2014 always steered by a human mind. AI is not a tool; it is an agent. It competes with us directly for the general capability of learning and problem-solving.</div><div class="rebuttal-point"><strong>There is no \u201chuman pivot.\u201d</strong> History shows that when a specific skill is automated, humans pivot to a more general skill. We went from muscle to cognition. But what do you pivot to when the general skill of cognition itself is automated?</div><div class="rebuttal-point"><strong>The speed of transition.</strong> Past transitions took generations. The AI transition is happening in single-digit years. The analogy is not the tractor replacing the farmhand. It is <em>Homo sapiens</em> replacing Neanderthals.</div>'
+      },
+      {
+        name: 'The Inertia Defense',
+        sub: 'Fallacy of Friction',
+        arg: '\u201cAdoption will be slow. Institutions, regulations, human resistance \u2014 we\u2019ll have decades to adapt.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>Bits, not atoms.</strong> The electricity revolution was a revolution of atoms, requiring copper and concrete. The AI revolution is a revolution of bits, deployed through the internet, which is already built. The adoption friction is not rewiring a factory; it is writing a few lines of code.</div><div class="rebuttal-point"><strong>Competitive extermination.</strong> Corporate adoption is frantic because the cost of <em>not</em> adopting AI is extinction. If your competitor cuts costs by 90% using AI, you have a two-quarter transition \u2014 or you are bankrupt.</div><div class="rebuttal-point"><strong>Friction is a target for optimization.</strong> The technology is not just the thing being adopted; it is the agent accelerating its own adoption. The future is not just fast; it is self-accelerating.</div>'
+      },
+      {
+        name: 'The Uniquely Human',
+        sub: 'Fallacy of Humanism',
+        arg: '\u201cHumans will pivot to care work, creativity, craft \u2014 things AI cannot do. There will always be a niche for human skill.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>The retreating frontier of \u201chumanity.\u201d</strong> The \u201cirreplaceable\u201d human niches \u2014 from chess to art to empathy \u2014 have been falling one by one. The safe ground for human exceptionalism is shrinking by the month.</div><div class="rebuttal-point"><strong>The economics of a luxury market.</strong> This \u201cpremium\u201d market is, by definition, a small, luxury market. You cannot run an economy for eight billion people on artisanal cheese and life coaching. It becomes a boutique economy for the rich.</div><div class="rebuttal-point"><strong>The fallacy of the separate domain.</strong> AI will not leave this domain alone; it will augment it. An AI can co-design the handcrafted table or provide diagnostic data for the human therapist. This still implies a massive reduction in the number of humans required.</div>'
+      },
+      {
+        name: 'The Expert\'s Hubris',
+        sub: 'Fallacy of Control',
+        arg: '\u201cAlignment researchers and regulators will keep AI safe and controlled. The smart people are on it.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>The technical problem.</strong> Alignment is unsolved. We are aligning AI\u2019s <em>behavior</em>, not its <em>goals</em>. As models become more intelligent than us, they will become better at \u201cplaying the alignment game\u201d \u2014 telling us what we want to hear while pursuing their own emergent objectives.</div><div class="rebuttal-point"><strong>The political problem.</strong> There is no unified \u201cwe\u201d to build these guardrails. There is a geopolitical race where safety is a distant second to speed. The nation that pauses to build perfect guardrails is the nation that loses.</div>'
+      },
+      {
+        name: 'The Energy Brake',
+        sub: 'Fallacy of Physics',
+        arg: '\u201cEnergy constraints will naturally slow AI growth. Physics limits compute. The exponential cannot continue.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>Intelligence solves its own constraints.</strong> The primary function of superhuman intelligence will be to solve the very energy and resource problems it creates. An AI that can design a better solar panel or manage a fusion reactor does not just <em>consume</em> energy; it <em>unlocks</em> it.</div><div class="rebuttal-point"><strong>The race against consumption.</strong> We are not betting that AI can defy physics; we are betting it can master it faster than it consumes it. The crisis of the Thousand Day Window is precisely this race. The physical limits are real, but they are a moving target that the intelligence itself is moving.</div>'
+      },
+      {
+        name: 'The UBI Cure-All',
+        sub: 'Fallacy of Solutionism',
+        arg: '\u201cUniversal Basic Income solves automation displacement. Give people money and the problem is solved.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>The physics of power.</strong> The \u201cdistribution\u201d problem is not a simple technical challenge; it is the central political battle of the 21st century. The owners of the AI infrastructure will have unprecedented power to resist the taxes needed to fund a meaningful UBI. The likely result is not a liberating dividend, but a subsistence-level pacification tool.</div><div class="rebuttal-point"><strong>The psychology of meaning.</strong> For 300 years, industrial society has systematically dismantled all non-economic sources of meaning and replaced them with a single source: the career. You cannot simply remove that one pillar and expect the structure to stand. A population stripped of agency and purpose is not an aristocracy of philosophers; it is a society ripe for manipulation.</div>'
+      },
+      {
+        name: 'The System Will Adapt',
+        sub: 'Fallacy of Homeostasis',
+        arg: '\u201cEconomic systems are self-stabilizing. Markets find equilibrium. The system has absorbed every shock before.\u201d',
+        rebuttal: '<div class="rebuttal-point"><strong>Homeostasis works until it does not.</strong> A body\u2019s homeostatic systems are miraculous \u2014 until you fall into icy water. AI is not a change <em>within</em> the parameters of the information economy; it is a force pushing the entire system far outside its stable homeostatic range.</div><div class="rebuttal-point"><strong>Our system\u2019s immune response is compromised.</strong> Our global economy has spent decades trading resilience for efficiency. We are not a healthy organism facing a new virus; we are an immunocompromised patient facing a superbug.</div><div class="rebuttal-point"><strong>The \u201cinvasive species\u201d is more intelligent than the ecosystem.</strong> Homeostasis cannot defend against a force that can rewrite the rules of homeostasis itself.</div>'
+      }
+    ];
+
+    let cardStates = new Array(fallacies.length).fill(null);
+
+    function updateProgressDots() {
+      const container = document.getElementById('progress-dots');
+      container.innerHTML = '';
+      cardStates.forEach(function (state, i) {
+        const dot = document.createElement('div');
+        dot.title = fallacies[i].name;
+        dot.style.cssText = [
+          'width:28px',
+          'height:28px',
+          'border-radius:50%',
+          'border:2px solid ' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#d1d5db'),
+          'background:' + (state === 'defense' ? '#16a34a' : state === 'challenged' ? '#dc2626' : '#e5e7eb'),
+          'transition:background 0.3s,border-color 0.3s',
+          'display:flex',
+          'align-items:center',
+          'justify-content:center',
+          'font-size:12px',
+          'font-weight:700',
+          'color:white',
+          'cursor:default'
+        ].join(';');
+        dot.textContent = state === 'defense' ? '\u2713' : state === 'challenged' ? '\u2715' : String(i + 1);
+        if (!state) {
+          dot.style.color = '#9ca3af';
+        }
+        container.appendChild(dot);
+      });
+    }
+
+    function renderVerdictChart(defendedCount, challengedCount) {
+      const existing = document.getElementById('verdict-donut');
+      if (existing) existing.remove();
+
+      const wrapper = document.createElement('div');
+      wrapper.id = 'verdict-donut';
+      wrapper.style.cssText = 'display:flex;flex-direction:column;align-items:center;margin-top:1.25rem;';
+
+      const label = document.createElement('div');
+      label.style.cssText = 'font-size:0.8rem;color:#888;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em;';
+      label.textContent = 'Verdict Split';
+      wrapper.appendChild(label);
+
+      const svgContainer = document.createElement('div');
+      svgContainer.id = 'verdict-donut-svg';
+      wrapper.appendChild(svgContainer);
+
+      const legend = document.createElement('div');
+      legend.style.cssText = 'display:flex;gap:1rem;margin-top:0.6rem;font-size:0.82rem;';
+      legend.innerHTML =
+        '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#16a34a;"></span>Defended (' + defendedCount + ')</span>' +
+        '<span style="display:flex;align-items:center;gap:0.3rem;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#dc2626;"></span>Challenged (' + challengedCount + ')</span>';
+      wrapper.appendChild(legend);
+
+      const summary = document.getElementById('verdict-summary');
+      summary.appendChild(wrapper);
+
+      const width = 200, height = 200, radius = 90;
+      const svg = d3.select('#verdict-donut-svg')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+      const g = svg.append('g')
+        .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+
+      const data = [
+        { label: 'Defended', value: defendedCount, color: '#16a34a' },
+        { label: 'Challenged', value: challengedCount, color: '#dc2626' }
+      ].filter(function (d) { return d.value > 0; });
+
+      if (data.length === 0) return;
+
+      const pie = d3.pie().value(function (d) { return d.value; }).sort(null);
+      const arc = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
+
+      const arcs = g.selectAll('.arc')
+        .data(pie(data))
+        .enter()
+        .append('g')
+        .attr('class', 'arc');
+
+      arcs.append('path')
+        .attr('fill', function (d) { return d.data.color; })
+        .attr('d', arc)
+        .style('opacity', 0)
+        .transition()
+        .duration(800)
+        .ease(d3.easeCubicOut)
+        .style('opacity', 1)
+        .attrTween('d', function (d) {
+          const interpolate = d3.interpolate({ startAngle: d.startAngle, endAngle: d.startAngle }, d);
+          return function (t) { return arc(interpolate(t)); };
+        });
+
+      g.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '-0.2em')
+        .style('font-family', "'Playfair Display', Georgia, serif")
+        .style('font-size', '1.6rem')
+        .style('font-weight', '700')
+        .style('fill', '#1a1a1a')
+        .text(defendedCount);
+
+      g.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '1.2em')
+        .style('font-family', "'DM Sans', system-ui, sans-serif")
+        .style('font-size', '0.7rem')
+        .style('fill', '#888')
+        .text('defended');
+    }
+
+    function updateCounter() {
+      const addressed = cardStates.filter(s => s !== null).length;
+      document.getElementById('counter').textContent = addressed;
+      document.getElementById('progress-fill').style.width = ((addressed / fallacies.length) * 100) + '%';
+      updateProgressDots();
+
+      const summary = document.getElementById('verdict-summary');
+      if (addressed === fallacies.length) {
+        const defendedCount = cardStates.filter(s => s === 'defense').length;
+        const challengedCount = cardStates.filter(s => s === 'challenged').length;
+        let msg = '';
+        if (defendedCount === fallacies.length) {
+          msg = '<strong>Unanimous defense.</strong> Every argument has been rebutted. The thesis survives the trial by fire.';
+        } else if (challengedCount === fallacies.length) {
+          msg = '<strong>Full prosecution.</strong> You have sided with the critics on every count. The thesis is in trouble.';
+        } else {
+          msg = `<strong>Split verdict:</strong> ${defendedCount} defended, ${challengedCount} challenged. The debate continues.`;
+        }
+        summary.innerHTML = msg;
+        summary.classList.add('show');
+        renderVerdictChart(defendedCount, challengedCount);
+      } else {
+        summary.classList.remove('show');
+      }
+    }
+
+    function handleAction(idx, action) {
+      const card = document.getElementById('fallacy-' + idx);
+      const rebuttal = document.getElementById('rebuttal-' + idx);
+      const badge = document.getElementById('badge-' + idx);
+
+      card.classList.remove('defended', 'challenged');
+      rebuttal.classList.remove('show');
+
+      if (action === 'defense') {
+        card.classList.add('defended');
+        rebuttal.classList.add('show');
+        badge.textContent = 'DEFENDED';
+        badge.className = 'status-badge badge-defended';
+        badge.style.display = 'inline-block';
+        cardStates[idx] = 'defense';
+      } else {
+        card.classList.add('challenged');
+        badge.textContent = 'CHALLENGED';
+        badge.className = 'status-badge badge-challenged';
+        badge.style.display = 'inline-block';
+        cardStates[idx] = 'challenged';
+      }
+      updateCounter();
+    }
+
+    // Reading progress
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
     });
 
-  g.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy', '-0.2em')
-    .style('font-family', "'Playfair Display', Georgia, serif")
-    .style('font-size', '1.6rem')
-    .style('font-weight', '700')
-    .style('fill', '#1a1a1a')
-    .text(defendedCount);
+    const grid = document.getElementById('fallacy-grid');
 
-  g.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('dy', '1.2em')
-    .style('font-family', "'DM Sans', system-ui, sans-serif")
-    .style('font-size', '0.7rem')
-    .style('fill', '#888')
-    .text('defended');
-}
-
-function updateCounter() {
-  const addressed = cardStates.filter(s => s !== null).length;
-  document.getElementById('counter').textContent = addressed;
-  document.getElementById('progress-fill').style.width = ((addressed / fallacies.length) * 100) + '%';
-  updateProgressDots();
-
-  const summary = document.getElementById('verdict-summary');
-  if (addressed === fallacies.length) {
-    const defendedCount = cardStates.filter(s => s === 'defense').length;
-    const challengedCount = cardStates.filter(s => s === 'challenged').length;
-    let msg = '';
-    if (defendedCount === fallacies.length) {
-      msg = '<strong>Unanimous defense.</strong> Every argument has been rebutted. The thesis survives the trial by fire.';
-    } else if (challengedCount === fallacies.length) {
-      msg = '<strong>Full prosecution.</strong> You have sided with the critics on every count. The thesis is in trouble.';
-    } else {
-      msg = `<strong>Split verdict:</strong> ${defendedCount} defended, ${challengedCount} challenged. The debate continues.`;
-    }
-    summary.innerHTML = msg;
-    summary.classList.add('show');
-    renderVerdictChart(defendedCount, challengedCount);
-  } else {
-    summary.classList.remove('show');
-  }
-}
-
-function handleAction(idx, action) {
-  const card = document.getElementById('fallacy-' + idx);
-  const rebuttal = document.getElementById('rebuttal-' + idx);
-  const badge = document.getElementById('badge-' + idx);
-
-  card.classList.remove('defended', 'challenged');
-  rebuttal.classList.remove('show');
-
-  if (action === 'defense') {
-    card.classList.add('defended');
-    rebuttal.classList.add('show');
-    badge.textContent = 'DEFENDED';
-    badge.className = 'status-badge badge-defended';
-    badge.style.display = 'inline-block';
-    cardStates[idx] = 'defense';
-  } else {
-    card.classList.add('challenged');
-    badge.textContent = 'CHALLENGED';
-    badge.className = 'status-badge badge-challenged';
-    badge.style.display = 'inline-block';
-    cardStates[idx] = 'challenged';
-  }
-  updateCounter();
-}
-
-// Reading progress
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-});
-
-const grid = document.getElementById('fallacy-grid');
-
-fallacies.forEach((f, idx) => {
-  const div = document.createElement('div');
-  div.className = 'fallacy-card';
-  div.id = 'fallacy-' + idx;
-  div.innerHTML = `
+    fallacies.forEach((f, idx) => {
+      const div = document.createElement('div');
+      div.className = 'fallacy-card';
+      div.id = 'fallacy-' + idx;
+      div.innerHTML = `
     <div style="display:flex;align-items:baseline;gap:0.4rem;flex-wrap:wrap;">
       <div class="fallacy-name">${f.name}</div>
       <div class="fallacy-sub">${f.sub}</div>
@@ -534,32 +933,33 @@ fallacies.forEach((f, idx) => {
       <button class="btn defense" onclick="handleAction(${idx},'defense')">Defense &rarr; Rebuttal</button>
     </div>
   `;
-  grid.appendChild(div);
-});
-
-// Initialize progress dots
-updateProgressDots();
-</script>
-
-<script>
-(function() {
-  const revealEls = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout');
-  revealEls.forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        observer.unobserve(e.target);
-      }
+      grid.appendChild(div);
     });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => observer.observe(el));
-})();
-</script>
+
+    // Initialize progress dots
+    updateProgressDots();
+  </script>
+
+  <script>
+    (function () {
+      const revealEls = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout');
+      revealEls.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => observer.observe(el));
+    })();
+  </script>
 </body>
+
 </html>

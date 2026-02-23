@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 18 — Money for Two Worlds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      background: #fafaf8;
+      color: #1a1a1a;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+    }
+
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s;
+    }
+
+    .panel:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e5e5e0;
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: rgba(250, 250, 248, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
+
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      text-decoration: underline;
+    }
+
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.25rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      touch-action: manipulation;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn.secondary {
+      background: #f5f5f3;
+      color: #1a1a1a;
+      border: 1px solid #e5e5e0;
+      cursor: pointer;
+    }
+
+    .btn.secondary:hover {
+      background: #e5e5e0;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #2563eb;
+    }
+
+    .slider-row {
+      margin: 0.75rem 0;
+    }
+
+    .slider-row label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .panel {
+        padding: 1rem;
+      }
+
+      .currency-designer {
+        grid-template-columns: 1fr;
+      }
+
+      .slider-row label {
+        font-size: 0.82rem;
+      }
+
+      .broken-card {
+        padding: 0.75rem;
+      }
+    }
+
+    .economy-side {
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid #e5e5e0;
+    }
+
+    .economy-side.atoms {
+      border-top: 3px solid #d97706;
+      background: #fffbeb;
+    }
+
+    .economy-side.bits {
+      border-top: 3px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    .economy-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .economy-prop {
+      font-size: 0.85rem;
+      color: #555;
+      margin: 0.25rem 0;
+    }
+
+    .broken-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .broken-card {
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .broken-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .broken-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .broken-desc {
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .severity-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .severity-label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .severity-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .severity-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .severity-dot.on {
+      background: #dc2626;
+    }
+
+    .severity-dot.off {
+      background: #e5e5e0;
+    }
+
+    /* Pulsing animation for max severity dots */
+    @keyframes severePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.4);
+        opacity: 0.7;
+      }
+    }
+
+    .severity-dot.on.severe-pulse {
+      animation: severePulse 1.5s ease-in-out infinite;
+    }
+
+    .failure-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 3px;
+      background: #fee2e2;
+      color: #dc2626;
+      margin-bottom: 0.4rem;
+    }
+
+    .currency-designer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .currency-designer {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .currency-col {
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid #e5e5e0;
+    }
+
+    .currency-col.fc {
+      border-top: 3px solid #d97706;
+    }
+
+    .currency-col.cc {
+      border-top: 3px solid #2563eb;
+    }
+
+    .currency-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .currency-subtitle {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.75rem;
+    }
+
+    .currency-effect {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .pullquote-attr {
+      font-size: 0.85rem;
+      font-style: normal;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    /* Illustration wrapper */
+    .illustration {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    /* Scroll-reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="17-symbiotic-state.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="19-nucleation.html">Next &rarr;</a>
+  </nav>
+
+  <div class="prose">
+    <div class="chapter-num">Chapter 18</div>
+    <h1>Money for Two Worlds</h1>
+
+    <!-- Two Worlds Hero SVG -->
+    <div class="illustration reveal">
+      <svg viewBox="0 0 640 180" style="max-width:620px;width:100%;" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="physBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fef9c3" />
+            <stop offset="100%" stop-color="#fef3c7" />
+          </linearGradient>
+          <linearGradient id="digBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#dbeafe" />
+            <stop offset="100%" stop-color="#eff6ff" />
+          </linearGradient>
+          <linearGradient id="dividerGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.1" />
+            <stop offset="50%" stop-color="#7c3aed" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.1" />
+          </linearGradient>
+          <filter id="twoWorldsShadow">
+            <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.12" />
+          </filter>
+          <filter id="divGlow">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#7c3aed" flood-opacity="0.5" />
+          </filter>
+        </defs>
+        <!-- Background -->
+        <rect x="0" y="0" width="640" height="180" rx="8" fill="#f8faff" />
+        <!-- Physical Economy (left half) -->
+        <rect x="10" y="10" width="300" height="160" rx="10" fill="url(#physBg)" stroke="#d97706" stroke-width="2"
+          filter="url(#twoWorldsShadow)" />
+        <!-- Factory silhouette: main building -->
+        <rect x="55" y="90" width="80" height="60" rx="2" fill="#d97706" opacity="0.3" />
+        <!-- Factory chimney -->
+        <rect x="70" y="68" width="14" height="28" rx="2" fill="#d97706" opacity="0.45" />
+        <rect x="95" y="76" width="10" height="20" rx="2" fill="#d97706" opacity="0.35" />
+        <!-- Smoke puffs from chimney -->
+        <circle cx="77" cy="62" r="5" fill="#d97706" opacity="0.2" />
+        <circle cx="82" cy="55" r="4" fill="#d97706" opacity="0.15" />
+        <circle cx="75" cy="49" r="3" fill="#d97706" opacity="0.1" />
+        <!-- Gear icon (simple) -->
+        <circle cx="170" cy="110" r="18" fill="none" stroke="#d97706" stroke-width="3" opacity="0.5" />
+        <circle cx="170" cy="110" r="8" fill="#d97706" opacity="0.25" />
+        <!-- Gear teeth (simple rectangles) -->
+        <rect x="168" y="88" width="4" height="8" rx="1" fill="#d97706" opacity="0.4" />
+        <rect x="168" y="126" width="4" height="8" rx="1" fill="#d97706" opacity="0.4" />
+        <rect x="148" y="108" width="8" height="4" rx="1" fill="#d97706" opacity="0.4" />
+        <rect x="186" y="108" width="8" height="4" rx="1" fill="#d97706" opacity="0.4" />
+        <!-- PHYSICAL label -->
+        <text x="160" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#92400e"
+          font-family="'Playfair Display', Georgia, serif">PHYSICAL</text>
+        <text x="160" y="162" text-anchor="middle" font-size="10" fill="#b45309"
+          font-family="'DM Sans', system-ui, sans-serif">atoms &bull; scarcity &bull; thermodynamics</text>
+        <!-- Digital Economy (right half) -->
+        <rect x="330" y="10" width="300" height="160" rx="10" fill="url(#digBg)" stroke="#2563eb" stroke-width="2"
+          filter="url(#twoWorldsShadow)" />
+        <!-- Dot matrix grid -->
+        <g opacity="0.3">
+          <circle cx="370" cy="55" r="2" fill="#2563eb" />
+          <circle cx="385" cy="55" r="2" fill="#2563eb" />
+          <circle cx="400" cy="55" r="2" fill="#2563eb" />
+          <circle cx="415" cy="55" r="2" fill="#2563eb" />
+          <circle cx="370" cy="70" r="2" fill="#2563eb" />
+          <circle cx="385" cy="70" r="2" fill="#2563eb" />
+          <circle cx="400" cy="70" r="2" fill="#2563eb" />
+          <circle cx="415" cy="70" r="2" fill="#2563eb" />
+          <circle cx="370" cy="85" r="2" fill="#2563eb" />
+          <circle cx="385" cy="85" r="2" fill="#2563eb" />
+          <circle cx="400" cy="85" r="2" fill="#2563eb" />
+          <circle cx="415" cy="85" r="2" fill="#2563eb" />
+        </g>
+        <!-- Flowing data stream curves -->
+        <path d="M450,60 Q490,80 530,60 Q570,40 610,60" stroke="#2563eb" stroke-width="2.5" fill="none" opacity="0.6"
+          stroke-linecap="round" />
+        <path d="M450,90 Q490,110 530,90 Q570,70 610,90" stroke="#2563eb" stroke-width="2" fill="none" opacity="0.4"
+          stroke-linecap="round" />
+        <path d="M450,120 Q490,140 530,120 Q570,100 610,120" stroke="#2563eb" stroke-width="1.5" fill="none"
+          opacity="0.25" stroke-linecap="round" />
+        <!-- DIGITAL label -->
+        <text x="480" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#1e40af"
+          font-family="'Playfair Display', Georgia, serif">DIGITAL</text>
+        <text x="480" y="162" text-anchor="middle" font-size="10" fill="#3b5bdb"
+          font-family="'DM Sans', system-ui, sans-serif">bits &bull; abundance &bull; information</text>
+        <!-- Glowing dividing line in center -->
+        <line x1="320" y1="10" x2="320" y2="170" stroke="url(#dividerGlow)" stroke-width="3" filter="url(#divGlow)" />
+      </svg>
+    </div>
+
+    <div class="pullquote reveal">
+      <p>"Money is a matter of functions four: a medium, a measure, a standard, a store. But money is not all these
+        functions equally well, and therein lies the problem."</p>
+      <div class="pullquote-attr">&mdash; William Stanley Jevons, <em>Money and the Mechanism of Exchange</em> (1875)
+      </div>
+    </div>
+
+    <h2>The Metabolic Rift: When Labor Doesn't Need to Eat</h2>
+
+    <p>For ten thousand years, all economic value was ultimately rooted in a simple, biological fact: human beings need
+      to eat. Labor, whether of the mind or the muscle, was performed by metabolic engines that required sustenance,
+      shelter, and rest. The entire superstructure of wages, prices, and money was built upon this non-negotiable
+      thermodynamic foundation. Capital needed labor, and labor needed calories. This was the great bargain.</p>
+
+    <p>The Intelligence Inversion shatters this bargain. An AI does not need sustenance. A robot does not need shelter.
+      They need electricity. For the first time, we have created a form of "labor" that has no metabolic needs.</p>
+
+    <!-- SVG: Metabolic Rift diagram — warm earth tones vs cool cyber blues -->
+    <svg viewBox="0 0 600 190" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;"
+      aria-label="Metabolic Rift: human labor vs silicon labor">
+      <defs>
+        <!-- Warm earth gradient for physical/human world -->
+        <linearGradient id="humanWorldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef3c7" />
+          <stop offset="50%" stop-color="#fffbeb" />
+          <stop offset="100%" stop-color="#fef9c3" />
+        </linearGradient>
+        <!-- Cool cyber blue gradient for digital/silicon world -->
+        <linearGradient id="siliconWorldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#dbeafe" />
+          <stop offset="50%" stop-color="#eff6ff" />
+          <stop offset="100%" stop-color="#e0e7ff" />
+        </linearGradient>
+        <!-- Texture pattern for physical world: subtle crosshatch -->
+        <pattern id="earthPattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="10" x2="10" y2="0" stroke="#d97706" stroke-width="0.4" opacity="0.18" />
+        </pattern>
+        <!-- Texture pattern for digital world: subtle grid dots -->
+        <pattern id="cyberPattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+          <circle cx="6" cy="6" r="1" fill="#2563eb" opacity="0.18" />
+        </pattern>
+        <filter id="worldShadow" x="-5%" y="-5%" width="110%" height="115%">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.12)" />
+        </filter>
+        <filter id="riftGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="rgba(220,38,38,0.4)" />
+        </filter>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="600" height="190" fill="#f8faff" rx="6" />
+      <!-- Human side: warm earth tones + texture -->
+      <rect x="18" y="16" width="248" height="156" rx="14" fill="url(#humanWorldGrad)" stroke="#d97706"
+        stroke-width="2.5" filter="url(#worldShadow)" />
+      <rect x="18" y="16" width="248" height="156" rx="14" fill="url(#earthPattern)" opacity="1" />
+      <!-- Human world label stripe -->
+      <rect x="18" y="16" width="248" height="32" rx="14" fill="#d97706" opacity="0.15" />
+      <rect x="18" y="32" width="248" height="16" fill="#d97706" opacity="0.15" />
+      <text x="142" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e"
+        font-family="'DM Sans', system-ui, sans-serif">Human Labor</text>
+      <!-- Human world icon: simple figure -->
+      <circle cx="142" cy="68" r="10" fill="#d97706" opacity="0.4" />
+      <line x1="142" y1="78" x2="142" y2="100" stroke="#d97706" stroke-width="2.5" opacity="0.5" />
+      <line x1="130" y1="88" x2="154" y2="88" stroke="#d97706" stroke-width="2" opacity="0.5" />
+      <line x1="142" y1="100" x2="134" y2="118" stroke="#d97706" stroke-width="2" opacity="0.5" />
+      <line x1="142" y1="100" x2="150" y2="118" stroke="#d97706" stroke-width="2" opacity="0.5" />
+      <text x="142" y="138" text-anchor="middle" font-size="11" fill="#78350f" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">High metabolic overhead</text>
+      <text x="142" y="158" text-anchor="middle" font-size="10" fill="#92400e"
+        font-family="'DM Sans', system-ui, sans-serif">Cost floor: biological minimum</text>
+      <!-- RIFT divider -->
+      <line x1="283" y1="30" x2="317" y2="30" stroke="#dc2626" stroke-width="1.5" opacity="0.5" />
+      <line x1="283" y1="94" x2="317" y2="94" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4"
+        filter="url(#riftGlow)" />
+      <line x1="283" y1="160" x2="317" y2="160" stroke="#dc2626" stroke-width="1.5" opacity="0.5" />
+      <text x="300" y="82" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626"
+        font-family="'DM Sans', system-ui, sans-serif">RIFT</text>
+      <text x="300" y="110" text-anchor="middle" font-size="8" fill="#dc2626"
+        font-family="'DM Sans', system-ui, sans-serif">&#x21D5;</text>
+      <!-- Silicon side: cool cyber blues + dot pattern -->
+      <rect x="334" y="16" width="248" height="156" rx="14" fill="url(#siliconWorldGrad)" stroke="#2563eb"
+        stroke-width="2.5" filter="url(#worldShadow)" />
+      <rect x="334" y="16" width="248" height="156" rx="14" fill="url(#cyberPattern)" opacity="1" />
+      <!-- Silicon world label stripe -->
+      <rect x="334" y="16" width="248" height="32" rx="14" fill="#2563eb" opacity="0.12" />
+      <rect x="334" y="32" width="248" height="16" fill="#2563eb" opacity="0.12" />
+      <text x="458" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af"
+        font-family="'DM Sans', system-ui, sans-serif">Silicon Labor</text>
+      <!-- Silicon world icon: circuit-style chip -->
+      <rect x="448" y="56" width="20" height="20" rx="3" fill="#2563eb" opacity="0.35" />
+      <line x1="448" y1="61" x2="442" y2="61" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="448" y1="66" x2="442" y2="66" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="448" y1="71" x2="442" y2="71" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="468" y1="61" x2="474" y2="61" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="468" y1="66" x2="474" y2="66" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="468" y1="71" x2="474" y2="71" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="453" y1="56" x2="453" y2="50" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="458" y1="56" x2="458" y2="50" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="463" y1="56" x2="463" y2="50" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="453" y1="76" x2="453" y2="82" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="458" y1="76" x2="458" y2="82" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <line x1="463" y1="76" x2="463" y2="82" stroke="#2563eb" stroke-width="1.5" opacity="0.6" />
+      <text x="458" y="103" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Electricity only</text>
+      <text x="458" y="120" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">No food, no shelter, no rest</text>
+      <text x="458" y="138" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Near-zero metabolic overhead</text>
+      <text x="458" y="158" text-anchor="middle" font-size="10" fill="#3b5bdb"
+        font-family="'DM Sans', system-ui, sans-serif">Cost floor: price of electricity</text>
+    </svg>
+
+    <p>This creates a <strong>Metabolic Rift</strong>. Human labor, with its immense overhead of biology and culture,
+      cannot compete on price with silicon labor, which has none. When the marginal cost of cognitive labor approaches
+      the price of electricity, the value of a human mind, in purely economic terms, collapses.</p>
+
+    <div class="pullquote reveal">
+      <p>This is not a new chapter in the story of labor versus capital. This is the end of the story.</p>
+    </div>
+
+    <p>It forces us to ask the most fundamental question: In a world where work is no longer necessary for production,
+      what is money <em>for</em>?</p>
+
+    <hr class="section-divider">
+
+    <h2>The Extractive Protocols: Fiat, Bitcoin, and Bretton Woods</h2>
+
+    <p>Money is a technology for social coordination. But the <em>design</em> of that technology determines whether it
+      builds or drains a system's health. Our current monetary protocols are fundamentally extractive.</p>
+
+    <div class="stat-callout reveal">
+      <div class="stat-number">97%</div>
+      <div class="stat-label">of fiat currency is created by commercial banks when they make loans &mdash; money born
+        from debt</div>
+    </div>
+
+    <p>This system requires perpetual growth to service its ever-compounding interest, forcing the relentless
+      liquidation of our Material and Diversity Capitals. The tragic Eurozone crisis showed its flaw: a single, rigid
+      currency imposed on diverse economies creates extractive flows, starving the periphery to enrich the core.</p>
+
+    <p>On a global scale, the post-1971 collapse of the Bretton Woods system was undone by the impossible
+      <strong>Triffin Dilemma</strong>: to supply the world with the liquidity it needs, the host country must run
+      deficits, but those very deficits eventually destroy global confidence in the currency's value. Both failures
+      proved that a single national currency cannot safely serve as the world's reserve.
+    </p>
+
+    <p>Bitcoin was a brilliant escape from this centralized system. Yet it too is extractive. Its "Proof of Work"
+      mechanism consumes a nation's worth of energy simply to secure its ledger. Its deflationary nature incentivizes
+      hoarding over circulation, starving the system of the very interactions that build Intelligence and Network
+      Capital.</p>
+
+    <div class="pullquote reveal">
+      <p>These systems are failing because they are trying to use a single protocol to manage a world of two different
+        physical realities.</p>
+    </div>
+
+    <div class="panel reveal">
+      <h2>The Three Broken Systems</h2>
+      <div class="broken-cards">
+        <div class="broken-card">
+          <div class="failure-tag">STRUCTURAL FAILURE</div>
+          <div class="broken-title">Fiat Currency</div>
+          <div class="broken-desc">Born from debt. Requires perpetual growth. Every dollar is borrowed into existence,
+            demanding repayment with interest. In a zero-marginal-cost bit economy, the system seizes: you cannot pay
+            interest on a loan with a good that costs nothing to reproduce.</div>
+          <div class="severity-bar">
+            <span class="severity-label">Severity:</span>
+            <div class="severity-dots">
+              <div class="severity-dot on"></div>
+              <div class="severity-dot on"></div>
+              <div class="severity-dot on"></div>
+              <div class="severity-dot on"></div>
+              <div class="severity-dot off"></div>
+            </div>
+            <span class="severity-label">4/5</span>
+          </div>
+        </div>
+        <div class="broken-card">
+          <div class="failure-tag">STRUCTURAL FAILURE</div>
+          <div class="broken-title">Bretton Woods / Dollar Reserve</div>
+          <div class="broken-desc">The Triffin Dilemma: to supply the world with reserve currency, America must run
+            persistent deficits. But deficits undermine confidence in the currency. The system requires the host nation
+            to impoverish itself to sustain the global financial architecture. A structural contradiction with no exit.
+          </div>
+          <div class="severity-bar">
+            <span class="severity-label">Severity:</span>
+            <div class="severity-dots">
+              <div class="severity-dot on severe-pulse"></div>
+              <div class="severity-dot on severe-pulse"></div>
+              <div class="severity-dot on severe-pulse"></div>
+              <div class="severity-dot on severe-pulse"></div>
+              <div class="severity-dot on severe-pulse"></div>
+            </div>
+            <span class="severity-label">5/5</span>
+          </div>
+        </div>
+        <div class="broken-card">
+          <div class="failure-tag">PARTIAL FAILURE</div>
+          <div class="broken-title">Bitcoin / Proof-of-Work</div>
+          <div class="broken-desc">Energy extractive by design. Deflationary by construction — which means hoarding
+            beats spending, which means velocity collapses. Solves the trust problem beautifully, but creates
+            environmental devastation and an economics of self-defeating scarcity in a world that needs abundant
+            intelligence to flow freely.</div>
+          <div class="severity-bar">
+            <span class="severity-label">Severity:</span>
+            <div class="severity-dots">
+              <div class="severity-dot on"></div>
+              <div class="severity-dot on"></div>
+              <div class="severity-dot on"></div>
+              <div class="severity-dot off"></div>
+              <div class="severity-dot off"></div>
+            </div>
+            <span class="severity-label">3/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Physics of Two Economies</h2>
+
+    <p>The economy is not one thing. It is two different worlds.</p>
+
+    <p>The <strong>Atomic Economy</strong> is the world of scarce, rivalrous goods, governed by thermodynamics. This is
+      the world of human metabolic needs and our finite planet (M Capital). The <strong>Bit Economy</strong> is the
+      world of abundant, non-rivalrous goods, governed by information theory. This is the world of AI's non-metabolic
+      production and our collective knowledge (I Capital).</p>
+
+    <p>Using a single, scarcity-based currency for both is a design flaw of civilizational scale. It strangles the
+      abundant Bit Economy with artificial scarcity while flooding the scarce Atomic Economy with speculative credit,
+      creating the boom-bust cycles that define our era.</p>
+
+    <div class="panel reveal">
+      <h2>The Two Economies</h2>
+      <div class="two-col">
+        <div class="economy-side atoms">
+          <div class="economy-title" style="color:#d97706;">Atom Economy</div>
+          <div class="economy-prop">Physical, scarce, rivalrous</div>
+          <div class="economy-prop">If I have it, you don't</div>
+          <div class="economy-prop">Governed by scarcity</div>
+          <div class="economy-prop">Supply/demand curves work</div>
+          <div class="economy-prop">Marginal cost &gt; 0</div>
+        </div>
+        <div class="economy-side bits">
+          <div class="economy-title" style="color:#2563eb;">Bit Economy</div>
+          <div class="economy-prop">Digital, abundant, non-rivalrous</div>
+          <div class="economy-prop">Copying costs nothing</div>
+          <div class="economy-prop">Governed by network effects</div>
+          <div class="economy-prop">Traditional pricing breaks</div>
+          <div class="economy-prop">Marginal cost &rarr; 0</div>
+        </div>
+      </div>
+
+      <div class="slider-row" style="margin-top:1.5rem;">
+        <label>Bit Economy as % of GDP: <span id="bit-pct">35%</span></label>
+        <input type="range" id="bit-slider" min="10" max="70" value="35" oninput="updateBitEconomy()">
+        <div class="slider-label"><span>10% (1990)</span><span>70% (2030 projected)</span></div>
+      </div>
+      <svg id="bit-economy-svg" style="width:100%;max-width:600px;" height="120"></svg>
+      <div id="bit-mismatch" style="font-size:0.88rem;color:#555;margin-top:0.5rem;font-style:italic;"></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Architecture of Symbiosis: A Dual Currency System</h2>
+
+    <p>The solution is to design the right tool for each job. Two worlds need two currencies. This is not a vague
+      proposal; it is an engineering blueprint.</p>
+
+    <!-- SVG: Dual Currency Architecture — warm earth tones vs cool cyber blues, with bridge -->
+    <svg viewBox="0 0 600 280" style="width:100%;max-width:600px;margin:1.5rem auto;display:block;"
+      aria-label="Dual Currency Architecture: Foundation Coins and Culture Credits">
+      <defs>
+        <!-- Foundation Coins: warm amber/gold earth tones -->
+        <linearGradient id="fcWorldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef9c3" />
+          <stop offset="40%" stop-color="#fffbeb" />
+          <stop offset="100%" stop-color="#fef3c7" />
+        </linearGradient>
+        <!-- Culture Credits: cool cyber blue tones -->
+        <linearGradient id="ccWorldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0e7ff" />
+          <stop offset="40%" stop-color="#eff6ff" />
+          <stop offset="100%" stop-color="#dbeafe" />
+        </linearGradient>
+        <!-- FC crystal gradient -->
+        <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="#d97706" stop-opacity="0.2" />
+        </linearGradient>
+        <!-- CC wave gradient -->
+        <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2563eb" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <!-- Earth texture pattern for FC world -->
+        <pattern id="fcTexture" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="14" x2="14" y2="0" stroke="#d97706" stroke-width="0.5" opacity="0.15" />
+        </pattern>
+        <!-- Cyber dot pattern for CC world -->
+        <pattern id="ccTexture" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+          <circle cx="7" cy="7" r="1.2" fill="#2563eb" opacity="0.16" />
+        </pattern>
+        <filter id="currencyShadow" x="-5%" y="-5%" width="110%" height="115%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.12)" />
+        </filter>
+        <filter id="crystalShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(217,119,6,0.3)" />
+        </filter>
+        <filter id="waveShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="rgba(37,99,235,0.3)" />
+        </filter>
+        <marker id="bridgeArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M1,1 L7,4 L1,7 Z" fill="#374151" />
+        </marker>
+      </defs>
+      <!-- Background -->
+      <rect x="0" y="0" width="600" height="280" fill="#f8faff" rx="6" />
+      <!-- FC side: warm earth world -->
+      <rect x="16" y="14" width="262" height="246" rx="14" fill="url(#fcWorldGrad)" stroke="#d97706" stroke-width="2.5"
+        filter="url(#currencyShadow)" />
+      <rect x="16" y="14" width="262" height="246" rx="14" fill="url(#fcTexture)" />
+      <!-- FC header -->
+      <rect x="16" y="14" width="262" height="40" rx="14" fill="#d97706" opacity="0.18" />
+      <rect x="16" y="36" width="262" height="18" fill="#d97706" opacity="0.18" />
+      <text x="147" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#78350f"
+        font-family="'DM Sans', system-ui, sans-serif">Foundation Coins (FC)</text>
+      <text x="147" y="62" text-anchor="middle" font-size="10" fill="#92400e"
+        font-family="'DM Sans', system-ui, sans-serif">Crystallized Intelligence</text>
+      <!-- FC crystal icon with amber fill -->
+      <polygon points="147,80 170,114 147,148 124,114" fill="url(#crystalGrad)" stroke="#d97706" stroke-width="2"
+        filter="url(#crystalShadow)" />
+      <line x1="147" y1="80" x2="147" y2="148" stroke="#d97706" stroke-width="1" opacity="0.4" />
+      <line x1="124" y1="114" x2="170" y2="114" stroke="#d97706" stroke-width="1" opacity="0.4" />
+      <line x1="147" y1="80" x2="170" y2="114" stroke="#fbbf24" stroke-width="1" opacity="0.6" />
+      <line x1="147" y1="148" x2="124" y2="114" stroke="#fbbf24" stroke-width="1" opacity="0.6" />
+      <text x="147" y="172" text-anchor="middle" font-size="11" fill="#78350f"
+        font-family="'DM Sans', system-ui, sans-serif">Scarce &bull; Store of value</text>
+      <text x="147" y="190" text-anchor="middle" font-size="11" fill="#78350f"
+        font-family="'DM Sans', system-ui, sans-serif">Minted by useful computation</text>
+      <text x="147" y="208" text-anchor="middle" font-size="11" fill="#78350f"
+        font-family="'DM Sans', system-ui, sans-serif">Capped supply</text>
+      <text x="147" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e"
+        font-family="'DM Sans', system-ui, sans-serif">Anchored to physical reality</text>
+      <!-- Bridge / connecting arrow with currency flow symbol -->
+      <line x1="278" y1="110" x2="295" y2="140" stroke="#374151" stroke-width="1.5" stroke-dasharray="5,4"
+        opacity="0.5" />
+      <line x1="305" y1="140" x2="322" y2="110" stroke="#374151" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"
+        marker-end="url(#bridgeArrow)" />
+      <text x="300" y="158" text-anchor="middle" font-size="9" fill="#888" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">exchange</text>
+      <!-- CC side: cool cyber world -->
+      <rect x="322" y="14" width="262" height="246" rx="14" fill="url(#ccWorldGrad)" stroke="#2563eb" stroke-width="2.5"
+        filter="url(#currencyShadow)" />
+      <rect x="322" y="14" width="262" height="246" rx="14" fill="url(#ccTexture)" />
+      <!-- CC header -->
+      <rect x="322" y="14" width="262" height="40" rx="14" fill="#2563eb" opacity="0.14" />
+      <rect x="322" y="36" width="262" height="18" fill="#2563eb" opacity="0.14" />
+      <text x="453" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#1e3a8a"
+        font-family="'DM Sans', system-ui, sans-serif">Culture Credits (CC)</text>
+      <text x="453" y="62" text-anchor="middle" font-size="10" fill="#3b5bdb"
+        font-family="'DM Sans', system-ui, sans-serif">Currency of Flow</text>
+      <!-- CC wave / flow icons with gradient -->
+      <path d="M410,102 Q422,80 438,102 Q454,124 470,102 Q486,80 498,102" fill="none" stroke="url(#waveGrad)"
+        stroke-width="3" stroke-linecap="round" filter="url(#waveShadow)" />
+      <path d="M410,122 Q422,100 438,122 Q454,144 470,122 Q486,100 498,122" fill="none" stroke="url(#waveGrad)"
+        stroke-width="3" stroke-linecap="round" opacity="0.55" />
+      <path d="M410,142 Q422,120 438,142 Q454,164 470,142 Q486,120 498,142" fill="none" stroke="url(#waveGrad)"
+        stroke-width="3" stroke-linecap="round" opacity="0.25" />
+      <text x="453" y="172" text-anchor="middle" font-size="11" fill="#1e3a8a"
+        font-family="'DM Sans', system-ui, sans-serif">Abundant &bull; Medium of exchange</text>
+      <text x="453" y="190" text-anchor="middle" font-size="11" fill="#1e3a8a"
+        font-family="'DM Sans', system-ui, sans-serif">Issued as Abundance Dividend</text>
+      <text x="453" y="208" text-anchor="middle" font-size="11" fill="#1e3a8a"
+        font-family="'DM Sans', system-ui, sans-serif">Built-in demurrage (decay)</text>
+      <text x="453" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af"
+        font-family="'DM Sans', system-ui, sans-serif">Intelligence flows, not pools</text>
+    </svg>
+
+    <p><strong>Foundation Coins</strong> replace money born from debt or wasteful work with <em>Money Born from
+        Benefit</em>. A new Foundation Coin is minted only when the network can cryptographically verify that a specific
+      amount of useful computation has been performed for the open intelligence commons &mdash; curating a dataset,
+      training a foundational AI model, or performing a scientific simulation that solves a public problem. It is, quite
+      literally, crystallized intelligence.</p>
+
+    <p><strong>Culture Credits</strong> are issued as an Abundance Dividend, providing the baseline liquidity for every
+      Sovereign Agent to participate in the network. Like the "miracle" money of W&ouml;rgl, Culture Credits have a
+      built-in decay rate (demurrage). If you do not use them, they slowly lose value and return to the commons. This
+      incentivizes circulation, ensuring that our collective intelligence is a flowing river, not a stagnant reservoir.
+    </p>
+
+    <div class="panel reveal">
+      <h2>The Dual Currency Design</h2>
+      <p style="font-size:0.9rem;color:#555;">Design both currencies, then simulate how they flow through a simple
+        economy.</p>
+
+      <div class="currency-designer">
+        <div class="currency-col fc">
+          <div class="currency-title" style="color:#d97706;">Foundation Coins (FC)</div>
+          <div class="currency-subtitle">For scarce material goods</div>
+          <div class="slider-row">
+            <label style="font-size:0.85rem;">Computational work to mint 1 FC: <span id="fc-work-val">50</span></label>
+            <input type="range" id="fc-work" min="10" max="100" value="50" oninput="updateCurrencyDesign()">
+            <div class="slider-label"><span>Easy</span><span>Hard</span></div>
+          </div>
+          <div class="currency-effect" id="fc-effect">Moderate energy tether — FC is scarce enough to price physical
+            goods but not so scarce as to be deflationary.</div>
+        </div>
+        <div class="currency-col cc">
+          <div class="currency-title" style="color:#2563eb;">Culture Credits (CC)</div>
+          <div class="currency-subtitle">For abundant intelligence</div>
+          <div class="slider-row">
+            <label style="font-size:0.85rem;">Demurrage rate (decay/month): <span id="cc-decay-val">2%</span></label>
+            <input type="range" id="cc-decay" min="0" max="5" value="2" step="0.5" oninput="updateCurrencyDesign()">
+            <div class="slider-label"><span>0% (hoard)</span><span>5% (spend or lose)</span></div>
+          </div>
+          <div class="currency-effect" id="cc-effect">2% decay per month creates gentle pressure to circulate —
+            intelligence flowing beats intelligence hoarded.</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:0.75rem 0;">
+        <button class="btn" onclick="simulateEconomy()">Simulate Economy (30 steps)</button>
+        <button class="btn secondary" onclick="resetSimulation()">Reset</button>
+      </div>
+
+      <svg id="economy-svg" style="width:100%;max-width:600px;" height="240"></svg>
+      <div id="economy-log" style="font-size:0.85rem;color:#555;margin-top:0.5rem;font-style:italic;text-align:center;">
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>From a Physics of Power to a Physics of Intelligence</h2>
+
+    <p>This dual system represents a fundamental shift in the physics of money.</p>
+
+    <p>The old monetary systems are based on a <strong>physics of power</strong>. Fiat currency is valuable because the
+      state has the power to compel its use. Bitcoin is valuable because its network has the power to consume immense
+      energy.</p>
+
+    <p>The new system is based on a <strong>physics of intelligence</strong>. Foundation Coins are valuable because they
+      are the direct, auditable result of the efficient conversion of energy into useful order. Its backing is not the
+      power of a state or the hash rate of a network, but the demonstrated intelligence of its participants.</p>
+
+    <div class="pullquote reveal">
+      <p>This is not just a monetary system. It is a generative, anti-entropic engine &mdash; an economy designed to
+        fund its own evolution toward greater intelligence, resilience, and shared prosperity.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Bit Economy slider ---
+    function updateBitEconomy() {
+      const pct = parseInt(document.getElementById('bit-slider').value);
+      document.getElementById('bit-pct').textContent = pct + '%';
+
+      const svgEl = document.getElementById('bit-economy-svg');
+      const w = svgEl.clientWidth || 600;
+      const h = 120;
+      const svg = d3.select('#bit-economy-svg').attr('height', h);
+      svg.selectAll('*').remove();
+
+      // Stacked bar
+      const barH = 40, barY = 20, barX = 20, barW = w - 40;
+      svg.append('rect').attr('x', barX).attr('y', barY).attr('width', barW).attr('height', barH)
+        .attr('fill', '#d97706').attr('rx', 4).attr('opacity', 0.8);
+      const bitW = barW * (pct / 100);
+      svg.append('rect').attr('x', barX + barW - bitW).attr('y', barY).attr('width', bitW).attr('height', barH)
+        .attr('fill', '#2563eb').attr('rx', 4).attr('opacity', 0.8);
+
+      svg.append('text').attr('x', barX + (barW - bitW) / 2).attr('y', barY + barH / 2 + 5)
+        .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'white').attr('font-weight', 700)
+        .text('Atom Economy ' + (100 - pct) + '%');
+      if (bitW > 60) {
+        svg.append('text').attr('x', barX + barW - bitW / 2).attr('y', barY + barH / 2 + 5)
+          .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'white').attr('font-weight', 700)
+          .text('Bit Economy ' + pct + '%');
+      }
+
+      // Single currency system line
+      const mismatch = pct > 50 ? 'high' : pct > 30 ? 'moderate' : 'low';
+      const colors = { low: '#16a34a', moderate: '#d97706', high: '#dc2626' };
+      svg.append('text').attr('x', barX + barW / 2).attr('y', barY + barH + 30)
+        .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', colors[mismatch]).attr('font-weight', 600)
+        .text('Single-currency mismatch: ' + mismatch.toUpperCase());
+
+      const msgs = {
+        low: 'Atom economy dominates — traditional currency works adequately.',
+        moderate: 'Growing tension — digital goods are mispriced and digital labor is undervalued.',
+        high: 'Critical mismatch — 70%+ of economic value operates under the wrong pricing regime. The system is breaking.'
+      };
+      document.getElementById('bit-mismatch').textContent = msgs[mismatch];
+    }
+
+    requestAnimationFrame(() => updateBitEconomy());
+
+    // --- Currency Design ---
+    function updateCurrencyDesign() {
+      const fcWork = parseInt(document.getElementById('fc-work').value);
+      const ccDecay = parseFloat(document.getElementById('cc-decay').value);
+      document.getElementById('fc-work-val').textContent = fcWork;
+      document.getElementById('cc-decay-val').textContent = ccDecay + '%';
+
+      let fcEffect;
+      if (fcWork < 30) fcEffect = 'Low energy tether — FC is abundant and may fail to hold value for physical goods. Risk of inflation.';
+      else if (fcWork > 75) fcEffect = 'High energy tether — FC is very scarce. Good store of value, but risks deflation and hoarding.';
+      else fcEffect = 'Moderate energy tether — FC is scarce enough to price physical goods while remaining accessible.';
+      document.getElementById('fc-effect').textContent = fcEffect;
+
+      let ccEffect;
+      if (ccDecay === 0) ccEffect = 'Zero decay — CC behaves like normal money. Hoarding is rational. Intelligence pools at wealthy nodes rather than circulating.';
+      else if (ccDecay >= 4) ccEffect = ccDecay + '% decay/month — strong hot-potato effect. CC circulates rapidly through knowledge networks, incentivizing contribution over accumulation.';
+      else ccEffect = ccDecay + '% decay/month — gentle circulation pressure. Intelligence is encouraged to flow but not forced.';
+      document.getElementById('cc-effect').textContent = ccEffect;
+    }
+
+    // --- Economy Simulation ---
+    const NODES = 10;
+    let simRunning = false;
+    let simStep = 0;
+    let simTimer = null;
+    let fcBalances = [], ccBalances = [];
+    const nodeTypes = ['Person', 'Person', 'Person', 'Firm', 'Firm', 'AI Service', 'AI Service', 'Person', 'Firm', 'Person'];
+    const nodeColors = { Person: '#7c3aed', Firm: '#d97706', 'AI Service': '#2563eb' };
+
+    function initSim() {
+      fcBalances = Array(NODES).fill(0).map(() => 50 + Math.random() * 50);
+      ccBalances = Array(NODES).fill(0).map(() => 30 + Math.random() * 40);
+    }
+
+    function resetSimulation() {
+      if (simTimer) clearTimeout(simTimer);
+      simRunning = false;
+      simStep = 0;
+      initSim();
+      renderEconomySvg();
+      document.getElementById('economy-log').textContent = '';
+    }
+
+    function renderEconomySvg() {
+      const svgEl = document.getElementById('economy-svg');
+      const w = svgEl.clientWidth || 600;
+      const h = 240;
+      const svg = d3.select('#economy-svg').attr('height', h);
+      svg.selectAll('*').remove();
+
+      const cx = w / 2, cy = h / 2;
+      const r = Math.min(w, h) * 0.38;
+
+      const nodePositions = Array(NODES).fill(0).map((_, i) => ({
+        x: cx + Math.cos((i / NODES) * Math.PI * 2 - Math.PI / 2) * r,
+        y: cy + Math.sin((i / NODES) * Math.PI * 2 - Math.PI / 2) * r
+      }));
+
+      // FC bars (outer rings — orange)
+      nodePositions.forEach((pos, i) => {
+        const fc = fcBalances[i];
+        const maxFC = 200;
+        const barLen = Math.min(18, (fc / maxFC) * 18);
+        svg.append('circle').attr('cx', pos.x).attr('cy', pos.y).attr('r', 14)
+          .attr('fill', nodeColors[nodeTypes[i]] || '#888').attr('opacity', 0.8)
+          .attr('stroke', 'white').attr('stroke-width', 2);
+
+        // FC bar (right side, orange)
+        svg.append('rect').attr('x', pos.x + 14).attr('y', pos.y - barLen / 2)
+          .attr('width', 5).attr('height', barLen).attr('fill', '#d97706').attr('rx', 2).attr('opacity', 0.9);
+
+        // CC bar (below, blue)
+        const cc = ccBalances[i];
+        const ccLen = Math.min(18, (cc / 150) * 18);
+        svg.append('rect').attr('x', pos.x - ccLen / 2).attr('y', pos.y + 14)
+          .attr('width', ccLen).attr('height', 5).attr('fill', '#2563eb').attr('rx', 2).attr('opacity', 0.9);
+
+        svg.append('text').attr('x', pos.x).attr('y', pos.y + 4)
+          .attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', 'white').attr('font-weight', 600)
+          .text(i);
+      });
+
+      // Legend
+      svg.append('rect').attr('x', 10).attr('y', h - 50).attr('width', 10).attr('height', 10).attr('fill', '#d97706').attr('rx', 2);
+      svg.append('text').attr('x', 24).attr('y', h - 42).attr('font-size', 9).attr('fill', '#555').text('Foundation Coins (pools at physical nodes)');
+      svg.append('rect').attr('x', 10).attr('y', h - 35).attr('width', 10).attr('height', 10).attr('fill', '#2563eb').attr('rx', 2);
+      svg.append('text').attr('x', 24).attr('y', h - 27).attr('font-size', 9).attr('fill', '#555').text('Culture Credits (circulates through AI/knowledge nodes)');
+    }
+
+    function stepSimulation() {
+      const ccDecay = parseFloat(document.getElementById('cc-decay').value) / 100;
+
+      // Each step: random transactions
+      for (let t = 0; t < 3; t++) {
+        const from = Math.floor(Math.random() * NODES);
+        const to = Math.floor(Math.random() * NODES);
+        if (from === to) continue;
+
+        // FC: Physical goods flow toward Firm nodes (they accumulate)
+        if (nodeTypes[to] === 'Firm' || nodeTypes[to] === 'AI Service') {
+          const amount = Math.random() * 5;
+          fcBalances[from] = Math.max(0, fcBalances[from] - amount);
+          fcBalances[to] += amount;
+        } else {
+          const amount = Math.random() * 3;
+          fcBalances[from] = Math.max(0, fcBalances[from] - amount);
+          fcBalances[to] += amount;
+        }
+
+        // CC: Circulates more rapidly, especially through AI Service nodes
+        const ccAmount = Math.random() * 8 * (nodeTypes[to] === 'AI Service' ? 2 : 1);
+        ccBalances[from] = Math.max(0, ccBalances[from] - ccAmount / 2);
+        ccBalances[to] += ccAmount;
+      }
+
+      // Apply CC decay (demurrage)
+      ccBalances = ccBalances.map(v => v * (1 - ccDecay));
+
+      // FC: slight redistribution from firms to persons (wages)
+      for (let i = 0; i < NODES; i++) {
+        if (nodeTypes[i] === 'Firm' && fcBalances[i] > 60) {
+          const wage = 2;
+          fcBalances[i] -= wage;
+          // Distribute to a random person
+          const persons = nodeTypes.map((t, j) => t === 'Person' ? j : -1).filter(j => j >= 0);
+          const recipient = persons[Math.floor(Math.random() * persons.length)];
+          fcBalances[recipient] += wage;
+        }
+      }
+    }
+
+    function simulateEconomy() {
+      if (simRunning) return;
+      simRunning = true;
+      simStep = 0;
+      initSim();
+      renderEconomySvg();
+
+      function tick() {
+        if (simStep >= 30) {
+          simRunning = false;
+          document.getElementById('economy-log').textContent = 'Simulation complete. Foundation Coins pooled at physical firms; Culture Credits circulated through AI service nodes with demurrage decay.';
+          return;
+        }
+        stepSimulation();
+        renderEconomySvg();
+        simStep++;
+        document.getElementById('economy-log').textContent = 'Step ' + simStep + '/30...';
+        simTimer = setTimeout(tick, 200);
+      }
+
+      tick();
+    }
+
+    initSim();
+    requestAnimationFrame(() => renderEconomySvg());
+
+    // Redraw SVGs on window resize for responsiveness
+    window.addEventListener('resize', () => {
+      updateBitEconomy();
+      renderEconomySvg();
+    });
+
+    // --- Reading progress bar ---
+    window.addEventListener('scroll', () => {
+      const p = document.documentElement;
+      document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+    });
+
+    // --- Scroll-reveal IntersectionObserver ---
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .reveal').forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,736 +1,1235 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ch 9 — The Three Flows</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
-.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
-.nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
-.nav a:hover { color: #1d4ed8; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 9 — The Three Flows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.pullquote .pullquote-attr { font-size: 0.85rem; color: #555; font-style: normal; margin-top: 0.5rem; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-.river-wrap { width: 100%; overflow: hidden; border-radius: 6px; background: #0a1628; }
-.river-tooltip { font-size: 0.85rem; color: #ccc; text-align: center; min-height: 1.5em; padding: 0.5rem; background: #0a1628; border-radius: 0 0 6px 6px; }
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-.flow-toggles { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
-.flow-toggle { padding: 0.5rem 1.2rem; border: 2px solid; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-family: 'DM Sans', system-ui, sans-serif; }
-.flow-toggle[data-flow="harmonic"] { border-color: #78716c; color: #78716c; background: white; }
-.flow-toggle[data-flow="harmonic"].active { background: #78716c; color: white; }
-.flow-toggle[data-flow="circular"] { border-color: #0d9488; color: #0d9488; background: white; }
-.flow-toggle[data-flow="circular"].active { background: #0d9488; color: white; }
-.flow-toggle[data-flow="gradient"] { border-color: #3b82f6; color: #3b82f6; background: white; }
-.flow-toggle[data-flow="gradient"].active { background: #3b82f6; color: white; }
-.flow-desc { text-align: center; font-size: 0.95rem; min-height: 3em; margin-top: 0.75rem; }
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      color: #2563eb;
+      cursor: ew-resize;
+      user-select: none;
+      font-weight: 600;
+      padding: 0 2px;
+    }
 
-.tx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.tx-card { border: 1.5px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; }
-.tx-card:hover { border-color: #bbb; }
-.tx-card.revealed { cursor: default; }
-.tx-card .tx-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
-.tx-card .tx-answer { font-size: 0.85rem; color: #555; display: none; margin-top: 0.5rem; }
-.tx-card.revealed .tx-answer { display: block; }
-.tx-tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 3px; margin-right: 0.3rem; }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-.coercion-container { display: flex; gap: 1.5rem; align-items: stretch; }
-.coercion-slider-wrap { display: flex; flex-direction: column; align-items: center; width: 60px; }
-.coercion-slider { writing-mode: vertical-lr; direction: rtl; width: 24px; height: 200px; margin: 0.5rem 0; accent-color: #2563eb; }
-.coercion-label { font-size: 0.8rem; color: #888; text-align: center; }
-.coercion-readout { flex: 1; }
-.coercion-level { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
-.coercion-desc { font-size: 0.9rem; color: #555; margin-bottom: 0.75rem; min-height: 3em; }
-.capital-bars { display: grid; gap: 0.5rem; }
-.cap-bar-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
-.cap-bar-label { width: 80px; font-weight: 600; }
-.cap-bar { flex: 1; height: 14px; background: #e5e5e0; border-radius: 7px; overflow: hidden; }
-.cap-bar-fill { height: 100%; border-radius: 7px; transition: width 0.3s, background 0.3s; }
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
 
-.elephant-svg { display: block; margin: 2rem auto; max-width: 400px; }
-.synthesis-svg { display: block; margin: 2rem auto; max-width: 500px; }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
 
-.btn, button { touch-action: manipulation; min-height: 36px; }
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
 
-@media (max-width: 600px) {
-  .tx-grid { grid-template-columns: 1fr; }
-  .coercion-container { flex-direction: column; }
-  .coercion-slider-wrap { flex-direction: row; width: 100%; }
-  .coercion-slider { writing-mode: horizontal-tb; direction: ltr; width: 100%; height: 24px; }
-  .stat-row { grid-template-columns: 1fr; }
-}
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; pointer-events: none; }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
 
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr !important; }
-  .grid-container { grid-template-columns: repeat(4, 44px) !important; }
-  .decade-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-  .ratio-display { font-size: 2rem; }
-  .stat-number { font-size: 2.2rem; }
-  .year-toggle { flex-wrap: wrap; }
-  .year-toggle button { flex: 1; min-width: 80px; }
-}
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
 
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-}
-</style>
+    .nav a:hover {
+      color: #1d4ed8;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .pullquote-attr {
+      font-size: 0.85rem;
+      color: #555;
+      font-style: normal;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .river-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #0a1628;
+    }
+
+    .river-tooltip {
+      font-size: 0.85rem;
+      color: #ccc;
+      text-align: center;
+      min-height: 1.5em;
+      padding: 0.5rem;
+      background: #0a1628;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .flow-toggles {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .flow-toggle {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .flow-toggle[data-flow="harmonic"] {
+      border-color: #78716c;
+      color: #78716c;
+      background: white;
+    }
+
+    .flow-toggle[data-flow="harmonic"].active {
+      background: #78716c;
+      color: white;
+    }
+
+    .flow-toggle[data-flow="circular"] {
+      border-color: #0d9488;
+      color: #0d9488;
+      background: white;
+    }
+
+    .flow-toggle[data-flow="circular"].active {
+      background: #0d9488;
+      color: white;
+    }
+
+    .flow-toggle[data-flow="gradient"] {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      background: white;
+    }
+
+    .flow-toggle[data-flow="gradient"].active {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .flow-desc {
+      text-align: center;
+      font-size: 0.95rem;
+      min-height: 3em;
+      margin-top: 0.75rem;
+    }
+
+    .tx-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .tx-card {
+      border: 1.5px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tx-card:hover {
+      border-color: #bbb;
+    }
+
+    .tx-card.revealed {
+      cursor: default;
+    }
+
+    .tx-card .tx-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tx-card .tx-answer {
+      font-size: 0.85rem;
+      color: #555;
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    .tx-card.revealed .tx-answer {
+      display: block;
+    }
+
+    .tx-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      margin-right: 0.3rem;
+    }
+
+    .coercion-container {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .coercion-slider-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 60px;
+    }
+
+    .coercion-slider {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 24px;
+      height: 200px;
+      margin: 0.5rem 0;
+      accent-color: #2563eb;
+    }
+
+    .coercion-label {
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+    }
+
+    .coercion-readout {
+      flex: 1;
+    }
+
+    .coercion-level {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .coercion-desc {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      min-height: 3em;
+    }
+
+    .capital-bars {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .cap-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .cap-bar-label {
+      width: 80px;
+      font-weight: 600;
+    }
+
+    .cap-bar {
+      flex: 1;
+      height: 14px;
+      background: #e5e5e0;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .cap-bar-fill {
+      height: 100%;
+      border-radius: 7px;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .elephant-svg {
+      display: block;
+      margin: 2rem auto;
+      max-width: 400px;
+    }
+
+    .synthesis-svg {
+      display: block;
+      margin: 2rem auto;
+      max-width: 500px;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+      min-height: 36px;
+    }
+
+    @media (max-width: 600px) {
+      .tx-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coercion-container {
+        flex-direction: column;
+      }
+
+      .coercion-slider-wrap {
+        flex-direction: row;
+        width: 100%;
+      }
+
+      .coercion-slider {
+        writing-mode: horizontal-tb;
+        direction: ltr;
+        width: 100%;
+        height: 24px;
+      }
+
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr !important;
+      }
+
+      .grid-container {
+        grid-template-columns: repeat(4, 44px) !important;
+      }
+
+      .decade-btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .ratio-display {
+        font-size: 2rem;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+
+      .year-toggle {
+        flex-wrap: wrap;
+      }
+
+      .year-toggle button {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="05-mind-dashboard.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="07-network-prison.html">Next &rarr;</a>
-</nav>
-<div class="prose">
-  <div class="chapter-num">Chapter 9</div>
-  <h1>The Three Flows</h1>
-  <p><em>The Blind Scholars and the Elephant</em></p>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="05-mind-dashboard.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="07-network-prison.html">Next &rarr;</a>
+  </nav>
+  <div class="prose">
+    <div class="chapter-num">Chapter 6</div>
+    <h1>The Engine of Order: Intelligence Against Entropy</h1>
+    <p><em>The Blind Scholars and the Elephant</em></p>
 
-  <div class="pullquote">
-    <p>"We can be blind to the obvious, and we are also blind to our blindness."</p>
-    <div class="pullquote-attr">&mdash; Daniel Kahneman</div>
-  </div>
-
-  <!-- ===== The Elephant in the Dark Room ===== -->
-  <h2>The Elephant in the Dark Room</h2>
-  <p>In ancient India, six blind scholars were brought before an elephant. The first, touching the trunk, declared, "An elephant is like a thick snake!" The second, feeling a leg, insisted, "No, it is like a mighty tree!" The third, grasping the tail, proclaimed, "You are both fools, it is clearly a rope!" Each scholar gave a perfect, empirically verifiable description of the part they touched. Each was completely right about their piece, catastrophically wrong about the whole, and ready to die defending their partial truth.</p>
-
-  <!-- SVG: Blind scholars and elephant -->
-  <svg class="elephant-svg" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="Blind scholars touching different parts of an elephant" style="max-width:420px;width:100%;height:auto;">
-    <defs>
-      <radialGradient id="elephantBodyGrad" cx="45%" cy="40%" r="60%">
-        <stop offset="0%" stop-color="#e7e5e4"/>
-        <stop offset="100%" stop-color="#a8a29e"/>
-      </radialGradient>
-      <radialGradient id="elephantHeadGrad" cx="40%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#e7e5e4"/>
-        <stop offset="100%" stop-color="#a8a29e"/>
-      </radialGradient>
-      <linearGradient id="elephantBg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fafafa"/>
-        <stop offset="100%" stop-color="#f5f5f4"/>
-      </linearGradient>
-      <filter id="elephantShadow" x="-5%" y="-5%" width="110%" height="110%">
-        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.12"/>
-      </filter>
-      <!-- Highlight circles for each schema color -->
-      <radialGradient id="blueHighlight" cx="50%" cy="30%" r="50%">
-        <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="tealHighlight" cx="50%" cy="30%" r="50%">
-        <stop offset="0%" stop-color="#5eead4" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#0d9488" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="stoneHighlight" cx="50%" cy="30%" r="50%">
-        <stop offset="0%" stop-color="#d6d3d1" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#78716c" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-
-    <!-- Background -->
-    <rect x="0" y="0" width="420" height="240" rx="14" fill="url(#elephantBg)" stroke="#e7e5e4" stroke-width="1"/>
-
-    <!-- Elephant shadow -->
-    <ellipse cx="205" cy="215" rx="115" ry="10" fill="#78716c" opacity="0.12"/>
-
-    <!-- Elephant legs -->
-    <rect x="128" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
-    <rect x="168" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
-    <rect x="248" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
-    <rect x="283" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.5"/>
-
-    <!-- Elephant body -->
-    <ellipse cx="205" cy="122" rx="115" ry="62" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.8" filter="url(#elephantShadow)"/>
-
-    <!-- Ear -->
-    <ellipse cx="298" cy="88" rx="20" ry="28" fill="#c8c4bf" stroke="#78716c" stroke-width="1.5" opacity="0.9"/>
-
-    <!-- Head -->
-    <ellipse cx="316" cy="103" rx="42" ry="37" fill="url(#elephantHeadGrad)" stroke="#78716c" stroke-width="1.8"/>
-
-    <!-- Eye -->
-    <circle cx="330" cy="94" r="5" fill="#1c1917"/>
-    <circle cx="332" cy="92" r="1.5" fill="white" opacity="0.5"/>
-
-    <!-- Trunk -->
-    <path d="M345 118 Q366 145 350 174 Q344 183 338 173 Q352 145 335 122" fill="url(#elephantHeadGrad)" stroke="#78716c" stroke-width="1.8"/>
-
-    <!-- Tail -->
-    <path d="M92 118 Q64 113 58 134" fill="none" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- Tail tuft -->
-    <circle cx="58" cy="134" r="4" fill="#a8a29e"/>
-
-    <!-- Scholar glow highlights (showing which part each "sees") -->
-    <!-- Trunk region highlight (blue — "Snake") -->
-    <ellipse cx="347" cy="148" rx="22" ry="28" fill="url(#blueHighlight)" opacity="0.8"/>
-    <!-- Left legs highlight (teal — "Tree") -->
-    <ellipse cx="150" cy="185" rx="28" ry="20" fill="url(#tealHighlight)" opacity="0.8"/>
-    <!-- Tail highlight (stone — "Rope") -->
-    <ellipse cx="65" cy="128" rx="18" ry="14" fill="url(#stoneHighlight)" opacity="0.8"/>
-
-    <!-- Scholar label tags -->
-    <!-- Blue: Snake! (trunk) -->
-    <rect x="348" y="190" width="56" height="20" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
-    <text x="376" y="204" text-anchor="middle" font-size="11" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Snake! 🐍</text>
-    <line x1="360" y1="175" x2="365" y2="190" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3 2"/>
-
-    <!-- Teal: Tree! (legs) -->
-    <rect x="120" y="220" width="50" height="20" rx="5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.2"/>
-    <text x="145" y="234" text-anchor="middle" font-size="11" fill="#0f766e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Tree! 🌳</text>
-
-    <!-- Stone: Rope! (tail) -->
-    <rect x="12" y="118" width="54" height="20" rx="5" fill="#f5f5f4" stroke="#78716c" stroke-width="1.2"/>
-    <text x="39" y="132" text-anchor="middle" font-size="11" fill="#57534e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Rope! 🪢</text>
-    <line x1="58" y1="128" x2="66" y2="128" stroke="#78716c" stroke-width="1" stroke-dasharray="3 2"/>
-  </svg>
-
-  <p>This is the secret history of economic thought. For three centuries, brilliant minds have been grappling with different parts of the same beast in a dark room, mistaking anatomy for ideology.</p>
-
-  <p>Adam Smith, the father of Capitalism, felt the steady pulse of commerce and declared the elephant's nature was competitive exchange. Karl Marx witnessed industrial exploitation and grasped the elephant's recursive spiral of accumulation. Friedrich Hayek touched the deep, invisible structures of tradition and proclaimed the elephant was a benevolent, spontaneous order. They fought like the blind scholars, each defending their glimpse of truth. Centuries of blood spilled over a false dichotomy.</p>
-
-  <div class="pullquote">
-    <p>Today, we turn on the lights.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== The Mathematics of Reality ===== -->
-  <h2>The Mathematics of Reality</h2>
-  <p>The economy is a river. Value flows. And just like a river, all economic activity naturally organizes into exactly three types of flow. Not four. Not two. <strong>Three.</strong> This is not a convenient classification. It is a mathematical necessity, as inevitable as two plus two equals four.</p>
-
-  <p>The <strong>Hodge Decomposition theorem</strong>, a crown jewel of 20th-century mathematics, proves that any flow on any surface can be uniquely and orthogonally broken down into exactly three components:</p>
-
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number" style="font-size:2rem; color:#3b82f6;">1</div>
-      <div class="stat-label"><strong>Gradient Flow</strong><br>High to low potential, driven by scarcity</div>
+    <div class="pullquote">
+      <p>"The whole of science is nothing more than a refinement of everyday thinking."</p>
+      <div class="pullquote-attr">&mdash; Albert Einstein</div>
     </div>
-    <div class="stat-callout">
-      <div class="stat-number" style="font-size:2rem; color:#0d9488;">2</div>
-      <div class="stat-label"><strong>Circular Flow</strong><br>Self-reinforcing loops, driven by abundance</div>
+
+    <!-- ===== The Elephant in the Dark Room ===== -->
+    <h2>The Elephant in the Dark Room</h2>
+    <p>In ancient India, six blind scholars were brought before an elephant. The first, touching the trunk, declared,
+      "An elephant is like a thick snake!" The second, feeling a leg, insisted, "No, it is like a mighty tree!" The
+      third, grasping the tail, proclaimed, "You are both fools, it is clearly a rope!" Each scholar gave a perfect,
+      empirically verifiable description of the part they touched. Each was completely right about their piece,
+      catastrophically wrong about the whole, and ready to die defending their partial truth.</p>
+
+    <!-- SVG: Blind scholars and elephant -->
+    <svg class="elephant-svg" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg"
+      aria-label="Blind scholars touching different parts of an elephant"
+      style="max-width:420px;width:100%;height:auto;">
+      <defs>
+        <radialGradient id="elephantBodyGrad" cx="45%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#e7e5e4" />
+          <stop offset="100%" stop-color="#a8a29e" />
+        </radialGradient>
+        <radialGradient id="elephantHeadGrad" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#e7e5e4" />
+          <stop offset="100%" stop-color="#a8a29e" />
+        </radialGradient>
+        <linearGradient id="elephantBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fafafa" />
+          <stop offset="100%" stop-color="#f5f5f4" />
+        </linearGradient>
+        <filter id="elephantShadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.12" />
+        </filter>
+        <!-- Highlight circles for each schema color -->
+        <radialGradient id="blueHighlight" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.4" />
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="tealHighlight" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#5eead4" stop-opacity="0.4" />
+          <stop offset="100%" stop-color="#0d9488" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="stoneHighlight" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#d6d3d1" stop-opacity="0.4" />
+          <stop offset="100%" stop-color="#78716c" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="420" height="240" rx="14" fill="url(#elephantBg)" stroke="#e7e5e4" stroke-width="1" />
+
+      <!-- Elephant shadow -->
+      <ellipse cx="205" cy="215" rx="115" ry="10" fill="#78716c" opacity="0.12" />
+
+      <!-- Elephant legs -->
+      <rect x="128" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c"
+        stroke-width="1.5" />
+      <rect x="168" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c"
+        stroke-width="1.5" />
+      <rect x="248" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c"
+        stroke-width="1.5" />
+      <rect x="283" y="168" width="24" height="46" rx="7" fill="url(#elephantBodyGrad)" stroke="#78716c"
+        stroke-width="1.5" />
+
+      <!-- Elephant body -->
+      <ellipse cx="205" cy="122" rx="115" ry="62" fill="url(#elephantBodyGrad)" stroke="#78716c" stroke-width="1.8"
+        filter="url(#elephantShadow)" />
+
+      <!-- Ear -->
+      <ellipse cx="298" cy="88" rx="20" ry="28" fill="#c8c4bf" stroke="#78716c" stroke-width="1.5" opacity="0.9" />
+
+      <!-- Head -->
+      <ellipse cx="316" cy="103" rx="42" ry="37" fill="url(#elephantHeadGrad)" stroke="#78716c" stroke-width="1.8" />
+
+      <!-- Eye -->
+      <circle cx="330" cy="94" r="5" fill="#1c1917" />
+      <circle cx="332" cy="92" r="1.5" fill="white" opacity="0.5" />
+
+      <!-- Trunk -->
+      <path d="M345 118 Q366 145 350 174 Q344 183 338 173 Q352 145 335 122" fill="url(#elephantHeadGrad)"
+        stroke="#78716c" stroke-width="1.8" />
+
+      <!-- Tail -->
+      <path d="M92 118 Q64 113 58 134" fill="none" stroke="#78716c" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Tail tuft -->
+      <circle cx="58" cy="134" r="4" fill="#a8a29e" />
+
+      <!-- Scholar glow highlights (showing which part each "sees") -->
+      <!-- Trunk region highlight (blue — "Snake") -->
+      <ellipse cx="347" cy="148" rx="22" ry="28" fill="url(#blueHighlight)" opacity="0.8" />
+      <!-- Left legs highlight (teal — "Tree") -->
+      <ellipse cx="150" cy="185" rx="28" ry="20" fill="url(#tealHighlight)" opacity="0.8" />
+      <!-- Tail highlight (stone — "Rope") -->
+      <ellipse cx="65" cy="128" rx="18" ry="14" fill="url(#stoneHighlight)" opacity="0.8" />
+
+      <!-- Scholar label tags -->
+      <!-- Blue: Snake! (trunk) -->
+      <rect x="348" y="190" width="56" height="20" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2" />
+      <text x="376" y="204" text-anchor="middle" font-size="11" fill="#1d4ed8"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Snake! 🐍</text>
+      <line x1="360" y1="175" x2="365" y2="190" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3 2" />
+
+      <!-- Teal: Tree! (legs) -->
+      <rect x="120" y="220" width="50" height="20" rx="5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.2" />
+      <text x="145" y="234" text-anchor="middle" font-size="11" fill="#0f766e"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Tree! 🌳</text>
+
+      <!-- Stone: Rope! (tail) -->
+      <rect x="12" y="118" width="54" height="20" rx="5" fill="#f5f5f4" stroke="#78716c" stroke-width="1.2" />
+      <text x="39" y="132" text-anchor="middle" font-size="11" fill="#57534e"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Rope! 🪢</text>
+      <line x1="58" y1="128" x2="66" y2="128" stroke="#78716c" stroke-width="1" stroke-dasharray="3 2" />
+    </svg>
+
+    <p>For centuries, economics blissfully ignored this law. It built models of perpetual growth and perfect
+      equilibrium, assuming that order was natural and decay was a temporary glitch. This was its original sin.</p>
+
+    <p>Because the most interesting question in the universe is not "Why do things fall apart?" but "Why does anything
+      exist at all?" In a cosmos ruled by entropy, the existence of a star, a living cell, or a functioning economy is
+      the ultimate anomaly. Each is a pocket of astonishing order in a sea of encroaching chaos. Each is a temporary
+      victory against the inevitable.</p>
+
+    <p>To build a new economics, we must start not with human wants or rational actors, but with this fundamental
+      struggle. We must ask: how is order created and maintained in a universe that is trying to tear it down? The
+      answer was discovered not by an economist, but by a physicist with a powerful imagination.</p>
+
+    <div class="pullquote">
+      <p>Today, we turn on the lights.</p>
     </div>
-    <div class="stat-callout">
-      <div class="stat-number" style="font-size:2rem; color:#78716c;">3</div>
-      <div class="stat-label"><strong>Harmonic Flow</strong><br>Persistent channels, driven by structure</div>
-    </div>
-  </div>
 
-  <p>This is not a model of economics. This is the deep structure of economic reality.</p>
+    <hr class="section-divider">
 
-  <hr class="section-divider">
+    <!-- ===== The Mathematics of Reality ===== -->
+    <h2>The Mathematics of Reality</h2>
+    <p>The economy is a river. Value flows. And just like a river, all economic activity naturally organizes into
+      exactly three types of flow. Not four. Not two. <strong>Three.</strong> This is not a convenient classification.
+      It is a mathematical necessity, as inevitable as two plus two equals four.</p>
 
-  <!-- ===== River Visualization (preserved) ===== -->
-  <h2>The River Visualization</h2>
-  <p>Below, three rivers flow simultaneously. Each layer represents a different type of economic flow. Hover to explore.</p>
-  <div class="panel" style="padding:0;overflow:hidden;">
-    <div class="river-wrap">
-      <svg id="riverSvg" style="width:100%;display:block;" height="300" preserveAspectRatio="none"></svg>
-    </div>
-    <div class="river-tooltip" id="riverTooltip">Hover over a layer to explore</div>
-  </div>
+    <p>The <strong>Hodge Decomposition theorem</strong>, a crown jewel of 20th-century mathematics, proves that any flow
+      on any surface can be uniquely and orthogonally broken down into exactly three components:</p>
 
-  <hr class="section-divider">
-
-  <!-- ===== Gradient Flow: Smith ===== -->
-  <h2>Gradient Flow: The Gospel of Adam Smith</h2>
-  <p>Gradient flows follow potential differences and, in doing so, eliminate them. This is the economics of loss and rivalry. When a baker sells a loaf, they have one less, the buyer has one more. The potential difference -- the baker's surplus and the buyer's hunger -- is exhausted.</p>
-
-  <p>Adam Smith was the prophet of this flow. When he described the "invisible hand," he was providing a beautiful metaphor for what a physicist calls the negative gradient operator. Individual agents, each following their local gradient of self-interest, collectively guide the system to an efficient equilibrium.</p>
-
-  <div class="pullquote">
-    <p>In a pure gradient system, all flows must eventually cease. If this were all there was to economics, every economy would be a stagnant pond.</p>
-  </div>
-
-  <!-- ===== Circular Flow: Marx ===== -->
-  <h2>Circular Flow: The Ghost of Karl Marx</h2>
-  <p>Circular flows do not seek equilibrium; they create self-reinforcing, accumulative loops. This is the economics of abundance and non-rivalry. When an idea is shared, the recipient gains everything and the originator loses nothing. The more it is used, the more valuable it becomes.</p>
-
-  <p>Marx's formula for capital, M-C-M', is a perfect description of a circular flow. He saw that certain economic activities did not exhaust themselves but amplified themselves, concentrating value and power in an accelerating spiral. Network effects and the compounding of capital are all manifestations of this flow.</p>
-
-  <div class="pullquote">
-    <p>Marx correctly identified the accumulative nature of circular flows but misdiagnosed the cause. He saw the elephant's trunk but thought it was made of human sweat alone. In truth, all non-rival goods naturally follow this dynamic.</p>
-  </div>
-
-  <!-- ===== Harmonic Flow: Hayek ===== -->
-  <h2>Harmonic Flow: The Wisdom of Friedrich Hayek</h2>
-  <p>Harmonic flows are the strangest. They neither deplete sources nor spin in loops. They are the persistent channels determined by the shape of economic space itself -- the riverbeds that guide the river. This is the economics of structure, trust, and institutions.</p>
-
-  <p>Hayek's "spontaneous order" is the emergence of harmonic flows: the unwritten rules, cultural norms, and shared trust that allow a complex society to coordinate.</p>
-
-  <div class="pullquote">
-    <p>The Austrians were so awestruck by the emergence of these structures that they worshipped them as divine creation, failing to see that humans can and must engineer the environment.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== Flow Toggles (preserved) ===== -->
-  <h2>Flow Toggles</h2>
-  <p>Toggle each flow on and off to see what happens when parts of the economic system go missing.</p>
-  <div class="panel">
-    <div class="flow-toggles">
-      <button class="flow-toggle active" data-flow="harmonic">Harmonic</button>
-      <button class="flow-toggle active" data-flow="circular">Circular</button>
-      <button class="flow-toggle active" data-flow="gradient">Gradient</button>
-    </div>
-    <div class="flow-desc" id="flowDesc">Healthy economy: all three flows active and reinforcing each other.</div>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== The Great Synthesis ===== -->
-  <h2>The Great Synthesis</h2>
-  <p>The fragmentation of economics into warring schools was a historical accident. Each blind scholar felt their part of the elephant and declared it the whole truth.</p>
-
-  <!-- SVG: Three flows braided together -->
-  <svg class="synthesis-svg" viewBox="0 0 530 185" xmlns="http://www.w3.org/2000/svg" aria-label="Three economic flows braiding together" style="max-width:530px;width:100%;height:auto;">
-    <defs>
-      <!-- Gradient flow gradient (blue, directional) -->
-      <linearGradient id="gradientFlowGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#93c5fd"/>
-        <stop offset="50%" stop-color="#2563eb"/>
-        <stop offset="100%" stop-color="#1d4ed8"/>
-      </linearGradient>
-      <!-- Circular flow gradient (teal, cycling) -->
-      <linearGradient id="circularFlowGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#5eead4"/>
-        <stop offset="50%" stop-color="#0d9488"/>
-        <stop offset="100%" stop-color="#0f766e"/>
-      </linearGradient>
-      <!-- Harmonic flow gradient (stone, solid) -->
-      <linearGradient id="harmonicFlowGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#d6d3d1"/>
-        <stop offset="50%" stop-color="#78716c"/>
-        <stop offset="100%" stop-color="#57534e"/>
-      </linearGradient>
-      <!-- Background gradient -->
-      <linearGradient id="synthesisBg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f8fafc"/>
-        <stop offset="100%" stop-color="#f1f5f9"/>
-      </linearGradient>
-      <!-- Arrow markers for each flow -->
-      <marker id="arrowGradient" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-        <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
-      </marker>
-      <marker id="arrowCircular" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-        <polygon points="0 0, 8 3, 0 6" fill="#0d9488"/>
-      </marker>
-      <marker id="arrowHarmonic" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-        <polygon points="0 0, 8 3, 0 6" fill="#78716c"/>
-      </marker>
-      <!-- Glow filters for each flow -->
-      <filter id="blueFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="tealFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- Background -->
-    <rect x="0" y="0" width="530" height="185" rx="14" fill="url(#synthesisBg)" stroke="#e2e8f0" stroke-width="1"/>
-
-    <!-- Title -->
-    <text x="265" y="18" text-anchor="middle" font-size="12" fill="#374151" font-family="'Playfair Display', Georgia, serif" font-weight="700">The Three Flows: Braided Together</text>
-
-    <!-- Left origin label box -->
-    <rect x="8" y="28" width="60" height="132" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" opacity="0.8"/>
-    <text x="38" y="60" text-anchor="middle" font-size="9.5" fill="#3b82f6" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Smith</text>
-    <text x="38" y="72" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Gradient</text>
-    <text x="38" y="100" text-anchor="middle" font-size="9.5" fill="#0d9488" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Marx</text>
-    <text x="38" y="112" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Circular</text>
-    <text x="38" y="140" text-anchor="middle" font-size="9.5" fill="#78716c" font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Hayek</text>
-    <text x="38" y="152" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="'DM Sans', system-ui, sans-serif">Harmonic</text>
-
-    <!-- === GRADIENT FLOW: wavy, arrows, blue (top) === -->
-    <!-- Shadow path -->
-    <path d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" opacity="0.25"/>
-    <!-- Main path with animated dashoffset to simulate flow -->
-    <path id="gradPath" d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="url(#gradientFlowGrad)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 5" marker-end="url(#arrowGradient)" filter="url(#blueFlowGlow)">
-      <animate attributeName="stroke-dashoffset" values="0;-52" dur="2.5s" repeatCount="indefinite"/>
-    </path>
-    <!-- Arrow markers at mid-points -->
-    <circle cx="168" cy="78" r="3" fill="#2563eb" opacity="0.6"/>
-    <circle cx="295" cy="50" r="3" fill="#2563eb" opacity="0.6"/>
-    <!-- End label -->
-    <rect x="492" y="38" width="30" height="16" rx="4" fill="#dbeafe"/>
-    <text x="507" y="50" text-anchor="middle" font-size="9" fill="#1d4ed8" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Grad.</text>
-    <!-- Annotation below line -->
-    <text x="230" y="100" text-anchor="middle" font-size="8.5" fill="#3b82f6" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">price signals → equilibrium</text>
-
-    <!-- === CIRCULAR FLOW: oscillating loops, teal (mid) === -->
-    <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="#5eead4" stroke-width="6" stroke-linecap="round" opacity="0.25"/>
-    <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="url(#circularFlowGrad)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="10 6" marker-end="url(#arrowCircular)" filter="url(#tealFlowGlow)">
-      <animate attributeName="stroke-dashoffset" values="0;-64" dur="3.5s" repeatCount="indefinite"/>
-    </path>
-    <!-- Loop indicators -->
-    <circle cx="168" cy="62" r="3" fill="#0d9488" opacity="0.6"/>
-    <circle cx="398" cy="132" r="3" fill="#0d9488" opacity="0.6"/>
-    <!-- Eddy at the loops (animated pulse) -->
-    <ellipse cx="168" cy="62" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
-      <animate attributeName="opacity" values="0.15;0.55;0.15" dur="2s" repeatCount="indefinite"/>
-      <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="398" cy="132" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
-      <animate attributeName="opacity" values="0.55;0.15;0.55" dur="2s" repeatCount="indefinite"/>
-      <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- End label -->
-    <rect x="492" y="85" width="30" height="16" rx="4" fill="#ccfbf1"/>
-    <text x="507" y="97" text-anchor="middle" font-size="9" fill="#0f766e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Circ.</text>
-    <text x="295" y="148" text-anchor="middle" font-size="8.5" fill="#0d9488" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">self-reinforcing loops → accumulation</text>
-
-    <!-- === HARMONIC FLOW: steady, stone, dashed (bottom) === -->
-    <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="#a8a29e" stroke-width="5" stroke-linecap="round" opacity="0.25"/>
-    <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="url(#harmonicFlowGrad)" stroke-width="3.8" stroke-linecap="round" stroke-dasharray="10 5" marker-end="url(#arrowHarmonic)"/>
-    <!-- End label -->
-    <rect x="492" y="131" width="30" height="16" rx="4" fill="#f5f5f4"/>
-    <text x="507" y="143" text-anchor="middle" font-size="9" fill="#57534e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Harm.</text>
-    <text x="230" y="168" text-anchor="middle" font-size="8.5" fill="#78716c" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">persistent structures → institutional order</text>
-  </svg>
-
-  <p>The Keynesians studied what happens when the system gets stuck in "entropy wells." The Behavioralists documented the heuristics we use to navigate this multi-flow landscape. They were all right. They just did not know they were all right about the same thing.</p>
-
-  <div class="pullquote">
-    <p>The economy is not a market, a class struggle, or a spontaneous order. It is a dynamic, braided interplay of all three flows.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== The Old World as a Special Case ===== -->
-  <h2>The Old World as a Special Case</h2>
-  <p>The neoclassical framework is not wrong. It is a special, frictionless limit case of a more general theory. If we set information costs to zero, forbid self-amplifying Circular Flows, and assume institutional Harmonic Flows are static and perfect, the entire rich, curved geometry collapses into a flat Euclidean plane.</p>
-
-  <p>On that plane, the old laws emerge as corollaries. General Equilibrium is what happens in a world with only Gradient Flow. This is no different than how Einstein's relativity contains Newton's laws as a special case at low speeds.</p>
-
-  <div class="pullquote">
-    <p>The neoclassical economists gave us a perfect map of a world that does not exist.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== The Three Flows of a Single Day ===== -->
-  <h2>The Three Flows of a Single Day</h2>
-  <p>This framework is not just for analyzing civilizations. It is the operating system of your own life. Consider the flow of value in a single day:</p>
-
-  <p>When you <strong>buy a coffee</strong>, that is Gradient Flow. You have a need, the barista has a supply. Money and coffee are exchanged. The transaction is complete and zero-sum at the level of the goods. <em>Smith's River.</em></p>
-  <p>When you <strong>learn a new skill</strong> from an online video and share it with a colleague, that is Circular Flow. The knowledge is not consumed. It is replicated. <em>Marx's Whirlpool.</em></p>
-  <p>When you <strong>speak English</strong> with the barista or your colleague, you are using Harmonic Flow. Language is the invisible, persistent infrastructure that makes both the transaction and the knowledge sharing possible. <em>Hayek's Riverbed.</em></p>
-
-  <hr class="section-divider">
-
-  <!-- ===== Transaction Labeler (preserved) ===== -->
-  <h2>Transaction Labeler</h2>
-  <p>Can you identify which flow each transaction belongs to? Click each card to reveal the answer.</p>
-  <div class="panel">
-    <p style="font-size:0.9rem;color:#888;margin-top:0;">Click each card to reveal which flow it operates in.</p>
-    <div class="tx-grid" id="txGrid"></div>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== The AI Tsunami ===== -->
-  <h2>The AI Tsunami</h2>
-  <p>This unified understanding is not an academic luxury. It is a survival imperative. Because artificial intelligence is a tsunami that amplifies all three flows at once, to an unprecedented degree.</p>
-
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number" style="color:#3b82f6;">&darr;</div>
-      <div class="stat-label"><strong>Gradient</strong><br>Algorithmic trading flattens price differences in microseconds</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number" style="color:#0d9488;">&circlearrowright;</div>
-      <div class="stat-label"><strong>Circular</strong><br>AI network effects create winner-take-all dynamics</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number" style="color:#78716c;">&equiv;</div>
-      <div class="stat-label"><strong>Harmonic</strong><br>AI designs new protocols that lock in new economic riverbeds overnight</div>
-    </div>
-  </div>
-
-  <div class="pullquote">
-    <p>An economic theory that sees only one of these flows is like a coastal engineer who understands tides but not waves or currents. You will be drowned by the forces you failed to see.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ===== Coercion Drain (preserved) ===== -->
-  <h2>The Coercion Drain</h2>
-  <p>Coercion is not a separate category but a pathological form of Gradient Flow -- an entropy pump. A coercive transaction destroys the source node's freedom, community, and potential. The net change in global value is negative. Drag the slider to see how coercion hollows out an economy.</p>
-  <div class="panel">
-    <div class="coercion-container">
-      <div class="coercion-slider-wrap">
-        <div class="coercion-label">Coercion</div>
-        <input type="range" class="coercion-slider" id="coercionSlider" min="0" max="100" value="0">
-        <div class="coercion-label">0%</div>
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number" style="font-size:2rem; color:#3b82f6;">1</div>
+        <div class="stat-label"><strong>Gradient Flow</strong><br>High to low potential, driven by scarcity</div>
       </div>
-      <div class="coercion-readout">
-        <div class="coercion-level" id="coercionLevel">Voluntary Exchange</div>
-        <div class="coercion-desc" id="coercionDesc">All three flows amplify each other. Gradient distributes, Circular accumulates, Harmonic sustains.</div>
-        <div class="capital-bars">
-          <div class="cap-bar-row"><span class="cap-bar-label">N-Capital</span><div class="cap-bar"><div class="cap-bar-fill" id="nCapFill" style="width:80%;background:#22c55e"></div></div></div>
-          <div class="cap-bar-row"><span class="cap-bar-label">D-Capital</span><div class="cap-bar"><div class="cap-bar-fill" id="dCapFill" style="width:80%;background:#f59e0b"></div></div></div>
-          <div class="cap-bar-row"><span class="cap-bar-label">Economy</span><div class="cap-bar"><div class="cap-bar-fill" id="econFill" style="width:80%;background:#3b82f6"></div></div></div>
+      <div class="stat-callout">
+        <div class="stat-number" style="font-size:2rem; color:#0d9488;">2</div>
+        <div class="stat-label"><strong>Circular Flow</strong><br>Self-reinforcing loops, driven by abundance</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number" style="font-size:2rem; color:#78716c;">3</div>
+        <div class="stat-label"><strong>Harmonic Flow</strong><br>Persistent channels, driven by structure</div>
+      </div>
+    </div>
+
+    <p>This is not a model of economics. This is the deep structure of economic reality.</p>
+
+    <hr class="section-divider">
+
+    <!-- ===== River Visualization (preserved) ===== -->
+    <h2>The River Visualization</h2>
+    <p>Below, three rivers flow simultaneously. Each layer represents a different type of economic flow. Hover to
+      explore.</p>
+    <div class="panel" style="padding:0;overflow:hidden;">
+      <div class="river-wrap">
+        <svg id="riverSvg" style="width:100%;display:block;" height="300" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="river-tooltip" id="riverTooltip">Hover over a layer to explore</div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== Gradient Flow: Smith ===== -->
+    <h2>Gradient Flow: The Gospel of Adam Smith</h2>
+    <p>Gradient flows follow potential differences and, in doing so, eliminate them. This is the economics of loss and
+      rivalry. When a baker sells a loaf, they have one less, the buyer has one more. The potential difference -- the
+      baker's surplus and the buyer's hunger -- is exhausted.</p>
+
+    <p>Adam Smith was the prophet of this flow. When he described the "invisible hand," he was providing a beautiful
+      metaphor for what a physicist calls the negative gradient operator. Individual agents, each following their local
+      gradient of self-interest, collectively guide the system to an efficient equilibrium.</p>
+
+    <div class="pullquote">
+      <p>In a pure gradient system, all flows must eventually cease. If this were all there was to economics, every
+        economy would be a stagnant pond.</p>
+    </div>
+
+    <!-- ===== Circular Flow: Marx ===== -->
+    <h2>Circular Flow: The Ghost of Karl Marx</h2>
+    <p>Circular flows do not seek equilibrium; they create self-reinforcing, accumulative loops. This is the economics
+      of abundance and non-rivalry. When an idea is shared, the recipient gains everything and the originator loses
+      nothing. The more it is used, the more valuable it becomes.</p>
+
+    <p>Marx's formula for capital, M-C-M', is a perfect description of a circular flow. He saw that certain economic
+      activities did not exhaust themselves but amplified themselves, concentrating value and power in an accelerating
+      spiral. Network effects and the compounding of capital are all manifestations of this flow.</p>
+
+    <div class="pullquote">
+      <p>Marx correctly identified the accumulative nature of circular flows but misdiagnosed the cause. He saw the
+        elephant's trunk but thought it was made of human sweat alone. In truth, all non-rival goods naturally follow
+        this dynamic.</p>
+    </div>
+
+    <!-- ===== Harmonic Flow: Hayek ===== -->
+    <h2>Harmonic Flow: The Wisdom of Friedrich Hayek</h2>
+    <p>Harmonic flows are the strangest. They neither deplete sources nor spin in loops. They are the persistent
+      channels determined by the shape of economic space itself -- the riverbeds that guide the river. This is the
+      economics of structure, trust, and institutions.</p>
+
+    <p>Hayek's "spontaneous order" is the emergence of harmonic flows: the unwritten rules, cultural norms, and shared
+      trust that allow a complex society to coordinate.</p>
+
+    <div class="pullquote">
+      <p>The Austrians were so awestruck by the emergence of these structures that they worshipped them as divine
+        creation, failing to see that humans can and must engineer the environment.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== Flow Toggles (preserved) ===== -->
+    <h2>Flow Toggles</h2>
+    <p>Toggle each flow on and off to see what happens when parts of the economic system go missing.</p>
+    <div class="panel">
+      <div class="flow-toggles">
+        <button class="flow-toggle active" data-flow="harmonic">Harmonic</button>
+        <button class="flow-toggle active" data-flow="circular">Circular</button>
+        <button class="flow-toggle active" data-flow="gradient">Gradient</button>
+      </div>
+      <div class="flow-desc" id="flowDesc">Healthy economy: all three flows active and reinforcing each other.</div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== The Great Synthesis ===== -->
+    <h2>The Great Synthesis</h2>
+    <p>The fragmentation of economics into warring schools was a historical accident. Each blind scholar felt their part
+      of the elephant and declared it the whole truth.</p>
+
+    <!-- SVG: Three flows braided together -->
+    <svg class="synthesis-svg" viewBox="0 0 530 185" xmlns="http://www.w3.org/2000/svg"
+      aria-label="Three economic flows braiding together" style="max-width:530px;width:100%;height:auto;">
+      <defs>
+        <!-- Gradient flow gradient (blue, directional) -->
+        <linearGradient id="gradientFlowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="50%" stop-color="#2563eb" />
+          <stop offset="100%" stop-color="#1d4ed8" />
+        </linearGradient>
+        <!-- Circular flow gradient (teal, cycling) -->
+        <linearGradient id="circularFlowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5eead4" />
+          <stop offset="50%" stop-color="#0d9488" />
+          <stop offset="100%" stop-color="#0f766e" />
+        </linearGradient>
+        <!-- Harmonic flow gradient (stone, solid) -->
+        <linearGradient id="harmonicFlowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d6d3d1" />
+          <stop offset="50%" stop-color="#78716c" />
+          <stop offset="100%" stop-color="#57534e" />
+        </linearGradient>
+        <!-- Background gradient -->
+        <linearGradient id="synthesisBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8fafc" />
+          <stop offset="100%" stop-color="#f1f5f9" />
+        </linearGradient>
+        <!-- Arrow markers for each flow -->
+        <marker id="arrowGradient" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#2563eb" />
+        </marker>
+        <marker id="arrowCircular" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#0d9488" />
+        </marker>
+        <marker id="arrowHarmonic" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#78716c" />
+        </marker>
+        <!-- Glow filters for each flow -->
+        <filter id="blueFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter id="tealFlowGlow" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="530" height="185" rx="14" fill="url(#synthesisBg)" stroke="#e2e8f0" stroke-width="1" />
+
+      <!-- Title -->
+      <text x="265" y="18" text-anchor="middle" font-size="12" fill="#374151"
+        font-family="'Playfair Display', Georgia, serif" font-weight="700">The Three Flows: Braided Together</text>
+
+      <!-- Left origin label box -->
+      <rect x="8" y="28" width="60" height="132" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" opacity="0.8" />
+      <text x="38" y="60" text-anchor="middle" font-size="9.5" fill="#3b82f6"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Smith</text>
+      <text x="38" y="72" text-anchor="middle" font-size="8" fill="#9ca3af"
+        font-family="'DM Sans', system-ui, sans-serif">Gradient</text>
+      <text x="38" y="100" text-anchor="middle" font-size="9.5" fill="#0d9488"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Marx</text>
+      <text x="38" y="112" text-anchor="middle" font-size="8" fill="#9ca3af"
+        font-family="'DM Sans', system-ui, sans-serif">Circular</text>
+      <text x="38" y="140" text-anchor="middle" font-size="9.5" fill="#78716c"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="600">Hayek</text>
+      <text x="38" y="152" text-anchor="middle" font-size="8" fill="#9ca3af"
+        font-family="'DM Sans', system-ui, sans-serif">Harmonic</text>
+
+      <!-- === GRADIENT FLOW: wavy, arrows, blue (top) === -->
+      <!-- Shadow path -->
+      <path d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="#93c5fd" stroke-width="6"
+        stroke-linecap="round" opacity="0.25" />
+      <!-- Main path with animated dashoffset to simulate flow -->
+      <path id="gradPath" d="M74 50 Q168 92 295 50 Q398 10 490 50" fill="none" stroke="url(#gradientFlowGrad)"
+        stroke-width="3.2" stroke-linecap="round" stroke-dasharray="8 5" marker-end="url(#arrowGradient)"
+        filter="url(#blueFlowGlow)">
+        <animate attributeName="stroke-dashoffset" values="0;-52" dur="2.5s" repeatCount="indefinite" />
+      </path>
+      <!-- Arrow markers at mid-points -->
+      <circle cx="168" cy="78" r="3" fill="#2563eb" opacity="0.6" />
+      <circle cx="295" cy="50" r="3" fill="#2563eb" opacity="0.6" />
+      <!-- End label -->
+      <rect x="492" y="38" width="30" height="16" rx="4" fill="#dbeafe" />
+      <text x="507" y="50" text-anchor="middle" font-size="9" fill="#1d4ed8"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Grad.</text>
+      <!-- Annotation below line -->
+      <text x="230" y="100" text-anchor="middle" font-size="8.5" fill="#3b82f6" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">price signals → equilibrium</text>
+
+      <!-- === CIRCULAR FLOW: oscillating loops, teal (mid) === -->
+      <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="#5eead4" stroke-width="6"
+        stroke-linecap="round" opacity="0.25" />
+      <path d="M74 97 Q168 48 295 97 Q398 146 490 97" fill="none" stroke="url(#circularFlowGrad)" stroke-width="3.2"
+        stroke-linecap="round" stroke-dasharray="10 6" marker-end="url(#arrowCircular)" filter="url(#tealFlowGlow)">
+        <animate attributeName="stroke-dashoffset" values="0;-64" dur="3.5s" repeatCount="indefinite" />
+      </path>
+      <!-- Loop indicators -->
+      <circle cx="168" cy="62" r="3" fill="#0d9488" opacity="0.6" />
+      <circle cx="398" cy="132" r="3" fill="#0d9488" opacity="0.6" />
+      <!-- Eddy at the loops (animated pulse) -->
+      <ellipse cx="168" cy="62" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
+        <animate attributeName="opacity" values="0.15;0.55;0.15" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite" />
+      </ellipse>
+      <ellipse cx="398" cy="132" rx="10" ry="8" fill="none" stroke="#0d9488" stroke-width="1" stroke-dasharray="3 2">
+        <animate attributeName="opacity" values="0.55;0.15;0.55" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="rx" values="10;14;10" dur="2s" repeatCount="indefinite" />
+      </ellipse>
+      <!-- End label -->
+      <rect x="492" y="85" width="30" height="16" rx="4" fill="#ccfbf1" />
+      <text x="507" y="97" text-anchor="middle" font-size="9" fill="#0f766e"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Circ.</text>
+      <text x="295" y="148" text-anchor="middle" font-size="8.5" fill="#0d9488" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">self-reinforcing loops → accumulation</text>
+
+      <!-- === HARMONIC FLOW: steady, stone, dashed (bottom) === -->
+      <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="#a8a29e" stroke-width="5"
+        stroke-linecap="round" opacity="0.25" />
+      <path d="M74 143 Q168 143 295 143 Q398 143 490 143" fill="none" stroke="url(#harmonicFlowGrad)" stroke-width="3.8"
+        stroke-linecap="round" stroke-dasharray="10 5" marker-end="url(#arrowHarmonic)" />
+      <!-- End label -->
+      <rect x="492" y="131" width="30" height="16" rx="4" fill="#f5f5f4" />
+      <text x="507" y="143" text-anchor="middle" font-size="9" fill="#57534e"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Harm.</text>
+      <text x="230" y="168" text-anchor="middle" font-size="8.5" fill="#78716c" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">persistent structures → institutional order</text>
+    </svg>
+
+    <p>The Keynesians studied what happens when the system gets stuck in "entropy wells." The Behavioralists documented
+      the heuristics we use to navigate this multi-flow landscape. They were all right. They just did not know they were
+      all right about the same thing.</p>
+
+    <div class="pullquote">
+      <p>The economy is not a market, a class struggle, or a spontaneous order. It is a dynamic, braided interplay of
+        all three flows.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== The Old World as a Special Case ===== -->
+    <h2>The Old World as a Special Case</h2>
+    <p>The neoclassical framework is not wrong. It is a special, frictionless limit case of a more general theory. If we
+      set information costs to zero, forbid self-amplifying Circular Flows, and assume institutional Harmonic Flows are
+      static and perfect, the entire rich, curved geometry collapses into a flat Euclidean plane.</p>
+
+    <p>On that plane, the old laws emerge as corollaries. General Equilibrium is what happens in a world with only
+      Gradient Flow. This is no different than how Einstein's relativity contains Newton's laws as a special case at low
+      speeds.</p>
+
+    <div class="pullquote">
+      <p>The neoclassical economists gave us a perfect map of a world that does not exist.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== The Three Flows of a Single Day ===== -->
+    <h2>The Three Flows of a Single Day</h2>
+    <p>This framework is not just for analyzing civilizations. It is the operating system of your own life. Consider the
+      flow of value in a single day:</p>
+
+    <p>When you <strong>buy a coffee</strong>, that is Gradient Flow. You have a need, the barista has a supply. Money
+      and coffee are exchanged. The transaction is complete and zero-sum at the level of the goods. <em>Smith's
+        River.</em></p>
+    <p>When you <strong>learn a new skill</strong> from an online video and share it with a colleague, that is Circular
+      Flow. The knowledge is not consumed. It is replicated. <em>Marx's Whirlpool.</em></p>
+    <p>When you <strong>speak English</strong> with the barista or your colleague, you are using Harmonic Flow. Language
+      is the invisible, persistent infrastructure that makes both the transaction and the knowledge sharing possible.
+      <em>Hayek's Riverbed.</em></p>
+
+    <hr class="section-divider">
+
+    <!-- ===== Transaction Labeler (preserved) ===== -->
+    <h2>Transaction Labeler</h2>
+    <p>Can you identify which flow each transaction belongs to? Click each card to reveal the answer.</p>
+    <div class="panel">
+      <p style="font-size:0.9rem;color:#888;margin-top:0;">Click each card to reveal which flow it operates in.</p>
+      <div class="tx-grid" id="txGrid"></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== The AI Tsunami ===== -->
+    <h2>The AI Tsunami</h2>
+    <p>This unified understanding is not an academic luxury. It is a survival imperative. Because artificial
+      intelligence is a tsunami that amplifies all three flows at once, to an unprecedented degree.</p>
+
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number" style="color:#3b82f6;">&darr;</div>
+        <div class="stat-label"><strong>Gradient</strong><br>Algorithmic trading flattens price differences in
+          microseconds</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number" style="color:#0d9488;">&circlearrowright;</div>
+        <div class="stat-label"><strong>Circular</strong><br>AI network effects create winner-take-all dynamics</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number" style="color:#78716c;">&equiv;</div>
+        <div class="stat-label"><strong>Harmonic</strong><br>AI designs new protocols that lock in new economic
+          riverbeds overnight</div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      <p>An economic theory that sees only one of these flows is like a coastal engineer who understands tides but not
+        waves or currents. You will be drowned by the forces you failed to see.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== Coercion Drain (preserved) ===== -->
+    <h2>The Coercion Drain</h2>
+    <p>Coercion is not a separate category but a pathological form of Gradient Flow -- an entropy pump. A coercive
+      transaction destroys the source node's freedom, community, and potential. The net change in global value is
+      negative. Drag the slider to see how coercion hollows out an economy.</p>
+    <div class="panel">
+      <div class="coercion-container">
+        <div class="coercion-slider-wrap">
+          <div class="coercion-label">Coercion</div>
+          <input type="range" class="coercion-slider" id="coercionSlider" min="0" max="100" value="0">
+          <div class="coercion-label">0%</div>
+        </div>
+        <div class="coercion-readout">
+          <div class="coercion-level" id="coercionLevel">Voluntary Exchange</div>
+          <div class="coercion-desc" id="coercionDesc">All three flows amplify each other. Gradient distributes,
+            Circular accumulates, Harmonic sustains.</div>
+          <div class="capital-bars">
+            <div class="cap-bar-row"><span class="cap-bar-label">N-Capital</span>
+              <div class="cap-bar">
+                <div class="cap-bar-fill" id="nCapFill" style="width:80%;background:#22c55e"></div>
+              </div>
+            </div>
+            <div class="cap-bar-row"><span class="cap-bar-label">D-Capital</span>
+              <div class="cap-bar">
+                <div class="cap-bar-fill" id="dCapFill" style="width:80%;background:#f59e0b"></div>
+              </div>
+            </div>
+            <div class="cap-bar-row"><span class="cap-bar-label">Economy</span>
+              <div class="cap-bar">
+                <div class="cap-bar-fill" id="econFill" style="width:80%;background:#3b82f6"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <hr class="section-divider">
+
+    <!-- ===== Conclusion ===== -->
+    <h2>The End of Ideology</h2>
+    <p>The great ideological battles of the 20th century -- Capitalism versus Communism -- are revealed to be
+      dangerously simplistic. They were arguments about whether the elephant was all leg or all trunk.</p>
+
+    <p>The real task of 21st-century economics is not to choose an ideology. It is to become a master plumber of a
+      multi-dimensional system. We must design systems that:</p>
+    <ul>
+      <li>Allow <strong>Gradient Flows</strong> to efficiently distribute scarce, rivalrous goods.</li>
+      <li>Cultivate <strong>Circular Flows</strong> that share abundant, non-rivalrous goods for collective benefit.
+      </li>
+      <li>Consciously build <strong>Harmonic Flows</strong> -- institutions of trust and transparency -- that create a
+        stable and just landscape for the other flows.</li>
+    </ul>
+
+    <div class="pullquote">
+      <p>The blind scholars of economics each held a piece of the truth. For centuries, their heirs have been fighting.
+        That fight is over. Value flows in three ways. Our job is to learn to see the whole elephant, and then to become
+        wise stewards of its flourishing.</p>
+    </div>
+
   </div>
 
-  <hr class="section-divider">
+  <script>
+    // ===== River Visualization =====
+    const flowState = { harmonic: true, circular: true, gradient: true };
+    let riverAnim;
 
-  <!-- ===== Conclusion ===== -->
-  <h2>The End of Ideology</h2>
-  <p>The great ideological battles of the 20th century -- Capitalism versus Communism -- are revealed to be dangerously simplistic. They were arguments about whether the elephant was all leg or all trunk.</p>
+    (function initRiver() {
+      const svg = d3.select('#riverSvg');
+      const container = document.getElementById('riverSvg').parentElement;
+      const W = container.clientWidth || 680;
+      const H = 300;
+      svg.attr('viewBox', `0 0 ${W} ${H}`);
 
-  <p>The real task of 21st-century economics is not to choose an ideology. It is to become a master plumber of a multi-dimensional system. We must design systems that:</p>
-  <ul>
-    <li>Allow <strong>Gradient Flows</strong> to efficiently distribute scarce, rivalrous goods.</li>
-    <li>Cultivate <strong>Circular Flows</strong> that share abundant, non-rivalrous goods for collective benefit.</li>
-    <li>Consciously build <strong>Harmonic Flows</strong> -- institutions of trust and transparency -- that create a stable and just landscape for the other flows.</li>
-  </ul>
+      const layers = {
+        harmonic: { y: 220, h: 60, color: '#57534e', speed: 0.3, label: 'Harmonic Flow (Hayek)', desc: "Hayek's distributed knowledge. Language, culture, law, money. Slow to change, foundational." },
+        circular: { y: 140, h: 70, color: '#0d9488', speed: 0.7, label: 'Circular Flow (Marx)', desc: "Marx's capital accumulation. Profits to investment to profits. Self-reinforcing loops." },
+        gradient: { y: 60, h: 60, color: '#60a5fa', speed: 1.5, label: 'Gradient Flow (Smith)', desc: "Smith's market prices. Resources flow from low to high value. Fast, reactive." }
+      };
 
-  <div class="pullquote">
-    <p>The blind scholars of economics each held a piece of the truth. For centuries, their heirs have been fighting. That fight is over. Value flows in three ways. Our job is to learn to see the whole elephant, and then to become wise stewards of its flourishing.</p>
-  </div>
+      let t = 0;
+      const groups = {};
 
-</div>
+      Object.keys(layers).forEach(key => {
+        const g = svg.append('g').attr('class', 'layer-' + key);
+        groups[key] = g;
 
-<script>
-// ===== River Visualization =====
-const flowState = { harmonic: true, circular: true, gradient: true };
-let riverAnim;
+        g.append('rect')
+          .attr('x', 0).attr('y', layers[key].y - 10).attr('width', W).attr('height', layers[key].h + 20)
+          .attr('fill', 'transparent').attr('cursor', 'pointer')
+          .on('mouseenter', () => {
+            document.getElementById('riverTooltip').textContent = layers[key].label + ': ' + layers[key].desc;
+            g.selectAll('.wave-path').attr('opacity', 1);
+          })
+          .on('mouseleave', () => {
+            document.getElementById('riverTooltip').textContent = 'Hover over a layer to explore';
+            g.selectAll('.wave-path').attr('opacity', 0.7);
+          });
 
-(function initRiver() {
-  const svg = d3.select('#riverSvg');
-  const container = document.getElementById('riverSvg').parentElement;
-  const W = container.clientWidth || 680;
-  const H = 300;
-  svg.attr('viewBox', `0 0 ${W} ${H}`);
-
-  const layers = {
-    harmonic: { y: 220, h: 60, color: '#57534e', speed: 0.3, label: 'Harmonic Flow (Hayek)', desc: "Hayek's distributed knowledge. Language, culture, law, money. Slow to change, foundational." },
-    circular: { y: 140, h: 70, color: '#0d9488', speed: 0.7, label: 'Circular Flow (Marx)', desc: "Marx's capital accumulation. Profits to investment to profits. Self-reinforcing loops." },
-    gradient: { y: 60, h: 60, color: '#60a5fa', speed: 1.5, label: 'Gradient Flow (Smith)', desc: "Smith's market prices. Resources flow from low to high value. Fast, reactive." }
-  };
-
-  let t = 0;
-  const groups = {};
-
-  Object.keys(layers).forEach(key => {
-    const g = svg.append('g').attr('class', 'layer-' + key);
-    groups[key] = g;
-
-    g.append('rect')
-      .attr('x', 0).attr('y', layers[key].y - 10).attr('width', W).attr('height', layers[key].h + 20)
-      .attr('fill', 'transparent').attr('cursor', 'pointer')
-      .on('mouseenter', () => {
-        document.getElementById('riverTooltip').textContent = layers[key].label + ': ' + layers[key].desc;
-        g.selectAll('.wave-path').attr('opacity', 1);
-      })
-      .on('mouseleave', () => {
-        document.getElementById('riverTooltip').textContent = 'Hover over a layer to explore';
-        g.selectAll('.wave-path').attr('opacity', 0.7);
-      });
-
-    for (let i = 0; i < 4; i++) {
-      g.append('path').attr('class', 'wave-path')
-        .attr('fill', 'none')
-        .attr('stroke', layers[key].color)
-        .attr('stroke-width', 2 + Math.random() * 2)
-        .attr('opacity', 0.7);
-    }
-
-    if (key === 'circular') {
-      for (let i = 0; i < 5; i++) {
-        g.append('circle').attr('class', 'eddy')
-          .attr('cx', 80 + i * 130).attr('cy', layers[key].y + layers[key].h / 2)
-          .attr('r', 12 + Math.random() * 8)
-          .attr('fill', 'none').attr('stroke', '#5eead4').attr('stroke-width', 1.5).attr('opacity', 0.5);
-      }
-    }
-  });
-
-  function animate() {
-    t += 0.02;
-    Object.keys(layers).forEach(key => {
-      const L = layers[key];
-      const visible = flowState[key];
-      groups[key].attr('opacity', visible ? 1 : 0.08);
-
-      groups[key].selectAll('.wave-path').each(function(_, i) {
-        const path = d3.select(this);
-        const yOff = L.y + (i + 0.5) * (L.h / 4);
-        let d = `M0,${yOff}`;
-        for (let x = 0; x <= W; x += 10) {
-          const y = yOff + Math.sin((x * 0.015) + t * L.speed * 3 + i * 0.8) * (6 + i * 2)
-                        + Math.sin((x * 0.008) + t * L.speed * 1.5 + i * 1.5) * 4;
-          d += ` L${x},${y}`;
+        for (let i = 0; i < 4; i++) {
+          g.append('path').attr('class', 'wave-path')
+            .attr('fill', 'none')
+            .attr('stroke', layers[key].color)
+            .attr('stroke-width', 2 + Math.random() * 2)
+            .attr('opacity', 0.7);
         }
-        path.attr('d', d);
+
+        if (key === 'circular') {
+          for (let i = 0; i < 5; i++) {
+            g.append('circle').attr('class', 'eddy')
+              .attr('cx', 80 + i * 130).attr('cy', layers[key].y + layers[key].h / 2)
+              .attr('r', 12 + Math.random() * 8)
+              .attr('fill', 'none').attr('stroke', '#5eead4').attr('stroke-width', 1.5).attr('opacity', 0.5);
+          }
+        }
       });
 
-      if (key === 'circular') {
-        groups[key].selectAll('.eddy').each(function(_, i) {
-          const eddy = d3.select(this);
-          const phase = t * 1.5 + i * 1.2;
-          eddy.attr('r', 12 + Math.sin(phase) * 6)
-              .attr('opacity', visible ? 0.3 + Math.sin(phase) * 0.2 : 0.05);
+      function animate() {
+        t += 0.02;
+        Object.keys(layers).forEach(key => {
+          const L = layers[key];
+          const visible = flowState[key];
+          groups[key].attr('opacity', visible ? 1 : 0.08);
+
+          groups[key].selectAll('.wave-path').each(function (_, i) {
+            const path = d3.select(this);
+            const yOff = L.y + (i + 0.5) * (L.h / 4);
+            let d = `M0,${yOff}`;
+            for (let x = 0; x <= W; x += 10) {
+              const y = yOff + Math.sin((x * 0.015) + t * L.speed * 3 + i * 0.8) * (6 + i * 2)
+                + Math.sin((x * 0.008) + t * L.speed * 1.5 + i * 1.5) * 4;
+              d += ` L${x},${y}`;
+            }
+            path.attr('d', d);
+          });
+
+          if (key === 'circular') {
+            groups[key].selectAll('.eddy').each(function (_, i) {
+              const eddy = d3.select(this);
+              const phase = t * 1.5 + i * 1.2;
+              eddy.attr('r', 12 + Math.sin(phase) * 6)
+                .attr('opacity', visible ? 0.3 + Math.sin(phase) * 0.2 : 0.05);
+            });
+          }
         });
+        riverAnim = requestAnimationFrame(animate);
       }
+      animate();
+    })();
+
+    // ===== Flow Toggles =====
+    const flowDescriptions = {
+      '111': 'Healthy economy: all three flows active and reinforcing each other.',
+      '001': 'Gradient only: All price differences equalize quickly. No structural support, no accumulation. Markets without institutions.',
+      '010': 'Circular only: Capital loops internally, nothing distributed. Hoarding without exchange.',
+      '100': 'Harmonic only: Institutions exist but nothing flows through them. Fossilized.',
+      '011': 'Gradient + Circular, no Harmonic: Markets work but inequality accelerates. Circular captures Gradient\'s gains. No institutional check.',
+      '101': 'Harmonic + Gradient, no Circular: Exchange works, institutions hold, but no capital accumulates. Subsistence economy.',
+      '110': 'Harmonic + Circular, no Gradient: Institutions support accumulation but no market signals. Planned economy.',
+      '000': 'No flows active. Economic death. Nothing moves, nothing grows, nothing sustains.'
+    };
+
+    document.querySelectorAll('.flow-toggle').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const flow = this.dataset.flow;
+        flowState[flow] = !flowState[flow];
+        this.classList.toggle('active', flowState[flow]);
+        const key = [flowState.harmonic ? 1 : 0, flowState.circular ? 1 : 0, flowState.gradient ? 1 : 0].join('');
+        document.getElementById('flowDesc').textContent = flowDescriptions[key] || 'A partial economy with missing flows.';
+      });
     });
-    riverAnim = requestAnimationFrame(animate);
-  }
-  animate();
-})();
 
-// ===== Flow Toggles =====
-const flowDescriptions = {
-  '111': 'Healthy economy: all three flows active and reinforcing each other.',
-  '001': 'Gradient only: All price differences equalize quickly. No structural support, no accumulation. Markets without institutions.',
-  '010': 'Circular only: Capital loops internally, nothing distributed. Hoarding without exchange.',
-  '100': 'Harmonic only: Institutions exist but nothing flows through them. Fossilized.',
-  '011': 'Gradient + Circular, no Harmonic: Markets work but inequality accelerates. Circular captures Gradient\'s gains. No institutional check.',
-  '101': 'Harmonic + Gradient, no Circular: Exchange works, institutions hold, but no capital accumulates. Subsistence economy.',
-  '110': 'Harmonic + Circular, no Gradient: Institutions support accumulation but no market signals. Planned economy.',
-  '000': 'No flows active. Economic death. Nothing moves, nothing grows, nothing sustains.'
-};
+    // ===== Transaction Labeler =====
+    const transactions = [
+      { title: 'Buy a coffee', flows: ['gradient'], tags: [{ label: 'Gradient', color: '#3b82f6' }], desc: 'A price signal directing surplus. You value the coffee more than $4; the shop values $4 more than the beans.' },
+      { title: 'Read Wikipedia', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Cultural commons and knowledge infrastructure. No price, no profit loop -- pure shared protocol.' },
+      { title: 'Speak English with a stranger', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'A shared protocol enabling exchange. Language is the deepest harmonic flow -- slow to change, foundational to everything.' },
+      { title: 'Pay income taxes', flows: ['circular', 'harmonic'], tags: [{ label: 'Circular', color: '#0d9488' }, { label: 'Harmonic', color: '#78716c' }], desc: 'Redistribution loop (Circular) operating through institutional channels (Harmonic). Government as flow manager.' },
+      { title: 'Join an early-stage startup', flows: ['circular'], tags: [{ label: 'Circular', color: '#0d9488' }], desc: 'Capital accumulation loop. Investment seeking returns, which fund more investment. The classic self-reinforcing cycle.' },
+      { title: 'Attend a religious service', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Social cohesion infrastructure. Shared rituals, norms, and trust -- the riverbed that channels all other flows.' }
+    ];
 
-document.querySelectorAll('.flow-toggle').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const flow = this.dataset.flow;
-    flowState[flow] = !flowState[flow];
-    this.classList.toggle('active', flowState[flow]);
-    const key = [flowState.harmonic ? 1 : 0, flowState.circular ? 1 : 0, flowState.gradient ? 1 : 0].join('');
-    document.getElementById('flowDesc').textContent = flowDescriptions[key] || 'A partial economy with missing flows.';
-  });
-});
-
-// ===== Transaction Labeler =====
-const transactions = [
-  { title: 'Buy a coffee', flows: ['gradient'], tags: [{ label: 'Gradient', color: '#3b82f6' }], desc: 'A price signal directing surplus. You value the coffee more than $4; the shop values $4 more than the beans.' },
-  { title: 'Read Wikipedia', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Cultural commons and knowledge infrastructure. No price, no profit loop -- pure shared protocol.' },
-  { title: 'Speak English with a stranger', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'A shared protocol enabling exchange. Language is the deepest harmonic flow -- slow to change, foundational to everything.' },
-  { title: 'Pay income taxes', flows: ['circular', 'harmonic'], tags: [{ label: 'Circular', color: '#0d9488' }, { label: 'Harmonic', color: '#78716c' }], desc: 'Redistribution loop (Circular) operating through institutional channels (Harmonic). Government as flow manager.' },
-  { title: 'Join an early-stage startup', flows: ['circular'], tags: [{ label: 'Circular', color: '#0d9488' }], desc: 'Capital accumulation loop. Investment seeking returns, which fund more investment. The classic self-reinforcing cycle.' },
-  { title: 'Attend a religious service', flows: ['harmonic'], tags: [{ label: 'Harmonic', color: '#78716c' }], desc: 'Social cohesion infrastructure. Shared rituals, norms, and trust -- the riverbed that channels all other flows.' }
-];
-
-const txGrid = document.getElementById('txGrid');
-transactions.forEach(tx => {
-  const card = document.createElement('div');
-  card.className = 'tx-card';
-  card.innerHTML = `
+    const txGrid = document.getElementById('txGrid');
+    transactions.forEach(tx => {
+      const card = document.createElement('div');
+      card.className = 'tx-card';
+      card.innerHTML = `
     <div class="tx-title">${tx.title}</div>
     <div class="tx-answer">
       <div>${tx.tags.map(t => `<span class="tx-tag" style="background:${t.color};color:white;">${t.label}</span>`).join('')}</div>
       <div style="margin-top:0.4rem;">${tx.desc}</div>
     </div>
   `;
-  card.addEventListener('click', function() {
-    if (!this.classList.contains('revealed')) {
-      this.classList.add('revealed');
-      this.style.borderColor = tx.tags[0].color;
-      this.style.background = tx.tags[0].color + '08';
-    }
-  });
-  txGrid.appendChild(card);
-});
-
-// ===== Coercion Drain =====
-const coercionSlider = document.getElementById('coercionSlider');
-coercionSlider.addEventListener('input', function() {
-  const v = parseInt(this.value);
-  const nCap = Math.max(5, 80 - v * 0.75);
-  const dCap = Math.max(5, 80 - v * 0.7);
-  const econ = Math.max(8, 80 - v * 0.5);
-
-  document.getElementById('nCapFill').style.width = nCap + '%';
-  document.getElementById('nCapFill').style.background = nCap > 40 ? '#22c55e' : nCap > 20 ? '#f59e0b' : '#dc2626';
-  document.getElementById('dCapFill').style.width = dCap + '%';
-  document.getElementById('dCapFill').style.background = dCap > 40 ? '#f59e0b' : dCap > 20 ? '#f97316' : '#dc2626';
-  document.getElementById('econFill').style.width = econ + '%';
-  document.getElementById('econFill').style.background = econ > 40 ? '#3b82f6' : econ > 20 ? '#f97316' : '#dc2626';
-
-  const levelEl = document.getElementById('coercionLevel');
-  const descEl = document.getElementById('coercionDesc');
-
-  if (v < 15) {
-    levelEl.textContent = 'Voluntary Exchange';
-    levelEl.style.color = '#22c55e';
-    descEl.textContent = 'All three flows amplify each other. Gradient distributes, Circular accumulates, Harmonic sustains.';
-  } else if (v < 40) {
-    levelEl.textContent = 'Low Coercion';
-    levelEl.style.color = '#84cc16';
-    descEl.textContent = 'Mild extraction. Some Gradient flow distorted by rent-seeking. Natural and Democratic capital slowly eroding.';
-  } else if (v < 65) {
-    levelEl.textContent = 'Mixed Coercion';
-    levelEl.style.color = '#f59e0b';
-    descEl.textContent = 'Circular flow captures Gradient gains. N and D capital declining. Trust erodes, institutions weaken.';
-  } else if (v < 85) {
-    levelEl.textContent = 'High Coercion';
-    levelEl.style.color = '#f97316';
-    descEl.textContent = 'Gradient flow reversing -- extraction replaces exchange. Only Circular remains for the coercers. Economy hollowing out.';
-  } else {
-    levelEl.textContent = 'Pure Extraction';
-    levelEl.style.color = '#dc2626';
-    descEl.textContent = 'Gradient reversed entirely. N and D collapsed. Only Circular remains for the extractors. Everyone else in survival mode.';
-  }
-
-  coercionSlider.parentElement.querySelector('.coercion-label:last-child').textContent = v + '%';
-});
-
-// Reading progress
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-});
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
+      card.addEventListener('click', function () {
+        if (!this.classList.contains('revealed')) {
+          this.classList.add('revealed');
+          this.style.borderColor = tx.tags[0].color;
+          this.style.background = tx.tags[0].color + '08';
+        }
+      });
+      txGrid.appendChild(card);
     });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+
+    // ===== Coercion Drain =====
+    const coercionSlider = document.getElementById('coercionSlider');
+    coercionSlider.addEventListener('input', function () {
+      const v = parseInt(this.value);
+      const nCap = Math.max(5, 80 - v * 0.75);
+      const dCap = Math.max(5, 80 - v * 0.7);
+      const econ = Math.max(8, 80 - v * 0.5);
+
+      document.getElementById('nCapFill').style.width = nCap + '%';
+      document.getElementById('nCapFill').style.background = nCap > 40 ? '#22c55e' : nCap > 20 ? '#f59e0b' : '#dc2626';
+      document.getElementById('dCapFill').style.width = dCap + '%';
+      document.getElementById('dCapFill').style.background = dCap > 40 ? '#f59e0b' : dCap > 20 ? '#f97316' : '#dc2626';
+      document.getElementById('econFill').style.width = econ + '%';
+      document.getElementById('econFill').style.background = econ > 40 ? '#3b82f6' : econ > 20 ? '#f97316' : '#dc2626';
+
+      const levelEl = document.getElementById('coercionLevel');
+      const descEl = document.getElementById('coercionDesc');
+
+      if (v < 15) {
+        levelEl.textContent = 'Voluntary Exchange';
+        levelEl.style.color = '#22c55e';
+        descEl.textContent = 'All three flows amplify each other. Gradient distributes, Circular accumulates, Harmonic sustains.';
+      } else if (v < 40) {
+        levelEl.textContent = 'Low Coercion';
+        levelEl.style.color = '#84cc16';
+        descEl.textContent = 'Mild extraction. Some Gradient flow distorted by rent-seeking. Natural and Democratic capital slowly eroding.';
+      } else if (v < 65) {
+        levelEl.textContent = 'Mixed Coercion';
+        levelEl.style.color = '#f59e0b';
+        descEl.textContent = 'Circular flow captures Gradient gains. N and D capital declining. Trust erodes, institutions weaken.';
+      } else if (v < 85) {
+        levelEl.textContent = 'High Coercion';
+        levelEl.style.color = '#f97316';
+        descEl.textContent = 'Gradient flow reversing -- extraction replaces exchange. Only Circular remains for the coercers. Economy hollowing out.';
+      } else {
+        levelEl.textContent = 'Pure Extraction';
+        levelEl.style.color = '#dc2626';
+        descEl.textContent = 'Gradient reversed entirely. N and D collapsed. Only Circular remains for the extractors. Everyone else in survival mode.';
+      }
+
+      coercionSlider.parentElement.querySelector('.coercion-label:last-child').textContent = v + '%';
+    });
+
+    // Reading progress
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+    });
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>

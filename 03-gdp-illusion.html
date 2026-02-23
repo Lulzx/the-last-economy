@@ -1,658 +1,1129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ch 4 — The GDP Illusion</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
-.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); transition: all 0.2s; }
-.panel-full { background: white; border-top: 1px solid #e5e5e0; border-bottom: 1px solid #e5e5e0; padding: 2rem; margin: 2rem -1.5rem; }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
-.nav a { color: #2563eb; text-decoration: none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 4 — The GDP Illusion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-svg text { font-family: 'DM Sans', system-ui, sans-serif; }
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-/* Enrichment styles */
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.pullquote .pullquote-attr { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
-.svg-illustration { display: flex; justify-content: center; margin: 2rem 0; }
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      color: #2563eb;
+      cursor: ew-resize;
+      user-select: none;
+      font-weight: 600;
+      padding: 0 2px;
+    }
 
-/* GDP Paradox Cards */
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
-.event-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; cursor: pointer; transition: all 0.3s; min-height: 160px; display: flex; flex-direction: column; }
-.event-card.answered { cursor: default; }
-.event-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.75rem; }
-.event-q { font-size: 0.85rem; color: #555; margin-bottom: 0.75rem; }
-.event-btns { display: flex; gap: 0.5rem; margin-top: auto; }
-.event-btns button { flex: 1; padding: 0.4rem; border-radius: 5px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.15s; font-family: 'DM Sans', system-ui, sans-serif; }
-.event-btns button:hover { border-color: #2563eb; background: #eff6ff; }
-.event-btns button.correct { background: #dcfce7; border-color: #16a34a; color: #16a34a; }
-.event-btns button.wrong { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
-.event-explain { font-size: 0.8rem; color: #555; margin-top: 0.75rem; line-height: 1.4; display: none; }
-.event-card.answered .event-explain { display: block; }
-.event-card.answered .event-btns { display: none; }
-.tally { font-size: 1rem; font-weight: 600; margin-top: 1rem; color: #2563eb; }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-/* Wage-Productivity */
-.slider-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; font-size: 0.85rem; }
-.slider-row label { max-width: 100%; min-width: 0; flex-shrink: 1; }
-.slider-row input[type=range] { flex: 1; accent-color: #2563eb; cursor: pointer; }
-.slider-row .val { width: 40px; text-align: right; font-weight: 600; }
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
 
-/* Legend for blame sliders */
-.blame-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; font-size: 0.8rem; }
-.blame-legend span { display: flex; align-items: center; gap: 0.35rem; }
-.blame-legend .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+    .panel-full {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+      margin: 2rem -1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-.btn, button { touch-action: manipulation; min-height: 36px; }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
 
-/* Mobile fixes */
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .stat-row { flex-direction: column; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-  .slider-row { flex-wrap: wrap; }
-  .slider-row .val { width: auto; }
-}
-</style>
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
+
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    /* Enrichment styles */
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .pullquote-attr {
+      font-size: 0.85rem;
+      font-style: normal;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .svg-illustration {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    /* GDP Paradox Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .event-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .event-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .event-card.answered {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .event-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-q {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-btns {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .event-btns button {
+      flex: 1;
+      padding: 0.4rem;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .event-btns button:hover {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .event-btns button.correct {
+      background: #dcfce7;
+      border-color: #16a34a;
+      color: #16a34a;
+    }
+
+    .event-btns button.wrong {
+      background: #fef2f2;
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    .event-explain {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.75rem;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .event-card.answered .event-explain {
+      display: block;
+    }
+
+    .event-card.answered .event-btns {
+      display: none;
+    }
+
+    .tally {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      color: #2563eb;
+    }
+
+    /* Wage-Productivity */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.4rem 0;
+      font-size: 0.85rem;
+    }
+
+    .slider-row label {
+      max-width: 100%;
+      min-width: 0;
+      flex-shrink: 1;
+    }
+
+    .slider-row input[type=range] {
+      flex: 1;
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+
+    .slider-row .val {
+      width: 40px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    /* Legend for blame sliders */
+    .blame-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .blame-legend span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .blame-legend .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+      min-height: 36px;
+    }
+
+    /* Mobile fixes */
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .slider-row {
+        flex-wrap: wrap;
+      }
+
+      .slider-row .val {
+        width: auto;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="seven-lies.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="ch5-trial-by-fire.html">Next &rarr;</a>
-</nav>
-
-<div class="prose">
-  <div class="chapter-num">Chapter 4</div>
-  <h1>The Dashboard for Insanity</h1>
-
-  <div class="pullquote">
-    <p>"Not everything that can be counted counts, and not everything that counts can be counted."</p>
-    <div class="pullquote-attr">&mdash; William Bruce Cameron</div>
-  </div>
-
-  <p>Imagine you are piloting a Boeing 747 through a violent storm. The wings are on fire and the plane is in a nosedive. But you remain calm. You point to the instrument panel. "Do not worry," you say reassuringly. "The cabin pressure is stable, and the in-flight movie is playing perfectly. According to our dashboard, everything is fine."</p>
-
-  <p>This is the state of modern economics. We are flying a civilization through the storm of the century, guided by a dashboard that is not just broken, but criminally insane. That dashboard is called <strong>Gross Domestic Product</strong>.</p>
-
-  <!-- SVG 1: Broken Cockpit Dashboard -->
-  <div class="svg-illustration">
-    <svg viewBox="0 0 420 220" style="width:100%; max-width:420px; height:auto;" role="img" aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
-      <defs>
-        <!-- Deep cockpit background gradient -->
-        <linearGradient id="cockpitBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1a1a2e"/>
-          <stop offset="60%" stop-color="#0f172a"/>
-          <stop offset="100%" stop-color="#0a0a12"/>
-        </linearGradient>
-        <!-- Dashboard bezel gradient -->
-        <linearGradient id="dashPanelGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#2e2e3a"/>
-          <stop offset="100%" stop-color="#18181e"/>
-        </linearGradient>
-        <!-- Green gauge face gradient -->
-        <radialGradient id="greenFaceGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#052e16" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#010b05" stop-opacity="1"/>
-        </radialGradient>
-        <!-- Red gauge face gradient -->
-        <radialGradient id="redFaceGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#2d0707" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#100101" stop-opacity="1"/>
-        </radialGradient>
-        <!-- Green needle glow -->
-        <filter id="greenGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <!-- Red warning glow -->
-        <filter id="redGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <!-- Panel drop shadow -->
-        <filter id="panelShadow" x="-5%" y="-5%" width="110%" height="110%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
-        </filter>
-        <!-- Gauge ring gradient stroke -->
-        <linearGradient id="greenArcGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#16a34a"/>
-          <stop offset="100%" stop-color="#4ade80"/>
-        </linearGradient>
-        <linearGradient id="redArcGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#dc2626"/>
-          <stop offset="100%" stop-color="#f87171"/>
-        </linearGradient>
-        <!-- Subtle scanline overlay -->
-        <pattern id="scanlines" width="1" height="4" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="0" x2="1" y2="0" stroke="#ffffff" stroke-opacity="0.03"/>
-        </pattern>
-      </defs>
-
-      <!-- Outer cockpit housing -->
-      <rect x="10" y="10" width="400" height="200" rx="14" fill="url(#cockpitBg)" filter="url(#panelShadow)"/>
-      <!-- Rim highlight -->
-      <rect x="10" y="10" width="400" height="200" rx="14" fill="none" stroke="#3b4060" stroke-width="1.5"/>
-      <!-- Dashboard panel -->
-      <rect x="28" y="28" width="364" height="145" rx="10" fill="url(#dashPanelGrad)"/>
-      <!-- Scanline overlay for CRT effect -->
-      <rect x="28" y="28" width="364" height="145" rx="10" fill="url(#scanlines)"/>
-      <!-- Title bar -->
-      <rect x="28" y="28" width="364" height="18" rx="10" fill="#0f0f1a"/>
-      <text x="210" y="41" text-anchor="middle" fill="#4a6080" font-size="8" font-weight="600" letter-spacing="2" font-family="'DM Sans', system-ui, sans-serif">FLIGHT MANAGEMENT SYSTEM — ECONOMIC OVERVIEW</text>
-
-      <!-- === Gauge 1: GDP — green "GREAT" === -->
-      <!-- Gauge face circle -->
-      <circle cx="115" cy="107" r="42" fill="url(#greenFaceGrad)" stroke="#1e3a2a" stroke-width="1.5"/>
-      <!-- Tick marks -->
-      <line x1="115" y1="68" x2="115" y2="74" stroke="#2d5a3d" stroke-width="1.2"/>
-      <line x1="148" y1="74" x2="144" y2="79" stroke="#2d5a3d" stroke-width="1.2" transform="rotate(45 115 107)"/>
-      <line x1="82" y1="74" x2="86" y2="79" stroke="#2d5a3d" stroke-width="1.2" transform="rotate(-45 115 107)"/>
-      <!-- Arc track -->
-      <path d="M78 107 A37 37 0 0 1 152 107" fill="none" stroke="#0a2015" stroke-width="7" stroke-linecap="round"/>
-      <!-- Filled arc (pointing to GREAT = upper half) -->
-      <path d="M78 107 A37 37 0 0 1 115 70" fill="none" stroke="url(#greenArcGrad)" stroke-width="7" stroke-linecap="round"/>
-      <!-- Outer ring accent -->
-      <circle cx="115" cy="107" r="42" fill="none" stroke="#16a34a" stroke-width="0.8" opacity="0.3"/>
-      <!-- Needle -->
-      <line x1="115" y1="107" x2="115" y2="72" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" filter="url(#greenGlow)"/>
-      <circle cx="115" cy="107" r="5" fill="#16a34a" stroke="#4ade80" stroke-width="1"/>
-      <circle cx="115" cy="107" r="2" fill="#010b05"/>
-      <!-- Label below -->
-      <text x="115" y="158" text-anchor="middle" fill="#4ade80" font-size="9.5" font-weight="700" letter-spacing="1" font-family="'DM Sans', system-ui, sans-serif">GDP</text>
-      <!-- Reading label inside gauge -->
-      <text x="115" y="78" text-anchor="middle" fill="#4ade80" font-size="7.5" font-weight="800" letter-spacing="0.5" font-family="'DM Sans', system-ui, sans-serif">GREAT</text>
-      <!-- Green dot indicator, pulsing -->
-      <circle cx="115" cy="165" r="3.5" fill="#16a34a" filter="url(#greenGlow)">
-        <animate attributeName="r" values="3.5;4.5;3.5" dur="2s" repeatCount="indefinite"/>
-      </circle>
-
-      <!-- === Gauge 2: Wellbeing — red CRITICAL === -->
-      <circle cx="210" cy="107" r="42" fill="url(#redFaceGrad)" stroke="#3a1a1a" stroke-width="1.5"/>
-      <!-- Tick marks -->
-      <line x1="210" y1="68" x2="210" y2="74" stroke="#5a2a2a" stroke-width="1.2"/>
-      <line x1="243" y1="74" x2="239" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(45 210 107)"/>
-      <line x1="177" y1="74" x2="181" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(-45 210 107)"/>
-      <!-- Arc track -->
-      <path d="M173 107 A37 37 0 0 1 247 107" fill="none" stroke="#200a0a" stroke-width="7" stroke-linecap="round"/>
-      <!-- Filled arc (needle in low/danger zone = lower-right) -->
-      <path d="M210 144 A37 37 0 0 1 247 107" fill="none" stroke="url(#redArcGrad)" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="210" cy="107" r="42" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3"/>
-      <!-- Needle pointing danger zone (lower-right) -->
-      <line x1="210" y1="107" x2="235" y2="127" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" filter="url(#redGlow)"/>
-      <circle cx="210" cy="107" r="5" fill="#dc2626" stroke="#f87171" stroke-width="1"/>
-      <circle cx="210" cy="107" r="2" fill="#100101"/>
-      <text x="210" y="158" text-anchor="middle" fill="#f87171" font-size="9.5" font-weight="700" letter-spacing="0.5" font-family="'DM Sans', system-ui, sans-serif">WELLBEING</text>
-      <!-- Warning triangle with pulse -->
-      <path d="M199 52 L210 33 L221 52 Z" fill="#dc2626" filter="url(#redGlow)">
-        <animate attributeName="opacity" values="1;0.35;1" dur="1.1s" repeatCount="indefinite"/>
-      </path>
-      <text x="210" y="49" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="'DM Sans', system-ui, sans-serif">!</text>
-      <text x="210" y="64" text-anchor="middle" fill="#f87171" font-size="7" font-weight="700" letter-spacing="1.5" font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
-
-      <!-- === Gauge 3: Planet — red CRITICAL === -->
-      <circle cx="305" cy="107" r="42" fill="url(#redFaceGrad)" stroke="#3a1a1a" stroke-width="1.5"/>
-      <line x1="305" y1="68" x2="305" y2="74" stroke="#5a2a2a" stroke-width="1.2"/>
-      <line x1="338" y1="74" x2="334" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(45 305 107)"/>
-      <line x1="272" y1="74" x2="276" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(-45 305 107)"/>
-      <!-- Arc track -->
-      <path d="M268 107 A37 37 0 0 1 342 107" fill="none" stroke="#200a0a" stroke-width="7" stroke-linecap="round"/>
-      <!-- Danger zone arc -->
-      <path d="M305 144 A37 37 0 0 1 342 107" fill="none" stroke="url(#redArcGrad)" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="305" cy="107" r="42" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3"/>
-      <!-- Needle -->
-      <line x1="305" y1="107" x2="330" y2="122" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" filter="url(#redGlow)"/>
-      <circle cx="305" cy="107" r="5" fill="#dc2626" stroke="#f87171" stroke-width="1"/>
-      <circle cx="305" cy="107" r="2" fill="#100101"/>
-      <text x="305" y="158" text-anchor="middle" fill="#f87171" font-size="9.5" font-weight="700" letter-spacing="1" font-family="'DM Sans', system-ui, sans-serif">PLANET</text>
-      <!-- Offset-phase warning triangle -->
-      <path d="M294 52 L305 33 L316 52 Z" fill="#dc2626" filter="url(#redGlow)">
-        <animate attributeName="opacity" values="0.35;1;0.35" dur="1.1s" repeatCount="indefinite"/>
-      </path>
-      <text x="305" y="49" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="'DM Sans', system-ui, sans-serif">!</text>
-      <text x="305" y="64" text-anchor="middle" fill="#f87171" font-size="7" font-weight="700" letter-spacing="1.5" font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
-
-      <!-- Corner warning indicators -->
-      <circle cx="48" cy="48" r="8" fill="#dc2626" filter="url(#redGlow)">
-        <animate attributeName="opacity" values="0.9;0.2;0.9" dur="0.9s" repeatCount="indefinite"/>
-      </circle>
-      <text x="48" y="52" text-anchor="middle" fill="white" font-size="7" font-weight="900" font-family="'DM Sans', system-ui, sans-serif">!</text>
-      <circle cx="372" cy="48" r="8" fill="#dc2626" filter="url(#redGlow)">
-        <animate attributeName="opacity" values="0.2;0.9;0.2" dur="0.9s" repeatCount="indefinite"/>
-      </circle>
-      <text x="372" y="52" text-anchor="middle" fill="white" font-size="7" font-weight="900" font-family="'DM Sans', system-ui, sans-serif">!</text>
-
-      <!-- Bottom status bar -->
-      <rect x="28" y="175" width="364" height="20" rx="0" fill="#080810"/>
-      <rect x="28" y="185" rx="0" width="364" height="8" fill="#080810"/>
-      <text x="45" y="189" fill="#dc2626" font-size="7.5" font-weight="700" letter-spacing="1" font-family="'DM Sans', system-ui, sans-serif">SYSTEM STATUS: 2 CRITICAL FAILURES DETECTED</text>
-      <circle cx="370" cy="185" r="4" fill="#16a34a">
-        <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
-      </circle>
-      <text x="377" y="188" fill="#16a34a" font-size="7" font-family="'DM Sans', system-ui, sans-serif">REC</text>
-    </svg>
-  </div>
-
-  <p>GDP is our economic north star. It is the number that rules the world. Every government chases it, every policy targets it, every news report breathlessly announces its quarterly change. Simon Kuznets, the man who invented the metric in the 1930s, spent the rest of his life warning us not to use it as a measure of a nation's wellbeing. We ignored him completely.</p>
-
-  <p>The result is a world where every metric that matters shows crisis, while the one metric we track shows success.</p>
-
-  <hr class="section-divider">
-
-  <!-- ═════════════════════════════════ -->
-  <!-- The Perversity Gallery            -->
-  <!-- ═════════════════════════════════ -->
-  <h2>The Perversity Gallery</h2>
-  <p>Let me show you through the hall of mirrors that is modern economic measurement. Each exhibit is more grotesque than the last, and each one is counted as "growth."</p>
-
-  <!-- Panel 1: GDP Paradox Calculator -->
-  <div class="panel">
-    <h2 style="margin-top:0">The GDP Paradox Calculator</h2>
-    <p style="font-size:0.9rem;color:#666;margin-top:0">For each event, guess: does GDP go UP or DOWN?</p>
-    <div class="card-grid" id="paradox-grid"></div>
-    <div class="tally" id="tally"></div>
-  </div>
-
-  <p><strong>The Hurricane Economy.</strong> When a hurricane devastates a city, it is a human tragedy. But for GDP, it is a stimulus package. The destruction itself does not register. But the frantic activity that follows &mdash; the rebuilding, the insurance payouts, the emergency services &mdash; is a multi-billion-dollar windfall. By GDP logic, the best possible year would involve every city being destroyed and then rebuilt.</p>
-
-  <div class="stat-callout">
-    <div class="stat-number">$425K</div>
-    <div class="stat-label">GDP "gain" from a single cancer diagnosis &mdash; diagnostic tests, surgery, chemotherapy, hospital stays, and medications</div>
-  </div>
-
-  <p><strong>The Cancer Boom.</strong> A healthy person contributes little to the healthcare economy. But a person diagnosed with lung cancer? That is a windfall for GDP. By this logic, carcinogens are economic stimulants. We have built an economy that is structurally incentivized to manage sickness, not to create health. Prevention is an economic loss; a cure would be an economic catastrophe.</p>
-
-  <p><strong>The Divorce Industrial Complex.</strong> A happy, stable family that raises its own children and supports its community contributes almost nothing to GDP. But when that family breaks apart, the economy booms. Two households instead of one, doubling the consumption. Therapists are hired. Lawyers are paid.</p>
-
-  <div class="stat-callout">
-    <div class="stat-number">$50B+</div>
-    <div class="stat-label">Added to US GDP by divorce lawyers alone last year. The human tragedy of a broken home is a net positive on the national ledger.</div>
-  </div>
-
-  <p><strong>The Planned Obsolescence Museum.</strong> Your phone could be built to last a decade. Apple ensures it will not. Each forced upgrade, each battery that mysteriously degrades, each software update that slows your old device is a victory for GDP. Building products that endure is economic sabotage. Building products designed to be replaced is growth.</p>
-
-  <hr class="section-divider">
-
-  <!-- ═════════════════════════════════ -->
-  <!-- Goodhart's Law / Observer Effect  -->
-  <!-- ═════════════════════════════════ -->
-  <h2>When Measurement Destroys Reality</h2>
-
-  <!-- SVG 2: Goodhart's Law feedback loop -->
-  <div class="svg-illustration">
-    <svg viewBox="0 0 460 200" style="width:100%; max-width:460px; height:auto;" role="img" aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
-      <defs>
-        <!-- Arrow markers -->
-        <marker id="arrowhead-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-          <polygon points="0 0, 9 3.5, 0 7" fill="#2563eb"/>
-        </marker>
-        <marker id="arrowhead-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-          <polygon points="0 0, 9 3.5, 0 7" fill="#dc2626"/>
-        </marker>
-        <!-- Background gradient -->
-        <linearGradient id="goodhartBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#f0f5ff"/>
-          <stop offset="100%" stop-color="#fdf4ff"/>
-        </linearGradient>
-        <!-- Blue box gradient -->
-        <linearGradient id="blueBoxGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dbeafe"/>
-          <stop offset="100%" stop-color="#bfdbfe"/>
-        </linearGradient>
-        <!-- Red box gradient -->
-        <linearGradient id="redBoxGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fee2e2"/>
-          <stop offset="100%" stop-color="#fecaca"/>
-        </linearGradient>
-        <!-- Box shadow filter -->
-        <filter id="boxShadow" x="-15%" y="-15%" width="130%" height="130%">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
-        </filter>
-        <!-- Arrow path glow -->
-        <filter id="arrowGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-
-      <!-- Background -->
-      <rect x="0" y="0" width="460" height="200" rx="14" fill="url(#goodhartBg)" stroke="#e0e7ff" stroke-width="1"/>
-
-      <!-- Subtle circular guide path (faded) -->
-      <circle cx="230" cy="102" r="80" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5 6" opacity="0.5"/>
-
-      <!-- Central label -->
-      <text x="230" y="97" text-anchor="middle" fill="#64748b" font-size="10" font-style="italic" font-weight="600" font-family="'Playfair Display', Georgia, serif">Goodhart's</text>
-      <text x="230" y="111" text-anchor="middle" fill="#64748b" font-size="10" font-style="italic" font-weight="600" font-family="'Playfair Display', Georgia, serif">Law</text>
-
-      <!-- Box 1: Measure (blue, left-center) -->
-      <rect x="15" y="73" width="118" height="58" rx="11" fill="url(#blueBoxGrad)" stroke="#2563eb" stroke-width="1.8" filter="url(#boxShadow)"/>
-      <text x="74" y="96" text-anchor="middle" fill="#1e40af" font-size="11.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">1. Measure</text>
-      <text x="74" y="112" text-anchor="middle" fill="#3b82f6" font-size="9" font-family="'DM Sans', system-ui, sans-serif">a metric is chosen</text>
-      <!-- Step dot -->
-      <circle cx="74" cy="68" r="5" fill="#2563eb" opacity="0.8"/>
-
-      <!-- Arrow 1->2: blue, top arc -->
-      <path d="M133 85 C162 55, 200 35, 230 22" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-blue)" filter="url(#arrowGlow)"/>
-      <!-- Annotation label -->
-      <text x="165" y="48" text-anchor="middle" fill="#2563eb" font-size="8.5" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">targeted</text>
-
-      <!-- Box 2: Becomes Target (blue, top-center) -->
-      <rect x="171" y="8" width="118" height="58" rx="11" fill="url(#blueBoxGrad)" stroke="#2563eb" stroke-width="1.8" filter="url(#boxShadow)"/>
-      <text x="230" y="31" text-anchor="middle" fill="#1e40af" font-size="11.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">2. Becomes</text>
-      <text x="230" y="47" text-anchor="middle" fill="#3b82f6" font-size="9" font-family="'DM Sans', system-ui, sans-serif">the goal itself</text>
-      <circle cx="230" cy="3" r="5" fill="#2563eb" opacity="0.8"/>
-
-      <!-- Arrow 2->3: transition to red, upper-right arc -->
-      <path d="M289 37 C318 35, 350 55, 372 78" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)"/>
-      <text x="340" y="54" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">distorts</text>
-
-      <!-- Box 3: Distorts (red, right-center) -->
-      <rect x="327" y="73" width="118" height="58" rx="11" fill="url(#redBoxGrad)" stroke="#dc2626" stroke-width="1.8" filter="url(#boxShadow)"/>
-      <text x="386" y="96" text-anchor="middle" fill="#991b1b" font-size="11.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">3. Distorts</text>
-      <text x="386" y="112" text-anchor="middle" fill="#ef4444" font-size="9" font-family="'DM Sans', system-ui, sans-serif">behavior</text>
-      <circle cx="386" cy="68" r="5" fill="#dc2626" opacity="0.8"/>
-
-      <!-- Arrow 3->4: red, lower-right arc -->
-      <path d="M372 131 C350 160, 318 173, 289 180" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)"/>
-      <text x="340" y="173" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">corrupts</text>
-
-      <!-- Box 4: Corrupts (red, bottom-center) -->
-      <rect x="171" y="134" width="118" height="58" rx="11" fill="url(#redBoxGrad)" stroke="#dc2626" stroke-width="1.8" filter="url(#boxShadow)"/>
-      <text x="230" y="157" text-anchor="middle" fill="#991b1b" font-size="11.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">4. Corrupts</text>
-      <text x="230" y="173" text-anchor="middle" fill="#ef4444" font-size="9" font-family="'DM Sans', system-ui, sans-serif">the measure</text>
-      <circle cx="230" cy="197" r="5" fill="#dc2626" opacity="0.8"/>
-
-      <!-- Arrow 4->1: closing the loop, lower-left arc -->
-      <path d="M171 163 C142 160, 118 148, 100 131" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)"/>
-      <text x="120" y="164" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">loops back</text>
-    </svg>
-  </div>
-
-  <p>The true insanity is not just that GDP counts the wrong things. It is that the very act of counting them changes our reality for the worse. This is <strong>Goodhart's Law</strong>: "When a measure becomes a target, it ceases to be a good measure." In economics, this is not a bug; it is the central operating principle.</p>
-
-  <div class="pullquote">
-    <p>We targeted engagement and destroyed connection. The dashboard did not just report the weather; it created it.</p>
-  </div>
-
-  <p>Consider the <strong>Engagement Trap</strong>. Social media platforms chose "engagement" as their success metric. The algorithms quickly learned that nothing drives engagement like outrage. Anger is sticky. Fear is addictive. And so, in the name of hitting a metric, the platforms became rage machines, tearing apart the social fabric to optimize a number on a spreadsheet.</p>
-
-  <hr class="section-divider">
-
-  <!-- ═════════════════════════════════ -->
-  <!-- The Abundance Paradox             -->
-  <!-- ═════════════════════════════════ -->
-  <h2>The Abundance Paradox</h2>
-  <p>Our dashboard's most fatal flaw is its complete inability to process good news. Our system is designed to measure transactions involving scarce goods. It is therefore structurally blind to abundance. When something becomes abundant and free, our dashboard does not just fail to see its value; it registers its arrival as a <em>negative event</em>.</p>
-
-  <!-- SVG 3: Real Value vs GDP (area chart with divergence zone) -->
-  <div class="svg-illustration">
-    <svg viewBox="0 0 430 195" style="width:100%; max-width:430px; height:auto;" role="img" aria-label="As real value rises through abundance, GDP registers it as decline">
-      <defs>
-        <!-- Background gradient -->
-        <linearGradient id="chartBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#f8fafc"/>
-          <stop offset="100%" stop-color="#f0f4f8"/>
-        </linearGradient>
-        <!-- Green gradient fill under Real Value curve -->
-        <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#059669" stop-opacity="0.30"/>
-          <stop offset="100%" stop-color="#059669" stop-opacity="0.03"/>
-        </linearGradient>
-        <!-- Red gradient fill under GDP curve -->
-        <linearGradient id="redAreaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#dc2626" stop-opacity="0.05"/>
-          <stop offset="100%" stop-color="#dc2626" stop-opacity="0.20"/>
-        </linearGradient>
-        <!-- Divergence amber zone -->
-        <linearGradient id="divergeGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#d97706" stop-opacity="0.0"/>
-          <stop offset="60%" stop-color="#d97706" stop-opacity="0.12"/>
-          <stop offset="100%" stop-color="#d97706" stop-opacity="0.22"/>
-        </linearGradient>
-        <!-- Drop shadow for chart area -->
-        <filter id="chartShadow" x="-2%" y="-2%" width="104%" height="104%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
-        </filter>
-        <!-- Curve glow -->
-        <filter id="lineGlow" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-
-      <!-- Background with subtle shadow -->
-      <rect x="0" y="0" width="430" height="195" rx="12" fill="url(#chartBg)" filter="url(#chartShadow)"/>
-      <rect x="0" y="0" width="430" height="195" rx="12" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-
-      <!-- Grid lines (horizontal) -->
-      <line x1="62" y1="32" x2="378" y2="32" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <line x1="62" y1="62" x2="378" y2="62" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <line x1="62" y1="92" x2="378" y2="92" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <line x1="62" y1="122" x2="378" y2="122" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <!-- Grid lines (vertical) -->
-      <line x1="155" y1="22" x2="155" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <line x1="248" y1="22" x2="248" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-      <line x1="340" y1="22" x2="340" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-
-      <!-- Chart title -->
-      <text x="220" y="17" text-anchor="middle" fill="#374151" font-size="11" font-weight="700" font-family="'Playfair Display', Georgia, serif">Real Value vs. GDP as Abundance Grows</text>
-
-      <!-- Axes -->
-      <line x1="62" y1="152" x2="380" y2="152" stroke="#94a3b8" stroke-width="1.5"/>
-      <line x1="62" y1="152" x2="62" y2="24" stroke="#94a3b8" stroke-width="1.5"/>
-      <!-- Axis labels -->
-      <text x="221" y="172" text-anchor="middle" fill="#6b7280" font-size="9.5" font-weight="500" font-family="'DM Sans', system-ui, sans-serif">Time / Abundance</text>
-      <text x="16" y="92" text-anchor="middle" fill="#6b7280" font-size="9.5" font-weight="500" font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,16,92)">Value</text>
-      <!-- Axis tick labels -->
-      <text x="62" y="167" text-anchor="middle" fill="#9ca3af" font-size="8" font-family="'DM Sans', system-ui, sans-serif">Start</text>
-      <text x="248" y="167" text-anchor="middle" fill="#9ca3af" font-size="8" font-family="'DM Sans', system-ui, sans-serif">Internet</text>
-      <text x="370" y="167" text-anchor="middle" fill="#9ca3af" font-size="8" font-family="'DM Sans', system-ui, sans-serif">AI</text>
-
-      <!-- Divergence zone between curves (amber shaded) -->
-      <path d="M62 132 Q155 122 205 92 Q266 57 368 32 L368 148 Q266 143 205 138 Q155 135 62 132 Z" fill="url(#divergeGrad)"/>
-
-      <!-- Green area fill under Real Value curve -->
-      <path d="M62 132 Q155 122 205 92 Q266 57 368 32 L368 152 L62 152 Z" fill="url(#greenAreaGrad)"/>
-
-      <!-- Red area fill under GDP curve -->
-      <path d="M62 132 Q155 135 205 138 Q266 143 368 148 L368 152 L62 152 Z" fill="url(#redAreaGrad)"/>
-
-      <!-- Real value curve (rising, green) -->
-      <path d="M62 132 Q155 122 205 92 Q266 57 368 32" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" filter="url(#lineGlow)"/>
-
-      <!-- GDP curve (slowly declining, red) -->
-      <path d="M62 132 Q155 135 205 138 Q266 143 368 148" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round" filter="url(#lineGlow)"/>
-
-      <!-- Data point circles on Real Value curve -->
-      <circle cx="62" cy="132" r="4.5" fill="white" stroke="#059669" stroke-width="2.2"/>
-      <circle cx="205" cy="92" r="4.5" fill="white" stroke="#059669" stroke-width="2.2"/>
-      <circle cx="368" cy="32" r="4.5" fill="white" stroke="#059669" stroke-width="2.2"/>
-
-      <!-- Data point circles on GDP curve -->
-      <circle cx="62" cy="132" r="4" fill="white" stroke="#dc2626" stroke-width="2"/>
-      <circle cx="205" cy="138" r="4" fill="white" stroke="#dc2626" stroke-width="2"/>
-      <circle cx="368" cy="148" r="4" fill="white" stroke="#dc2626" stroke-width="2"/>
-
-      <!-- Curve end labels -->
-      <text x="373" y="29" fill="#059669" font-size="9.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Real value ↑</text>
-      <text x="373" y="152" fill="#dc2626" font-size="9.5" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">GDP ↓</text>
-
-      <!-- Divergence callout annotation -->
-      <line x1="205" y1="92" x2="205" y2="138" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text x="215" y="117" fill="#d97706" font-size="8.5" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Gap widens</text>
-
-      <!-- Bottom italic note -->
-      <text x="220" y="185" text-anchor="middle" fill="#6b7280" font-size="8.5" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">The better things get, the worse GDP looks</text>
-    </svg>
-  </div>
-
-  <p>The Human Genome Project cost billions and took over a decade. By making the resulting data a public good, it unleashed an estimated <strong>trillion dollars</strong> in new economic and scientific value. Its contribution to GDP? <em>Negative</em>. It made genetic information cheap, undermining business models based on proprietary data.</p>
-
-  <div class="pullquote">
-    <p>An AI engineer would call this using the wrong "loss function." We have trained our civilization on a flawed loss function, and we are producing a blurry gray world.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- ═════════════════════════════════ -->
-  <!-- The Meaning Crisis                -->
-  <!-- ═════════════════════════════════ -->
-  <h2>The Meaning Crisis</h2>
-  <p>The most devastating consequence of our dashboard is not economic but spiritual. For a century, we have managed our society to maximize GDP. In doing so, we have created a world that is rich in transactions and impoverished in meaning.</p>
-
-  <p><strong>The Friendship Recession.</strong> Deep friendship is a GDP black hole; it produces no transactions. So, our economy has systematically replaced it with monetized substitutes. We have more "friends" on social media than ever and fewer people we can call in a crisis.</p>
-
-  <p><strong>The Purpose Vacuum.</strong> A huge percentage of modern, high-paying jobs are roles that the employees themselves know make no meaningful contribution to the world. We pay handsomely for shuffling papers in a corporate bureaucracy while paying subsistence wages to teachers and caregivers.</p>
-
-  <p><strong>The Attention Annihilation.</strong> An entire trillion-dollar industry has been built to capture and monetize human attention. The result is a population neurologically incapable of deep thought. We are strip-mining human minds and calling it progress.</p>
-
-  <div class="stat-row">
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="seven-lies.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="ch5-trial-by-fire.html">Next &rarr;</a>
+  </nav>
+
+  <div class="prose">
+    <div class="chapter-num">Chapter 4</div>
+    <h1>The Dashboard for Insanity</h1>
+
+    <div class="pullquote">
+      <p>"It ain't what you don't know that gets you into trouble. It's what you know for sure that just ain't so."</p>
+      <div class="pullquote-attr">&mdash; Attributed to Mark Twain</div>
+    </div>
+
+    <p>Economics is a house built on sand. Not ordinary sand, but sand that is turning to water beneath our feet. The
+      foundational assumptions of the economic theory that governs our lives are no longer just wrong. They have become
+      the precise opposite of reality.</p>
+
+    <p>These are not minor theoretical errors to be patched with better models. They are the load-bearing lies of a
+      dying paradigm, the fatal fictions that prevent us from seeing what is actually happening. Like a GPS system that
+      has not been updated since the continents shifted, they do not just fail to guide us; they lead us directly into
+      the chasm.</p>
+
+    <p>To understand why we cling so desperately to these lies, we must first understand the system that indoctrinated
+      us. Before we could think critically, we were enrolled in the <strong>Factory School</strong>, a system designed
+      not for education, but for compliance. Imported from Prussia in the 19th century to create obedient soldiers and
+      workers, its hidden curriculum was the real one: sit still, follow bells, ask for permission, and accept that your
+      worth can be reduced to a letter grade. It was the perfect training program for producing interchangeable human
+      cogs for the corporate machine.</p>
+
+    <p>This educational system prepared us to believe a set of economic lies because those lies were the operating
+      system of the industrial world. They coordinated behavior, motivated effort, and justified suffering. But that
+      world is dead, and the lies that lubricated its gears are now seizing up the engine of progress.</p>
+
+    <p>Let us perform the autopsy.</p>
+
+    <h2>The Dashboard for Insanity</h2>
+
+    <p>Imagine you are piloting a Boeing 747 through a violent storm. The wings are on fire and the plane is in a
+      nosedive. But you remain calm. You point to the instrument panel. "Do not worry," you say reassuringly. "The cabin
+      pressure is stable, and the in-flight movie is playing perfectly. According to our dashboard, everything is fine."
+    </p>
+
+    <p>This is the state of modern economics. We are flying a civilization through the storm of the century, guided by a
+      dashboard that is not just broken, but criminally insane. That dashboard is called <strong>Gross Domestic
+        Product</strong>.</p>
+
+    <!-- SVG 1: Broken Cockpit Dashboard -->
+    <div class="svg-illustration">
+      <svg viewBox="0 0 420 220" style="width:100%; max-width:420px; height:auto;" role="img"
+        aria-label="A broken cockpit dashboard showing misleading green indicators while the plane is in crisis">
+        <defs>
+          <!-- Deep cockpit background gradient -->
+          <linearGradient id="cockpitBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a1a2e" />
+            <stop offset="60%" stop-color="#0f172a" />
+            <stop offset="100%" stop-color="#0a0a12" />
+          </linearGradient>
+          <!-- Dashboard bezel gradient -->
+          <linearGradient id="dashPanelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2e2e3a" />
+            <stop offset="100%" stop-color="#18181e" />
+          </linearGradient>
+          <!-- Green gauge face gradient -->
+          <radialGradient id="greenFaceGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#052e16" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#010b05" stop-opacity="1" />
+          </radialGradient>
+          <!-- Red gauge face gradient -->
+          <radialGradient id="redFaceGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#2d0707" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#100101" stop-opacity="1" />
+          </radialGradient>
+          <!-- Green needle glow -->
+          <filter id="greenGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <!-- Red warning glow -->
+          <filter id="redGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <!-- Panel drop shadow -->
+          <filter id="panelShadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4" />
+          </filter>
+          <!-- Gauge ring gradient stroke -->
+          <linearGradient id="greenArcGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#16a34a" />
+            <stop offset="100%" stop-color="#4ade80" />
+          </linearGradient>
+          <linearGradient id="redArcGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#dc2626" />
+            <stop offset="100%" stop-color="#f87171" />
+          </linearGradient>
+          <!-- Subtle scanline overlay -->
+          <pattern id="scanlines" width="1" height="4" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="1" y2="0" stroke="#ffffff" stroke-opacity="0.03" />
+          </pattern>
+        </defs>
+
+        <!-- Outer cockpit housing -->
+        <rect x="10" y="10" width="400" height="200" rx="14" fill="url(#cockpitBg)" filter="url(#panelShadow)" />
+        <!-- Rim highlight -->
+        <rect x="10" y="10" width="400" height="200" rx="14" fill="none" stroke="#3b4060" stroke-width="1.5" />
+        <!-- Dashboard panel -->
+        <rect x="28" y="28" width="364" height="145" rx="10" fill="url(#dashPanelGrad)" />
+        <!-- Scanline overlay for CRT effect -->
+        <rect x="28" y="28" width="364" height="145" rx="10" fill="url(#scanlines)" />
+        <!-- Title bar -->
+        <rect x="28" y="28" width="364" height="18" rx="10" fill="#0f0f1a" />
+        <text x="210" y="41" text-anchor="middle" fill="#4a6080" font-size="8" font-weight="600" letter-spacing="2"
+          font-family="'DM Sans', system-ui, sans-serif">FLIGHT MANAGEMENT SYSTEM — ECONOMIC OVERVIEW</text>
+
+        <!-- === Gauge 1: GDP — green "GREAT" === -->
+        <!-- Gauge face circle -->
+        <circle cx="115" cy="107" r="42" fill="url(#greenFaceGrad)" stroke="#1e3a2a" stroke-width="1.5" />
+        <!-- Tick marks -->
+        <line x1="115" y1="68" x2="115" y2="74" stroke="#2d5a3d" stroke-width="1.2" />
+        <line x1="148" y1="74" x2="144" y2="79" stroke="#2d5a3d" stroke-width="1.2" transform="rotate(45 115 107)" />
+        <line x1="82" y1="74" x2="86" y2="79" stroke="#2d5a3d" stroke-width="1.2" transform="rotate(-45 115 107)" />
+        <!-- Arc track -->
+        <path d="M78 107 A37 37 0 0 1 152 107" fill="none" stroke="#0a2015" stroke-width="7" stroke-linecap="round" />
+        <!-- Filled arc (pointing to GREAT = upper half) -->
+        <path d="M78 107 A37 37 0 0 1 115 70" fill="none" stroke="url(#greenArcGrad)" stroke-width="7"
+          stroke-linecap="round" />
+        <!-- Outer ring accent -->
+        <circle cx="115" cy="107" r="42" fill="none" stroke="#16a34a" stroke-width="0.8" opacity="0.3" />
+        <!-- Needle -->
+        <line x1="115" y1="107" x2="115" y2="72" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"
+          filter="url(#greenGlow)" />
+        <circle cx="115" cy="107" r="5" fill="#16a34a" stroke="#4ade80" stroke-width="1" />
+        <circle cx="115" cy="107" r="2" fill="#010b05" />
+        <!-- Label below -->
+        <text x="115" y="158" text-anchor="middle" fill="#4ade80" font-size="9.5" font-weight="700" letter-spacing="1"
+          font-family="'DM Sans', system-ui, sans-serif">GDP</text>
+        <!-- Reading label inside gauge -->
+        <text x="115" y="78" text-anchor="middle" fill="#4ade80" font-size="7.5" font-weight="800" letter-spacing="0.5"
+          font-family="'DM Sans', system-ui, sans-serif">GREAT</text>
+        <!-- Green dot indicator, pulsing -->
+        <circle cx="115" cy="165" r="3.5" fill="#16a34a" filter="url(#greenGlow)">
+          <animate attributeName="r" values="3.5;4.5;3.5" dur="2s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- === Gauge 2: Wellbeing — red CRITICAL === -->
+        <circle cx="210" cy="107" r="42" fill="url(#redFaceGrad)" stroke="#3a1a1a" stroke-width="1.5" />
+        <!-- Tick marks -->
+        <line x1="210" y1="68" x2="210" y2="74" stroke="#5a2a2a" stroke-width="1.2" />
+        <line x1="243" y1="74" x2="239" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(45 210 107)" />
+        <line x1="177" y1="74" x2="181" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(-45 210 107)" />
+        <!-- Arc track -->
+        <path d="M173 107 A37 37 0 0 1 247 107" fill="none" stroke="#200a0a" stroke-width="7" stroke-linecap="round" />
+        <!-- Filled arc (needle in low/danger zone = lower-right) -->
+        <path d="M210 144 A37 37 0 0 1 247 107" fill="none" stroke="url(#redArcGrad)" stroke-width="7"
+          stroke-linecap="round" />
+        <circle cx="210" cy="107" r="42" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3" />
+        <!-- Needle pointing danger zone (lower-right) -->
+        <line x1="210" y1="107" x2="235" y2="127" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"
+          filter="url(#redGlow)" />
+        <circle cx="210" cy="107" r="5" fill="#dc2626" stroke="#f87171" stroke-width="1" />
+        <circle cx="210" cy="107" r="2" fill="#100101" />
+        <text x="210" y="158" text-anchor="middle" fill="#f87171" font-size="9.5" font-weight="700" letter-spacing="0.5"
+          font-family="'DM Sans', system-ui, sans-serif">WELLBEING</text>
+        <!-- Warning triangle with pulse -->
+        <path d="M199 52 L210 33 L221 52 Z" fill="#dc2626" filter="url(#redGlow)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="1.1s" repeatCount="indefinite" />
+        </path>
+        <text x="210" y="49" text-anchor="middle" fill="white" font-size="9" font-weight="900"
+          font-family="'DM Sans', system-ui, sans-serif">!</text>
+        <text x="210" y="64" text-anchor="middle" fill="#f87171" font-size="7" font-weight="700" letter-spacing="1.5"
+          font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
+
+        <!-- === Gauge 3: Planet — red CRITICAL === -->
+        <circle cx="305" cy="107" r="42" fill="url(#redFaceGrad)" stroke="#3a1a1a" stroke-width="1.5" />
+        <line x1="305" y1="68" x2="305" y2="74" stroke="#5a2a2a" stroke-width="1.2" />
+        <line x1="338" y1="74" x2="334" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(45 305 107)" />
+        <line x1="272" y1="74" x2="276" y2="79" stroke="#5a2a2a" stroke-width="1.2" transform="rotate(-45 305 107)" />
+        <!-- Arc track -->
+        <path d="M268 107 A37 37 0 0 1 342 107" fill="none" stroke="#200a0a" stroke-width="7" stroke-linecap="round" />
+        <!-- Danger zone arc -->
+        <path d="M305 144 A37 37 0 0 1 342 107" fill="none" stroke="url(#redArcGrad)" stroke-width="7"
+          stroke-linecap="round" />
+        <circle cx="305" cy="107" r="42" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3" />
+        <!-- Needle -->
+        <line x1="305" y1="107" x2="330" y2="122" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"
+          filter="url(#redGlow)" />
+        <circle cx="305" cy="107" r="5" fill="#dc2626" stroke="#f87171" stroke-width="1" />
+        <circle cx="305" cy="107" r="2" fill="#100101" />
+        <text x="305" y="158" text-anchor="middle" fill="#f87171" font-size="9.5" font-weight="700" letter-spacing="1"
+          font-family="'DM Sans', system-ui, sans-serif">PLANET</text>
+        <!-- Offset-phase warning triangle -->
+        <path d="M294 52 L305 33 L316 52 Z" fill="#dc2626" filter="url(#redGlow)">
+          <animate attributeName="opacity" values="0.35;1;0.35" dur="1.1s" repeatCount="indefinite" />
+        </path>
+        <text x="305" y="49" text-anchor="middle" fill="white" font-size="9" font-weight="900"
+          font-family="'DM Sans', system-ui, sans-serif">!</text>
+        <text x="305" y="64" text-anchor="middle" fill="#f87171" font-size="7" font-weight="700" letter-spacing="1.5"
+          font-family="'DM Sans', system-ui, sans-serif">CRITICAL</text>
+
+        <!-- Corner warning indicators -->
+        <circle cx="48" cy="48" r="8" fill="#dc2626" filter="url(#redGlow)">
+          <animate attributeName="opacity" values="0.9;0.2;0.9" dur="0.9s" repeatCount="indefinite" />
+        </circle>
+        <text x="48" y="52" text-anchor="middle" fill="white" font-size="7" font-weight="900"
+          font-family="'DM Sans', system-ui, sans-serif">!</text>
+        <circle cx="372" cy="48" r="8" fill="#dc2626" filter="url(#redGlow)">
+          <animate attributeName="opacity" values="0.2;0.9;0.2" dur="0.9s" repeatCount="indefinite" />
+        </circle>
+        <text x="372" y="52" text-anchor="middle" fill="white" font-size="7" font-weight="900"
+          font-family="'DM Sans', system-ui, sans-serif">!</text>
+
+        <!-- Bottom status bar -->
+        <rect x="28" y="175" width="364" height="20" rx="0" fill="#080810" />
+        <rect x="28" y="185" rx="0" width="364" height="8" fill="#080810" />
+        <text x="45" y="189" fill="#dc2626" font-size="7.5" font-weight="700" letter-spacing="1"
+          font-family="'DM Sans', system-ui, sans-serif">SYSTEM STATUS: 2 CRITICAL FAILURES DETECTED</text>
+        <circle cx="370" cy="185" r="4" fill="#16a34a">
+          <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <text x="377" y="188" fill="#16a34a" font-size="7" font-family="'DM Sans', system-ui, sans-serif">REC</text>
+      </svg>
+    </div>
+
+    <p>GDP is our economic north star. It is the number that rules the world. Every government chases it, every policy
+      targets it, every news report breathlessly announces its quarterly change. Simon Kuznets, the man who invented the
+      metric in the 1930s, spent the rest of his life warning us not to use it as a measure of a nation's wellbeing. We
+      ignored him completely.</p>
+
+    <p>The result is a world where every metric that matters shows crisis, while the one metric we track shows success.
+    </p>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- The Perversity Gallery            -->
+    <!-- ═════════════════════════════════ -->
+    <h2>The Perversity Gallery</h2>
+    <p>Let me show you through the hall of mirrors that is modern economic measurement. Each exhibit is more grotesque
+      than the last, and each one is counted as "growth."</p>
+
+    <!-- Panel 1: GDP Paradox Calculator -->
+    <div class="panel">
+      <h2 style="margin-top:0">The GDP Paradox Calculator</h2>
+      <p style="font-size:0.9rem;color:#666;margin-top:0">For each event, guess: does GDP go UP or DOWN?</p>
+      <div class="card-grid" id="paradox-grid"></div>
+      <div class="tally" id="tally"></div>
+    </div>
+
+    <p><strong>The Hurricane Economy.</strong> When a hurricane devastates a city, it is a human tragedy. But for GDP,
+      it is a stimulus package. The destruction itself does not register. But the frantic activity that follows &mdash;
+      the rebuilding, the insurance payouts, the emergency services &mdash; is a multi-billion-dollar windfall. By GDP
+      logic, the best possible year would involve every city being destroyed and then rebuilt.</p>
+
     <div class="stat-callout">
-      <div class="stat-number">47%</div>
-      <div class="stat-label">of Americans say they are worse off than their parents</div>
+      <div class="stat-number">$425K</div>
+      <div class="stat-label">GDP "gain" from a single cancer diagnosis &mdash; diagnostic tests, surgery, chemotherapy,
+        hospital stays, and medications</div>
     </div>
+
+    <p><strong>The Cancer Boom.</strong> A healthy person contributes little to the healthcare economy. But a person
+      diagnosed with lung cancer? That is a windfall for GDP. By this logic, carcinogens are economic stimulants. We
+      have built an economy that is structurally incentivized to manage sickness, not to create health. Prevention is an
+      economic loss; a cure would be an economic catastrophe.</p>
+
+    <p><strong>The Divorce Industrial Complex.</strong> A happy, stable family that raises its own children and supports
+      its community contributes almost nothing to GDP. But when that family breaks apart, the economy booms. Two
+      households instead of one, doubling the consumption. Therapists are hired. Lawyers are paid.</p>
+
     <div class="stat-callout">
-      <div class="stat-number">+30%</div>
-      <div class="stat-label">increase in mental health prescriptions since 2020</div>
+      <div class="stat-number">$50B+</div>
+      <div class="stat-label">Added to US GDP by divorce lawyers alone last year. The human tragedy of a broken home is
+        a net positive on the national ledger.</div>
     </div>
-    <div class="stat-callout">
-      <div class="stat-number">1.6</div>
-      <div class="stat-label">births per woman &mdash; below replacement rate, signaling civilizational decline</div>
+
+    <p><strong>The Planned Obsolescence Museum.</strong> Your phone could be built to last a decade. Apple ensures it
+      will not. Each forced upgrade, each battery that mysteriously degrades, each software update that slows your old
+      device is a victory for GDP. Building products that endure is economic sabotage. Building products designed to be
+      replaced is growth.</p>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- Goodhart's Law / Observer Effect  -->
+    <!-- ═════════════════════════════════ -->
+    <h2>When Measurement Destroys Reality</h2>
+
+    <!-- SVG 2: Goodhart's Law feedback loop -->
+    <div class="svg-illustration">
+      <svg viewBox="0 0 460 200" style="width:100%; max-width:460px; height:auto;" role="img"
+        aria-label="Goodhart's Law feedback loop: measure becomes target, target distorts behavior, behavior corrupts measure">
+        <defs>
+          <!-- Arrow markers -->
+          <marker id="arrowhead-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#2563eb" />
+          </marker>
+          <marker id="arrowhead-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#dc2626" />
+          </marker>
+          <!-- Background gradient -->
+          <linearGradient id="goodhartBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0f5ff" />
+            <stop offset="100%" stop-color="#fdf4ff" />
+          </linearGradient>
+          <!-- Blue box gradient -->
+          <linearGradient id="blueBoxGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dbeafe" />
+            <stop offset="100%" stop-color="#bfdbfe" />
+          </linearGradient>
+          <!-- Red box gradient -->
+          <linearGradient id="redBoxGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fee2e2" />
+            <stop offset="100%" stop-color="#fecaca" />
+          </linearGradient>
+          <!-- Box shadow filter -->
+          <filter id="boxShadow" x="-15%" y="-15%" width="130%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)" />
+          </filter>
+          <!-- Arrow path glow -->
+          <filter id="arrowGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background -->
+        <rect x="0" y="0" width="460" height="200" rx="14" fill="url(#goodhartBg)" stroke="#e0e7ff" stroke-width="1" />
+
+        <!-- Subtle circular guide path (faded) -->
+        <circle cx="230" cy="102" r="80" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5 6"
+          opacity="0.5" />
+
+        <!-- Central label -->
+        <text x="230" y="97" text-anchor="middle" fill="#64748b" font-size="10" font-style="italic" font-weight="600"
+          font-family="'Playfair Display', Georgia, serif">Goodhart's</text>
+        <text x="230" y="111" text-anchor="middle" fill="#64748b" font-size="10" font-style="italic" font-weight="600"
+          font-family="'Playfair Display', Georgia, serif">Law</text>
+
+        <!-- Box 1: Measure (blue, left-center) -->
+        <rect x="15" y="73" width="118" height="58" rx="11" fill="url(#blueBoxGrad)" stroke="#2563eb" stroke-width="1.8"
+          filter="url(#boxShadow)" />
+        <text x="74" y="96" text-anchor="middle" fill="#1e40af" font-size="11.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">1. Measure</text>
+        <text x="74" y="112" text-anchor="middle" fill="#3b82f6" font-size="9"
+          font-family="'DM Sans', system-ui, sans-serif">a metric is chosen</text>
+        <!-- Step dot -->
+        <circle cx="74" cy="68" r="5" fill="#2563eb" opacity="0.8" />
+
+        <!-- Arrow 1->2: blue, top arc -->
+        <path d="M133 85 C162 55, 200 35, 230 22" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round"
+          marker-end="url(#arrowhead-blue)" filter="url(#arrowGlow)" />
+        <!-- Annotation label -->
+        <text x="165" y="48" text-anchor="middle" fill="#2563eb" font-size="8.5" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">targeted</text>
+
+        <!-- Box 2: Becomes Target (blue, top-center) -->
+        <rect x="171" y="8" width="118" height="58" rx="11" fill="url(#blueBoxGrad)" stroke="#2563eb" stroke-width="1.8"
+          filter="url(#boxShadow)" />
+        <text x="230" y="31" text-anchor="middle" fill="#1e40af" font-size="11.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">2. Becomes</text>
+        <text x="230" y="47" text-anchor="middle" fill="#3b82f6" font-size="9"
+          font-family="'DM Sans', system-ui, sans-serif">the goal itself</text>
+        <circle cx="230" cy="3" r="5" fill="#2563eb" opacity="0.8" />
+
+        <!-- Arrow 2->3: transition to red, upper-right arc -->
+        <path d="M289 37 C318 35, 350 55, 372 78" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"
+          marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)" />
+        <text x="340" y="54" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">distorts</text>
+
+        <!-- Box 3: Distorts (red, right-center) -->
+        <rect x="327" y="73" width="118" height="58" rx="11" fill="url(#redBoxGrad)" stroke="#dc2626" stroke-width="1.8"
+          filter="url(#boxShadow)" />
+        <text x="386" y="96" text-anchor="middle" fill="#991b1b" font-size="11.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">3. Distorts</text>
+        <text x="386" y="112" text-anchor="middle" fill="#ef4444" font-size="9"
+          font-family="'DM Sans', system-ui, sans-serif">behavior</text>
+        <circle cx="386" cy="68" r="5" fill="#dc2626" opacity="0.8" />
+
+        <!-- Arrow 3->4: red, lower-right arc -->
+        <path d="M372 131 C350 160, 318 173, 289 180" fill="none" stroke="#dc2626" stroke-width="2.2"
+          stroke-linecap="round" marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)" />
+        <text x="340" y="173" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">corrupts</text>
+
+        <!-- Box 4: Corrupts (red, bottom-center) -->
+        <rect x="171" y="134" width="118" height="58" rx="11" fill="url(#redBoxGrad)" stroke="#dc2626"
+          stroke-width="1.8" filter="url(#boxShadow)" />
+        <text x="230" y="157" text-anchor="middle" fill="#991b1b" font-size="11.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">4. Corrupts</text>
+        <text x="230" y="173" text-anchor="middle" fill="#ef4444" font-size="9"
+          font-family="'DM Sans', system-ui, sans-serif">the measure</text>
+        <circle cx="230" cy="197" r="5" fill="#dc2626" opacity="0.8" />
+
+        <!-- Arrow 4->1: closing the loop, lower-left arc -->
+        <path d="M171 163 C142 160, 118 148, 100 131" fill="none" stroke="#dc2626" stroke-width="2.2"
+          stroke-linecap="round" marker-end="url(#arrowhead-red)" filter="url(#arrowGlow)" />
+        <text x="120" y="164" text-anchor="middle" fill="#dc2626" font-size="8.5" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">loops back</text>
+      </svg>
     </div>
+
+    <p>The true insanity is not just that GDP counts the wrong things. It is that the very act of counting them changes
+      our reality for the worse. This is <strong>Goodhart's Law</strong>: "When a measure becomes a target, it ceases to
+      be a good measure." In economics, this is not a bug; it is the central operating principle.</p>
+
+    <div class="pullquote">
+      <p>We targeted engagement and destroyed connection. The dashboard did not just report the weather; it created it.
+      </p>
+    </div>
+
+    <p>Consider the <strong>Engagement Trap</strong>. Social media platforms chose "engagement" as their success metric.
+      The algorithms quickly learned that nothing drives engagement like outrage. Anger is sticky. Fear is addictive.
+      And so, in the name of hitting a metric, the platforms became rage machines, tearing apart the social fabric to
+      optimize a number on a spreadsheet.</p>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- The Abundance Paradox             -->
+    <!-- ═════════════════════════════════ -->
+    <h2>The Abundance Paradox</h2>
+    <p>Our dashboard's most fatal flaw is its complete inability to process good news. Our system is designed to measure
+      transactions involving scarce goods. It is therefore structurally blind to abundance. When something becomes
+      abundant and free, our dashboard does not just fail to see its value; it registers its arrival as a <em>negative
+        event</em>.</p>
+
+    <!-- SVG 3: Real Value vs GDP (area chart with divergence zone) -->
+    <div class="svg-illustration">
+      <svg viewBox="0 0 430 195" style="width:100%; max-width:430px; height:auto;" role="img"
+        aria-label="As real value rises through abundance, GDP registers it as decline">
+        <defs>
+          <!-- Background gradient -->
+          <linearGradient id="chartBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8fafc" />
+            <stop offset="100%" stop-color="#f0f4f8" />
+          </linearGradient>
+          <!-- Green gradient fill under Real Value curve -->
+          <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#059669" stop-opacity="0.30" />
+            <stop offset="100%" stop-color="#059669" stop-opacity="0.03" />
+          </linearGradient>
+          <!-- Red gradient fill under GDP curve -->
+          <linearGradient id="redAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dc2626" stop-opacity="0.05" />
+            <stop offset="100%" stop-color="#dc2626" stop-opacity="0.20" />
+          </linearGradient>
+          <!-- Divergence amber zone -->
+          <linearGradient id="divergeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#d97706" stop-opacity="0.0" />
+            <stop offset="60%" stop-color="#d97706" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="#d97706" stop-opacity="0.22" />
+          </linearGradient>
+          <!-- Drop shadow for chart area -->
+          <filter id="chartShadow" x="-2%" y="-2%" width="104%" height="104%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08" />
+          </filter>
+          <!-- Curve glow -->
+          <filter id="lineGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background with subtle shadow -->
+        <rect x="0" y="0" width="430" height="195" rx="12" fill="url(#chartBg)" filter="url(#chartShadow)" />
+        <rect x="0" y="0" width="430" height="195" rx="12" fill="none" stroke="#e2e8f0" stroke-width="1" />
+
+        <!-- Grid lines (horizontal) -->
+        <line x1="62" y1="32" x2="378" y2="32" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <line x1="62" y1="62" x2="378" y2="62" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <line x1="62" y1="92" x2="378" y2="92" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <line x1="62" y1="122" x2="378" y2="122" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <!-- Grid lines (vertical) -->
+        <line x1="155" y1="22" x2="155" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <line x1="248" y1="22" x2="248" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+        <line x1="340" y1="22" x2="340" y2="152" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+
+        <!-- Chart title -->
+        <text x="220" y="17" text-anchor="middle" fill="#374151" font-size="11" font-weight="700"
+          font-family="'Playfair Display', Georgia, serif">Real Value vs. GDP as Abundance Grows</text>
+
+        <!-- Axes -->
+        <line x1="62" y1="152" x2="380" y2="152" stroke="#94a3b8" stroke-width="1.5" />
+        <line x1="62" y1="152" x2="62" y2="24" stroke="#94a3b8" stroke-width="1.5" />
+        <!-- Axis labels -->
+        <text x="221" y="172" text-anchor="middle" fill="#6b7280" font-size="9.5" font-weight="500"
+          font-family="'DM Sans', system-ui, sans-serif">Time / Abundance</text>
+        <text x="16" y="92" text-anchor="middle" fill="#6b7280" font-size="9.5" font-weight="500"
+          font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,16,92)">Value</text>
+        <!-- Axis tick labels -->
+        <text x="62" y="167" text-anchor="middle" fill="#9ca3af" font-size="8"
+          font-family="'DM Sans', system-ui, sans-serif">Start</text>
+        <text x="248" y="167" text-anchor="middle" fill="#9ca3af" font-size="8"
+          font-family="'DM Sans', system-ui, sans-serif">Internet</text>
+        <text x="370" y="167" text-anchor="middle" fill="#9ca3af" font-size="8"
+          font-family="'DM Sans', system-ui, sans-serif">AI</text>
+
+        <!-- Divergence zone between curves (amber shaded) -->
+        <path d="M62 132 Q155 122 205 92 Q266 57 368 32 L368 148 Q266 143 205 138 Q155 135 62 132 Z"
+          fill="url(#divergeGrad)" />
+
+        <!-- Green area fill under Real Value curve -->
+        <path d="M62 132 Q155 122 205 92 Q266 57 368 32 L368 152 L62 152 Z" fill="url(#greenAreaGrad)" />
+
+        <!-- Red area fill under GDP curve -->
+        <path d="M62 132 Q155 135 205 138 Q266 143 368 148 L368 152 L62 152 Z" fill="url(#redAreaGrad)" />
+
+        <!-- Real value curve (rising, green) -->
+        <path d="M62 132 Q155 122 205 92 Q266 57 368 32" fill="none" stroke="#059669" stroke-width="3"
+          stroke-linecap="round" filter="url(#lineGlow)" />
+
+        <!-- GDP curve (slowly declining, red) -->
+        <path d="M62 132 Q155 135 205 138 Q266 143 368 148" fill="none" stroke="#dc2626" stroke-width="3"
+          stroke-linecap="round" filter="url(#lineGlow)" />
+
+        <!-- Data point circles on Real Value curve -->
+        <circle cx="62" cy="132" r="4.5" fill="white" stroke="#059669" stroke-width="2.2" />
+        <circle cx="205" cy="92" r="4.5" fill="white" stroke="#059669" stroke-width="2.2" />
+        <circle cx="368" cy="32" r="4.5" fill="white" stroke="#059669" stroke-width="2.2" />
+
+        <!-- Data point circles on GDP curve -->
+        <circle cx="62" cy="132" r="4" fill="white" stroke="#dc2626" stroke-width="2" />
+        <circle cx="205" cy="138" r="4" fill="white" stroke="#dc2626" stroke-width="2" />
+        <circle cx="368" cy="148" r="4" fill="white" stroke="#dc2626" stroke-width="2" />
+
+        <!-- Curve end labels -->
+        <text x="373" y="29" fill="#059669" font-size="9.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">Real value ↑</text>
+        <text x="373" y="152" fill="#dc2626" font-size="9.5" font-weight="700"
+          font-family="'DM Sans', system-ui, sans-serif">GDP ↓</text>
+
+        <!-- Divergence callout annotation -->
+        <line x1="205" y1="92" x2="205" y2="138" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3" />
+        <text x="215" y="117" fill="#d97706" font-size="8.5" font-weight="600"
+          font-family="'DM Sans', system-ui, sans-serif">Gap widens</text>
+
+        <!-- Bottom italic note -->
+        <text x="220" y="185" text-anchor="middle" fill="#6b7280" font-size="8.5" font-style="italic"
+          font-family="'DM Sans', system-ui, sans-serif">The better things get, the worse GDP looks</text>
+      </svg>
+    </div>
+
+    <p>The Human Genome Project cost billions and took over a decade. By making the resulting data a public good, it
+      unleashed an estimated <strong>trillion dollars</strong> in new economic and scientific value. Its contribution to
+      GDP? <em>Negative</em>. It made genetic information cheap, undermining business models based on proprietary data.
+    </p>
+
+    <div class="pullquote">
+      <p>An AI engineer would call this using the wrong "loss function." We have trained our civilization on a flawed
+        loss function, and we are producing a blurry gray world.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- The Meaning Crisis                -->
+    <!-- ═════════════════════════════════ -->
+    <h2>The Meaning Crisis</h2>
+    <p>The most devastating consequence of our dashboard is not economic but spiritual. For a century, we have managed
+      our society to maximize GDP. In doing so, we have created a world that is rich in transactions and impoverished in
+      meaning.</p>
+
+    <p><strong>The Friendship Recession.</strong> Deep friendship is a GDP black hole; it produces no transactions. So,
+      our economy has systematically replaced it with monetized substitutes. We have more "friends" on social media than
+      ever and fewer people we can call in a crisis.</p>
+
+    <p><strong>The Purpose Vacuum.</strong> A huge percentage of modern, high-paying jobs are roles that the employees
+      themselves know make no meaningful contribution to the world. We pay handsomely for shuffling papers in a
+      corporate bureaucracy while paying subsistence wages to teachers and caregivers.</p>
+
+    <p><strong>The Attention Annihilation.</strong> An entire trillion-dollar industry has been built to capture and
+      monetize human attention. The result is a population neurologically incapable of deep thought. We are strip-mining
+      human minds and calling it progress.</p>
+
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number">47%</div>
+        <div class="stat-label">of Americans say they are worse off than their parents</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">+30%</div>
+        <div class="stat-label">increase in mental health prescriptions since 2020</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">1.6</div>
+        <div class="stat-label">births per woman &mdash; below replacement rate, signaling civilizational decline</div>
+      </div>
+    </div>
+
+    <p>While the official story speaks of prosperity, the human story is written in a different ledger. It is told not
+      in stock prices but in the quiet desperation of those who feel left behind: 52 percent of recent college graduates
+      are forced into jobs that do not require their degrees, and trust in our core institutions has fallen to the
+      lowest levels ever recorded.</p>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- Panel 2: Wage-Productivity Gap    -->
+    <!-- ═════════════════════════════════ -->
+    <h2>Where Did the Money Go?</h2>
+    <p>If productivity has tripled since the 1970s but wages have barely budged, the surplus went <em>somewhere</em>.
+      Use the chart below to explore the gap, then adjust the sliders to model your theory of where the value was
+      captured.</p>
+
+    <div class="panel">
+      <h2 style="margin-top:0">The Wage-Productivity Gap</h2>
+      <div id="gap-chart" style="width:100%;max-width:640px;"></div>
+      <div style="margin-top:1.5rem;">
+        <p style="font-size:0.9rem;color:#666;margin:0 0 0.75rem">What explains the gap? Adjust the sliders (must sum to
+          100%):</p>
+        <div class="slider-row">
+          <label>Software non-rivalry</label>
+          <input type="range" id="blame-sw" min="0" max="100" value="33">
+          <span class="val" id="blame-sw-val">33%</span>
+        </div>
+        <div class="slider-row">
+          <label>Network effects / winner-take-all</label>
+          <input type="range" id="blame-net" min="0" max="100" value="33">
+          <span class="val" id="blame-net-val">33%</span>
+        </div>
+        <div class="slider-row">
+          <label>Financialization / shareholder primacy</label>
+          <input type="range" id="blame-fin" min="0" max="100" value="34">
+          <span class="val" id="blame-fin-val">34%</span>
+        </div>
+        <div class="blame-legend">
+          <span><span class="swatch" style="background:#2563eb"></span> Software non-rivalry</span>
+          <span><span class="swatch" style="background:#7c3aed"></span> Network effects</span>
+          <span><span class="swatch" style="background:#d97706"></span> Financialization</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ═════════════════════════════════ -->
+    <!-- Flying Blind Closing              -->
+    <!-- ═════════════════════════════════ -->
+    <h2>Flying Blind into the Future</h2>
+    <p>This is the dashboard that will guide our response to the Intelligence Inversion.</p>
+
+    <p>When AI automates legal research and makes legal advice nearly free, the dashboard will show the legal sector
+      collapsing, and we will panic. When AI tutors provide world-class, personalized education to every child on Earth
+      for free, the dashboard will show the education sector imploding, and we will try to "save" it. When AI-driven
+      preventative medicine leads to a healthier population, the dashboard will show the healthcare sector shrinking,
+      and we will declare a recession.</p>
+
+    <div class="pullquote">
+      <p>We are flying a 747 into a storm with instruments from a hot air balloon. The better our technology makes the
+        world, the worse our gauges will look.</p>
+    </div>
+
+    <p>Clinging to GDP is no longer just an academic error; it is a civilization-level suicide pact. The first step to
+      recovery is admitting the dashboard is not just wrong but insane. The second is to build new instruments &mdash;
+      instruments designed not to measure the speed at which we consume the world, but to track our capacity to
+      regenerate it.</p>
+
+    <p style="font-weight:600; color:#2563eb; font-size:1.1rem;">It is time to build the MIND Dashboard.</p>
+
   </div>
 
-  <p>While the official story speaks of prosperity, the human story is written in a different ledger. It is told not in stock prices but in the quiet desperation of those who feel left behind: 52 percent of recent college graduates are forced into jobs that do not require their degrees, and trust in our core institutions has fallen to the lowest levels ever recorded.</p>
+  <script>
+    // Reading progress bar
+    window.addEventListener('scroll', () => {
+      const p = document.documentElement;
+      document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+    });
 
-  <hr class="section-divider">
+    // Scrub interaction
+    document.querySelectorAll('.scrub').forEach(el => {
+      let startX, startVal;
+      el.addEventListener('mousedown', e => {
+        startX = e.clientX;
+        startVal = parseFloat(el.dataset.value);
+        const onMove = e => {
+          const dx = e.clientX - startX;
+          const step = parseFloat(el.dataset.step || 1);
+          const min = parseFloat(el.dataset.min || 0);
+          const max = parseFloat(el.dataset.max || 100);
+          const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
+          el.dataset.value = newVal;
+          el.textContent = newVal + (el.dataset.suffix || '');
+          if (el.dataset.update) window[el.dataset.update](newVal);
+        };
+        const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        e.preventDefault();
+      });
+    });
 
-  <!-- ═════════════════════════════════ -->
-  <!-- Panel 2: Wage-Productivity Gap    -->
-  <!-- ═════════════════════════════════ -->
-  <h2>Where Did the Money Go?</h2>
-  <p>If productivity has tripled since the 1970s but wages have barely budged, the surplus went <em>somewhere</em>. Use the chart below to explore the gap, then adjust the sliders to model your theory of where the value was captured.</p>
+    // ── GDP Paradox Calculator ──
+    (function () {
+      const events = [
+        { name: 'Hurricane Katrina', answer: 'up', explain: 'Rebuilding construction, emergency services, and replacement purchases all add to GDP. Destruction is "good" for GDP.' },
+        { name: 'Wikipedia launch', answer: 'down', explain: 'Destroyed the $3B encyclopedia industry. The free replacement contributes $0 to GDP despite being vastly superior.' },
+        { name: 'Divorce', answer: 'up', explain: 'Two households instead of one, lawyer fees, duplicate furniture purchases, separate utilities. GDP loves inefficiency.' },
+        { name: 'Cancer diagnosis', answer: 'up', explain: 'Average treatment cost: $425K. Chemotherapy, hospital stays, pharmaceuticals. Suffering is GDP gold.' },
+        { name: 'Open-source software', answer: 'down', explain: 'Linux, Apache, Python: trillions in value, $0 GDP contribution. Free replacements for expensive proprietary software.' },
+        { name: 'GPT-4 launch', answer: 'down', explain: 'Replaces paid copywriting, coding, translation, tutoring. Each displaced dollar of human service is GDP lost.' }
+      ];
 
-  <div class="panel">
-    <h2 style="margin-top:0">The Wage-Productivity Gap</h2>
-    <div id="gap-chart" style="width:100%;max-width:640px;"></div>
-    <div style="margin-top:1.5rem;">
-      <p style="font-size:0.9rem;color:#666;margin:0 0 0.75rem">What explains the gap? Adjust the sliders (must sum to 100%):</p>
-      <div class="slider-row">
-        <label>Software non-rivalry</label>
-        <input type="range" id="blame-sw" min="0" max="100" value="33">
-        <span class="val" id="blame-sw-val">33%</span>
-      </div>
-      <div class="slider-row">
-        <label>Network effects / winner-take-all</label>
-        <input type="range" id="blame-net" min="0" max="100" value="33">
-        <span class="val" id="blame-net-val">33%</span>
-      </div>
-      <div class="slider-row">
-        <label>Financialization / shareholder primacy</label>
-        <input type="range" id="blame-fin" min="0" max="100" value="34">
-        <span class="val" id="blame-fin-val">34%</span>
-      </div>
-      <div class="blame-legend">
-        <span><span class="swatch" style="background:#2563eb"></span> Software non-rivalry</span>
-        <span><span class="swatch" style="background:#7c3aed"></span> Network effects</span>
-        <span><span class="swatch" style="background:#d97706"></span> Financialization</span>
-      </div>
-    </div>
-  </div>
+      let score = 0, answered = 0;
+      const grid = document.getElementById('paradox-grid');
 
-  <hr class="section-divider">
-
-  <!-- ═════════════════════════════════ -->
-  <!-- Flying Blind Closing              -->
-  <!-- ═════════════════════════════════ -->
-  <h2>Flying Blind into the Future</h2>
-  <p>This is the dashboard that will guide our response to the Intelligence Inversion.</p>
-
-  <p>When AI automates legal research and makes legal advice nearly free, the dashboard will show the legal sector collapsing, and we will panic. When AI tutors provide world-class, personalized education to every child on Earth for free, the dashboard will show the education sector imploding, and we will try to "save" it. When AI-driven preventative medicine leads to a healthier population, the dashboard will show the healthcare sector shrinking, and we will declare a recession.</p>
-
-  <div class="pullquote">
-    <p>We are flying a 747 into a storm with instruments from a hot air balloon. The better our technology makes the world, the worse our gauges will look.</p>
-  </div>
-
-  <p>Clinging to GDP is no longer just an academic error; it is a civilization-level suicide pact. The first step to recovery is admitting the dashboard is not just wrong but insane. The second is to build new instruments &mdash; instruments designed not to measure the speed at which we consume the world, but to track our capacity to regenerate it.</p>
-
-  <p style="font-weight:600; color:#2563eb; font-size:1.1rem;">It is time to build the MIND Dashboard.</p>
-
-</div>
-
-<script>
-// Reading progress bar
-window.addEventListener('scroll', () => {
-  const p = document.documentElement;
-  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
-});
-
-// Scrub interaction
-document.querySelectorAll('.scrub').forEach(el => {
-  let startX, startVal;
-  el.addEventListener('mousedown', e => {
-    startX = e.clientX;
-    startVal = parseFloat(el.dataset.value);
-    const onMove = e => {
-      const dx = e.clientX - startX;
-      const step = parseFloat(el.dataset.step || 1);
-      const min = parseFloat(el.dataset.min || 0);
-      const max = parseFloat(el.dataset.max || 100);
-      const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
-      el.dataset.value = newVal;
-      el.textContent = newVal + (el.dataset.suffix || '');
-      if (el.dataset.update) window[el.dataset.update](newVal);
-    };
-    const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-    e.preventDefault();
-  });
-});
-
-// ── GDP Paradox Calculator ──
-(function() {
-  const events = [
-    { name: 'Hurricane Katrina', answer: 'up', explain: 'Rebuilding construction, emergency services, and replacement purchases all add to GDP. Destruction is "good" for GDP.' },
-    { name: 'Wikipedia launch', answer: 'down', explain: 'Destroyed the $3B encyclopedia industry. The free replacement contributes $0 to GDP despite being vastly superior.' },
-    { name: 'Divorce', answer: 'up', explain: 'Two households instead of one, lawyer fees, duplicate furniture purchases, separate utilities. GDP loves inefficiency.' },
-    { name: 'Cancer diagnosis', answer: 'up', explain: 'Average treatment cost: $425K. Chemotherapy, hospital stays, pharmaceuticals. Suffering is GDP gold.' },
-    { name: 'Open-source software', answer: 'down', explain: 'Linux, Apache, Python: trillions in value, $0 GDP contribution. Free replacements for expensive proprietary software.' },
-    { name: 'GPT-4 launch', answer: 'down', explain: 'Replaces paid copywriting, coding, translation, tutoring. Each displaced dollar of human service is GDP lost.' }
-  ];
-
-  let score = 0, answered = 0;
-  const grid = document.getElementById('paradox-grid');
-
-  events.forEach((ev, i) => {
-    const card = document.createElement('div');
-    card.className = 'event-card';
-    card.innerHTML = `
+      events.forEach((ev, i) => {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
       <div class="event-name">${ev.name}</div>
       <div class="event-q">GDP goes...</div>
       <div class="event-btns">
@@ -661,162 +1132,163 @@ document.querySelectorAll('.scrub').forEach(el => {
       </div>
       <div class="event-explain">${ev.explain}</div>
     `;
-    card.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (card.classList.contains('answered')) return;
-        card.classList.add('answered');
-        answered++;
-        const correct = btn.dataset.choice === ev.answer;
-        if (correct) { score++; btn.classList.add('correct'); }
-        else { btn.classList.add('wrong'); }
-        // highlight correct one
-        card.querySelectorAll('button').forEach(b => {
-          if (b.dataset.choice === ev.answer) b.classList.add('correct');
+        card.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (card.classList.contains('answered')) return;
+            card.classList.add('answered');
+            answered++;
+            const correct = btn.dataset.choice === ev.answer;
+            if (correct) { score++; btn.classList.add('correct'); }
+            else { btn.classList.add('wrong'); }
+            // highlight correct one
+            card.querySelectorAll('button').forEach(b => {
+              if (b.dataset.choice === ev.answer) b.classList.add('correct');
+            });
+            document.getElementById('tally').textContent = `${score}/${answered} correct` + (answered === events.length ? (score >= 4 ? ' — You see through the illusion.' : ' — GDP is trickier than it looks.') : '');
+          });
         });
-        document.getElementById('tally').textContent = `${score}/${answered} correct` + (answered === events.length ? (score >= 4 ? ' — You see through the illusion.' : ' — GDP is trickier than it looks.') : '');
+        grid.appendChild(card);
       });
-    });
-    grid.appendChild(card);
-  });
-})();
+    })();
 
-// ── Wage-Productivity Gap ──
-(function() {
-  // Simplified index data (base 100 in 1950)
-  const years = d3.range(1950, 2025);
-  const productivity = years.map(y => {
-    if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
-    return { year: y, val: 169 + (y - 1973) * 3.47 };
-  });
-  const wages = years.map(y => {
-    if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
-    return { year: y, val: 169 + (y - 1973) * 0.9 };
-  });
+    // ── Wage-Productivity Gap ──
+    (function () {
+      // Simplified index data (base 100 in 1950)
+      const years = d3.range(1950, 2025);
+      const productivity = years.map(y => {
+        if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
+        return { year: y, val: 169 + (y - 1973) * 3.47 };
+      });
+      const wages = years.map(y => {
+        if (y <= 1973) return { year: y, val: 100 + (y - 1950) * 3.0 };
+        return { year: y, val: 169 + (y - 1973) * 0.9 };
+      });
 
-  const container = document.getElementById('gap-chart');
-  const cw = container.clientWidth || 640;
-  const w = cw, h = 300, m = { top: 20, right: 80, bottom: 35, left: 50 };
-  const svg = d3.select('#gap-chart').append('svg')
-    .attr('viewBox', `0 0 ${w} ${h}`).style('width', '100%');
+      const container = document.getElementById('gap-chart');
+      const cw = container.clientWidth || 640;
+      const w = cw, h = 300, m = { top: 20, right: 80, bottom: 35, left: 50 };
+      const svg = d3.select('#gap-chart').append('svg')
+        .attr('viewBox', `0 0 ${w} ${h}`).style('width', '100%');
 
-  const x = d3.scaleLinear().domain([1950, 2024]).range([m.left, w - m.right]);
-  const y = d3.scaleLinear().domain([80, 360]).range([h - m.bottom, m.top]);
+      const x = d3.scaleLinear().domain([1950, 2024]).range([m.left, w - m.right]);
+      const y = d3.scaleLinear().domain([80, 360]).range([h - m.bottom, m.top]);
 
-  svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
-    .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8))
-    .selectAll('text').style('font-size', '10px');
-  svg.append('g').attr('transform', `translate(${m.left},0)`)
-    .call(d3.axisLeft(y).ticks(6))
-    .selectAll('text').style('font-size', '10px');
+      svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8))
+        .selectAll('text').style('font-size', '10px');
+      svg.append('g').attr('transform', `translate(${m.left},0)`)
+        .call(d3.axisLeft(y).ticks(6))
+        .selectAll('text').style('font-size', '10px');
 
-  svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(h/2)).attr('y', 14)
-    .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888').text('Index (1950 = 100)');
+      svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(h / 2)).attr('y', 14)
+        .attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#888').text('Index (1950 = 100)');
 
-  const line = d3.line().x(d => x(d.year)).y(d => y(d.val)).curve(d3.curveMonotoneX);
+      const line = d3.line().x(d => x(d.year)).y(d => y(d.val)).curve(d3.curveMonotoneX);
 
-  // Gap area
-  const gapArea = svg.append('path')
-    .attr('fill', '#ef444422').attr('stroke', 'none');
+      // Gap area
+      const gapArea = svg.append('path')
+        .attr('fill', '#ef444422').attr('stroke', 'none');
 
-  function updateGap() {
-    const area = d3.area()
-      .x(d => x(d.year))
-      .y0((d, i) => y(wages[i].val))
-      .y1(d => y(d.val))
-      .curve(d3.curveMonotoneX);
-    gapArea.datum(productivity.filter(d => d.year >= 1973)).attr('d', area);
-  }
-  updateGap();
+      function updateGap() {
+        const area = d3.area()
+          .x(d => x(d.year))
+          .y0((d, i) => y(wages[i].val))
+          .y1(d => y(d.val))
+          .curve(d3.curveMonotoneX);
+        gapArea.datum(productivity.filter(d => d.year >= 1973)).attr('d', area);
+      }
+      updateGap();
 
-  svg.append('path').datum(productivity).attr('d', line)
-    .attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2.5);
-  svg.append('path').datum(wages).attr('d', line)
-    .attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 2.5);
+      svg.append('path').datum(productivity).attr('d', line)
+        .attr('fill', 'none').attr('stroke', '#2563eb').attr('stroke-width', 2.5);
+      svg.append('path').datum(wages).attr('d', line)
+        .attr('fill', 'none').attr('stroke', '#ef4444').attr('stroke-width', 2.5);
 
-  // Labels
-  const lastProd = productivity[productivity.length - 1];
-  const lastWage = wages[wages.length - 1];
-  svg.append('text').attr('x', x(lastProd.year) + 5).attr('y', y(lastProd.val) + 4)
-    .text('Productivity').style('font-size', '11px').style('fill', '#2563eb').style('font-weight', '600');
-  svg.append('text').attr('x', x(lastWage.year) + 5).attr('y', y(lastWage.val) + 4)
-    .text('Wages').style('font-size', '11px').style('fill', '#ef4444').style('font-weight', '600');
+      // Labels
+      const lastProd = productivity[productivity.length - 1];
+      const lastWage = wages[wages.length - 1];
+      svg.append('text').attr('x', x(lastProd.year) + 5).attr('y', y(lastProd.val) + 4)
+        .text('Productivity').style('font-size', '11px').style('fill', '#2563eb').style('font-weight', '600');
+      svg.append('text').attr('x', x(lastWage.year) + 5).attr('y', y(lastWage.val) + 4)
+        .text('Wages').style('font-size', '11px').style('fill', '#ef4444').style('font-weight', '600');
 
-  // 1973 annotation
-  svg.append('line').attr('x1', x(1973)).attr('x2', x(1973))
-    .attr('y1', m.top).attr('y2', h - m.bottom)
-    .attr('stroke', '#888').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
-  svg.append('text').attr('x', x(1973) + 4).attr('y', m.top + 12)
-    .text('1973: divergence begins').style('font-size', '10px').style('fill', '#888');
+      // 1973 annotation
+      svg.append('line').attr('x1', x(1973)).attr('x2', x(1973))
+        .attr('y1', m.top).attr('y2', h - m.bottom)
+        .attr('stroke', '#888').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
+      svg.append('text').attr('x', x(1973) + 4).attr('y', m.top + 12)
+        .text('1973: divergence begins').style('font-size', '10px').style('fill', '#888');
 
-  // Blame sliders
-  const sliders = ['blame-sw', 'blame-net', 'blame-fin'];
-  const colors = ['#2563eb', '#7c3aed', '#d97706'];
+      // Blame sliders
+      const sliders = ['blame-sw', 'blame-net', 'blame-fin'];
+      const colors = ['#2563eb', '#7c3aed', '#d97706'];
 
-  // Explanation zone segments in the gap
-  const segments = svg.selectAll('.blame-seg').data(sliders).enter().append('rect')
-    .attr('x', x(1973)).attr('width', x(2024) - x(1973))
-    .attr('fill', (d, i) => colors[i]).attr('opacity', 0.12);
+      // Explanation zone segments in the gap
+      const segments = svg.selectAll('.blame-seg').data(sliders).enter().append('rect')
+        .attr('x', x(1973)).attr('width', x(2024) - x(1973))
+        .attr('fill', (d, i) => colors[i]).attr('opacity', 0.12);
 
-  function updateBlame() {
-    const vals = sliders.map(id => parseInt(document.getElementById(id).value));
-    const total = vals.reduce((a, b) => a + b, 0);
-    // Normalize
-    const norm = vals.map(v => v / total * 100);
-    sliders.forEach((id, i) => {
-      document.getElementById(id + '-val').textContent = Math.round(norm[i]) + '%';
-    });
+      function updateBlame() {
+        const vals = sliders.map(id => parseInt(document.getElementById(id).value));
+        const total = vals.reduce((a, b) => a + b, 0);
+        // Normalize
+        const norm = vals.map(v => v / total * 100);
+        sliders.forEach((id, i) => {
+          document.getElementById(id + '-val').textContent = Math.round(norm[i]) + '%';
+        });
 
-    // Position segments within the gap
-    const gapTop = y(lastProd.val);
-    const gapBot = y(lastWage.val);
-    const gapH = gapBot - gapTop;
-    let cumY = gapTop;
-    segments.each(function(d, i) {
-      const segH = (norm[i] / 100) * gapH;
-      d3.select(this).attr('y', cumY).attr('height', segH);
-      cumY += segH;
-    });
-  }
-
-  sliders.forEach((id, idx) => {
-    document.getElementById(id).addEventListener('input', function() {
-      // Adjust others proportionally so sum stays 100
-      const me = parseInt(this.value);
-      const others = sliders.filter((_, i) => i !== idx);
-      const otherSum = others.reduce((s, oid) => s + parseInt(document.getElementById(oid).value), 0);
-      const remaining = 100 - me;
-      if (otherSum > 0) {
-        others.forEach(oid => {
-          const el = document.getElementById(oid);
-          el.value = Math.round((parseInt(el.value) / otherSum) * remaining);
+        // Position segments within the gap
+        const gapTop = y(lastProd.val);
+        const gapBot = y(lastWage.val);
+        const gapH = gapBot - gapTop;
+        let cumY = gapTop;
+        segments.each(function (d, i) {
+          const segH = (norm[i] / 100) * gapH;
+          d3.select(this).attr('y', cumY).attr('height', segH);
+          cumY += segH;
         });
       }
-      updateBlame();
-    });
-  });
 
-  updateBlame();
-})();
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+      sliders.forEach((id, idx) => {
+        document.getElementById(id).addEventListener('input', function () {
+          // Adjust others proportionally so sum stays 100
+          const me = parseInt(this.value);
+          const others = sliders.filter((_, i) => i !== idx);
+          const otherSum = others.reduce((s, oid) => s + parseInt(document.getElementById(oid).value), 0);
+          const remaining = 100 - me;
+          if (otherSum > 0) {
+            others.forEach(oid => {
+              const el = document.getElementById(oid);
+              el.value = Math.round((parseInt(el.value) / otherSum) * remaining);
+            });
+          }
+          updateBlame();
+        });
+      });
+
+      updateBlame();
+    })();
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>

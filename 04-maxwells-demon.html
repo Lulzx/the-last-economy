@@ -1,911 +1,1360 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ch 6 — Maxwell's Demon and the Physics of Value</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.2s; }
-.panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-h3 { font-family: 'Playfair Display', Georgia, serif; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 1px 4px rgba(0,0,0,0.06); z-index: 100; }
-.nav a { color: #2563eb; text-decoration: none; transition: color 0.15s; }
-.nav a:hover { color: #1d4ed8; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ch 6 — Maxwell's Demon and the Physics of Value</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-canvas { display: block; margin: 0 auto; border-radius: 6px; background: #111; max-width: 100%; height: auto; }
-.demon-btn { display: inline-block; padding: 0.5rem 1.2rem; border: 2px solid #2563eb; border-radius: 6px; background: white; color: #2563eb; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; margin: 0.75rem 0; }
-.demon-btn:hover { background: #eff4ff; }
-.demon-btn.active { background: #2563eb; color: white; }
-.stats { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.75rem; font-size: 0.9rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.stats span { background: #f5f5f0; padding: 0.3rem 0.7rem; border-radius: 4px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-.speed-slider { width: 100%; margin: 1rem 0; accent-color: #2563eb; }
-.speed-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; }
-.speed-result { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem; text-align: center; }
-.speed-result div { background: #f5f5f0; padding: 0.75rem; border-radius: 6px; }
-.speed-result .label { font-size: 0.8rem; color: #888; }
-.speed-result .val { font-size: 1.3rem; font-weight: 700; color: #2563eb; font-family: 'DM Mono', monospace; }
-.advantage-bar { height: 12px; background: #e5e5e0; border-radius: 6px; margin-top: 1rem; overflow: hidden; }
-.advantage-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #7c3aed); border-radius: 6px; transition: width 0.3s; }
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-.triangle-svg { display: block; margin: 0 auto; }
-.zone-label { font-size: 0.95rem; font-weight: 600; padding: 0.5rem 0; text-align: center; min-height: 1.5em; }
-.zone-desc { font-size: 0.85rem; color: #666; text-align: center; }
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      color: #2563eb;
+      cursor: ew-resize;
+      user-select: none;
+      font-weight: 600;
+      padding: 0 2px;
+    }
 
-.house-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.house-panel { text-align: center; }
-.house-panel h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-.cost-row { display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.9rem; }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
 
-.stat-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
-.stat-row .stat-callout { flex: 1; }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
 
-.concept-svg { display: block; margin: 1.5rem auto; }
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; width: 0%; pointer-events: none; }
+    h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
 
-.btn, button { touch-action: manipulation; min-height: 36px; }
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
 
-@media (max-width: 600px) {
-  .speed-result { grid-template-columns: 1fr; }
-  .house-container { grid-template-columns: 1fr; }
-  .cost-row { flex-direction: column; gap: 0.5rem; }
-  .stat-row { flex-direction: column; }
-}
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+    }
 
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .stat-row { flex-direction: column; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr !important; }
-  .grid-container { grid-template-columns: repeat(4, 44px) !important; }
-  .decade-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-  h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-  .ratio-display { font-size: 2rem; }
-  .stat-number { font-size: 2.2rem; }
-  .year-toggle { flex-wrap: wrap; }
-  .year-toggle button { flex: 1; min-width: 80px; }
-}
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
 
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-}
-</style>
+    .nav a:hover {
+      color: #1d4ed8;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+      background: #111;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .demon-btn {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border: 2px solid #2563eb;
+      border-radius: 6px;
+      background: white;
+      color: #2563eb;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      margin: 0.75rem 0;
+    }
+
+    .demon-btn:hover {
+      background: #eff4ff;
+    }
+
+    .demon-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .stats span {
+      background: #f5f5f0;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+    }
+
+    .speed-slider {
+      width: 100%;
+      margin: 1rem 0;
+      accent-color: #2563eb;
+    }
+
+    .speed-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .speed-result {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .speed-result div {
+      background: #f5f5f0;
+      padding: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .speed-result .label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .speed-result .val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2563eb;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .advantage-bar {
+      height: 12px;
+      background: #e5e5e0;
+      border-radius: 6px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .advantage-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+
+    .triangle-svg {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .zone-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.5rem 0;
+      text-align: center;
+      min-height: 1.5em;
+    }
+
+    .zone-desc {
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
+
+    .house-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .house-panel {
+      text-align: center;
+    }
+
+    .house-panel h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-row .stat-callout {
+      flex: 1;
+    }
+
+    .concept-svg {
+      display: block;
+      margin: 1.5rem auto;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      width: 0%;
+      pointer-events: none;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+      min-height: 36px;
+    }
+
+    @media (max-width: 600px) {
+      .speed-result {
+        grid-template-columns: 1fr;
+      }
+
+      .house-container {
+        grid-template-columns: 1fr;
+      }
+
+      .cost-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr !important;
+      }
+
+      .grid-container {
+        grid-template-columns: repeat(4, 44px) !important;
+      }
+
+      .decade-btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .ratio-display {
+        font-size: 2rem;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+
+      .year-toggle {
+        flex-wrap: wrap;
+      }
+
+      .year-toggle button {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="ch5-trial-by-fire.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="05-mind-dashboard.html">Next &rarr;</a>
-</nav>
-<div class="prose">
-  <div class="chapter-num">Chapter 6</div>
-  <h1>The Engine of Order: Intelligence Against Entropy</h1>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="ch5-trial-by-fire.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="05-mind-dashboard.html">Next &rarr;</a>
+  </nav>
+  <div class="prose">
+    <div class="chapter-num">Chapter 4</div>
+    <h1>The Engine of Order: Intelligence Against Entropy</h1>
 
-  <div class="pullquote">
-    <p>"The whole of science is nothing more than a refinement of everyday thinking." &mdash;Albert Einstein</p>
-  </div>
-
-  <h2>The Universe's Only Law That Matters</h2>
-
-  <p>There is a law that governs the universe, a rule so fundamental and inescapable that the physicist Arthur Eddington called it "the supreme law of Nature." It is the Second Law of Thermodynamics. It states, with brutal simplicity, that <strong>everything falls apart</strong>.</p>
-
-  <p>Every star will burn out. Every mountain will crumble to dust. Every complex system, left to itself, will inevitably decay into a state of useless, random chaos. This relentless march toward disorder is called entropy. It is the universe's default setting. It is the ultimate tax on existence, and it is always due.</p>
-
-  <!-- SVG: Entropy Arrow Illustration -->
-  <svg class="concept-svg" viewBox="0 0 520 110" style="width:100%;max-width:520px;height:auto;">
-    <defs>
-      <marker id="arrowHead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
-      </marker>
-      <!-- Blue particle gradient -->
-      <radialGradient id="blueParticleGrad" cx="50%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#93c5fd"/>
-        <stop offset="100%" stop-color="#1d4ed8"/>
-      </radialGradient>
-      <!-- Colorful particle gradients -->
-      <radialGradient id="redPGrad" cx="50%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#fca5a5"/>
-        <stop offset="100%" stop-color="#dc2626"/>
-      </radialGradient>
-      <radialGradient id="violetPGrad" cx="50%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#c4b5fd"/>
-        <stop offset="100%" stop-color="#7c3aed"/>
-      </radialGradient>
-      <radialGradient id="greenPGrad" cx="50%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#86efac"/>
-        <stop offset="100%" stop-color="#059669"/>
-      </radialGradient>
-      <radialGradient id="amberPGrad" cx="50%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#fcd34d"/>
-        <stop offset="100%" stop-color="#d97706"/>
-      </radialGradient>
-      <!-- Box background gradients -->
-      <linearGradient id="orderBoxGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#eff6ff"/>
-        <stop offset="100%" stop-color="#dbeafe"/>
-      </linearGradient>
-      <linearGradient id="disorderBoxGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fff7ed"/>
-        <stop offset="100%" stop-color="#fef3c7"/>
-      </linearGradient>
-      <!-- Drop shadow -->
-      <filter id="entropyBoxShadow" x="-10%" y="-10%" width="120%" height="120%">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.10"/>
-      </filter>
-      <!-- Particle glow -->
-      <filter id="particleGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- Ordered box -->
-    <rect x="15" y="16" width="90" height="68" rx="10" fill="url(#orderBoxGrad)" stroke="#93c5fd" stroke-width="1.5" filter="url(#entropyBoxShadow)"/>
-    <!-- Ordered particles in a 3x2 grid -->
-    <circle cx="37" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="60" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="83" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="37" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="60" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="83" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <text x="60" y="100" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Order</text>
-
-    <!-- Arrow with gradient stroke -->
-    <line x1="118" y1="50" x2="385" y2="50" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowHead)"/>
-    <!-- Arrow label -->
-    <text x="252" y="38" text-anchor="middle" font-size="11.5" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Entropy increases →</text>
-    <!-- Sub-label -->
-    <text x="252" y="68" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="'DM Sans', system-ui, sans-serif" font-style="italic">time / energy / information</text>
-
-    <!-- Disordered box -->
-    <rect x="398" y="16" width="106" height="68" rx="10" fill="url(#disorderBoxGrad)" stroke="#fcd34d" stroke-width="1.5" filter="url(#entropyBoxShadow)"/>
-    <!-- Scattered colorful particles at random positions -->
-    <circle cx="416" cy="30" r="5" fill="url(#redPGrad)" filter="url(#particleGlow)"/>
-    <circle cx="453" cy="25" r="5" fill="url(#violetPGrad)" filter="url(#particleGlow)"/>
-    <circle cx="479" cy="52" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)"/>
-    <circle cx="422" cy="63" r="5" fill="url(#greenPGrad)" filter="url(#particleGlow)"/>
-    <circle cx="464" cy="40" r="5" fill="url(#amberPGrad)" filter="url(#particleGlow)"/>
-    <circle cx="440" cy="56" r="5" fill="url(#redPGrad)" filter="url(#particleGlow)"/>
-    <text x="451" y="100" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Disorder</text>
-  </svg>
-
-  <p>For centuries, economics blissfully ignored this law. It built models of perpetual growth and perfect equilibrium, assuming that order was natural and decay was a temporary glitch. This was its original sin.</p>
-
-  <p>Because the most interesting question in the universe is not "Why do things fall apart?" but <strong>"Why does anything exist at all?"</strong> In a cosmos ruled by entropy, the existence of a star, a living cell, or a functioning economy is the ultimate anomaly. Each is a pocket of astonishing order in a sea of encroaching chaos. Each is a temporary victory against the inevitable.</p>
-
-  <p>To build a new economics, we must start not with human wants or rational actors, but with this fundamental struggle. We must ask: how is order created and maintained in a universe that is trying to tear it down?</p>
-
-  <hr class="section-divider">
-
-  <h2>Maxwell's Ghost: The Source of Value Creation</h2>
-
-  <p>In 1867, as Karl Marx was publishing <em>Das Kapital</em>, the physicist James Clerk Maxwell imagined a thought experiment that has haunted science ever since. Picture a box filled with gas, all at a uniform temperature &mdash; a system at maximum entropy, perfectly disordered. Now, imagine a tiny, intelligent being, a "demon" as it came to be known, who guards a tiny door in a wall that divides the box.</p>
-
-  <p>This intelligent agent observes the gas molecules. When a fast-moving (hot) molecule approaches from the left, it opens the door and lets it pass to the right. When a slow-moving (cold) molecule approaches from the right, it lets it pass to the left. Over time, through this simple act of sorting, the being achieves a miracle: the right side becomes hot, the left side becomes cold. It has created a temperature gradient. It has created <strong>order from chaos</strong>.</p>
-
-  <div class="pullquote">
-    <p>This is not just a physics puzzle. This is the secret of all value creation.</p>
-  </div>
-
-  <p>Every act of economic value is an act of sorting. The entrepreneur is this intelligent agent. The "box of gas" is the chaotic market of dispersed resources, random events, and human needs. The entrepreneur does not create anything from nothing. They <em>sort</em>. They see the "fast molecules" &mdash; undervalued assets, unmet needs, inefficient processes &mdash; and move them to one side. The result is a company: a pocket of incredible low entropy, a gradient of value maintained against the chaos of the broader market.</p>
-
-  <h2>Particle Simulator</h2>
-  <div class="panel">
-    <canvas id="particleCanvas" width="640" height="320"></canvas>
-    <div style="text-align:center">
-      <button class="demon-btn" id="demonToggle">Demon: OFF</button>
+    <div class="pullquote">
+      <p>"The whole of science is nothing more than a refinement of everyday thinking." &mdash;Albert Einstein</p>
     </div>
-    <div class="stats">
-      <span>Left temp: <strong id="leftTemp">50</strong></span>
-      <span>Right temp: <strong id="rightTemp">50</strong></span>
-      <span>System entropy: <strong id="entropy">1.00</strong></span>
+
+    <h2>The Universe's Only Law That Matters</h2>
+
+    <p>There is a law that governs the universe, a rule so fundamental and inescapable that the physicist Arthur
+      Eddington called it "the supreme law of Nature." It is the Second Law of Thermodynamics. It states, with brutal
+      simplicity, that <strong>everything falls apart</strong>.</p>
+
+    <p>Every star will burn out. Every mountain will crumble to dust. Every complex system, left to itself, will
+      inevitably decay into a state of useless, random chaos. This relentless march toward disorder is called entropy.
+      It is the universe's default setting. It is the ultimate tax on existence, and it is always due.</p>
+
+    <!-- SVG: Entropy Arrow Illustration -->
+    <svg class="concept-svg" viewBox="0 0 520 110" style="width:100%;max-width:520px;height:auto;">
+      <defs>
+        <marker id="arrowHead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
+        </marker>
+        <!-- Blue particle gradient -->
+        <radialGradient id="blueParticleGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="100%" stop-color="#1d4ed8" />
+        </radialGradient>
+        <!-- Colorful particle gradients -->
+        <radialGradient id="redPGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#fca5a5" />
+          <stop offset="100%" stop-color="#dc2626" />
+        </radialGradient>
+        <radialGradient id="violetPGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#c4b5fd" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </radialGradient>
+        <radialGradient id="greenPGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#86efac" />
+          <stop offset="100%" stop-color="#059669" />
+        </radialGradient>
+        <radialGradient id="amberPGrad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#fcd34d" />
+          <stop offset="100%" stop-color="#d97706" />
+        </radialGradient>
+        <!-- Box background gradients -->
+        <linearGradient id="orderBoxGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#eff6ff" />
+          <stop offset="100%" stop-color="#dbeafe" />
+        </linearGradient>
+        <linearGradient id="disorderBoxGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff7ed" />
+          <stop offset="100%" stop-color="#fef3c7" />
+        </linearGradient>
+        <!-- Drop shadow -->
+        <filter id="entropyBoxShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.10" />
+        </filter>
+        <!-- Particle glow -->
+        <filter id="particleGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ordered box -->
+      <rect x="15" y="16" width="90" height="68" rx="10" fill="url(#orderBoxGrad)" stroke="#93c5fd" stroke-width="1.5"
+        filter="url(#entropyBoxShadow)" />
+      <!-- Ordered particles in a 3x2 grid -->
+      <circle cx="37" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="60" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="83" cy="36" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="37" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="60" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="83" cy="60" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <text x="60" y="100" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Order</text>
+
+      <!-- Arrow with gradient stroke -->
+      <line x1="118" y1="50" x2="385" y2="50" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowHead)" />
+      <!-- Arrow label -->
+      <text x="252" y="38" text-anchor="middle" font-size="11.5" fill="#2563eb"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Entropy increases →</text>
+      <!-- Sub-label -->
+      <text x="252" y="68" text-anchor="middle" font-size="9" fill="#94a3b8"
+        font-family="'DM Sans', system-ui, sans-serif" font-style="italic">time / energy / information</text>
+
+      <!-- Disordered box -->
+      <rect x="398" y="16" width="106" height="68" rx="10" fill="url(#disorderBoxGrad)" stroke="#fcd34d"
+        stroke-width="1.5" filter="url(#entropyBoxShadow)" />
+      <!-- Scattered colorful particles at random positions -->
+      <circle cx="416" cy="30" r="5" fill="url(#redPGrad)" filter="url(#particleGlow)" />
+      <circle cx="453" cy="25" r="5" fill="url(#violetPGrad)" filter="url(#particleGlow)" />
+      <circle cx="479" cy="52" r="5" fill="url(#blueParticleGrad)" filter="url(#particleGlow)" />
+      <circle cx="422" cy="63" r="5" fill="url(#greenPGrad)" filter="url(#particleGlow)" />
+      <circle cx="464" cy="40" r="5" fill="url(#amberPGrad)" filter="url(#particleGlow)" />
+      <circle cx="440" cy="56" r="5" fill="url(#redPGrad)" filter="url(#particleGlow)" />
+      <text x="451" y="100" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Disorder</text>
+    </svg>
+
+    <p>For centuries, economics blissfully ignored this law. It built models of perpetual growth and perfect
+      equilibrium, assuming that order was natural and decay was a temporary glitch. This was its original sin.</p>
+
+    <p>Because the most interesting question in the universe is not "Why do things fall apart?" but <strong>"Why does
+        anything exist at all?"</strong> In a cosmos ruled by entropy, the existence of a star, a living cell, or a
+      functioning economy is the ultimate anomaly. Each is a pocket of astonishing order in a sea of encroaching chaos.
+      Each is a temporary victory against the inevitable.</p>
+
+    <p>To build a new economics, we must start not with human wants or rational actors, but with this fundamental
+      struggle. We must ask: how is order created and maintained in a universe that is trying to tear it down?</p>
+
+    <hr class="section-divider">
+
+    <h2>Maxwell's Ghost: The Source of Value Creation</h2>
+
+    <p>In 1867, as Karl Marx was publishing <em>Das Kapital</em>, the physicist James Clerk Maxwell imagined a thought
+      experiment that has haunted science ever since. Picture a box filled with gas, all at a uniform temperature
+      &mdash; a system at maximum entropy, perfectly disordered. Now, imagine a tiny, intelligent being, a "demon" as it
+      came to be known, who guards a tiny door in a wall that divides the box.</p>
+
+    <p>This intelligent agent observes the gas molecules. When a fast-moving (hot) molecule approaches from the left, it
+      opens the door and lets it pass to the right. When a slow-moving (cold) molecule approaches from the right, it
+      lets it pass to the left. Over time, through this simple act of sorting, the being achieves a miracle: the right
+      side becomes hot, the left side becomes cold. It has created a temperature gradient. It has created <strong>order
+        from chaos</strong>.</p>
+
+    <div class="pullquote">
+      <p>This is not just a physics puzzle. This is the secret of all value creation.</p>
     </div>
-    <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">Toggle the demon to watch it sort fast (hot) molecules to one side and slow (cold) to the other &mdash; creating order from uniform chaos.</p>
-  </div>
 
-  <hr class="section-divider">
+    <p>Every act of economic value is an act of sorting. The entrepreneur is this intelligent agent. The "box of gas" is
+      the chaotic market of dispersed resources, random events, and human needs. The entrepreneur does not create
+      anything from nothing. They <em>sort</em>. They see the "fast molecules" &mdash; undervalued assets, unmet needs,
+      inefficient processes &mdash; and move them to one side. The result is a company: a pocket of incredible low
+      entropy, a gradient of value maintained against the chaos of the broader market.</p>
 
-  <h2>The Sorter's Price: The Physics of Information</h2>
-
-  <p>For a century, Maxwell's thought experiment seemed to be a genuine paradox. But physicists eventually found the hidden cost. The sorting agent cannot operate without <em>information</em>. It must measure the speed of each molecule, remember that measurement, and decide whether to open the door. This act of thinking is not free.</p>
-
-  <div class="stat-callout">
-    <div class="stat-number">1961</div>
-    <div class="stat-label">The year Rolf Landauer proved every irreversible act of computation has a thermodynamic cost</div>
-  </div>
-
-  <p>Landauer, an IBM physicist, finally proved that every irreversible act of computation &mdash; like erasing a bit of information from memory &mdash; dissipates a tiny amount of heat into the environment. The final accounting is perfect: the decrease in entropy inside the box is always less than or equal to the increase in entropy in the agent's memory and its surroundings. The Second Law is saved.</p>
-
-  <div class="pullquote">
-    <p>Profit is the temporary surplus of low entropy an intelligent agent can create before the cost of its own thinking catches up.</p>
-  </div>
-
-  <p>But in saving it, we discover the most profound truth for our new economics: <strong>Intelligence is a physical process with a real, unavoidable cost.</strong></p>
-
-  <hr class="section-divider">
-
-  <h2>The Persistence Bridge</h2>
-
-  <p><strong>The Observation:</strong> Complex, ordered systems like firms, markets, and institutions <em>persist</em>. Against all odds, in a universe that wants to tear them down, they survive and even grow over long horizons.</p>
-
-  <p><strong>The Bridge:</strong> How can we explain this persistence? A skeptic might argue this is simply survivorship bias &mdash; perhaps we are merely talking to the lucky gambler who has not gone bust yet.</p>
-
-  <p>This intelligent critique misunderstands the nature of time and information. Consider two systems: System A, the "Lucky Gambler," navigating randomly, and System B, the "Dumb Clockmaker," using a simple but non-random model. In a single contest, the Gambler might win. But over a million contests? The Clockmaker's predictive model always prevails. <strong>Time is the engine that separates luck from competence.</strong></p>
-
-  <!-- SVG: Luck vs Competence over Time -->
-  <svg class="concept-svg" viewBox="0 0 520 195" style="width:100%;max-width:520px;height:auto;">
-    <defs>
-      <linearGradient id="persistenceBg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f8fafc"/>
-        <stop offset="100%" stop-color="#f1f5f9"/>
-      </linearGradient>
-      <!-- Blue area under clockmaker -->
-      <linearGradient id="clockAreaGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#2563eb" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="#2563eb" stop-opacity="0.03"/>
-      </linearGradient>
-      <!-- Red area under gambler -->
-      <linearGradient id="gamblerAreaGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#dc2626" stop-opacity="0.03"/>
-        <stop offset="100%" stop-color="#dc2626" stop-opacity="0.12"/>
-      </linearGradient>
-      <filter id="lineGlow2" x="-10%" y="-10%" width="120%" height="120%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- Background -->
-    <rect x="0" y="0" width="520" height="195" rx="12" fill="url(#persistenceBg)" stroke="#e2e8f0" stroke-width="1"/>
-
-    <!-- Title -->
-    <text x="260" y="18" text-anchor="middle" font-size="12" fill="#374151" font-family="'Playfair Display', Georgia, serif" font-weight="700">Persistence over Time</text>
-
-    <!-- Grid lines -->
-    <line x1="62" y1="40" x2="480" y2="40" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="62" y1="75" x2="480" y2="75" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="62" y1="110" x2="480" y2="110" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="160" y1="30" x2="160" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="260" y1="30" x2="260" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="360" y1="30" x2="360" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-    <line x1="460" y1="30" x2="460" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4"/>
-
-    <!-- Axes -->
-    <line x1="62" y1="157" x2="488" y2="157" stroke="#94a3b8" stroke-width="1.5"/>
-    <line x1="62" y1="157" x2="62" y2="30" stroke="#94a3b8" stroke-width="1.5"/>
-    <text x="275" y="175" text-anchor="middle" font-size="10" fill="#6b7280" font-family="'DM Sans', system-ui, sans-serif">Time (contests)</text>
-    <text x="16" y="97" text-anchor="middle" font-size="10" fill="#6b7280" font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,16,97)">Success</text>
-
-    <!-- Clockmaker area fill (under the rising line) -->
-    <polygon points="62,137 120,123 180,110 240,96 300,83 360,70 420,57 472,46 472,157 62,157" fill="url(#clockAreaGrad)"/>
-
-    <!-- Gambler area fill -->
-    <polygon points="62,84 120,64 180,100 240,115 300,90 360,125 420,140 472,150 472,157 62,157" fill="url(#gamblerAreaGrad)"/>
-
-    <!-- Lucky Gambler line (noisy, declining trend) -->
-    <polyline points="62,84 120,64 180,100 240,115 300,90 360,125 420,140 472,150" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="7,4" stroke-linecap="round"/>
-    <!-- Gambler data points -->
-    <circle cx="62" cy="84" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8"/>
-    <circle cx="240" cy="115" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8"/>
-    <circle cx="472" cy="150" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8"/>
-
-    <!-- Clockmaker line (steady, rising) -->
-    <polyline points="62,137 120,123 180,110 240,96 300,83 360,70 420,57 472,46" fill="none" stroke="#2563eb" stroke-width="2.8" stroke-linecap="round" filter="url(#lineGlow2)"/>
-    <!-- Clockmaker data points -->
-    <circle cx="62" cy="137" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8"/>
-    <circle cx="240" cy="96" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8"/>
-    <circle cx="472" cy="46" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8"/>
-
-    <!-- End labels -->
-    <text x="477" y="151" font-size="10" fill="#dc2626" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Gambler</text>
-    <text x="477" y="46" font-size="10" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Clockmaker</text>
-
-    <!-- Annotation: time is the engine -->
-    <line x1="260" y1="96" x2="260" y2="115" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2"/>
-    <text x="262" y="106" font-size="8.5" fill="#94a3b8" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">gap grows</text>
-  </svg>
-
-  <p>The persistent systems we observe &mdash; DNA, brains, books &mdash; are not just lucky. They are <em>learners</em>. They are structures that compound information, ratchets that prevent knowledge from slipping away. Any evolutionary process that selects for persistence is implicitly selecting for a single, underlying meta-capability: the ability to create maximum predictive order for a minimum thermodynamic cost.</p>
-
-  <hr class="section-divider">
-
-  <h2>Intelligence Theory: The Sorter's Law</h2>
-
-  <p>This bridge allows us to propose the single, solid foundation upon which our new economics can be built. We will no longer assume "rational actors" or "utility." We will found our science on a single, physically grounded principle.</p>
-
-  <div class="panel" style="background: #f8f8ff; border-color: #2563eb;">
-    <h3 style="margin-top:0; color: #2563eb;">Intelligence Theory (IT)</h3>
-    <p style="font-size: 1.1rem; font-style: italic;">The economy, as a complex adaptive system, evolves to favor configurations that are most efficient at creating predictive models of their environment.</p>
-  </div>
-
-  <p>The "goal" of any persistent system is to minimize a total computational cost &mdash; the sorter's total effort. This cost has three irreducible components:</p>
-
-  <h2>Three Costs Triangle</h2>
-  <div class="panel">
-    <svg id="triangleSvg" class="triangle-svg" viewBox="0 0 500 420" style="width:100%;height:auto;"></svg>
-    <div class="zone-label" id="zoneLabel">Drag the point inside the triangle</div>
-    <div class="zone-desc" id="zoneDesc"></div>
-  </div>
-
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number">1</div>
-      <div class="stat-label">Predictive Error &mdash; the cost of being wrong</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number">2</div>
-      <div class="stat-label">Model Complexity &mdash; the cost of thinking</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number">3</div>
-      <div class="stat-label">Update Cost &mdash; the cost of learning</div>
-    </div>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>Sorting Speed = Competitive Advantage</h2>
-  <div class="panel">
-    <div class="speed-labels"><span>Human speed</span><span>AI speed</span></div>
-    <input type="range" class="speed-slider" id="speedSlider" min="0" max="100" value="0">
-    <div class="speed-result">
-      <div><div class="label">Sorts / second</div><div class="val" id="sortsPerSec">10</div></div>
-      <div><div class="label">Cost / sort</div><div class="val" id="costPerSort">$0.50</div></div>
-      <div><div class="label">Competitive moat</div><div class="val" id="moat">3 years</div></div>
-    </div>
-    <div class="advantage-bar"><div class="advantage-fill" id="advFill" style="width:80%"></div></div>
-    <p style="font-size:0.9rem;margin-top:1rem;"><strong>Key insight:</strong> Speed advantage is temporary. The structural advantage is owning the sorted state.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>AI: The Perfect Sorting Machine</h2>
-
-  <p>For millennia, the only intelligent agents we had were biological brains. They were slow, inefficient, and mortal. The economic order they could create was limited by their own physical constraints.</p>
-
-  <p>Then, starting with the calculating machines of Babbage, continuing through the code-breaking engines of Turing, and culminating in the neural networks of the 21st century, we have been painstakingly building a new class of sorting agents in silicon.</p>
-
-  <!-- SVG: AI vs Human Agent Comparison -->
-  <svg class="concept-svg" viewBox="0 0 520 215" style="width:100%;max-width:520px;height:auto;">
-    <defs>
-      <linearGradient id="humanBoxGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fffbf5"/>
-        <stop offset="100%" stop-color="#fff3e0"/>
-      </linearGradient>
-      <linearGradient id="aiBoxGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f0f0ff"/>
-        <stop offset="100%" stop-color="#e0e7ff"/>
-      </linearGradient>
-      <linearGradient id="humanCapBar" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#d97706"/>
-        <stop offset="100%" stop-color="#fbbf24"/>
-      </linearGradient>
-      <linearGradient id="aiCapBar" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#2563eb"/>
-        <stop offset="100%" stop-color="#7c3aed"/>
-      </linearGradient>
-      <filter id="agentBoxShadow" x="-5%" y="-5%" width="110%" height="110%">
-        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.10"/>
-      </filter>
-      <!-- Uncapped arrow glow -->
-      <filter id="aiGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- Title -->
-    <text x="260" y="18" text-anchor="middle" font-size="13" fill="#1a1a1a" font-family="'Playfair Display', Georgia, serif" font-weight="700">Biological vs Silicon Agent</text>
-
-    <!-- Human side card -->
-    <rect x="22" y="30" width="218" height="165" rx="12" fill="url(#humanBoxGrad)" stroke="#fbbf24" stroke-width="1.5" filter="url(#agentBoxShadow)"/>
-    <!-- Header accent -->
-    <rect x="22" y="30" width="218" height="26" rx="12" fill="#fef3c7"/>
-    <rect x="22" y="46" width="218" height="10" fill="#fef3c7"/>
-    <text x="131" y="48" text-anchor="middle" font-size="12" fill="#92400e" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Human Brain</text>
-
-    <!-- Human attributes -->
-    <text x="42" y="76" font-size="10" fill="#78350f" font-family="'DM Sans', system-ui, sans-serif">⚡ Power: 20 watts</text>
-    <text x="42" y="96" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">⏳ Evolved: 4 billion years</text>
-    <text x="42" y="116" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">👤 Copies: 1 per lifetime</text>
-    <text x="42" y="136" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">🧱 Architecture: Fixed</text>
-
-    <!-- Human cap bar -->
-    <text x="42" y="158" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Intelligence ceiling</text>
-    <rect x="42" y="162" width="175" height="9" rx="4.5" fill="#e5e5e0"/>
-    <rect x="42" y="162" width="30" height="9" rx="4.5" fill="url(#humanCapBar)"/>
-    <text x="42" y="186" font-size="9" fill="#d97706" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Capped — biologically bounded</text>
-
-    <!-- VS divider -->
-    <circle cx="260" cy="112" r="18" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
-    <text x="260" y="117" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">VS</text>
-
-    <!-- AI side card -->
-    <rect x="280" y="30" width="218" height="165" rx="12" fill="url(#aiBoxGrad)" stroke="#7c3aed" stroke-width="1.5" filter="url(#agentBoxShadow)"/>
-    <!-- Header accent -->
-    <rect x="280" y="30" width="218" height="26" rx="12" fill="#ede9fe"/>
-    <rect x="280" y="46" width="218" height="10" fill="#ede9fe"/>
-    <text x="389" y="48" text-anchor="middle" font-size="12" fill="#4c1d95" font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Silicon Agent</text>
-
-    <!-- AI attributes -->
-    <text x="300" y="76" font-size="10" fill="#1e1b4b" font-family="'DM Sans', system-ui, sans-serif">⚡ Power: Scalable</text>
-    <text x="300" y="96" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">⏳ Designed: Decades</text>
-    <text x="300" y="116" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">🔁 Copies: Billions at ~$0</text>
-    <text x="300" y="136" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">♾️ Architecture: Recursive</text>
-
-    <!-- AI cap bar (nearly full) -->
-    <text x="300" y="158" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Intelligence ceiling</text>
-    <rect x="300" y="162" width="175" height="9" rx="4.5" fill="#e5e5e0"/>
-    <rect x="300" y="162" width="162" height="9" rx="4.5" fill="url(#aiCapBar)" filter="url(#aiGlow)">
-      <animate attributeName="width" values="100;162;100" dur="3s" repeatCount="indefinite"/>
-    </rect>
-    <text x="300" y="186" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Uncapped — recursively improving</text>
-
-    <!-- Bottom caption -->
-    <text x="260" y="208" text-anchor="middle" font-size="9" fill="#94a3b8" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">AI breaks free of the biological constraints governing intelligence for 4 billion years.</text>
-  </svg>
-
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number">20W</div>
-      <div class="stat-label">Power consumption of the human brain</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number">10<sup style="font-size:1.2rem">12</sup>x</div>
-      <div class="stat-label">Efficiency gain per logical operation in silicon vs biology</div>
-    </div>
-  </div>
-
-  <p>But the most profound difference is this: the biological agent's intelligence is <strong>capped</strong>. The human brain took billions of years to evolve, and its cognitive architecture is fixed. The silicon agent's intelligence is <strong>uncapped</strong>. Its processing power is limited only by the energy we can feed it. It is subject to recursive self-improvement; each generation of AI helps design a more intelligent successor.</p>
-
-  <div class="pullquote">
-    <p>The arrival of AI is not just another technological shift. It is a phase transition in the efficiency of entropy reduction.</p>
-  </div>
-
-  <p>We have, for the first time, created an intelligence that can break free of the biological constraints that have governed the creation of order on this planet for four billion years.</p>
-
-  <hr class="section-divider">
-
-  <h2>Intelligence vs Entropy</h2>
-  <div class="panel">
-    <p>After <span class="scrub" data-value="0" data-min="0" data-max="100" data-step="1" data-suffix=" years" data-update="updateHouses">0 years</span> of neglect, structures begin to decay.</p>
-    <div class="house-container">
-      <div class="house-panel">
-        <h3>No Maintenance</h3>
-        <svg id="houseDecay" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+    <h2>Particle Simulator</h2>
+    <div class="panel">
+      <canvas id="particleCanvas" width="640" height="320"></canvas>
+      <div style="text-align:center">
+        <button class="demon-btn" id="demonToggle">Demon: OFF</button>
       </div>
-      <div class="house-panel">
-        <h3>With Intelligence</h3>
-        <svg id="houseMaintained" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+      <div class="stats">
+        <span>Left temp: <strong id="leftTemp">50</strong></span>
+        <span>Right temp: <strong id="rightTemp">50</strong></span>
+        <span>System entropy: <strong id="entropy">1.00</strong></span>
+      </div>
+      <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">Toggle the demon to watch it sort fast (hot) molecules
+        to one side and slow (cold) to the other &mdash; creating order from uniform chaos.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Sorter's Price: The Physics of Information</h2>
+
+    <p>For a century, Maxwell's thought experiment seemed to be a genuine paradox. But physicists eventually found the
+      hidden cost. The sorting agent cannot operate without <em>information</em>. It must measure the speed of each
+      molecule, remember that measurement, and decide whether to open the door. This act of thinking is not free.</p>
+
+    <div class="stat-callout">
+      <div class="stat-number">1961</div>
+      <div class="stat-label">The year Rolf Landauer proved every irreversible act of computation has a thermodynamic
+        cost</div>
+    </div>
+
+    <p>Landauer, an IBM physicist, finally proved that every irreversible act of computation &mdash; like erasing a bit
+      of information from memory &mdash; dissipates a tiny amount of heat into the environment. The final accounting is
+      perfect: the decrease in entropy inside the box is always less than or equal to the increase in entropy in the
+      agent's memory and its surroundings. The Second Law is saved.</p>
+
+    <div class="pullquote">
+      <p>Profit is the temporary surplus of low entropy an intelligent agent can create before the cost of its own
+        thinking catches up.</p>
+    </div>
+
+    <p>But in saving it, we discover the most profound truth for our new economics: <strong>Intelligence is a physical
+        process with a real, unavoidable cost.</strong></p>
+
+    <hr class="section-divider">
+
+    <h2>The Persistence Bridge</h2>
+
+    <p><strong>The Observation:</strong> Complex, ordered systems like firms, markets, and institutions
+      <em>persist</em>. Against all odds, in a universe that wants to tear them down, they survive and even grow over
+      long horizons.</p>
+
+    <p><strong>The Bridge:</strong> How can we explain this persistence? A skeptic might argue this is simply
+      survivorship bias &mdash; perhaps we are merely talking to the lucky gambler who has not gone bust yet.</p>
+
+    <p>This intelligent critique misunderstands the nature of time and information. Consider two systems: System A, the
+      "Lucky Gambler," navigating randomly, and System B, the "Dumb Clockmaker," using a simple but non-random model. In
+      a single contest, the Gambler might win. But over a million contests? The Clockmaker's predictive model always
+      prevails. <strong>Time is the engine that separates luck from competence.</strong></p>
+
+    <!-- SVG: Luck vs Competence over Time -->
+    <svg class="concept-svg" viewBox="0 0 520 195" style="width:100%;max-width:520px;height:auto;">
+      <defs>
+        <linearGradient id="persistenceBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8fafc" />
+          <stop offset="100%" stop-color="#f1f5f9" />
+        </linearGradient>
+        <!-- Blue area under clockmaker -->
+        <linearGradient id="clockAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2563eb" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0.03" />
+        </linearGradient>
+        <!-- Red area under gambler -->
+        <linearGradient id="gamblerAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#dc2626" stop-opacity="0.03" />
+          <stop offset="100%" stop-color="#dc2626" stop-opacity="0.12" />
+        </linearGradient>
+        <filter id="lineGlow2" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="520" height="195" rx="12" fill="url(#persistenceBg)" stroke="#e2e8f0" stroke-width="1" />
+
+      <!-- Title -->
+      <text x="260" y="18" text-anchor="middle" font-size="12" fill="#374151"
+        font-family="'Playfair Display', Georgia, serif" font-weight="700">Persistence over Time</text>
+
+      <!-- Grid lines -->
+      <line x1="62" y1="40" x2="480" y2="40" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="62" y1="75" x2="480" y2="75" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="62" y1="110" x2="480" y2="110" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="160" y1="30" x2="160" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="260" y1="30" x2="260" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="360" y1="30" x2="360" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+      <line x1="460" y1="30" x2="460" y2="157" stroke="#e5e7eb" stroke-width="0.7" stroke-dasharray="3 4" />
+
+      <!-- Axes -->
+      <line x1="62" y1="157" x2="488" y2="157" stroke="#94a3b8" stroke-width="1.5" />
+      <line x1="62" y1="157" x2="62" y2="30" stroke="#94a3b8" stroke-width="1.5" />
+      <text x="275" y="175" text-anchor="middle" font-size="10" fill="#6b7280"
+        font-family="'DM Sans', system-ui, sans-serif">Time (contests)</text>
+      <text x="16" y="97" text-anchor="middle" font-size="10" fill="#6b7280"
+        font-family="'DM Sans', system-ui, sans-serif" transform="rotate(-90,16,97)">Success</text>
+
+      <!-- Clockmaker area fill (under the rising line) -->
+      <polygon points="62,137 120,123 180,110 240,96 300,83 360,70 420,57 472,46 472,157 62,157"
+        fill="url(#clockAreaGrad)" />
+
+      <!-- Gambler area fill -->
+      <polygon points="62,84 120,64 180,100 240,115 300,90 360,125 420,140 472,150 472,157 62,157"
+        fill="url(#gamblerAreaGrad)" />
+
+      <!-- Lucky Gambler line (noisy, declining trend) -->
+      <polyline points="62,84 120,64 180,100 240,115 300,90 360,125 420,140 472,150" fill="none" stroke="#dc2626"
+        stroke-width="2.2" stroke-dasharray="7,4" stroke-linecap="round" />
+      <!-- Gambler data points -->
+      <circle cx="62" cy="84" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8" />
+      <circle cx="240" cy="115" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8" />
+      <circle cx="472" cy="150" r="3.5" fill="white" stroke="#dc2626" stroke-width="1.8" />
+
+      <!-- Clockmaker line (steady, rising) -->
+      <polyline points="62,137 120,123 180,110 240,96 300,83 360,70 420,57 472,46" fill="none" stroke="#2563eb"
+        stroke-width="2.8" stroke-linecap="round" filter="url(#lineGlow2)" />
+      <!-- Clockmaker data points -->
+      <circle cx="62" cy="137" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8" />
+      <circle cx="240" cy="96" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8" />
+      <circle cx="472" cy="46" r="3.5" fill="white" stroke="#2563eb" stroke-width="1.8" />
+
+      <!-- End labels -->
+      <text x="477" y="151" font-size="10" fill="#dc2626" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Gambler</text>
+      <text x="477" y="46" font-size="10" fill="#2563eb" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Clockmaker</text>
+
+      <!-- Annotation: time is the engine -->
+      <line x1="260" y1="96" x2="260" y2="115" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2" />
+      <text x="262" y="106" font-size="8.5" fill="#94a3b8" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">gap grows</text>
+    </svg>
+
+    <p>The persistent systems we observe &mdash; DNA, brains, books &mdash; are not just lucky. They are
+      <em>learners</em>. They are structures that compound information, ratchets that prevent knowledge from slipping
+      away. Any evolutionary process that selects for persistence is implicitly selecting for a single, underlying
+      meta-capability: the ability to create maximum predictive order for a minimum thermodynamic cost.</p>
+
+    <hr class="section-divider">
+
+    <h2>Intelligence Theory: The Sorter's Law</h2>
+
+    <p>This bridge allows us to propose the single, solid foundation upon which our new economics can be built. We will
+      no longer assume "rational actors" or "utility." We will found our science on a single, physically grounded
+      principle.</p>
+
+    <div class="panel" style="background: #f8f8ff; border-color: #2563eb;">
+      <h3 style="margin-top:0; color: #2563eb;">Intelligence Theory (IT)</h3>
+      <p style="font-size: 1.1rem; font-style: italic;">The economy, as a complex adaptive system, evolves to favor
+        configurations that are most efficient at creating predictive models of their environment.</p>
+    </div>
+
+    <p>The "goal" of any persistent system is to minimize a total computational cost &mdash; the sorter's total effort.
+      This cost has three irreducible components:</p>
+
+    <h2>Three Costs Triangle</h2>
+    <div class="panel">
+      <svg id="triangleSvg" class="triangle-svg" viewBox="0 0 500 420" style="width:100%;height:auto;"></svg>
+      <div class="zone-label" id="zoneLabel">Drag the point inside the triangle</div>
+      <div class="zone-desc" id="zoneDesc"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Predictive Error &mdash; the cost of being wrong</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">2</div>
+        <div class="stat-label">Model Complexity &mdash; the cost of thinking</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Update Cost &mdash; the cost of learning</div>
       </div>
     </div>
-    <div class="cost-row">
-      <span>Cumulative maintenance: <strong id="maintCost">$0</strong></span>
-      <span>Replacement cost: <strong id="replaceCost">$250,000</strong></span>
+
+    <hr class="section-divider">
+
+    <h2>Sorting Speed = Competitive Advantage</h2>
+    <div class="panel">
+      <div class="speed-labels"><span>Human speed</span><span>AI speed</span></div>
+      <input type="range" class="speed-slider" id="speedSlider" min="0" max="100" value="0">
+      <div class="speed-result">
+        <div>
+          <div class="label">Sorts / second</div>
+          <div class="val" id="sortsPerSec">10</div>
+        </div>
+        <div>
+          <div class="label">Cost / sort</div>
+          <div class="val" id="costPerSort">$0.50</div>
+        </div>
+        <div>
+          <div class="label">Competitive moat</div>
+          <div class="val" id="moat">3 years</div>
+        </div>
+      </div>
+      <div class="advantage-bar">
+        <div class="advantage-fill" id="advFill" style="width:80%"></div>
+      </div>
+      <p style="font-size:0.9rem;margin-top:1rem;"><strong>Key insight:</strong> Speed advantage is temporary. The
+        structural advantage is owning the sorted state.</p>
     </div>
+
+    <hr class="section-divider">
+
+    <h2>AI: The Perfect Sorting Machine</h2>
+
+    <p>For millennia, the only intelligent agents we had were biological brains. They were slow, inefficient, and
+      mortal. The economic order they could create was limited by their own physical constraints.</p>
+
+    <p>Then, starting with the calculating machines of Babbage, continuing through the code-breaking engines of Turing,
+      and culminating in the neural networks of the 21st century, we have been painstakingly building a new class of
+      sorting agents in silicon.</p>
+
+    <!-- SVG: AI vs Human Agent Comparison -->
+    <svg class="concept-svg" viewBox="0 0 520 215" style="width:100%;max-width:520px;height:auto;">
+      <defs>
+        <linearGradient id="humanBoxGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fffbf5" />
+          <stop offset="100%" stop-color="#fff3e0" />
+        </linearGradient>
+        <linearGradient id="aiBoxGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f0f0ff" />
+          <stop offset="100%" stop-color="#e0e7ff" />
+        </linearGradient>
+        <linearGradient id="humanCapBar" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d97706" />
+          <stop offset="100%" stop-color="#fbbf24" />
+        </linearGradient>
+        <linearGradient id="aiCapBar" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2563eb" />
+          <stop offset="100%" stop-color="#7c3aed" />
+        </linearGradient>
+        <filter id="agentBoxShadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.10" />
+        </filter>
+        <!-- Uncapped arrow glow -->
+        <filter id="aiGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Title -->
+      <text x="260" y="18" text-anchor="middle" font-size="13" fill="#1a1a1a"
+        font-family="'Playfair Display', Georgia, serif" font-weight="700">Biological vs Silicon Agent</text>
+
+      <!-- Human side card -->
+      <rect x="22" y="30" width="218" height="165" rx="12" fill="url(#humanBoxGrad)" stroke="#fbbf24" stroke-width="1.5"
+        filter="url(#agentBoxShadow)" />
+      <!-- Header accent -->
+      <rect x="22" y="30" width="218" height="26" rx="12" fill="#fef3c7" />
+      <rect x="22" y="46" width="218" height="10" fill="#fef3c7" />
+      <text x="131" y="48" text-anchor="middle" font-size="12" fill="#92400e"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Human Brain</text>
+
+      <!-- Human attributes -->
+      <text x="42" y="76" font-size="10" fill="#78350f" font-family="'DM Sans', system-ui, sans-serif">⚡ Power: 20
+        watts</text>
+      <text x="42" y="96" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">⏳ Evolved: 4 billion
+        years</text>
+      <text x="42" y="116" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">👤 Copies: 1 per
+        lifetime</text>
+      <text x="42" y="136" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">🧱 Architecture:
+        Fixed</text>
+
+      <!-- Human cap bar -->
+      <text x="42" y="158" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Intelligence
+        ceiling</text>
+      <rect x="42" y="162" width="175" height="9" rx="4.5" fill="#e5e5e0" />
+      <rect x="42" y="162" width="30" height="9" rx="4.5" fill="url(#humanCapBar)" />
+      <text x="42" y="186" font-size="9" fill="#d97706" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Capped — biologically bounded</text>
+
+      <!-- VS divider -->
+      <circle cx="260" cy="112" r="18" fill="white" stroke="#e5e7eb" stroke-width="1.5" />
+      <text x="260" y="117" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="700"
+        font-family="'DM Sans', system-ui, sans-serif">VS</text>
+
+      <!-- AI side card -->
+      <rect x="280" y="30" width="218" height="165" rx="12" fill="url(#aiBoxGrad)" stroke="#7c3aed" stroke-width="1.5"
+        filter="url(#agentBoxShadow)" />
+      <!-- Header accent -->
+      <rect x="280" y="30" width="218" height="26" rx="12" fill="#ede9fe" />
+      <rect x="280" y="46" width="218" height="10" fill="#ede9fe" />
+      <text x="389" y="48" text-anchor="middle" font-size="12" fill="#4c1d95"
+        font-family="'DM Sans', system-ui, sans-serif" font-weight="700">Silicon Agent</text>
+
+      <!-- AI attributes -->
+      <text x="300" y="76" font-size="10" fill="#1e1b4b" font-family="'DM Sans', system-ui, sans-serif">⚡ Power:
+        Scalable</text>
+      <text x="300" y="96" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">⏳ Designed:
+        Decades</text>
+      <text x="300" y="116" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">🔁 Copies:
+        Billions at ~$0</text>
+      <text x="300" y="136" font-size="10" fill="#555" font-family="'DM Sans', system-ui, sans-serif">♾️ Architecture:
+        Recursive</text>
+
+      <!-- AI cap bar (nearly full) -->
+      <text x="300" y="158" font-size="9" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Intelligence
+        ceiling</text>
+      <rect x="300" y="162" width="175" height="9" rx="4.5" fill="#e5e5e0" />
+      <rect x="300" y="162" width="162" height="9" rx="4.5" fill="url(#aiCapBar)" filter="url(#aiGlow)">
+        <animate attributeName="width" values="100;162;100" dur="3s" repeatCount="indefinite" />
+      </rect>
+      <text x="300" y="186" font-size="9" fill="#2563eb" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">Uncapped — recursively improving</text>
+
+      <!-- Bottom caption -->
+      <text x="260" y="208" text-anchor="middle" font-size="9" fill="#94a3b8" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">AI breaks free of the biological constraints governing
+        intelligence for 4 billion years.</text>
+    </svg>
+
+    <div class="stat-row">
+      <div class="stat-callout">
+        <div class="stat-number">20W</div>
+        <div class="stat-label">Power consumption of the human brain</div>
+      </div>
+      <div class="stat-callout">
+        <div class="stat-number">10<sup style="font-size:1.2rem">12</sup>x</div>
+        <div class="stat-label">Efficiency gain per logical operation in silicon vs biology</div>
+      </div>
+    </div>
+
+    <p>But the most profound difference is this: the biological agent's intelligence is <strong>capped</strong>. The
+      human brain took billions of years to evolve, and its cognitive architecture is fixed. The silicon agent's
+      intelligence is <strong>uncapped</strong>. Its processing power is limited only by the energy we can feed it. It
+      is subject to recursive self-improvement; each generation of AI helps design a more intelligent successor.</p>
+
+    <div class="pullquote">
+      <p>The arrival of AI is not just another technological shift. It is a phase transition in the efficiency of
+        entropy reduction.</p>
+    </div>
+
+    <p>We have, for the first time, created an intelligence that can break free of the biological constraints that have
+      governed the creation of order on this planet for four billion years.</p>
+
+    <hr class="section-divider">
+
+    <h2>Intelligence vs Entropy</h2>
+    <div class="panel">
+      <p>After <span class="scrub" data-value="0" data-min="0" data-max="100" data-step="1" data-suffix=" years"
+          data-update="updateHouses">0 years</span> of neglect, structures begin to decay.</p>
+      <div class="house-container">
+        <div class="house-panel">
+          <h3>No Maintenance</h3>
+          <svg id="houseDecay" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+        </div>
+        <div class="house-panel">
+          <h3>With Intelligence</h3>
+          <svg id="houseMaintained" viewBox="0 0 280 200" style="width:100%;height:auto;"></svg>
+        </div>
+      </div>
+      <div class="cost-row">
+        <span>Cumulative maintenance: <strong id="maintCost">$0</strong></span>
+        <span>Replacement cost: <strong id="replaceCost">$250,000</strong></span>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The End of Scarcity, The Beginning of Physics</h2>
+
+    <p>The entire edifice of scarcity economics was built without ever asking where value came from. It assumed a world
+      of pre-existing, scarce goods and focused only on their allocation. It was a science of dividing the spoils, with
+      no theory of the hunt.</p>
+
+    <p>Intelligence Theory provides that foundation. <strong>Value is not a pre-existing substance. It is a state of low
+        entropy</strong> &mdash; a temporary victory against chaos, achieved by intelligent agents sorting their
+      environment.</p>
+
+    <p>The failure of the old economics was its blindness to physics. It tried to understand the patterns in the box
+      without understanding the agent that was creating them. Now, that agent is no longer a metaphor. It is code
+      running on a server farm, and it is getting better at its job every microsecond.</p>
+
+    <div class="pullquote">
+      <p>The question for humanity is no longer how to be better sorters. That game is over. The question is, in a world
+        sorted to near perfection by our own creation, what is our purpose?</p>
+    </div>
+
+    <p>Answering that requires us to understand the world the new intelligence is building. For the agent does not just
+      sort; in the act of sorting, it creates structures. It carves flows. It establishes the very geometry of our new
+      reality. It is to this emergent architecture that we now must turn.</p>
   </div>
 
-  <hr class="section-divider">
-
-  <h2>The End of Scarcity, The Beginning of Physics</h2>
-
-  <p>The entire edifice of scarcity economics was built without ever asking where value came from. It assumed a world of pre-existing, scarce goods and focused only on their allocation. It was a science of dividing the spoils, with no theory of the hunt.</p>
-
-  <p>Intelligence Theory provides that foundation. <strong>Value is not a pre-existing substance. It is a state of low entropy</strong> &mdash; a temporary victory against chaos, achieved by intelligent agents sorting their environment.</p>
-
-  <p>The failure of the old economics was its blindness to physics. It tried to understand the patterns in the box without understanding the agent that was creating them. Now, that agent is no longer a metaphor. It is code running on a server farm, and it is getting better at its job every microsecond.</p>
-
-  <div class="pullquote">
-    <p>The question for humanity is no longer how to be better sorters. That game is over. The question is, in a world sorted to near perfection by our own creation, what is our purpose?</p>
-  </div>
-
-  <p>Answering that requires us to understand the world the new intelligence is building. For the agent does not just sort; in the act of sorting, it creates structures. It carves flows. It establishes the very geometry of our new reality. It is to this emergent architecture that we now must turn.</p>
-</div>
-
-<script>
-// ===== Scrub interaction =====
-function initScrub() {
-  document.querySelectorAll('.scrub').forEach(el => {
-    let startX, startVal;
-    function onDown(e) {
-      const touch = e.touches ? e.touches[0] : e;
-      startX = touch.clientX; startVal = parseFloat(el.dataset.value);
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-      document.addEventListener('touchmove', onMove, { passive: false });
-      document.addEventListener('touchend', onUp);
-      e.preventDefault();
+  <script>
+    // ===== Scrub interaction =====
+    function initScrub() {
+      document.querySelectorAll('.scrub').forEach(el => {
+        let startX, startVal;
+        function onDown(e) {
+          const touch = e.touches ? e.touches[0] : e;
+          startX = touch.clientX; startVal = parseFloat(el.dataset.value);
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+          document.addEventListener('touchmove', onMove, { passive: false });
+          document.addEventListener('touchend', onUp);
+          e.preventDefault();
+        }
+        function onMove(e2) {
+          const touch = e2.touches ? e2.touches[0] : e2;
+          const dx = touch.clientX - startX;
+          const step = parseFloat(el.dataset.step || 1);
+          const min = parseFloat(el.dataset.min || 0);
+          const max = parseFloat(el.dataset.max || 100);
+          const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
+          el.dataset.value = newVal;
+          el.textContent = newVal + (el.dataset.suffix || '');
+          if (el.dataset.update) window[el.dataset.update](newVal);
+          if (e2.cancelable) e2.preventDefault();
+        }
+        function onUp() {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          document.removeEventListener('touchmove', onMove);
+          document.removeEventListener('touchend', onUp);
+        }
+        el.addEventListener('mousedown', onDown);
+        el.addEventListener('touchstart', onDown, { passive: false });
+      });
     }
-    function onMove(e2) {
-      const touch = e2.touches ? e2.touches[0] : e2;
-      const dx = touch.clientX - startX;
-      const step = parseFloat(el.dataset.step || 1);
-      const min = parseFloat(el.dataset.min || 0);
-      const max = parseFloat(el.dataset.max || 100);
-      const newVal = Math.min(max, Math.max(min, startVal + Math.round(dx / 5) * step));
-      el.dataset.value = newVal;
-      el.textContent = newVal + (el.dataset.suffix || '');
-      if (el.dataset.update) window[el.dataset.update](newVal);
-      if (e2.cancelable) e2.preventDefault();
-    }
-    function onUp() {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      document.removeEventListener('touchmove', onMove);
-      document.removeEventListener('touchend', onUp);
-    }
-    el.addEventListener('mousedown', onDown);
-    el.addEventListener('touchstart', onDown, { passive: false });
-  });
-}
 
-// ===== Particle Simulator =====
-(function() {
-  const canvas = document.getElementById('particleCanvas');
-  const ctx = canvas.getContext('2d');
+    // ===== Particle Simulator =====
+    (function () {
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
 
-  // Responsive canvas sizing
-  function resizeCanvas() {
-    const container = canvas.parentElement;
-    const maxW = Math.min(640, container.clientWidth - 2);
-    const ratio = 320 / 640;
-    canvas.width = maxW;
-    canvas.height = Math.round(maxW * ratio);
-  }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+      // Responsive canvas sizing
+      function resizeCanvas() {
+        const container = canvas.parentElement;
+        const maxW = Math.min(640, container.clientWidth - 2);
+        const ratio = 320 / 640;
+        canvas.width = maxW;
+        canvas.height = Math.round(maxW * ratio);
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
 
-  const wallRatio = 0.5, gateRatio = 0.5, gateHRatio = 40 / 320;
-  let demonOn = false;
-  const particles = [];
-  const N = 50;
+      const wallRatio = 0.5, gateRatio = 0.5, gateHRatio = 40 / 320;
+      let demonOn = false;
+      const particles = [];
+      const N = 50;
 
-  for (let i = 0; i < N; i++) {
-    const speed = 0.5 + Math.random() * 2.5;
-    const angle = Math.random() * Math.PI * 2;
-    particles.push({
-      xr: Math.random() * 0.9 + 0.05,
-      yr: Math.random() * 0.9 + 0.05,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      speed: speed,
-      r: 4,
-      hot: speed > 1.5
-    });
-  }
+      for (let i = 0; i < N; i++) {
+        const speed = 0.5 + Math.random() * 2.5;
+        const angle = Math.random() * Math.PI * 2;
+        particles.push({
+          xr: Math.random() * 0.9 + 0.05,
+          yr: Math.random() * 0.9 + 0.05,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          speed: speed,
+          r: 4,
+          hot: speed > 1.5
+        });
+      }
 
-  document.getElementById('demonToggle').addEventListener('click', function() {
-    demonOn = !demonOn;
-    this.textContent = 'Demon: ' + (demonOn ? 'ON' : 'OFF');
-    this.classList.toggle('active', demonOn);
-  });
+      document.getElementById('demonToggle').addEventListener('click', function () {
+        demonOn = !demonOn;
+        this.textContent = 'Demon: ' + (demonOn ? 'ON' : 'OFF');
+        this.classList.toggle('active', demonOn);
+      });
 
-  function step() {
-    const W = canvas.width, H = canvas.height;
-    const wallX = W * wallRatio;
-    const gateY = H * gateRatio;
-    const gateH = H * gateHRatio;
+      function step() {
+        const W = canvas.width, H = canvas.height;
+        const wallX = W * wallRatio;
+        const gateY = H * gateRatio;
+        const gateH = H * gateHRatio;
 
-    ctx.fillStyle = '#111';
-    ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, W, H);
 
-    // Wall
-    ctx.fillStyle = '#555';
-    ctx.fillRect(wallX - 2, 0, 4, gateY - gateH / 2);
-    ctx.fillRect(wallX - 2, gateY + gateH / 2, 4, H - gateY - gateH / 2);
+        // Wall
+        ctx.fillStyle = '#555';
+        ctx.fillRect(wallX - 2, 0, 4, gateY - gateH / 2);
+        ctx.fillRect(wallX - 2, gateY + gateH / 2, 4, H - gateY - gateH / 2);
 
-    // Gate indicator
-    ctx.fillStyle = demonOn ? '#22c55e' : '#ef4444';
-    ctx.fillRect(wallX - 2, gateY - gateH / 2, 4, gateH);
+        // Gate indicator
+        ctx.fillStyle = demonOn ? '#22c55e' : '#ef4444';
+        ctx.fillRect(wallX - 2, gateY - gateH / 2, 4, gateH);
 
-    let leftSum = 0, leftCount = 0, rightSum = 0, rightCount = 0;
+        let leftSum = 0, leftCount = 0, rightSum = 0, rightCount = 0;
 
-    particles.forEach(p => {
-      // Use absolute positions for physics
-      let px = p.xr * W;
-      let py = p.yr * H;
-      px += p.vx;
-      py += p.vy;
+        particles.forEach(p => {
+          // Use absolute positions for physics
+          let px = p.xr * W;
+          let py = p.yr * H;
+          px += p.vx;
+          py += p.vy;
 
-      // Bounce off walls
-      if (px - p.r < 0) { px = p.r; p.vx = Math.abs(p.vx); }
-      if (px + p.r > W) { px = W - p.r; p.vx = -Math.abs(p.vx); }
-      if (py - p.r < 0) { py = p.r; p.vy = Math.abs(p.vy); }
-      if (py + p.r > H) { py = H - p.r; p.vy = -Math.abs(p.vy); }
+          // Bounce off walls
+          if (px - p.r < 0) { px = p.r; p.vx = Math.abs(p.vx); }
+          if (px + p.r > W) { px = W - p.r; p.vx = -Math.abs(p.vx); }
+          if (py - p.r < 0) { py = p.r; p.vy = Math.abs(p.vy); }
+          if (py + p.r > H) { py = H - p.r; p.vy = -Math.abs(p.vy); }
 
-      // Wall collision
-      const nearGate = Math.abs(py - gateY) < gateH / 2;
-      if (Math.abs(px - wallX) < p.r + 2) {
-        if (!nearGate) {
-          if (px < wallX) { px = wallX - p.r - 2; p.vx = -Math.abs(p.vx); }
-          else { px = wallX + p.r + 2; p.vx = Math.abs(p.vx); }
-        } else if (demonOn) {
-          const goingRight = p.vx > 0;
-          const goingLeft = p.vx < 0;
-          if (p.hot && goingRight && px < wallX) {
-            px = wallX - p.r - 2; p.vx = -Math.abs(p.vx);
-          } else if (!p.hot && goingLeft && px > wallX) {
-            px = wallX + p.r + 2; p.vx = Math.abs(p.vx);
+          // Wall collision
+          const nearGate = Math.abs(py - gateY) < gateH / 2;
+          if (Math.abs(px - wallX) < p.r + 2) {
+            if (!nearGate) {
+              if (px < wallX) { px = wallX - p.r - 2; p.vx = -Math.abs(p.vx); }
+              else { px = wallX + p.r + 2; p.vx = Math.abs(p.vx); }
+            } else if (demonOn) {
+              const goingRight = p.vx > 0;
+              const goingLeft = p.vx < 0;
+              if (p.hot && goingRight && px < wallX) {
+                px = wallX - p.r - 2; p.vx = -Math.abs(p.vx);
+              } else if (!p.hot && goingLeft && px > wallX) {
+                px = wallX + p.r + 2; p.vx = Math.abs(p.vx);
+              }
+            }
           }
+
+          p.xr = px / W;
+          p.yr = py / H;
+
+          // Draw
+          const t = (p.speed - 0.5) / 2.5;
+          const r = Math.round(60 + t * 195);
+          const b = Math.round(220 - t * 180);
+          ctx.beginPath();
+          ctx.arc(px, py, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgb(${r},${Math.round(80 - t * 40)},${b})`;
+          ctx.fill();
+
+          // Stats
+          if (px < wallX) { leftSum += p.speed * p.speed; leftCount++; }
+          else { rightSum += p.speed * p.speed; rightCount++; }
+        });
+
+        const leftTemp = leftCount > 0 ? (leftSum / leftCount * 20).toFixed(0) : 0;
+        const rightTemp = rightCount > 0 ? (rightSum / rightCount * 20).toFixed(0) : 0;
+        document.getElementById('leftTemp').textContent = leftTemp;
+        document.getElementById('rightTemp').textContent = rightTemp;
+
+        // Entropy
+        const leftHot = particles.filter(p => p.xr < 0.5 && p.hot).length;
+        const totalHot = particles.filter(p => p.hot).length;
+        const totalCold = N - totalHot;
+
+        let ent = 1;
+        if (leftCount > 0 && rightCount > 0 && totalHot > 0 && totalCold > 0) {
+          const idealLeftHot = totalHot * (leftCount / N);
+          const deviation = Math.abs(leftHot - idealLeftHot) / Math.max(idealLeftHot, 1);
+          ent = Math.max(0, 1 - deviation);
+        }
+        document.getElementById('entropy').textContent = ent.toFixed(2);
+
+        requestAnimationFrame(step);
+      }
+      step();
+    })();
+
+    // ===== Speed Slider =====
+    (function () {
+      const slider = document.getElementById('speedSlider');
+      slider.addEventListener('input', function () {
+        const v = parseFloat(this.value) / 100;
+        const sorts = Math.round(10 * Math.pow(100000, v));
+        const cost = (0.50 * Math.pow(0.000002, v)).toFixed(v > 0.5 ? 6 : 2);
+        const moatYears = v < 0.3 ? '3 years' : v < 0.6 ? '18 months' : v < 0.8 ? '9 months' : '6 months';
+        const scarcity = v < 0.5 ? 1 - v * 0.3 : 0.85 - (v - 0.5) * 1.2;
+        const advantage = Math.max(5, Math.min(95, scarcity * 100));
+
+        document.getElementById('sortsPerSec').textContent = sorts.toLocaleString();
+        document.getElementById('costPerSort').textContent = '$' + cost;
+        document.getElementById('moat').textContent = moatYears;
+        document.getElementById('advFill').style.width = advantage + '%';
+      });
+    })();
+
+    // ===== Three Costs Triangle =====
+    (function () {
+      const svg = d3.select('#triangleSvg');
+      const w = 500, h = 420, pad = 60;
+      const A = [w / 2, pad];          // top: Prediction Error
+      const B = [pad, h - pad];        // bottom-left: Model Complexity
+      const C = [w - pad, h - pad];    // bottom-right: Update Cost
+
+      // Triangle
+      svg.append('polygon')
+        .attr('points', `${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}`)
+        .attr('fill', '#f8f8f5').attr('stroke', '#ccc').attr('stroke-width', 1.5);
+
+      // Labels
+      svg.append('text').attr('x', A[0]).attr('y', A[1] - 12).attr('text-anchor', 'middle').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Prediction Error');
+      svg.append('text').attr('x', B[0] - 5).attr('y', B[1] + 20).attr('text-anchor', 'start').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Model Complexity');
+      svg.append('text').attr('x', C[0] + 5).attr('y', C[1] + 20).attr('text-anchor', 'end').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Update Cost');
+
+      // Zone regions
+      const zones = [
+        { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost', cx: (A[0] + C[0]) / 2, cy: (A[1] + C[1]) / 2 - 20 },
+        { name: 'Central Planning', desc: 'High complexity, high prediction error, low update cost', cx: (A[0] + B[0]) / 2 - 10, cy: (A[1] + B[1]) / 2 + 20 },
+        { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost', cx: w / 2, cy: (A[1] + (B[1] + C[1]) / 2) / 2 - 10 },
+      ];
+
+      zones.forEach(z => {
+        svg.append('text').attr('x', z.cx).attr('y', z.cy).attr('text-anchor', 'middle')
+          .attr('font-size', 11).attr('fill', '#aaa').attr('font-style', 'italic').attr('font-family', "'DM Sans', system-ui, sans-serif").text(z.name);
+      });
+
+      // Barycentric coordinates
+      function bary(px, py) {
+        const denom = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1]);
+        const wA = ((B[1] - C[1]) * (px - C[0]) + (C[0] - B[0]) * (py - C[1])) / denom;
+        const wB = ((C[1] - A[1]) * (px - C[0]) + (A[0] - C[0]) * (py - C[1])) / denom;
+        const wC = 1 - wA - wB;
+        return [Math.max(0, wA), Math.max(0, wB), Math.max(0, wC)];
+      }
+
+      function insideTriangle(px, py) {
+        const [a, b, c] = bary(px, py);
+        return a >= -0.01 && b >= -0.01 && c >= -0.01;
+      }
+
+      function getZone(wA, wB, wC) {
+        if (wA > 0.45 && wC > 0.25) return { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost. Price signals do the work.' };
+        if (wB > 0.45) return { name: 'Central Planning', desc: 'High model complexity, high prediction error, low update cost. Top-down control.' };
+        if (wA > 0.4 && wB > 0.25) return { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost. Machine learning finds patterns humans cannot.' };
+        if (wC > 0.45) return { name: 'Bureaucracy', desc: 'High update cost, slow to change. Rules over results.' };
+        return { name: 'Mixed System', desc: 'A hybrid of approaches. Most real economies live here.' };
+      }
+
+      // Draggable point
+      const startX = w / 2, startY = h / 2.5;
+      const dot = svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 10)
+        .attr('fill', '#2563eb').attr('stroke', 'white').attr('stroke-width', 2).attr('cursor', 'grab');
+
+      // Percentage labels
+      const pctA = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
+      const pctB = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
+      const pctC = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
+
+      function updateLabels(px, py) {
+        const [wA, wB, wC] = bary(px, py);
+        pctA.attr('x', A[0]).attr('y', A[1] - 28).attr('text-anchor', 'middle').text(Math.round(wA * 100) + '%');
+        pctB.attr('x', B[0] - 5).attr('y', B[1] + 36).attr('text-anchor', 'start').text(Math.round(wB * 100) + '%');
+        pctC.attr('x', C[0] + 5).attr('y', C[1] + 36).attr('text-anchor', 'end').text(Math.round(wC * 100) + '%');
+        const zone = getZone(wA, wB, wC);
+        document.getElementById('zoneLabel').textContent = zone.name;
+        document.getElementById('zoneDesc').textContent = zone.desc;
+      }
+
+      updateLabels(startX, startY);
+
+      const drag = d3.drag()
+        .on('drag', function (event) {
+          let nx = event.x, ny = event.y;
+          if (insideTriangle(nx, ny)) {
+            dot.attr('cx', nx).attr('cy', ny);
+            updateLabels(nx, ny);
+          }
+        });
+      dot.call(drag);
+    })();
+
+    // ===== House Decay =====
+    function seededRandom(seed) {
+      let s = seed;
+      return function () {
+        s = (s * 16807 + 0) % 2147483647;
+        return (s - 1) / 2147483646;
+      };
+    }
+
+    function drawHouse(svgId, decay) {
+      const svg = d3.select('#' + svgId);
+      svg.selectAll('*').remove();
+      const d = decay / 100;
+      const rng = seededRandom(42);
+
+      // Ground
+      svg.append('rect').attr('x', 0).attr('y', 170).attr('width', 280).attr('height', 30).attr('fill', '#8B7355');
+
+      // Foundation
+      const fShift = d * 8 * (rng() > 0.5 ? 1 : -1);
+      svg.append('rect').attr('x', 40 + fShift * 0.3).attr('y', 140).attr('width', 200).attr('height', 30)
+        .attr('fill', '#999').attr('opacity', 1 - d * 0.3);
+
+      // Walls
+      const wallColor = d3.interpolateRgb('#e8d8a0', '#8a7a5a')(d);
+      svg.append('rect').attr('x', 50).attr('y', 70).attr('width', 85).attr('height', 70)
+        .attr('fill', wallColor).attr('transform', `rotate(${d * 3}, 50, 140)`);
+      svg.append('rect').attr('x', 145).attr('y', 70).attr('width', 85).attr('height', 70)
+        .attr('fill', wallColor).attr('transform', `rotate(${-d * 2}, 230, 140)`);
+
+      // Roof
+      const roofSag = d * 15;
+      svg.append('path')
+        .attr('d', `M30,75 L140,${15 + roofSag} L250,75 Z`)
+        .attr('fill', d > 0.7 ? '#654' : '#a0522d').attr('opacity', 1 - d * 0.2);
+
+      // Door
+      if (d < 0.8) {
+        svg.append('rect').attr('x', 120).attr('y', 100).attr('width', 30).attr('height', 40)
+          .attr('fill', '#654321').attr('transform', `rotate(${d * 10}, 120, 140)`);
+      }
+
+      // Windows
+      if (d < 0.6) {
+        svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
+        svg.append('rect').attr('x', 185).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
+      } else {
+        svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#333').attr('stroke', '#555');
+        svg.append('line').attr('x1', 70).attr('y1', 90).attr('x2', 95).attr('y2', 110).attr('stroke', '#aaa').attr('stroke-width', 1);
+      }
+
+      // Cracks
+      if (d > 0.3) {
+        const numCracks = Math.floor(d * 6);
+        for (let i = 0; i < numCracks; i++) {
+          const cx = 60 + rng() * 160;
+          const cy = 80 + rng() * 60;
+          const dx1 = 5 + rng() * 10, dy1 = 5 + rng() * 8;
+          const dx2 = -3 + rng() * 6, dy2 = 3 + rng() * 5;
+          svg.append('path')
+            .attr('d', `M${cx},${cy} l${dx1},${dy1} l${dx2},${dy2}`)
+            .attr('stroke', '#555').attr('stroke-width', 0.8).attr('fill', 'none');
         }
       }
 
-      p.xr = px / W;
-      p.yr = py / H;
-
-      // Draw
-      const t = (p.speed - 0.5) / 2.5;
-      const r = Math.round(60 + t * 195);
-      const b = Math.round(220 - t * 180);
-      ctx.beginPath();
-      ctx.arc(px, py, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgb(${r},${Math.round(80 - t * 40)},${b})`;
-      ctx.fill();
-
-      // Stats
-      if (px < wallX) { leftSum += p.speed * p.speed; leftCount++; }
-      else { rightSum += p.speed * p.speed; rightCount++; }
-    });
-
-    const leftTemp = leftCount > 0 ? (leftSum / leftCount * 20).toFixed(0) : 0;
-    const rightTemp = rightCount > 0 ? (rightSum / rightCount * 20).toFixed(0) : 0;
-    document.getElementById('leftTemp').textContent = leftTemp;
-    document.getElementById('rightTemp').textContent = rightTemp;
-
-    // Entropy
-    const leftHot = particles.filter(p => p.xr < 0.5 && p.hot).length;
-    const totalHot = particles.filter(p => p.hot).length;
-    const totalCold = N - totalHot;
-
-    let ent = 1;
-    if (leftCount > 0 && rightCount > 0 && totalHot > 0 && totalCold > 0) {
-      const idealLeftHot = totalHot * (leftCount / N);
-      const deviation = Math.abs(leftHot - idealLeftHot) / Math.max(idealLeftHot, 1);
-      ent = Math.max(0, 1 - deviation);
-    }
-    document.getElementById('entropy').textContent = ent.toFixed(2);
-
-    requestAnimationFrame(step);
-  }
-  step();
-})();
-
-// ===== Speed Slider =====
-(function() {
-  const slider = document.getElementById('speedSlider');
-  slider.addEventListener('input', function() {
-    const v = parseFloat(this.value) / 100;
-    const sorts = Math.round(10 * Math.pow(100000, v));
-    const cost = (0.50 * Math.pow(0.000002, v)).toFixed(v > 0.5 ? 6 : 2);
-    const moatYears = v < 0.3 ? '3 years' : v < 0.6 ? '18 months' : v < 0.8 ? '9 months' : '6 months';
-    const scarcity = v < 0.5 ? 1 - v * 0.3 : 0.85 - (v - 0.5) * 1.2;
-    const advantage = Math.max(5, Math.min(95, scarcity * 100));
-
-    document.getElementById('sortsPerSec').textContent = sorts.toLocaleString();
-    document.getElementById('costPerSort').textContent = '$' + cost;
-    document.getElementById('moat').textContent = moatYears;
-    document.getElementById('advFill').style.width = advantage + '%';
-  });
-})();
-
-// ===== Three Costs Triangle =====
-(function() {
-  const svg = d3.select('#triangleSvg');
-  const w = 500, h = 420, pad = 60;
-  const A = [w / 2, pad];          // top: Prediction Error
-  const B = [pad, h - pad];        // bottom-left: Model Complexity
-  const C = [w - pad, h - pad];    // bottom-right: Update Cost
-
-  // Triangle
-  svg.append('polygon')
-    .attr('points', `${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}`)
-    .attr('fill', '#f8f8f5').attr('stroke', '#ccc').attr('stroke-width', 1.5);
-
-  // Labels
-  svg.append('text').attr('x', A[0]).attr('y', A[1] - 12).attr('text-anchor', 'middle').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Prediction Error');
-  svg.append('text').attr('x', B[0] - 5).attr('y', B[1] + 20).attr('text-anchor', 'start').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Model Complexity');
-  svg.append('text').attr('x', C[0] + 5).attr('y', C[1] + 20).attr('text-anchor', 'end').attr('font-size', 13).attr('font-weight', 600).attr('font-family', "'DM Sans', system-ui, sans-serif").text('Update Cost');
-
-  // Zone regions
-  const zones = [
-    { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost', cx: (A[0] + C[0]) / 2, cy: (A[1] + C[1]) / 2 - 20 },
-    { name: 'Central Planning', desc: 'High complexity, high prediction error, low update cost', cx: (A[0] + B[0]) / 2 - 10, cy: (A[1] + B[1]) / 2 + 20 },
-    { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost', cx: w / 2, cy: (A[1] + (B[1] + C[1]) / 2) / 2 - 10 },
-  ];
-
-  zones.forEach(z => {
-    svg.append('text').attr('x', z.cx).attr('y', z.cy).attr('text-anchor', 'middle')
-      .attr('font-size', 11).attr('fill', '#aaa').attr('font-style', 'italic').attr('font-family', "'DM Sans', system-ui, sans-serif").text(z.name);
-  });
-
-  // Barycentric coordinates
-  function bary(px, py) {
-    const denom = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1]);
-    const wA = ((B[1] - C[1]) * (px - C[0]) + (C[0] - B[0]) * (py - C[1])) / denom;
-    const wB = ((C[1] - A[1]) * (px - C[0]) + (A[0] - C[0]) * (py - C[1])) / denom;
-    const wC = 1 - wA - wB;
-    return [Math.max(0, wA), Math.max(0, wB), Math.max(0, wC)];
-  }
-
-  function insideTriangle(px, py) {
-    const [a, b, c] = bary(px, py);
-    return a >= -0.01 && b >= -0.01 && c >= -0.01;
-  }
-
-  function getZone(wA, wB, wC) {
-    if (wA > 0.45 && wC > 0.25) return { name: 'Markets', desc: 'Low prediction error, medium complexity, low update cost. Price signals do the work.' };
-    if (wB > 0.45) return { name: 'Central Planning', desc: 'High model complexity, high prediction error, low update cost. Top-down control.' };
-    if (wA > 0.4 && wB > 0.25) return { name: 'Adaptive AI', desc: 'Low prediction error, high complexity, low update cost. Machine learning finds patterns humans cannot.' };
-    if (wC > 0.45) return { name: 'Bureaucracy', desc: 'High update cost, slow to change. Rules over results.' };
-    return { name: 'Mixed System', desc: 'A hybrid of approaches. Most real economies live here.' };
-  }
-
-  // Draggable point
-  const startX = w / 2, startY = h / 2.5;
-  const dot = svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 10)
-    .attr('fill', '#2563eb').attr('stroke', 'white').attr('stroke-width', 2).attr('cursor', 'grab');
-
-  // Percentage labels
-  const pctA = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
-  const pctB = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
-  const pctC = svg.append('text').attr('font-size', 12).attr('fill', '#2563eb').attr('font-weight', 600).attr('font-family', "'DM Mono', monospace");
-
-  function updateLabels(px, py) {
-    const [wA, wB, wC] = bary(px, py);
-    pctA.attr('x', A[0]).attr('y', A[1] - 28).attr('text-anchor', 'middle').text(Math.round(wA * 100) + '%');
-    pctB.attr('x', B[0] - 5).attr('y', B[1] + 36).attr('text-anchor', 'start').text(Math.round(wB * 100) + '%');
-    pctC.attr('x', C[0] + 5).attr('y', C[1] + 36).attr('text-anchor', 'end').text(Math.round(wC * 100) + '%');
-    const zone = getZone(wA, wB, wC);
-    document.getElementById('zoneLabel').textContent = zone.name;
-    document.getElementById('zoneDesc').textContent = zone.desc;
-  }
-
-  updateLabels(startX, startY);
-
-  const drag = d3.drag()
-    .on('drag', function(event) {
-      let nx = event.x, ny = event.y;
-      if (insideTriangle(nx, ny)) {
-        dot.attr('cx', nx).attr('cy', ny);
-        updateLabels(nx, ny);
+      // Vegetation overgrowth
+      if (d > 0.5) {
+        for (let i = 0; i < Math.floor(d * 8); i++) {
+          const vx = 30 + rng() * 220;
+          svg.append('path')
+            .attr('d', `M${vx},170 Q${vx + 5},${155 - d * 15} ${vx + 10},${160 - d * 10}`)
+            .attr('stroke', '#3a7a3a').attr('stroke-width', 1.5).attr('fill', 'none');
+        }
       }
-    });
-  dot.call(drag);
-})();
-
-// ===== House Decay =====
-function seededRandom(seed) {
-  let s = seed;
-  return function() {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-}
-
-function drawHouse(svgId, decay) {
-  const svg = d3.select('#' + svgId);
-  svg.selectAll('*').remove();
-  const d = decay / 100;
-  const rng = seededRandom(42);
-
-  // Ground
-  svg.append('rect').attr('x', 0).attr('y', 170).attr('width', 280).attr('height', 30).attr('fill', '#8B7355');
-
-  // Foundation
-  const fShift = d * 8 * (rng() > 0.5 ? 1 : -1);
-  svg.append('rect').attr('x', 40 + fShift * 0.3).attr('y', 140).attr('width', 200).attr('height', 30)
-    .attr('fill', '#999').attr('opacity', 1 - d * 0.3);
-
-  // Walls
-  const wallColor = d3.interpolateRgb('#e8d8a0', '#8a7a5a')(d);
-  svg.append('rect').attr('x', 50).attr('y', 70).attr('width', 85).attr('height', 70)
-    .attr('fill', wallColor).attr('transform', `rotate(${d * 3}, 50, 140)`);
-  svg.append('rect').attr('x', 145).attr('y', 70).attr('width', 85).attr('height', 70)
-    .attr('fill', wallColor).attr('transform', `rotate(${-d * 2}, 230, 140)`);
-
-  // Roof
-  const roofSag = d * 15;
-  svg.append('path')
-    .attr('d', `M30,75 L140,${15 + roofSag} L250,75 Z`)
-    .attr('fill', d > 0.7 ? '#654' : '#a0522d').attr('opacity', 1 - d * 0.2);
-
-  // Door
-  if (d < 0.8) {
-    svg.append('rect').attr('x', 120).attr('y', 100).attr('width', 30).attr('height', 40)
-      .attr('fill', '#654321').attr('transform', `rotate(${d * 10}, 120, 140)`);
-  }
-
-  // Windows
-  if (d < 0.6) {
-    svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
-    svg.append('rect').attr('x', 185).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#87CEEB').attr('stroke', '#555');
-  } else {
-    svg.append('rect').attr('x', 70).attr('y', 90).attr('width', 25).attr('height', 20).attr('fill', '#333').attr('stroke', '#555');
-    svg.append('line').attr('x1', 70).attr('y1', 90).attr('x2', 95).attr('y2', 110).attr('stroke', '#aaa').attr('stroke-width', 1);
-  }
-
-  // Cracks
-  if (d > 0.3) {
-    const numCracks = Math.floor(d * 6);
-    for (let i = 0; i < numCracks; i++) {
-      const cx = 60 + rng() * 160;
-      const cy = 80 + rng() * 60;
-      const dx1 = 5 + rng() * 10, dy1 = 5 + rng() * 8;
-      const dx2 = -3 + rng() * 6, dy2 = 3 + rng() * 5;
-      svg.append('path')
-        .attr('d', `M${cx},${cy} l${dx1},${dy1} l${dx2},${dy2}`)
-        .attr('stroke', '#555').attr('stroke-width', 0.8).attr('fill', 'none');
     }
-  }
 
-  // Vegetation overgrowth
-  if (d > 0.5) {
-    for (let i = 0; i < Math.floor(d * 8); i++) {
-      const vx = 30 + rng() * 220;
-      svg.append('path')
-        .attr('d', `M${vx},170 Q${vx + 5},${155 - d * 15} ${vx + 10},${160 - d * 10}`)
-        .attr('stroke', '#3a7a3a').attr('stroke-width', 1.5).attr('fill', 'none');
-    }
-  }
-}
+    window.updateHouses = function (year) {
+      drawHouse('houseDecay', year);
+      drawHouse('houseMaintained', Math.min(year * 0.05, 5));
+      document.getElementById('maintCost').textContent = '$' + (year * 2500).toLocaleString();
+      document.getElementById('replaceCost').textContent = '$250,000';
+    };
 
-window.updateHouses = function(year) {
-  drawHouse('houseDecay', year);
-  drawHouse('houseMaintained', Math.min(year * 0.05, 5));
-  document.getElementById('maintCost').textContent = '$' + (year * 2500).toLocaleString();
-  document.getElementById('replaceCost').textContent = '$250,000';
-};
+    drawHouse('houseDecay', 0);
+    drawHouse('houseMaintained', 0);
 
-drawHouse('houseDecay', 0);
-drawHouse('houseMaintained', 0);
+    initScrub();
 
-initScrub();
-
-// Reading progress
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-});
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
+    // Reading progress
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      var pct = p.scrollTop / (p.scrollHeight - p.clientHeight) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
     });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>

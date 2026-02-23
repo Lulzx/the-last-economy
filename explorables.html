@@ -1,933 +1,986 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Symbioism: The Last Economy — Explorable Explanations</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symbioism: The Last Economy — Explorable Explanations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  background: #fafaf8;
-  color: #1a1a1a;
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-.btn, button { touch-action: manipulation; }
+    body {
+      background: #fafaf8;
+      color: #1a1a1a;
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-.prose {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  max-width: 680px;
-  margin: 0 auto;
-  line-height: 1.75;
-}
+    .btn,
+    button {
+      touch-action: manipulation;
+    }
 
-nav {
-  padding: 16px 24px;
-  border-bottom: 1px solid #e5e5e0;
-  position: sticky;
-  top: 0;
-  background: rgba(250,250,248,0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  align-items: center;
-  z-index: 100;
-}
+    .prose {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
 
-header {
-  text-align: center;
-  padding: 72px 24px 48px;
-}
+    nav {
+      padding: 16px 24px;
+      border-bottom: 1px solid #e5e5e0;
+      position: sticky;
+      top: 0;
+      background: rgba(250, 250, 248, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      align-items: center;
+      z-index: 100;
+    }
 
-header h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-}
+    header {
+      text-align: center;
+      padding: 72px 24px 48px;
+    }
 
-header .subtitle {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  font-size: clamp(0.95rem, 2vw, 1.15rem);
-  color: #555;
-  margin-bottom: 32px;
-}
+    header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
 
-header .intro {
-  font-size: clamp(0.95rem, 2vw, 1.05rem);
-  color: #333;
-}
+    header .subtitle {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: #555;
+      margin-bottom: 32px;
+    }
 
-.scrub {
-  border-bottom: 2px dashed #2563eb;
-  cursor: ew-resize;
-  color: #2563eb;
-  font-weight: 600;
-  padding: 0 2px;
-  user-select: none;
-  -webkit-user-select: none;
-  display: inline;
-  touch-action: none;
-}
-.scrub:hover {
-  background: rgba(37, 99, 235, 0.08);
-  border-radius: 2px;
-}
+    header .intro {
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: #333;
+    }
 
-.grid-section {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 24px 24px 80px;
-}
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      cursor: ew-resize;
+      color: #2563eb;
+      font-weight: 600;
+      padding: 0 2px;
+      user-select: none;
+      -webkit-user-select: none;
+      display: inline;
+      touch-action: none;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
+    .scrub:hover {
+      background: rgba(37, 99, 235, 0.08);
+      border-radius: 2px;
+    }
 
-@media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-}
-@media (max-width: 560px) {
-  .grid { grid-template-columns: 1fr; gap: 14px; }
-  header { padding: 48px 20px 32px; }
-  .grid-section { padding: 16px 16px 60px; }
-}
+    .grid-section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 24px 80px;
+    }
 
-.card {
-  background: #fff;
-  border: 1px solid #e5e5e0;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  cursor: pointer;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-}
-.card:active {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
 
-.card-accent {
-  width: 100%;
-  height: 4px;
-  flex-shrink: 0;
-}
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
 
-.card-viz {
-  height: 100px;
-  width: 100%;
-  overflow: hidden;
-  background: #fafaf8;
-  flex-shrink: 0;
-}
-.card-viz svg {
-  display: block;
-  width: 100%;
-  max-width: 600px;
-}
+    @media (max-width: 560px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
 
-.card-body {
-  padding: 16px 20px 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+      header {
+        padding: 48px 20px 32px;
+      }
 
-.card-badge {
-  display: inline-block;
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  width: fit-content;
-}
+      .grid-section {
+        padding: 16px 16px 60px;
+      }
+    }
 
-.card-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
+    .card {
+      background: #fff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      cursor: pointer;
+    }
 
-.card-question {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.88rem;
-  color: #555;
-  flex: 1;
-  margin-bottom: 12px;
-  font-style: italic;
-  line-height: 1.55;
-}
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.12), 0 6px 12px -4px rgba(0, 0, 0, 0.08);
+      border-color: #d4d4d8;
+    }
 
-.card-link {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: gap 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.card:hover .card-link {
-  gap: 8px;
-}
+    .card:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+    }
 
-input[type=range] {
-  accent-color: #2563eb;
-}
+    .card-accent {
+      width: 100%;
+      height: 4px;
+      flex-shrink: 0;
+    }
 
-.btn {
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-}
+    .card-viz {
+      height: 120px;
+      width: 100%;
+      overflow: hidden;
+      background: #fafaf8;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #f4f4f5;
+    }
 
-.active {
-  background: #2563eb;
-  color: white;
-}
+    .card-viz svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 600px;
+    }
 
-nav a {
-  cursor: pointer;
-}
-</style>
+    .card-body {
+      padding: 16px 20px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-badge {
+      display: inline-block;
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      width: fit-content;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .card-question {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 0.88rem;
+      color: #555;
+      flex: 1;
+      margin-bottom: 12px;
+      font-style: italic;
+      line-height: 1.55;
+    }
+
+    .card-link {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: gap 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card:hover .card-link {
+      gap: 8px;
+    }
+
+    input[type=range] {
+      accent-color: #2563eb;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .active {
+      background: #2563eb;
+      color: white;
+    }
+
+    nav a {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <style>
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
-</style>
-<body>
-<div id="progress-bar"></div>
-
-<nav style="padding: 16px 24px; border-bottom: 1px solid #e5e5e0;">
-  <a href="index.html" style="font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; color: #555; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M6 3.5L3 7l3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Back to overview
-  </a>
-</nav>
-<header>
-  <h1>Symbioism: The Last Economy</h1>
-  <p class="subtitle">Twenty-three interactive chapters where you manipulate the ideas directly</p>
-  <p class="prose intro">
-    Since <span class="scrub" id="scrub-year" data-min="1750" data-max="2030" data-value="1750">1750</span>,
-    civilization has reorganized its economic engine
-    <span class="scrub" id="scrub-count" data-min="1" data-max="6" data-value="4">4</span> times.
-    We are living through the <span id="ordinal">4th</span> transition now — and this one is different.
-    Each prior shift — agrarian to mercantile, mercantile to industrial, industrial to informational —
-    changed <em>what</em> humans did. This shift changes <em>whether</em> humans do it at all.
-  </p>
-</header>
-
-<section class="grid-section">
-  <div class="grid" id="card-grid"></div>
-</section>
-
-
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script>
-// --- Scrubable numbers ---
-(function() {
-  const ordinals = ['','1st','2nd','3rd','4th','5th','6th'];
-  const ordinalEl = document.getElementById('ordinal');
-
-  function updateOrdinal() {
-    const v = parseInt(document.getElementById('scrub-count').dataset.value);
-    ordinalEl.textContent = ordinals[v] || v + 'th';
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+    z-index: 1000;
+    transition: width 0.1s linear;
+    pointer-events: none;
   }
+</style>
 
-  document.querySelectorAll('.scrub').forEach(el => {
-    let startX, startVal;
-    const min = parseInt(el.dataset.min);
-    const max = parseInt(el.dataset.max);
-    const sensitivity = (max - min) > 100 ? 1 : 0.15;
+<body>
+  <div id="progress-bar"></div>
 
-    function onMove(clientX) {
-      const dx = clientX - startX;
-      let next = Math.round(startVal + dx * sensitivity);
-      next = Math.max(min, Math.min(max, next));
-      el.dataset.value = next;
-      el.textContent = next;
-      updateOrdinal();
-    }
+  <nav style="padding: 16px 24px; border-bottom: 1px solid #e5e5e0;">
+    <a href="index.html"
+      style="font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; color: #555; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M11 7H3M6 3.5L3 7l3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      Back to overview
+    </a>
+  </nav>
+  <header>
+    <h1>Symbioism: The Last Economy</h1>
+    <p class="subtitle">Twenty-three interactive chapters where you manipulate the ideas directly</p>
+    <p class="prose intro">
+      Since <span class="scrub" id="scrub-year" data-min="1750" data-max="2030" data-value="1750">1750</span>,
+      civilization has reorganized its economic engine
+      <span class="scrub" id="scrub-count" data-min="1" data-max="6" data-value="4">4</span> times.
+      We are living through the <span id="ordinal">4th</span> transition now — and this one is different.
+      Each prior shift — agrarian to mercantile, mercantile to industrial, industrial to informational —
+      changed <em>what</em> humans did. This shift changes <em>whether</em> humans do it at all.
+    </p>
+  </header>
 
-    el.addEventListener('mousedown', e => {
-      e.preventDefault();
-      startX = e.clientX;
-      startVal = parseInt(el.dataset.value);
-      const moveHandler = e2 => onMove(e2.clientX);
-      const upHandler = () => {
-        document.removeEventListener('mousemove', moveHandler);
-        document.removeEventListener('mouseup', upHandler);
-      };
-      document.addEventListener('mousemove', moveHandler);
-      document.addEventListener('mouseup', upHandler);
-    });
+  <section class="grid-section">
+    <div class="grid" id="card-grid"></div>
+  </section>
 
-    el.addEventListener('touchstart', e => {
-      e.preventDefault();
-      startX = e.touches[0].clientX;
-      startVal = parseInt(el.dataset.value);
-      const moveHandler = e2 => onMove(e2.touches[0].clientX);
-      const upHandler = () => {
-        document.removeEventListener('touchmove', moveHandler);
-        document.removeEventListener('touchend', upHandler);
-      };
-      document.addEventListener('touchmove', moveHandler);
-      document.addEventListener('touchend', upHandler);
-    });
-  });
-})();
 
-// --- Card data ---
-const cards = [
-  { n: 0,  file: 'introduction.html',              title: 'The Thousand-Day Window',    ch: 'Intro',  q: 'How long do we have before the phase transition becomes irreversible?', color: '#1a1a1a' },
-  { n: 1,  file: '01-intelligence-inversion.html', title: 'The Intelligence Inversion', ch: 'Ch 1',  q: 'When cognition itself is automated, where do humans pivot?', color: '#7c3aed' },
-  { n: 2,  file: '02-harbingers.html',              title: 'Harbingers of the Storm',    ch: 'Ch 2',  q: 'What does physics look like when a system is about to break?', color: '#dc2626' },
-  { n: 3,  file: 'seven-lies.html',                 title: 'The Seven Fatal Lies',       ch: 'Ch 3',  q: 'What if the foundations of economics are not just wrong \u2014 but backwards?', color: '#b45309' },
-  { n: 4,  file: '03-gdp-illusion.html',            title: 'The GDP Illusion',           ch: 'Ch 4',  q: 'What if your only instrument rewarded destruction?', color: '#d97706' },
-  { n: 5,  file: 'ch5-trial-by-fire.html',          title: 'The Trial by Fire',          ch: 'Ch 5',  q: 'What are the seven strongest arguments against this book \u2014 and why do they fail?', color: '#dc2626' },
-  { n: 6,  file: '04-maxwells-demon.html',          title: 'Maxwell\u2019s Demon',       ch: 'Ch 6',  q: 'Is value a social agreement or a law of physics?', color: '#059669' },
-  { n: 7,  file: 'generative-engine.html',          title: 'The Generative Engine',      ch: 'Ch 7',  q: 'How does an economy conjure order from infinite chaos?', color: '#0d9488' },
-  { n: 8,  file: '05-mind-dashboard.html',          title: 'The MIND Dashboard',         ch: 'Ch 8',  q: 'What happens when any single dimension of civilization reaches zero?', color: '#2563eb' },
-  { n: 9,  file: '06-three-flows.html',             title: 'The Three Flows',            ch: 'Ch 9',  q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
-  { n: 10, file: '07-network-prison.html',          title: 'The Network Prison',         ch: 'Ch 10', q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
-  { n: 11, file: 'ch11-cathedral-bazaar.html',      title: 'Cathedral and Bazaar',       ch: 'Ch 11', q: 'Are firms becoming obsolete \u2014 and what replaces them?', color: '#0891b2' },
-  { n: 11.5, file: 'ch12-intelligent-game-theory.html', title: 'Intelligent Game Theory', ch: 'Chapter 12', q: 'From prisoner\u2019s dilemmas to symbiotic equilibria \u2014 how AI and cryptography are engineering cooperation into the architecture of the game itself.', color: '#7c3aed' },
-  { n: 12, file: '08-cooperation-emerges.html',     title: 'Cooperation Emerges',        ch: 'Ch 12', q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
-  { n: 13, file: 'ch13-dual-engine.html',           title: 'The Dual Engine',            ch: 'Ch 13', q: 'What happens when AI accelerates the fast clock to infinity while the slow clock barely moves?', color: '#7c3aed' },
-  { n: 14, file: 'ch14-social-contract.html',       title: 'The New Social Contract',    ch: 'Ch 14', q: 'What do we owe each other in a world where labor is no longer necessary?', color: '#16a34a' },
-  { n: 15, file: 'ch15-alignment-economy.html',     title: 'The Alignment Economy',      ch: 'Ch 15', q: 'Who commands the machines \u2014 and why is that the central question of this century?', color: '#dc2626' },
-  { n: 16, file: '09-three-futures.html',           title: 'The Three Futures',          ch: 'Ch 16', q: 'Which crystal will this supercooled civilization become?', color: '#dc2626' },
-  { n: 17, file: 'ch17-symbiotic-state.html',       title: 'The Symbiotic State',        ch: 'Ch 17', q: 'What does governance look like when its job is gardening, not extracting?', color: '#2563eb' },
-  { n: 18, file: 'ch18-money-two-worlds.html',      title: 'Money for Two Worlds',       ch: 'Ch 18', q: 'Can a currency designed for atoms serve an economy running on bits?', color: '#d97706' },
-  { n: 19, file: 'nucleation.html',                 title: 'The Nucleation of the New',  ch: 'Ch 19', q: 'How does a new world crystallize \u2014 and what is your role in seeding it?', color: '#16a34a' },
-  { n: 20, file: 'intelligent-macro.html',          title: 'Intelligent Macroeconomics', ch: 'Ch 20', q: 'What if the great economic mysteries dissolve when you measure the right things?', color: '#6d28d9' },
-  { n: 21, file: '10-after-economics.html',         title: 'After Economics',            ch: 'Ch 21', q: 'AI unbundles the job. What do you replace each piece with?', color: '#7c3aed' },
-  { n: 22, file: 'epilogue.html',                   title: 'The Thousandth Day',         ch: 'Epilogue', q: 'The machines have taken our work. What do we do with the gift of that liberation?', color: '#1a1a1a' },
-];
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // --- Scrubable numbers ---
+    (function () {
+      const ordinals = ['', '1st', '2nd', '3rd', '4th', '5th', '6th'];
+      const ordinalEl = document.getElementById('ordinal');
 
-// --- Mini-visualization generators ---
-const vizGenerators = [
-  // 0: Introduction — countdown number animation
-  function(svg, w, h, color) {
-    const windowEnd = new Date('2024-01-01').getTime() + 1000 * 24 * 3600 * 1000;
-    const remaining = Math.max(0, Math.ceil((windowEnd - Date.now()) / (24 * 3600 * 1000)));
-    const pct = Math.min(1, (1000 - remaining) / 1000);
-    // Progress arc
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
-    const tau = Math.PI * 2;
-    const arc = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau);
-    const filled = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau * pct);
-    svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', arc()).attr('fill', '#e5e5e0');
-    svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', filled()).attr('fill', color).attr('opacity', 0.8);
-    svg.append('text').attr('x', cx).attr('y', cy + 5).attr('text-anchor', 'middle').attr('font-size', 18).attr('font-weight', 700).attr('fill', color).text(remaining);
-    svg.append('text').attr('x', cx).attr('y', cy + 20).attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', '#888').text('days');
-  },
-  // 1: Rising then flipping sigmoid (intelligence inversion)
-  function(svg, w, h, color) {
-    const n = 40;
-    const data = d3.range(n).map(i => {
-      const x = i / (n - 1);
-      return { x, y: 1 / (1 + Math.exp(-12 * (x - 0.5))) };
-    });
-    const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
-    const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
-    const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
-    svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.7)
-      .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-      .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-      .transition().duration(1500).attr('stroke-dashoffset', 0);
-    const data2 = data.map(d => ({ x: d.x, y: 1 - d.y }));
-    svg.append('path').datum(data2).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.25)
-      .attr('stroke-dasharray', '4,4');
-  },
-  // 2: Seismograph jitter (harbingers)
-  function(svg, w, h, color) {
-    const n = 60;
-    const data = d3.range(n).map(i => {
-      const x = i / (n - 1);
-      const amp = Math.pow(x, 2.5);
-      return { x, y: 0.5 + amp * (Math.random() - 0.5) };
-    });
-    const xS = d3.scaleLinear().domain([0, 1]).range([4, w - 4]);
-    const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
-    const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveLinear);
-    svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-      .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0.7)
-      .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-      .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-      .transition().duration(2000).attr('stroke-dashoffset', 0);
-  },
-  // 3: Flip card animation (Seven Lies)
-  function(svg, w, h, color) {
-    const n = 7;
-    const cardW = Math.floor((w - 16) / n) - 2;
-    const cardH = h - 16;
-    const data = d3.range(n).map(i => ({ i, flipped: false }));
-    const groups = svg.selectAll('g.lie-card').data(data).join('g')
-      .attr('class', 'lie-card')
-      .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
-    groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
-      .attr('fill', color).attr('opacity', 0.8);
-    // Animate: cards flip one by one revealing back side
-    data.forEach((d, i) => {
-      setTimeout(() => {
-        groups.filter((dd, ii) => ii === i)
-          .select('rect')
-          .transition().duration(300)
-          .attr('fill', '#fff')
-          .attr('stroke', color).attr('stroke-width', 1.5);
-      }, 400 + i * 260);
-    });
-  },
-  // 5: Ch5 Trial by Fire — 7 argument cards flipping one by one
-  function(svg, w, h, color) {
-    const n = 7;
-    const cardW = Math.floor((w - 16) / n) - 2;
-    const cardH = h - 16;
-    const data = d3.range(n).map(i => ({ i }));
-    const groups = svg.selectAll('g.fire-card').data(data).join('g')
-      .attr('class', 'fire-card')
-      .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
-    groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
-      .attr('fill', color).attr('opacity', 0.7);
-    data.forEach((d, i) => {
-      setTimeout(() => {
-        groups.filter((dd, ii) => ii === i).select('rect')
-          .transition().duration(300)
-          .attr('fill', '#dcfce7').attr('stroke', '#16a34a').attr('stroke-width', 1.5).attr('opacity', 1);
-      }, 300 + i * 220);
-    });
-  },
-  // 4: Diverging bars (GDP illusion)
-  function(svg, w, h, color) {
-    const n = 12;
-    const data = d3.range(n).map(i => ({ i, v: 0.3 + Math.random() * 0.7, bad: Math.random() > 0.5 }));
-    const xS = d3.scaleBand().domain(d3.range(n)).range([16, w - 16]).padding(0.35);
-    const yS = d3.scaleLinear().domain([0, 1]).range([0, h * 0.65]);
-    svg.selectAll('rect').data(data).join('rect')
-      .attr('x', d => xS(d.i)).attr('width', xS.bandwidth())
-      .attr('y', h - 10).attr('height', 0)
-      .attr('rx', 2)
-      .attr('fill', d => d.bad ? '#e5e5e0' : color).attr('opacity', d => d.bad ? 0.6 : 0.7)
-      .transition().duration(800).delay((d, i) => i * 60)
-      .attr('y', d => h - 10 - yS(d.v)).attr('height', d => yS(d.v));
-  },
-  // 5: Orbiting particles (Maxwell's Demon)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.32;
-    svg.append('line').attr('x1', cx).attr('y1', 8).attr('x2', cx).attr('y2', h - 8)
-      .attr('stroke', '#e5e5e0').attr('stroke-width', 1).attr('stroke-dasharray', '3,3');
-    const particles = d3.range(14).map(() => ({
-      angle: Math.random() * Math.PI * 2,
-      speed: 0.005 + Math.random() * 0.015,
-      rx: r * (0.5 + Math.random() * 0.5),
-      ry: r * (0.3 + Math.random() * 0.5),
-      side: Math.random() > 0.5
-    }));
-    const dots = svg.selectAll('circle').data(particles).join('circle')
-      .attr('r', 3).attr('fill', d => d.side ? color : '#dc2626').attr('opacity', 0.65);
-    function tick() {
-      particles.forEach(p => p.angle += p.speed);
-      dots.attr('cx', d => cx + Math.cos(d.angle) * d.rx)
-          .attr('cy', d => cy + Math.sin(d.angle) * d.ry);
-      requestAnimationFrame(tick);
-    }
-    tick();
-  },
-  // 11: Ch11 Cathedral/Bazaar — two vertical bars with transaction cost line
-  function(svg, w, h, color) {
-    const barW = w * 0.28;
-    const catH = h * 0.72, bazH = h * 0.55;
-    // Cathedral bar
-    svg.append('rect').attr('x', w * 0.12).attr('y', h - 12 - catH).attr('width', barW).attr('height', 0)
-      .attr('fill', '#0891b2').attr('rx', 3).attr('opacity', 0.75)
-      .transition().duration(700).attr('height', catH);
-    svg.append('text').attr('x', w * 0.12 + barW/2).attr('y', h - 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#0891b2').text('Cathedral');
-    // Bazaar bar
-    svg.append('rect').attr('x', w * 0.6).attr('y', h - 12 - bazH).attr('width', barW).attr('height', 0)
-      .attr('fill', '#7c3aed').attr('rx', 3).attr('opacity', 0.75)
-      .transition().duration(700).delay(200).attr('height', bazH);
-    svg.append('text').attr('x', w * 0.6 + barW/2).attr('y', h - 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#7c3aed').text('Bazaar');
-    // Animated dividing line
-    const lineY = h - 12 - (catH + bazH) / 2;
-    svg.append('line').attr('x1', 0).attr('y1', lineY).attr('x2', 0).attr('y2', lineY)
-      .attr('stroke','#1a1a1a').attr('stroke-width', 1.5).attr('stroke-dasharray','4,3').attr('opacity', 0.5)
-      .transition().delay(800).duration(600).attr('x2', w);
-  },
-  // Ch12: Intelligent Game Theory — payoff matrix morphing into equilibrium
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2;
-    const nodes = [
-      { x: w * 0.28, y: h * 0.3 }, { x: w * 0.72, y: h * 0.3 },
-      { x: w * 0.28, y: h * 0.7 }, { x: w * 0.72, y: h * 0.7 }
-    ];
-    const edges = [{s:0,t:1},{s:2,t:3},{s:0,t:2},{s:1,t:3},{s:0,t:3},{s:1,t:2}];
-    edges.forEach((e, i) => {
-      svg.append('line').attr('x1', nodes[e.s].x).attr('y1', nodes[e.s].y)
-        .attr('x2', nodes[e.t].x).attr('y2', nodes[e.t].y)
-        .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0)
-        .transition().delay(i * 150).duration(400).attr('opacity', 0.4);
-    });
-    nodes.forEach((n, i) => {
-      svg.append('circle').attr('cx', n.x).attr('cy', n.y).attr('r', 0)
-        .attr('fill', i < 2 ? color : '#16a34a').attr('opacity', 0.85)
-        .transition().delay(i * 120).duration(400).attr('r', 7);
-    });
-    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 0)
-      .attr('fill', color).attr('opacity', 0.9)
-      .transition().delay(700).duration(500).attr('r', 10);
-    svg.append('text').attr('x', cx).attr('y', cy + 4).attr('text-anchor', 'middle')
-      .attr('font-size', 8).attr('font-weight', 700).attr('fill', 'white').attr('opacity', 0)
-      .transition().delay(900).duration(300).attr('opacity', 1).text('Nash');
-  },
-  // 6: Noise to pattern coalescing dots (Generative Engine)
-  function(svg, w, h, color) {
-    const n = 40;
-    const dots = d3.range(n).map(i => ({
-      sx: Math.random() * w, sy: Math.random() * h,
-      tx: (w / 2) + Math.cos(i / n * Math.PI * 2) * (w * 0.3),
-      ty: (h / 2) + Math.sin(i / n * Math.PI * 2) * (h * 0.35)
-    }));
-    const circles = svg.selectAll('circle').data(dots).join('circle')
-      .attr('cx', d => d.sx).attr('cy', d => d.sy)
-      .attr('r', 2.5).attr('fill', color).attr('opacity', 0.4);
-    // Animate toward ordered ring
-    setTimeout(() => {
-      circles.transition().duration(1400).delay((d, i) => i * 20)
-        .attr('cx', d => d.tx).attr('cy', d => d.ty).attr('opacity', 0.75);
-    }, 400);
-  },
-  // 7: Radar / pentagon (MIND Dashboard)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
-    const dims = 4;
-    const angles = d3.range(dims).map(i => (i / dims) * Math.PI * 2 - Math.PI / 2);
-    [0.33, 0.66, 1].forEach(s => {
-      const pts = angles.map(a => [cx + Math.cos(a) * r * s, cy + Math.sin(a) * r * s]);
-      svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
-        .attr('fill', 'none').attr('stroke', '#e5e5e0').attr('stroke-width', 1);
-    });
-    const vals = [0.8, 0.6, 0.4, 0.9];
-    const pts = angles.map((a, i) => [cx + Math.cos(a) * r * vals[i], cy + Math.sin(a) * r * vals[i]]);
-    svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
-      .attr('fill', color).attr('fill-opacity', 0.15).attr('stroke', color)
-      .attr('stroke-width', 1.5).attr('opacity', 0)
-      .transition().duration(800).attr('opacity', 1);
-    svg.selectAll('.dot').data(pts).join('circle')
-      .attr('cx', d => d[0]).attr('cy', d => d[1]).attr('r', 3)
-      .attr('fill', color).attr('opacity', 0)
-      .transition().duration(600).delay((d, i) => 800 + i * 100).attr('opacity', 1);
-  },
-  // 8: Three flowing streams (Three Flows)
-  function(svg, w, h, color) {
-    const streamColors = [color, '#7c3aed', '#d97706'];
-    streamColors.forEach((c, idx) => {
-      const n = 30;
-      const offset = (idx - 1) * h * 0.25;
-      const data = d3.range(n).map(i => {
-        const x = i / (n - 1);
-        return { x, y: 0.5 + offset / h + 0.12 * Math.sin(x * Math.PI * 3 + idx * 2) };
+      function updateOrdinal() {
+        const v = parseInt(document.getElementById('scrub-count').dataset.value);
+        ordinalEl.textContent = ordinals[v] || v + 'th';
+      }
+
+      document.querySelectorAll('.scrub').forEach(el => {
+        let startX, startVal;
+        const min = parseInt(el.dataset.min);
+        const max = parseInt(el.dataset.max);
+        const sensitivity = (max - min) > 100 ? 1 : 0.15;
+
+        function onMove(clientX) {
+          const dx = clientX - startX;
+          let next = Math.round(startVal + dx * sensitivity);
+          next = Math.max(min, Math.min(max, next));
+          el.dataset.value = next;
+          el.textContent = next;
+          updateOrdinal();
+        }
+
+        el.addEventListener('mousedown', e => {
+          e.preventDefault();
+          startX = e.clientX;
+          startVal = parseInt(el.dataset.value);
+          const moveHandler = e2 => onMove(e2.clientX);
+          const upHandler = () => {
+            document.removeEventListener('mousemove', moveHandler);
+            document.removeEventListener('mouseup', upHandler);
+          };
+          document.addEventListener('mousemove', moveHandler);
+          document.addEventListener('mouseup', upHandler);
+        });
+
+        el.addEventListener('touchstart', e => {
+          e.preventDefault();
+          startX = e.touches[0].clientX;
+          startVal = parseInt(el.dataset.value);
+          const moveHandler = e2 => onMove(e2.touches[0].clientX);
+          const upHandler = () => {
+            document.removeEventListener('touchmove', moveHandler);
+            document.removeEventListener('touchend', upHandler);
+          };
+          document.addEventListener('touchmove', moveHandler);
+          document.addEventListener('touchend', upHandler);
+        });
       });
-      const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
-      const yS = d3.scaleLinear().domain([0, 1]).range([4, h - 4]);
-      const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
-      svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-        .attr('stroke', c).attr('stroke-width', 2).attr('opacity', 0.5)
-        .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-        .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-        .transition().duration(1500).delay(idx * 200).attr('stroke-dashoffset', 0);
-    });
-  },
-  // 9: Network graph (Network Prison)
-  function(svg, w, h, color) {
-    const nodes = d3.range(10).map(i => ({
-      x: 20 + Math.random() * (w - 40),
-      y: 12 + Math.random() * (h - 24),
-      r: i === 0 ? 6 : 3 + Math.random() * 2
-    }));
-    const edges = [];
-    for (let i = 1; i < nodes.length; i++) {
-      edges.push({ s: Math.floor(Math.random() * i), t: i });
-      if (Math.random() > 0.5 && i > 2) edges.push({ s: Math.floor(Math.random() * i), t: i });
-    }
-    svg.selectAll('line').data(edges).join('line')
-      .attr('x1', d => nodes[d.s].x).attr('y1', d => nodes[d.s].y)
-      .attr('x2', d => nodes[d.t].x).attr('y2', d => nodes[d.t].y)
-      .attr('stroke', '#d5d5d0').attr('stroke-width', 1);
-    svg.selectAll('circle').data(nodes).join('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
-      .attr('fill', (d, i) => i === 0 ? color : '#aaa').attr('opacity', 0.7)
-      .transition().duration(500).delay((d, i) => i * 80).attr('r', d => d.r);
-  },
-  // 10: Growing cooperation dots (Cooperation Emerges)
-  function(svg, w, h, color) {
-    const n = 24;
-    const data = d3.range(n).map(i => ({
-      x: 16 + Math.random() * (w - 32),
-      y: 10 + Math.random() * (h - 20),
-      cooperate: Math.random() > 0.4
-    }));
-    svg.selectAll('circle').data(data).join('circle')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
-      .attr('fill', d => d.cooperate ? color : '#ddd').attr('opacity', 0.7)
-      .transition().duration(600).delay((d, i) => i * 40).attr('r', 4);
-    setTimeout(() => {
-      svg.selectAll('circle')
-        .transition().duration(1200)
-        .attr('fill', color).attr('opacity', 0.65);
-    }, 1800);
-  },
-  // 13: Ch13 Dual Engine — two clocks one fast one slow
-  function(svg, w, h, color) {
-    const drawSimpleClock = (cx, cy, r, handAngle, c) => {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', 'white').attr('stroke', c).attr('stroke-width', 2);
-      const ha = handAngle - Math.PI / 2;
-      svg.append('line').attr('x1', cx).attr('y1', cy)
-        .attr('x2', cx + Math.cos(ha) * r * 0.6).attr('y2', cy + Math.sin(ha) * r * 0.6)
-        .attr('stroke', c).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 3).attr('fill', c);
-    };
-    const r = Math.min(w * 0.2, h * 0.38);
-    let fastA = 0, slowA = 0, last = null;
-    drawSimpleClock(w * 0.28, h / 2, r, 0, '#dc2626');
-    drawSimpleClock(w * 0.72, h / 2, r, 0, '#2563eb');
-    svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#dc2626').text('Fast');
-    svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#2563eb').text('Slow');
-    function tick(ts) {
-      if (!last) last = ts;
-      const dt = (ts - last) / 1000; last = ts;
-      fastA += dt * 3; slowA += dt * 0.15;
-      svg.selectAll('*').remove();
-      drawSimpleClock(w * 0.28, h / 2, r, fastA, '#dc2626');
-      drawSimpleClock(w * 0.72, h / 2, r, slowA, '#2563eb');
-      svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#dc2626').text('Fast');
-      svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 9).attr('fill','#2563eb').text('Slow');
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  },
-  // 14: Ch14 Social Contract — three circles appearing (Dignity, Capability, Viability)
-  function(svg, w, h, color) {
-    const labels = ['Dignity','Capability','Viability'];
-    const colors = ['#16a34a','#2563eb','#7c3aed'];
-    const cx = [w * 0.25, w * 0.5, w * 0.75];
-    const cy = h / 2;
-    const r = Math.min(w * 0.12, h * 0.32);
-    labels.forEach((label, i) => {
-      svg.append('circle').attr('cx', cx[i]).attr('cy', cy).attr('r', 0)
-        .attr('fill', colors[i]).attr('opacity', 0.18).attr('stroke', colors[i]).attr('stroke-width', 2)
-        .transition().duration(600).delay(i * 350).attr('r', r);
-      svg.append('text').attr('x', cx[i]).attr('y', cy + 4).attr('text-anchor','middle').attr('font-size', 9).attr('fill', colors[i]).attr('opacity', 0)
-        .transition().delay(400 + i * 350).duration(300).attr('opacity', 1).text(label);
-    });
-  },
-  // 15: Ch15 Alignment Economy — warning lights turning on
-  function(svg, w, h, color) {
-    const lights = [{label:'Self-Pres.',c:'#dc2626'},{label:'Resource',c:'#d97706'},{label:'Capability',c:'#7c3aed'}];
-    const spacing = w / 4;
-    lights.forEach((l, i) => {
-      const cx = spacing * (i + 1);
-      svg.append('circle').attr('cx', cx).attr('cy', h / 2 - 10).attr('r', h * 0.22)
-        .attr('fill', '#e5e5e0').attr('stroke', '#ccc').attr('stroke-width', 2)
-        .transition().delay(500 + i * 600).duration(400).attr('fill', l.c).attr('opacity', 0.85);
-      svg.append('text').attr('x', cx).attr('y', h - 8).attr('text-anchor','middle').attr('font-size', 9).attr('fill', l.c).text(l.label);
-    });
-  },
-  // 11: Three branching paths (Three Futures)
-  function(svg, w, h, color) {
-    const startX = 20, startY = h / 2;
-    const branches = [
-      { dy: -0.35, c: color },
-      { dy: 0, c: '#666' },
-      { dy: 0.35, c: '#059669' }
+    })();
+
+    // --- Card data ---
+    const cards = [
+      { n: 0, file: 'introduction.html', title: 'The Thousand-Day Window', ch: 'Intro', q: 'How long do we have before the phase transition becomes irreversible?', color: '#1a1a1a' },
+      { n: 1, file: '01-intelligence-inversion.html', title: 'The Intelligence Inversion', ch: 'Ch 1', q: 'When cognition itself is automated, where do humans pivot?', color: '#7c3aed' },
+      { n: 2, file: '02-harbingers.html', title: 'Harbingers of the Storm', ch: 'Ch 2', q: 'What does physics look like when a system is about to break?', color: '#dc2626' },
+      { n: 3, file: 'seven-lies.html', title: 'The Seven Fatal Lies', ch: 'Ch 3', q: 'What if the foundations of economics are not just wrong \u2014 but backwards?', color: '#b45309' },
+      { n: 4, file: '03-gdp-illusion.html', title: 'The GDP Illusion', ch: 'Ch 4', q: 'What if your only instrument rewarded destruction?', color: '#d97706' },
+      { n: 5, file: 'ch5-trial-by-fire.html', title: 'The Trial by Fire', ch: 'Ch 5', q: 'What are the seven strongest arguments against this book \u2014 and why do they fail?', color: '#dc2626' },
+      { n: 6, file: '04-maxwells-demon.html', title: 'Maxwell\u2019s Demon', ch: 'Ch 6', q: 'Is value a social agreement or a law of physics?', color: '#059669' },
+      { n: 7, file: 'generative-engine.html', title: 'The Generative Engine', ch: 'Ch 7', q: 'How does an economy conjure order from infinite chaos?', color: '#0d9488' },
+      { n: 8, file: '05-mind-dashboard.html', title: 'The MIND Dashboard', ch: 'Ch 8', q: 'What happens when any single dimension of civilization reaches zero?', color: '#2563eb' },
+      { n: 9, file: '06-three-flows.html', title: 'The Three Flows', ch: 'Ch 9', q: 'Were Smith, Marx, and Hayek all right \u2014 looking at different parts of the same river?', color: '#0891b2' },
+      { n: 10, file: '07-network-prison.html', title: 'The Network Prison', ch: 'Ch 10', q: 'Does individual talent matter, or only network position?', color: '#7c3aed' },
+      { n: 11, file: 'ch11-cathedral-bazaar.html', title: 'Cathedral and Bazaar', ch: 'Ch 11', q: 'Are firms becoming obsolete \u2014 and what replaces them?', color: '#0891b2' },
+      { n: 11.5, file: 'ch12-intelligent-game-theory.html', title: 'Intelligent Game Theory', ch: 'Chapter 12', q: 'From prisoner\u2019s dilemmas to symbiotic equilibria \u2014 how AI and cryptography are engineering cooperation into the architecture of the game itself.', color: '#7c3aed' },
+      { n: 12, file: '08-cooperation-emerges.html', title: 'Cooperation Emerges', ch: 'Ch 12', q: 'Is cooperation idealism \u2014 or the mathematically optimal selfish strategy?', color: '#16a34a' },
+      { n: 13, file: 'ch13-dual-engine.html', title: 'The Dual Engine', ch: 'Ch 13', q: 'What happens when AI accelerates the fast clock to infinity while the slow clock barely moves?', color: '#7c3aed' },
+      { n: 14, file: 'ch14-social-contract.html', title: 'The New Social Contract', ch: 'Ch 14', q: 'What do we owe each other in a world where labor is no longer necessary?', color: '#16a34a' },
+      { n: 15, file: 'ch15-alignment-economy.html', title: 'The Alignment Economy', ch: 'Ch 15', q: 'Who commands the machines \u2014 and why is that the central question of this century?', color: '#dc2626' },
+      { n: 16, file: '09-three-futures.html', title: 'The Three Futures', ch: 'Ch 16', q: 'Which crystal will this supercooled civilization become?', color: '#dc2626' },
+      { n: 17, file: 'ch17-symbiotic-state.html', title: 'The Symbiotic State', ch: 'Ch 17', q: 'What does governance look like when its job is gardening, not extracting?', color: '#2563eb' },
+      { n: 18, file: 'ch18-money-two-worlds.html', title: 'Money for Two Worlds', ch: 'Ch 18', q: 'Can a currency designed for atoms serve an economy running on bits?', color: '#d97706' },
+      { n: 19, file: 'nucleation.html', title: 'The Nucleation of the New', ch: 'Ch 19', q: 'How does a new world crystallize \u2014 and what is your role in seeding it?', color: '#16a34a' },
+      { n: 20, file: 'intelligent-macro.html', title: 'Intelligent Macroeconomics', ch: 'Ch 20', q: 'What if the great economic mysteries dissolve when you measure the right things?', color: '#6d28d9' },
+      { n: 21, file: '10-after-economics.html', title: 'After Economics', ch: 'Ch 21', q: 'AI unbundles the job. What do you replace each piece with?', color: '#7c3aed' },
+      { n: 22, file: 'epilogue.html', title: 'The Thousandth Day', ch: 'Epilogue', q: 'The machines have taken our work. What do we do with the gift of that liberation?', color: '#1a1a1a' },
     ];
-    branches.forEach((b, idx) => {
-      const n = 20;
-      const data = d3.range(n).map(i => {
-        const t = i / (n - 1);
-        return { x: startX + t * (w - 40), y: startY + b.dy * h * Math.pow(t, 1.5) };
-      });
-      const line = d3.line().x(d => d.x).y(d => d.y).curve(d3.curveBasis);
-      svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
-        .attr('stroke', b.c).attr('stroke-width', 2).attr('opacity', 0.6)
-        .attr('stroke-dasharray', function() { return this.getTotalLength(); })
-        .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
-        .transition().duration(1200).delay(idx * 200).attr('stroke-dashoffset', 0);
-    });
-    svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 4)
-      .attr('fill', color).attr('opacity', 0.8);
-  },
-  // 12: Ripple animation (Nucleation)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2;
-    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-      .attr('fill', color).attr('opacity', 1);
-    const numRipples = 4;
-    for (let i = 0; i < numRipples; i++) {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
-        .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
-        .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
-        .on('end', function loop() {
-          d3.select(this).attr('r', 4).attr('opacity', 0.9)
+
+    // --- Mini-visualization generators ---
+    const vizGenerators = [
+      // 0: Introduction — countdown number animation
+      function (svg, w, h, color) {
+        const windowEnd = new Date('2024-01-01').getTime() + 1000 * 24 * 3600 * 1000;
+        const remaining = Math.max(0, Math.ceil((windowEnd - Date.now()) / (24 * 3600 * 1000)));
+        const pct = Math.min(1, (1000 - remaining) / 1000);
+        // Progress arc
+        const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
+        const tau = Math.PI * 2;
+        const arc = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau);
+        const filled = d3.arc().innerRadius(r * 0.65).outerRadius(r).startAngle(0).endAngle(tau * pct);
+        svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', arc()).attr('fill', '#e5e5e0');
+        svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', filled()).attr('fill', color).attr('opacity', 0.8);
+        svg.append('text').attr('x', cx).attr('y', cy + 5).attr('text-anchor', 'middle').attr('font-size', 18).attr('font-weight', 700).attr('fill', color).text(remaining);
+        svg.append('text').attr('x', cx).attr('y', cy + 20).attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', '#888').text('days');
+      },
+      // 1: Rising then flipping sigmoid (intelligence inversion)
+      function (svg, w, h, color) {
+        const n = 40;
+        const data = d3.range(n).map(i => {
+          const x = i / (n - 1);
+          return { x, y: 1 / (1 + Math.exp(-12 * (x - 0.5))) };
+        });
+        const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
+        const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
+        const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
+        svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
+          .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.7)
+          .attr('stroke-dasharray', function () { return this.getTotalLength(); })
+          .attr('stroke-dashoffset', function () { return this.getTotalLength(); })
+          .transition().duration(1500).attr('stroke-dashoffset', 0);
+        const data2 = data.map(d => ({ x: d.x, y: 1 - d.y }));
+        svg.append('path').datum(data2).attr('d', line).attr('fill', 'none')
+          .attr('stroke', color).attr('stroke-width', 2).attr('opacity', 0.25)
+          .attr('stroke-dasharray', '4,4');
+      },
+      // 2: Seismograph jitter (harbingers)
+      function (svg, w, h, color) {
+        const n = 60;
+        const data = d3.range(n).map(i => {
+          const x = i / (n - 1);
+          const amp = Math.pow(x, 2.5);
+          return { x, y: 0.5 + amp * (Math.random() - 0.5) };
+        });
+        const xS = d3.scaleLinear().domain([0, 1]).range([4, w - 4]);
+        const yS = d3.scaleLinear().domain([0, 1]).range([h - 8, 8]);
+        const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveLinear);
+        svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
+          .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0.7)
+          .attr('stroke-dasharray', function () { return this.getTotalLength(); })
+          .attr('stroke-dashoffset', function () { return this.getTotalLength(); })
+          .transition().duration(2000).attr('stroke-dashoffset', 0);
+      },
+      // 3: Flip card animation (Seven Lies)
+      function (svg, w, h, color) {
+        const n = 7;
+        const cardW = Math.floor((w - 16) / n) - 2;
+        const cardH = h - 16;
+        const data = d3.range(n).map(i => ({ i, flipped: false }));
+        const groups = svg.selectAll('g.lie-card').data(data).join('g')
+          .attr('class', 'lie-card')
+          .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
+        groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
+          .attr('fill', color).attr('opacity', 0.8);
+        // Animate: cards flip one by one revealing back side
+        data.forEach((d, i) => {
+          setTimeout(() => {
+            groups.filter((dd, ii) => ii === i)
+              .select('rect')
+              .transition().duration(300)
+              .attr('fill', '#fff')
+              .attr('stroke', color).attr('stroke-width', 1.5);
+          }, 400 + i * 260);
+        });
+      },
+      // 5: Ch5 Trial by Fire — 7 argument cards flipping one by one
+      function (svg, w, h, color) {
+        const n = 7;
+        const cardW = Math.floor((w - 16) / n) - 2;
+        const cardH = h - 16;
+        const data = d3.range(n).map(i => ({ i }));
+        const groups = svg.selectAll('g.fire-card').data(data).join('g')
+          .attr('class', 'fire-card')
+          .attr('transform', (d, i) => `translate(${8 + i * (cardW + 2)}, 8)`);
+        groups.append('rect').attr('width', cardW).attr('height', cardH).attr('rx', 3)
+          .attr('fill', color).attr('opacity', 0.7);
+        data.forEach((d, i) => {
+          setTimeout(() => {
+            groups.filter((dd, ii) => ii === i).select('rect')
+              .transition().duration(300)
+              .attr('fill', '#dcfce7').attr('stroke', '#16a34a').attr('stroke-width', 1.5).attr('opacity', 1);
+          }, 300 + i * 220);
+        });
+      },
+      // 4: Diverging bars (GDP illusion)
+      function (svg, w, h, color) {
+        const n = 12;
+        const data = d3.range(n).map(i => ({ i, v: 0.3 + Math.random() * 0.7, bad: Math.random() > 0.5 }));
+        const xS = d3.scaleBand().domain(d3.range(n)).range([16, w - 16]).padding(0.35);
+        const yS = d3.scaleLinear().domain([0, 1]).range([0, h * 0.65]);
+        svg.selectAll('rect').data(data).join('rect')
+          .attr('x', d => xS(d.i)).attr('width', xS.bandwidth())
+          .attr('y', h - 10).attr('height', 0)
+          .attr('rx', 2)
+          .attr('fill', d => d.bad ? '#e5e5e0' : color).attr('opacity', d => d.bad ? 0.6 : 0.7)
+          .transition().duration(800).delay((d, i) => i * 60)
+          .attr('y', d => h - 10 - yS(d.v)).attr('height', d => yS(d.v));
+      },
+      // 5: Orbiting particles (Maxwell's Demon)
+      function (svg, w, h, color) {
+        const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.32;
+        svg.append('line').attr('x1', cx).attr('y1', 8).attr('x2', cx).attr('y2', h - 8)
+          .attr('stroke', '#e5e5e0').attr('stroke-width', 1).attr('stroke-dasharray', '3,3');
+        const particles = d3.range(14).map(() => ({
+          angle: Math.random() * Math.PI * 2,
+          speed: 0.005 + Math.random() * 0.015,
+          rx: r * (0.5 + Math.random() * 0.5),
+          ry: r * (0.3 + Math.random() * 0.5),
+          side: Math.random() > 0.5
+        }));
+        const dots = svg.selectAll('circle').data(particles).join('circle')
+          .attr('r', 3).attr('fill', d => d.side ? color : '#dc2626').attr('opacity', 0.65);
+        function tick() {
+          particles.forEach(p => p.angle += p.speed);
+          dots.attr('cx', d => cx + Math.cos(d.angle) * d.rx)
+            .attr('cy', d => cy + Math.sin(d.angle) * d.ry);
+          requestAnimationFrame(tick);
+        }
+        tick();
+      },
+      // 11: Ch11 Cathedral/Bazaar — two vertical bars with transaction cost line
+      function (svg, w, h, color) {
+        const barW = w * 0.28;
+        const catH = h * 0.72, bazH = h * 0.55;
+        // Cathedral bar
+        svg.append('rect').attr('x', w * 0.12).attr('y', h - 12 - catH).attr('width', barW).attr('height', 0)
+          .attr('fill', '#0891b2').attr('rx', 3).attr('opacity', 0.75)
+          .transition().duration(700).attr('height', catH);
+        svg.append('text').attr('x', w * 0.12 + barW / 2).attr('y', h - 4).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#0891b2').text('Cathedral');
+        // Bazaar bar
+        svg.append('rect').attr('x', w * 0.6).attr('y', h - 12 - bazH).attr('width', barW).attr('height', 0)
+          .attr('fill', '#7c3aed').attr('rx', 3).attr('opacity', 0.75)
+          .transition().duration(700).delay(200).attr('height', bazH);
+        svg.append('text').attr('x', w * 0.6 + barW / 2).attr('y', h - 4).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#7c3aed').text('Bazaar');
+        // Animated dividing line
+        const lineY = h - 12 - (catH + bazH) / 2;
+        svg.append('line').attr('x1', 0).attr('y1', lineY).attr('x2', 0).attr('y2', lineY)
+          .attr('stroke', '#1a1a1a').attr('stroke-width', 1.5).attr('stroke-dasharray', '4,3').attr('opacity', 0.5)
+          .transition().delay(800).duration(600).attr('x2', w);
+      },
+      // Ch12: Intelligent Game Theory — payoff matrix morphing into equilibrium
+      function (svg, w, h, color) {
+        const cx = w / 2, cy = h / 2;
+        const nodes = [
+          { x: w * 0.28, y: h * 0.3 }, { x: w * 0.72, y: h * 0.3 },
+          { x: w * 0.28, y: h * 0.7 }, { x: w * 0.72, y: h * 0.7 }
+        ];
+        const edges = [{ s: 0, t: 1 }, { s: 2, t: 3 }, { s: 0, t: 2 }, { s: 1, t: 3 }, { s: 0, t: 3 }, { s: 1, t: 2 }];
+        edges.forEach((e, i) => {
+          svg.append('line').attr('x1', nodes[e.s].x).attr('y1', nodes[e.s].y)
+            .attr('x2', nodes[e.t].x).attr('y2', nodes[e.t].y)
+            .attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0)
+            .transition().delay(i * 150).duration(400).attr('opacity', 0.4);
+        });
+        nodes.forEach((n, i) => {
+          svg.append('circle').attr('cx', n.x).attr('cy', n.y).attr('r', 0)
+            .attr('fill', i < 2 ? color : '#16a34a').attr('opacity', 0.85)
+            .transition().delay(i * 120).duration(400).attr('r', 7);
+        });
+        svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 0)
+          .attr('fill', color).attr('opacity', 0.9)
+          .transition().delay(700).duration(500).attr('r', 10);
+        svg.append('text').attr('x', cx).attr('y', cy + 4).attr('text-anchor', 'middle')
+          .attr('font-size', 8).attr('font-weight', 700).attr('fill', 'white').attr('opacity', 0)
+          .transition().delay(900).duration(300).attr('opacity', 1).text('Nash');
+      },
+      // 6: Noise to pattern coalescing dots (Generative Engine)
+      function (svg, w, h, color) {
+        const n = 40;
+        const dots = d3.range(n).map(i => ({
+          sx: Math.random() * w, sy: Math.random() * h,
+          tx: (w / 2) + Math.cos(i / n * Math.PI * 2) * (w * 0.3),
+          ty: (h / 2) + Math.sin(i / n * Math.PI * 2) * (h * 0.35)
+        }));
+        const circles = svg.selectAll('circle').data(dots).join('circle')
+          .attr('cx', d => d.sx).attr('cy', d => d.sy)
+          .attr('r', 2.5).attr('fill', color).attr('opacity', 0.4);
+        // Animate toward ordered ring
+        setTimeout(() => {
+          circles.transition().duration(1400).delay((d, i) => i * 20)
+            .attr('cx', d => d.tx).attr('cy', d => d.ty).attr('opacity', 0.75);
+        }, 400);
+      },
+      // 7: Radar / pentagon (MIND Dashboard)
+      function (svg, w, h, color) {
+        const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35;
+        const dims = 4;
+        const angles = d3.range(dims).map(i => (i / dims) * Math.PI * 2 - Math.PI / 2);
+        [0.33, 0.66, 1].forEach(s => {
+          const pts = angles.map(a => [cx + Math.cos(a) * r * s, cy + Math.sin(a) * r * s]);
+          svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+            .attr('fill', 'none').attr('stroke', '#e5e5e0').attr('stroke-width', 1);
+        });
+        const vals = [0.8, 0.6, 0.4, 0.9];
+        const pts = angles.map((a, i) => [cx + Math.cos(a) * r * vals[i], cy + Math.sin(a) * r * vals[i]]);
+        svg.append('polygon').attr('points', pts.map(p => p.join(',')).join(' '))
+          .attr('fill', color).attr('fill-opacity', 0.15).attr('stroke', color)
+          .attr('stroke-width', 1.5).attr('opacity', 0)
+          .transition().duration(800).attr('opacity', 1);
+        svg.selectAll('.dot').data(pts).join('circle')
+          .attr('cx', d => d[0]).attr('cy', d => d[1]).attr('r', 3)
+          .attr('fill', color).attr('opacity', 0)
+          .transition().duration(600).delay((d, i) => 800 + i * 100).attr('opacity', 1);
+      },
+      // 8: Three flowing streams (Three Flows)
+      function (svg, w, h, color) {
+        const streamColors = [color, '#7c3aed', '#d97706'];
+        streamColors.forEach((c, idx) => {
+          const n = 30;
+          const offset = (idx - 1) * h * 0.25;
+          const data = d3.range(n).map(i => {
+            const x = i / (n - 1);
+            return { x, y: 0.5 + offset / h + 0.12 * Math.sin(x * Math.PI * 3 + idx * 2) };
+          });
+          const xS = d3.scaleLinear().domain([0, 1]).range([0, w]);
+          const yS = d3.scaleLinear().domain([0, 1]).range([4, h - 4]);
+          const line = d3.line().x(d => xS(d.x)).y(d => yS(d.y)).curve(d3.curveBasis);
+          svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
+            .attr('stroke', c).attr('stroke-width', 2).attr('opacity', 0.5)
+            .attr('stroke-dasharray', function () { return this.getTotalLength(); })
+            .attr('stroke-dashoffset', function () { return this.getTotalLength(); })
+            .transition().duration(1500).delay(idx * 200).attr('stroke-dashoffset', 0);
+        });
+      },
+      // 9: Network graph (Network Prison)
+      function (svg, w, h, color) {
+        const nodes = d3.range(10).map(i => ({
+          x: 20 + Math.random() * (w - 40),
+          y: 12 + Math.random() * (h - 24),
+          r: i === 0 ? 6 : 3 + Math.random() * 2
+        }));
+        const edges = [];
+        for (let i = 1; i < nodes.length; i++) {
+          edges.push({ s: Math.floor(Math.random() * i), t: i });
+          if (Math.random() > 0.5 && i > 2) edges.push({ s: Math.floor(Math.random() * i), t: i });
+        }
+        svg.selectAll('line').data(edges).join('line')
+          .attr('x1', d => nodes[d.s].x).attr('y1', d => nodes[d.s].y)
+          .attr('x2', d => nodes[d.t].x).attr('y2', d => nodes[d.t].y)
+          .attr('stroke', '#d5d5d0').attr('stroke-width', 1);
+        svg.selectAll('circle').data(nodes).join('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
+          .attr('fill', (d, i) => i === 0 ? color : '#aaa').attr('opacity', 0.7)
+          .transition().duration(500).delay((d, i) => i * 80).attr('r', d => d.r);
+      },
+      // 10: Growing cooperation dots (Cooperation Emerges)
+      function (svg, w, h, color) {
+        const n = 24;
+        const data = d3.range(n).map(i => ({
+          x: 16 + Math.random() * (w - 32),
+          y: 10 + Math.random() * (h - 20),
+          cooperate: Math.random() > 0.4
+        }));
+        svg.selectAll('circle').data(data).join('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 0)
+          .attr('fill', d => d.cooperate ? color : '#ddd').attr('opacity', 0.7)
+          .transition().duration(600).delay((d, i) => i * 40).attr('r', 4);
+        setTimeout(() => {
+          svg.selectAll('circle')
+            .transition().duration(1200)
+            .attr('fill', color).attr('opacity', 0.65);
+        }, 1800);
+      },
+      // 13: Ch13 Dual Engine — two clocks one fast one slow
+      function (svg, w, h, color) {
+        const drawSimpleClock = (cx, cy, r, handAngle, c) => {
+          svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', 'white').attr('stroke', c).attr('stroke-width', 2);
+          const ha = handAngle - Math.PI / 2;
+          svg.append('line').attr('x1', cx).attr('y1', cy)
+            .attr('x2', cx + Math.cos(ha) * r * 0.6).attr('y2', cy + Math.sin(ha) * r * 0.6)
+            .attr('stroke', c).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
+          svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 3).attr('fill', c);
+        };
+        const r = Math.min(w * 0.2, h * 0.38);
+        let fastA = 0, slowA = 0, last = null;
+        drawSimpleClock(w * 0.28, h / 2, r, 0, '#dc2626');
+        drawSimpleClock(w * 0.72, h / 2, r, 0, '#2563eb');
+        svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#dc2626').text('Fast');
+        svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#2563eb').text('Slow');
+        function tick(ts) {
+          if (!last) last = ts;
+          const dt = (ts - last) / 1000; last = ts;
+          fastA += dt * 3; slowA += dt * 0.15;
+          svg.selectAll('*').remove();
+          drawSimpleClock(w * 0.28, h / 2, r, fastA, '#dc2626');
+          drawSimpleClock(w * 0.72, h / 2, r, slowA, '#2563eb');
+          svg.append('text').attr('x', w * 0.28).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#dc2626').text('Fast');
+          svg.append('text').attr('x', w * 0.72).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', '#2563eb').text('Slow');
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      },
+      // 14: Ch14 Social Contract — three circles appearing (Dignity, Capability, Viability)
+      function (svg, w, h, color) {
+        const labels = ['Dignity', 'Capability', 'Viability'];
+        const colors = ['#16a34a', '#2563eb', '#7c3aed'];
+        const cx = [w * 0.25, w * 0.5, w * 0.75];
+        const cy = h / 2;
+        const r = Math.min(w * 0.12, h * 0.32);
+        labels.forEach((label, i) => {
+          svg.append('circle').attr('cx', cx[i]).attr('cy', cy).attr('r', 0)
+            .attr('fill', colors[i]).attr('opacity', 0.18).attr('stroke', colors[i]).attr('stroke-width', 2)
+            .transition().duration(600).delay(i * 350).attr('r', r);
+          svg.append('text').attr('x', cx[i]).attr('y', cy + 4).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', colors[i]).attr('opacity', 0)
+            .transition().delay(400 + i * 350).duration(300).attr('opacity', 1).text(label);
+        });
+      },
+      // 15: Ch15 Alignment Economy — warning lights turning on
+      function (svg, w, h, color) {
+        const lights = [{ label: 'Self-Pres.', c: '#dc2626' }, { label: 'Resource', c: '#d97706' }, { label: 'Capability', c: '#7c3aed' }];
+        const spacing = w / 4;
+        lights.forEach((l, i) => {
+          const cx = spacing * (i + 1);
+          svg.append('circle').attr('cx', cx).attr('cy', h / 2 - 10).attr('r', h * 0.22)
+            .attr('fill', '#e5e5e0').attr('stroke', '#ccc').attr('stroke-width', 2)
+            .transition().delay(500 + i * 600).duration(400).attr('fill', l.c).attr('opacity', 0.85);
+          svg.append('text').attr('x', cx).attr('y', h - 8).attr('text-anchor', 'middle').attr('font-size', 9).attr('fill', l.c).text(l.label);
+        });
+      },
+      // 11: Three branching paths (Three Futures)
+      function (svg, w, h, color) {
+        const startX = 20, startY = h / 2;
+        const branches = [
+          { dy: -0.35, c: color },
+          { dy: 0, c: '#666' },
+          { dy: 0.35, c: '#059669' }
+        ];
+        branches.forEach((b, idx) => {
+          const n = 20;
+          const data = d3.range(n).map(i => {
+            const t = i / (n - 1);
+            return { x: startX + t * (w - 40), y: startY + b.dy * h * Math.pow(t, 1.5) };
+          });
+          const line = d3.line().x(d => d.x).y(d => d.y).curve(d3.curveBasis);
+          svg.append('path').datum(data).attr('d', line).attr('fill', 'none')
+            .attr('stroke', b.c).attr('stroke-width', 2).attr('opacity', 0.6)
+            .attr('stroke-dasharray', function () { return this.getTotalLength(); })
+            .attr('stroke-dashoffset', function () { return this.getTotalLength(); })
+            .transition().duration(1200).delay(idx * 200).attr('stroke-dashoffset', 0);
+        });
+        svg.append('circle').attr('cx', startX).attr('cy', startY).attr('r', 4)
+          .attr('fill', color).attr('opacity', 0.8);
+      },
+      // 12: Ripple animation (Nucleation)
+      function (svg, w, h, color) {
+        const cx = w / 2, cy = h / 2;
+        svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
+          .attr('fill', color).attr('opacity', 1);
+        const numRipples = 4;
+        for (let i = 0; i < numRipples; i++) {
+          svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
+            .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
             .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
             .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
-            .on('end', loop);
+            .on('end', function loop() {
+              d3.select(this).attr('r', 4).attr('opacity', 0.9)
+                .transition().delay(i * 350).duration(1200).ease(d3.easeCubicOut)
+                .attr('r', 10 + i * 14 + Math.min(w, h) * 0.15).attr('opacity', 0)
+                .on('end', loop);
+            });
+        }
+      },
+      // 17: Ch17 Symbiotic State — network nodes (Guardian Lattice preview)
+      function (svg, w, h, color) {
+        const nodeData = [
+          { x: 0.2, y: 0.3, c: '#2563eb', r: 7 }, { x: 0.5, y: 0.15, c: '#2563eb', r: 7 }, { x: 0.8, y: 0.3, c: '#2563eb', r: 7 },
+          { x: 0.15, y: 0.75, c: '#16a34a', r: 5 }, { x: 0.38, y: 0.85, c: '#16a34a', r: 5 }, { x: 0.62, y: 0.8, c: '#16a34a', r: 5 }, { x: 0.85, y: 0.72, c: '#16a34a', r: 5 }
+        ];
+        const edges = [{ s: 0, t: 3 }, { s: 1, t: 4 }, { s: 2, t: 5 }, { s: 0, t: 1 }, { s: 1, t: 2 }, { s: 3, t: 4 }, { s: 4, t: 5 }, { s: 5, t: 6 }];
+        edges.forEach(e => {
+          const a = nodeData[e.s], b = nodeData[e.t];
+          svg.append('line').attr('x1', a.x * w).attr('y1', a.y * h).attr('x2', b.x * w).attr('y2', b.y * h)
+            .attr('stroke', '#e5e5e0').attr('stroke-width', 1.5);
         });
-    }
-  },
-  // 17: Ch17 Symbiotic State — network nodes (Guardian Lattice preview)
-  function(svg, w, h, color) {
-    const nodeData = [
-      {x:0.2,y:0.3,c:'#2563eb',r:7},{x:0.5,y:0.15,c:'#2563eb',r:7},{x:0.8,y:0.3,c:'#2563eb',r:7},
-      {x:0.15,y:0.75,c:'#16a34a',r:5},{x:0.38,y:0.85,c:'#16a34a',r:5},{x:0.62,y:0.8,c:'#16a34a',r:5},{x:0.85,y:0.72,c:'#16a34a',r:5}
-    ];
-    const edges = [{s:0,t:3},{s:1,t:4},{s:2,t:5},{s:0,t:1},{s:1,t:2},{s:3,t:4},{s:4,t:5},{s:5,t:6}];
-    edges.forEach(e => {
-      const a = nodeData[e.s], b = nodeData[e.t];
-      svg.append('line').attr('x1', a.x*w).attr('y1', a.y*h).attr('x2', b.x*w).attr('y2', b.y*h)
-        .attr('stroke','#e5e5e0').attr('stroke-width',1.5);
-    });
-    nodeData.forEach((n, i) => {
-      svg.append('circle').attr('cx', n.x*w).attr('cy', n.y*h).attr('r', 0)
-        .attr('fill', n.c).attr('stroke','white').attr('stroke-width',2).attr('opacity',0.85)
-        .transition().duration(400).delay(i*100).attr('r', n.r);
-    });
-  },
-  // 18: Ch18 Money — two coin types flowing differently
-  function(svg, w, h, color) {
-    // FC coins (pooling at right)
-    const fcCoins = d3.range(8).map(i => ({ x: Math.random() * w * 0.4, y: 10 + Math.random() * (h - 20), tx: w * 0.7 + Math.random() * w * 0.2, ty: 10 + Math.random() * (h - 20) }));
-    const fcCircles = svg.selectAll('.fc').data(fcCoins).join('circle').attr('class','fc')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 5).attr('fill', '#d97706').attr('opacity', 0.8);
-    fcCircles.transition().duration(1200).delay((d,i) => i*100).attr('cx', d => d.tx).attr('cy', d => d.ty);
-    // CC coins (circulating widely)
-    const ccCoins = d3.range(8).map(i => ({ x: w * 0.4 + Math.random() * w * 0.3, y: 10 + Math.random() * (h - 20) }));
-    const ccCircles = svg.selectAll('.cc').data(ccCoins).join('circle').attr('class','cc')
-      .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 4).attr('fill', '#2563eb').attr('opacity', 0.7);
-    function circulate() {
-      ccCircles.transition().duration(800).delay((d,i) => i*60)
-        .attr('cx', () => 20 + Math.random() * (w - 40)).attr('cy', () => 10 + Math.random() * (h - 20))
-        .on('end', function(d, i) { if (i === 0) circulate(); });
-    }
-    setTimeout(circulate, 600);
-    svg.append('text').attr('x', w * 0.8).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 8).attr('fill','#d97706').text('FC pools');
-    svg.append('text').attr('x', w * 0.3).attr('y', h - 6).attr('text-anchor','middle').attr('font-size', 8).attr('fill','#2563eb').text('CC circulates');
-  },
-  // 13: Animated MIND bar chart (Intelligent Macroeconomics)
-  function(svg, w, h, color) {
-    const vals = [
-      { k: 'M', v: 0.85, c: '#ef4444' },
-      { k: 'I', v: 0.70, c: '#2563eb' },
-      { k: 'N', v: 0.45, c: '#22c55e' },
-      { k: 'D', v: 0.60, c: '#f59e0b' }
-    ];
-    const barW = (w - 32) / vals.length - 6;
-    const maxH = h - 28;
-    vals.forEach((d, i) => {
-      const x = 16 + i * (barW + 6);
-      svg.append('rect').attr('x', x).attr('y', h - 12).attr('width', barW).attr('height', 0)
-        .attr('rx', 3).attr('fill', d.c).attr('opacity', 0.75)
-        .transition().duration(700).delay(i * 120)
-        .attr('y', h - 12 - maxH * d.v).attr('height', maxH * d.v);
-      svg.append('text').attr('x', x + barW / 2).attr('y', h - 2)
-        .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 700)
-        .attr('fill', d.c).text(d.k);
-    });
-  },
-  // 14: Unbundling blocks (After Economics)
-  function(svg, w, h, color) {
-    const blockW = 14, gap = 4;
-    const cols = Math.floor((w - 20) / (blockW + gap));
-    const rows = 3;
-    const offsetX = (w - cols * (blockW + gap) + gap) / 2;
-    const offsetY = (h - rows * (blockW + gap) + gap) / 2;
-    const data = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        data.push({ r, c, x: offsetX + c * (blockW + gap), y: offsetY + r * (blockW + gap) });
-      }
-    }
-    const blockColors = [color, '#7c3aed', '#d97706', '#059669', '#dc2626'];
-    svg.selectAll('rect').data(data).join('rect')
-      .attr('x', w / 2).attr('y', h / 2).attr('width', 0).attr('height', 0)
-      .attr('rx', 2).attr('fill', (d, i) => blockColors[i % blockColors.length]).attr('opacity', 0.55)
-      .transition().duration(600).delay((d, i) => i * 25)
-      .attr('x', d => d.x).attr('y', d => d.y)
-      .attr('width', blockW).attr('height', blockW);
-  },
-  // 22: Epilogue — a glowing dot expanding (nucleation)
-  function(svg, w, h, color) {
-    const cx = w / 2, cy = h / 2;
-    svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4).attr('fill', color).attr('opacity', 1);
-    for (let i = 0; i < 4; i++) {
-      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
-        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
-        .transition().delay(i * 400).duration(1400).ease(d3.easeCubicOut)
-        .attr('r', 8 + i * 15 + Math.min(w, h) * 0.12).attr('opacity', 0)
-        .on('end', function loop() {
-          d3.select(this).attr('r', 4).attr('opacity', 0.9)
+        nodeData.forEach((n, i) => {
+          svg.append('circle').attr('cx', n.x * w).attr('cy', n.y * h).attr('r', 0)
+            .attr('fill', n.c).attr('stroke', 'white').attr('stroke-width', 2).attr('opacity', 0.85)
+            .transition().duration(400).delay(i * 100).attr('r', n.r);
+        });
+      },
+      // 18: Ch18 Money — two coin types flowing differently
+      function (svg, w, h, color) {
+        // FC coins (pooling at right)
+        const fcCoins = d3.range(8).map(i => ({ x: Math.random() * w * 0.4, y: 10 + Math.random() * (h - 20), tx: w * 0.7 + Math.random() * w * 0.2, ty: 10 + Math.random() * (h - 20) }));
+        const fcCircles = svg.selectAll('.fc').data(fcCoins).join('circle').attr('class', 'fc')
+          .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 5).attr('fill', '#d97706').attr('opacity', 0.8);
+        fcCircles.transition().duration(1200).delay((d, i) => i * 100).attr('cx', d => d.tx).attr('cy', d => d.ty);
+        // CC coins (circulating widely)
+        const ccCoins = d3.range(8).map(i => ({ x: w * 0.4 + Math.random() * w * 0.3, y: 10 + Math.random() * (h - 20) }));
+        const ccCircles = svg.selectAll('.cc').data(ccCoins).join('circle').attr('class', 'cc')
+          .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', 4).attr('fill', '#2563eb').attr('opacity', 0.7);
+        function circulate() {
+          ccCircles.transition().duration(800).delay((d, i) => i * 60)
+            .attr('cx', () => 20 + Math.random() * (w - 40)).attr('cy', () => 10 + Math.random() * (h - 20))
+            .on('end', function (d, i) { if (i === 0) circulate(); });
+        }
+        setTimeout(circulate, 600);
+        svg.append('text').attr('x', w * 0.8).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', '#d97706').text('FC pools');
+        svg.append('text').attr('x', w * 0.3).attr('y', h - 6).attr('text-anchor', 'middle').attr('font-size', 8).attr('fill', '#2563eb').text('CC circulates');
+      },
+      // 13: Animated MIND bar chart (Intelligent Macroeconomics)
+      function (svg, w, h, color) {
+        const vals = [
+          { k: 'M', v: 0.85, c: '#ef4444' },
+          { k: 'I', v: 0.70, c: '#2563eb' },
+          { k: 'N', v: 0.45, c: '#22c55e' },
+          { k: 'D', v: 0.60, c: '#f59e0b' }
+        ];
+        const barW = (w - 32) / vals.length - 6;
+        const maxH = h - 28;
+        vals.forEach((d, i) => {
+          const x = 16 + i * (barW + 6);
+          svg.append('rect').attr('x', x).attr('y', h - 12).attr('width', barW).attr('height', 0)
+            .attr('rx', 3).attr('fill', d.c).attr('opacity', 0.75)
+            .transition().duration(700).delay(i * 120)
+            .attr('y', h - 12 - maxH * d.v).attr('height', maxH * d.v);
+          svg.append('text').attr('x', x + barW / 2).attr('y', h - 2)
+            .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 700)
+            .attr('fill', d.c).text(d.k);
+        });
+      },
+      // 14: Unbundling blocks (After Economics)
+      function (svg, w, h, color) {
+        const blockW = 14, gap = 4;
+        const cols = Math.floor((w - 20) / (blockW + gap));
+        const rows = 3;
+        const offsetX = (w - cols * (blockW + gap) + gap) / 2;
+        const offsetY = (h - rows * (blockW + gap) + gap) / 2;
+        const data = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            data.push({ r, c, x: offsetX + c * (blockW + gap), y: offsetY + r * (blockW + gap) });
+          }
+        }
+        const blockColors = [color, '#7c3aed', '#d97706', '#059669', '#dc2626'];
+        svg.selectAll('rect').data(data).join('rect')
+          .attr('x', w / 2).attr('y', h / 2).attr('width', 0).attr('height', 0)
+          .attr('rx', 2).attr('fill', (d, i) => blockColors[i % blockColors.length]).attr('opacity', 0.55)
+          .transition().duration(600).delay((d, i) => i * 25)
+          .attr('x', d => d.x).attr('y', d => d.y)
+          .attr('width', blockW).attr('height', blockW);
+      },
+      // 22: Epilogue — a glowing dot expanding (nucleation)
+      function (svg, w, h, color) {
+        const cx = w / 2, cy = h / 2;
+        svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4).attr('fill', color).attr('opacity', 1);
+        for (let i = 0; i < 4; i++) {
+          svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
+            .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2 - i * 0.3).attr('opacity', 0.9)
             .transition().delay(i * 400).duration(1400).ease(d3.easeCubicOut)
             .attr('r', 8 + i * 15 + Math.min(w, h) * 0.12).attr('opacity', 0)
-            .on('end', loop);
-        });
-    }
-  }
-];
-
-// --- Loop delays per viz index (ms); 0 = already self-looping ---
-const loopDelays = [
-  3000, // 0  Introduction: static arc
-  3500, // 1  Intelligence Inversion: path draw (1500ms)
-  4000, // 2  Harbingers: seismograph draw (2000ms)
-  4000, // 3  Seven Lies: card flips (1960ms)
-  3500, // 4  Ch5 Trial: fire card flips (1620ms)
-  3500, // 5  GDP: bars grow (1460ms)
-     0, // 6  Maxwell's Demon: rAF loop (self-looping)
-  3500, // 7  Ch11: bars + line (2300ms)
-  3500, // Ch12: Intelligent Game Theory: nodes + equilibrium (1700ms)
-  4000, // 8  Generative Engine: scatter→ring (2180ms)
-  3500, // 9  MIND radar: polygon fade in (800ms)
-  4000, // 10 Three Flows: streams draw (1900ms)
-  3000, // 11 Network Prison: nodes appear (1220ms)
-  6000, // 12 Cooperation: appear + converge (4520ms)
-     0, // 13 Dual Engine: rAF loop (self-looping)
-  3000, // 14 Social Contract: circles appear (1300ms)
-  4000, // 15 Alignment: lights turn on (1900ms)
-  3500, // 16 Three Futures: branches draw (1600ms)
-     0, // 17 Nucleation: ripple loop (self-looping)
-  3000, // 18 Symbiotic State: nodes appear (1000ms)
-  4000, // 19 Ch18 Money: coins flow (1900ms)
-  3000, // 20 Intelligent Macro: bars grow (1060ms)
-  3000, // 21 After Economics: blocks expand (1200ms)
-     0, // 22 Epilogue: glow loop (self-looping)
-];
-
-function initViz(idx, svg, w, h, color) {
-  svg.selectAll('*').remove();
-  vizGenerators[idx](svg, w, h, color);
-  const delay = loopDelays[idx];
-  if (delay > 0) {
-    setTimeout(() => initViz(idx, svg, w, h, color), delay);
-  }
-}
-
-// --- Build cards ---
-const grid = document.getElementById('card-grid');
-
-cards.forEach((card, idx) => {
-  const a = document.createElement('a');
-  a.href = card.file;
-  a.className = 'card';
-
-  // Accent bar
-  const accent = document.createElement('div');
-  accent.className = 'card-accent';
-  accent.style.background = card.color;
-  a.appendChild(accent);
-
-  // Viz container
-  const vizDiv = document.createElement('div');
-  vizDiv.className = 'card-viz';
-  vizDiv.id = 'viz-' + card.n;
-  a.appendChild(vizDiv);
-
-  // Body
-  const body = document.createElement('div');
-  body.className = 'card-body';
-
-  const badge = document.createElement('span');
-  badge.className = 'card-badge';
-  badge.style.background = card.color + '14';
-  badge.style.color = card.color;
-  badge.textContent = card.ch;
-  body.appendChild(badge);
-
-  const title = document.createElement('div');
-  title.className = 'card-title';
-  title.textContent = card.title;
-  body.appendChild(title);
-
-  const question = document.createElement('div');
-  question.className = 'card-question';
-  question.textContent = card.q;
-  body.appendChild(question);
-
-  const link = document.createElement('span');
-  link.className = 'card-link';
-  link.style.color = card.color;
-  link.textContent = 'Explore';
-  link.insertAdjacentHTML('beforeend', ' <span style="transition:inherit">\u2192</span>');
-  body.appendChild(link);
-
-  a.appendChild(body);
-  grid.appendChild(a);
-
-  // Initialize D3 viz
-  requestAnimationFrame(() => {
-    const container = document.getElementById('viz-' + card.n);
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    const svg = d3.select(container).append('svg')
-      .attr('width', w).attr('height', h)
-      .attr('viewBox', `0 0 ${w} ${h}`)
-      .style('width', '100%').style('max-width', '600px');
-    initViz(idx, svg, w, h, card.color);
-  });
-});
-
-// Reading progress
-window.addEventListener('scroll', function() {
-  var p = document.documentElement;
-  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
-});
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
+            .on('end', function loop() {
+              d3.select(this).attr('r', 4).attr('opacity', 0.9)
+                .transition().delay(i * 400).duration(1400).ease(d3.easeCubicOut)
+                .attr('r', 8 + i * 15 + Math.min(w, h) * 0.12).attr('opacity', 0)
+                .on('end', loop);
+            });
+        }
       }
+    ];
+
+    // --- Loop delays per viz index (ms); 0 = already self-looping ---
+    const loopDelays = [
+      3000, // 0  Introduction: static arc
+      3500, // 1  Intelligence Inversion: path draw (1500ms)
+      4000, // 2  Harbingers: seismograph draw (2000ms)
+      4000, // 3  Seven Lies: card flips (1960ms)
+      3500, // 4  Ch5 Trial: fire card flips (1620ms)
+      3500, // 5  GDP: bars grow (1460ms)
+      0, // 6  Maxwell's Demon: rAF loop (self-looping)
+      3500, // 7  Ch11: bars + line (2300ms)
+      3500, // Ch12: Intelligent Game Theory: nodes + equilibrium (1700ms)
+      4000, // 8  Generative Engine: scatter→ring (2180ms)
+      3500, // 9  MIND radar: polygon fade in (800ms)
+      4000, // 10 Three Flows: streams draw (1900ms)
+      3000, // 11 Network Prison: nodes appear (1220ms)
+      6000, // 12 Cooperation: appear + converge (4520ms)
+      0, // 13 Dual Engine: rAF loop (self-looping)
+      3000, // 14 Social Contract: circles appear (1300ms)
+      4000, // 15 Alignment: lights turn on (1900ms)
+      3500, // 16 Three Futures: branches draw (1600ms)
+      0, // 17 Nucleation: ripple loop (self-looping)
+      3000, // 18 Symbiotic State: nodes appear (1000ms)
+      4000, // 19 Ch18 Money: coins flow (1900ms)
+      3000, // 20 Intelligent Macro: bars grow (1060ms)
+      3000, // 21 After Economics: blocks expand (1200ms)
+      0, // 22 Epilogue: glow loop (self-looping)
+    ];
+
+    function initViz(idx, svg, w, h, color) {
+      svg.selectAll('*').remove();
+      vizGenerators[idx](svg, w, h, color);
+      const delay = loopDelays[idx];
+      if (delay > 0) {
+        setTimeout(() => initViz(idx, svg, w, h, color), delay);
+      }
+    }
+
+    // --- Build cards ---
+    const grid = document.getElementById('card-grid');
+
+    cards.forEach((card, idx) => {
+      const a = document.createElement('a');
+      a.href = card.file;
+      a.className = 'card';
+
+      // Accent bar
+      const accent = document.createElement('div');
+      accent.className = 'card-accent';
+      accent.style.background = card.color;
+      a.appendChild(accent);
+
+      // Viz container
+      const vizDiv = document.createElement('div');
+      vizDiv.className = 'card-viz';
+      vizDiv.id = 'viz-' + card.n;
+      a.appendChild(vizDiv);
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'card-body';
+
+      const badge = document.createElement('span');
+      badge.className = 'card-badge';
+      badge.style.background = card.color + '14';
+      badge.style.color = card.color;
+      badge.textContent = card.ch;
+      body.appendChild(badge);
+
+      const title = document.createElement('div');
+      title.className = 'card-title';
+      title.textContent = card.title;
+      body.appendChild(title);
+
+      const question = document.createElement('div');
+      question.className = 'card-question';
+      question.textContent = card.q;
+      body.appendChild(question);
+
+      const link = document.createElement('span');
+      link.className = 'card-link';
+      link.style.color = card.color;
+      link.textContent = 'Explore';
+      link.insertAdjacentHTML('beforeend', ' <span style="transition:inherit">\u2192</span>');
+      body.appendChild(link);
+
+      a.appendChild(body);
+      grid.appendChild(a);
+
+      // Initialize D3 viz
+      requestAnimationFrame(() => {
+        const container = document.getElementById('viz-' + card.n);
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        const svg = d3.select(container).append('svg')
+          .attr('width', w).attr('height', h)
+          .attr('viewBox', `0 0 ${w} ${h}`)
+          .style('width', '100%').style('max-width', '600px');
+        initViz(idx, svg, w, h, card.color);
+      });
     });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+
+    // Reading progress
+    window.addEventListener('scroll', function () {
+      var p = document.documentElement;
+      document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
+    });
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>

@@ -1,721 +1,877 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cooperation Emerges</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-body { background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; overflow-x: hidden; }
-.prose { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.7; font-size: 1.05rem; }
-.scrub { border-bottom: 2px dashed #2563eb; color: #2563eb; cursor: ew-resize; user-select: none; font-weight: 600; padding: 0 2px; }
-.panel { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s; }
-.panel:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); transition: all 0.2s; }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 600; margin-top: 2rem; }
-.chapter-num { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
-.nav { display: flex; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e5e0; font-size: 0.9rem; position: sticky; top: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.nav a { color: #2563eb; text-decoration: none; }
-svg text { font-family: 'DM Sans', system-ui, sans-serif; }
-.btn { background: #2563eb; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: min(0.9rem, 14px); margin: 0.25rem; font-family: 'DM Sans', system-ui, sans-serif; }
-.btn:hover { background: #1d4ed8; }
-.btn.active { background: #2563eb; color: white; box-shadow: 0 0 0 2px #93c5fd; }
-.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
-.stat { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
-.stat strong { color: #1a1a1a; }
-input[type="range"] { width: 100%; margin: 0.25rem 0; accent-color: #2563eb; }
-.slider-label { display: flex; justify-content: space-between; font-size: min(0.85rem, 14px); color: #555; }
-.slider-row { margin: 0.75rem 0; }
-.slider-row label { font-size: min(0.9rem, 14px); font-weight: 600; display: block; margin-bottom: 0.25rem; }
-.matrix { display: grid; grid-template-columns: auto 1fr 1fr; gap: 0; font-size: 0.85rem; margin: 1rem 0; border: 1px solid #e5e5e0; border-radius: 6px; overflow: hidden; }
-.matrix div { padding: 0.5rem 0.75rem; border: 1px solid #e5e5e0; text-align: center; }
-.matrix .header { background: #f5f5f3; font-weight: 600; }
-.results-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; text-align: center; }
-.results-grid .val { font-size: 1.5rem; font-weight: 700; color: #2563eb; }
-.results-grid .lbl { font-size: 0.8rem; color: #888; }
-.leaderboard { margin: 1rem 0; }
-.leaderboard .entry { display: flex; justify-content: space-between; padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0ed; font-size: 0.9rem; }
-.leaderboard .entry:first-child { background: #eff6ff; font-weight: 600; border-radius: 6px 6px 0 0; }
-.leaderboard .rank { color: #888; width: 2rem; }
-.caption { font-size: 0.9rem; color: #666; font-style: italic; margin-top: 1rem; }
-.case-card { border: 1px solid #e5e5e0; border-radius: 8px; padding: 1rem; margin: 0.75rem 0; cursor: pointer; transition: all 0.2s; }
-.case-card:hover { border-color: #2563eb; }
-.case-card h3 { font-family: 'Playfair Display', Georgia, serif; margin: 0 0 0.25rem; font-size: 1rem; }
-.case-card .big-stat { font-size: 1.8rem; font-weight: 700; color: #2563eb; margin: 0.5rem 0; }
-.case-card .detail { display: none; font-size: 0.9rem; color: #555; margin-top: 0.75rem; line-height: 1.6; }
-.case-card.open .detail { display: block; }
-.pullquote { border-left: 5px solid #2563eb; margin: 2rem 0; padding: 1rem 1.5rem; background: #eff6ff; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(37,99,235,0.08); }
-.pullquote p { font-size: 1.15rem; font-style: italic; color: #1e40af; margin: 0; }
-.pullquote .attribution { font-size: 0.85rem; font-style: normal; color: #555; margin-top: 0.5rem; }
-.stat-callout { display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border: 1px solid #e5e5e0; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
-.stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 700; color: #2563eb; line-height: 1; }
-.stat-label { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
-.section-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent); margin: 3rem 0; }
-.stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-.stat-row .stat-callout { flex: 1; min-width: 140px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cooperation Emerges</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfc;
+      --bg2: #f4f4f5;
+      --bg-glass: rgba(253, 253, 252, 0.85);
+      --blue: #2563eb;
+      --violet: #8b5cf6;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --border: #e4e4e7;
+    }
 
-.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706); z-index: 1000; transition: width 0.1s linear; pointer-events: none; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-.btn, button { touch-action: manipulation; min-height: 36px; }
+    .prose {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
 
-/* Mobile fixes */
-@media (max-width: 640px) {
-  .panel-full { margin: 2rem 0; border-radius: 8px; border: 1px solid #e5e5e0; }
-  .stat-row { flex-direction: column; }
-  .calc-cols { flex-direction: column; }
-  .gauges { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .prose { font-size: 1rem; padding: 1.5rem 1rem; }
-  .btn { font-size: min(0.82rem, 13px); padding: 0.4rem 0.8rem; }
-}
-</style>
+    .scrub {
+      border-bottom: 2px dashed #2563eb;
+      color: #2563eb;
+      cursor: ew-resize;
+      user-select: none;
+      font-weight: 600;
+      padding: 0 2px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .panel:hover {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .chapter-num {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav a:hover {
+      color: #1d4ed8;
+    }
+
+    svg text {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: min(0.9rem, 14px);
+      margin: 0.25rem;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .stat {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.5rem 0;
+    }
+
+    .stat strong {
+      color: #1a1a1a;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 0.25rem 0;
+      accent-color: #2563eb;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: min(0.85rem, 14px);
+      color: #555;
+    }
+
+    .slider-row {
+      margin: 0.75rem 0;
+    }
+
+    .slider-row label {
+      font-size: min(0.9rem, 14px);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 0;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+      border: 1px solid #e5e5e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .matrix div {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #e5e5e0;
+      text-align: center;
+    }
+
+    .matrix .header {
+      background: #f5f5f3;
+      font-weight: 600;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .results-grid .val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .results-grid .lbl {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .leaderboard {
+      margin: 1rem 0;
+    }
+
+    .leaderboard .entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #f0f0ed;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard .entry:first-child {
+      background: #eff6ff;
+      font-weight: 600;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .leaderboard .rank {
+      color: #888;
+      width: 2rem;
+    }
+
+    .caption {
+      font-size: 0.9rem;
+      color: #666;
+      font-style: italic;
+      margin-top: 1rem;
+    }
+
+    .case-card {
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .case-card:hover {
+      border-color: #2563eb;
+    }
+
+    .case-card h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      margin: 0 0 0.25rem;
+      font-size: 1rem;
+    }
+
+    .case-card .big-stat {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 0.5rem 0;
+    }
+
+    .case-card .detail {
+      display: none;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .case-card.open .detail {
+      display: block;
+    }
+
+    .pullquote {
+      border-left: 5px solid #2563eb;
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #eff6ff;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .pullquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1e40af;
+      margin: 0;
+    }
+
+    .pullquote .attribution {
+      font-size: 0.85rem;
+      font-style: normal;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e5e5e0;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      color: #2563eb;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e5e0 20%, #e5e5e0 80%, transparent);
+      margin: 3rem 0;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-row .stat-callout {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed, #d97706);
+      z-index: 1000;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .btn,
+    button {
+      touch-action: manipulation;
+      min-height: 36px;
+    }
+
+    /* Mobile fixes */
+    @media (max-width: 640px) {
+      .panel-full {
+        margin: 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #e5e5e0;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      .calc-cols {
+        flex-direction: column;
+      }
+
+      .gauges {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .prose {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .btn {
+        font-size: min(0.82rem, 13px);
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="progress-bar" id="progress-bar"></div>
-<nav class="nav">
-  <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
-  <a href="explorables.html">All Chapters</a>
-  <a href="ch13-dual-engine.html">Next &rarr;</a>
-</nav>
+  <div class="progress-bar" id="progress-bar"></div>
+  <nav class="nav">
+    <a href="ch11-cathedral-bazaar.html">&larr; Previous</a>
+    <a href="explorables.html">All Chapters</a>
+    <a href="ch13-dual-engine.html">Next &rarr;</a>
+  </nav>
 
-<div class="prose">
-  <div class="chapter-num">Chapter 12</div>
-  <h1>Cooperation Emerges</h1>
+  <div class="prose">
+    <div class="chapter-num">Chapter 8</div>
+    <h1>The MIND of a Civilization</h1>
 
-  <div class="pullquote">
-    <p>&ldquo;The calculus of probabilities, in its application to game theory, is a monstrously complicated subject&hellip; It is not a topic for a gentleman.&rdquo;</p>
-    <div class="attribution">&mdash; John von Neumann</div>
-  </div>
-
-  <p>Cooperation isn&rsquo;t idealism. In repeated games with memory, it is the mathematically optimal selfish strategy. The prisoner&rsquo;s dilemma isn&rsquo;t a story about morality &mdash; it&rsquo;s a story about time horizons and information.</p>
-
-  <!-- Section: The Prisoner's Enlightenment -->
-  <h2>The Prisoner&rsquo;s Enlightenment</h2>
-
-  <p>The Prisoner&rsquo;s Dilemma is philosophy&rsquo;s most depressing party trick. Two prisoners, unable to communicate, must choose whether to cooperate or to betray their partner. The math is brutal. Whatever your partner does, you are better off defecting. So both defect. Both suffer a harsher sentence than if they had cooperated. Rationality itself seems to doom us to mutual destruction.</p>
-
-  <p>In 1950, when this was formalized at the RAND Corporation, it became the cold logic of the Cold War. Whatever the Soviets do, we are better off building more bombs. Whatever we do, they are better off building more bombs. The Nash Equilibrium is a planet of rubble.</p>
-
-  <!-- SVG 1: From Defection to Cooperation — enhanced -->
-  <svg viewBox="0 0 600 160" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Evolution from defection to cooperation across game types">
-    <defs>
-      <marker id="arrow-blue-c" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
-      </marker>
-      <!-- Red gradient for One-Shot/Defect box -->
-      <linearGradient id="defectGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fecaca"/>
-        <stop offset="100%" stop-color="#fef2f2"/>
-      </linearGradient>
-      <!-- Yellow gradient for Tit-for-Tat box -->
-      <linearGradient id="titGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fef9c3"/>
-        <stop offset="100%" stop-color="#fefce8"/>
-      </linearGradient>
-      <!-- Blue gradient for Cooperate/Symbiotic box -->
-      <linearGradient id="coopGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#bfdbfe"/>
-        <stop offset="100%" stop-color="#eff6ff"/>
-      </linearGradient>
-      <!-- Background gradient -->
-      <linearGradient id="coop-bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#f8faff"/>
-        <stop offset="100%" stop-color="#fafaf8"/>
-      </linearGradient>
-      <!-- Arrow stroke gradient -->
-      <linearGradient id="arrowStrokeGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#93c5fd"/>
-        <stop offset="100%" stop-color="#2563eb"/>
-      </linearGradient>
-      <filter id="coopBoxShadow">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
-      </filter>
-    </defs>
-
-    <!-- Background -->
-    <rect x="0" y="0" width="600" height="160" rx="12" fill="url(#coop-bg)"/>
-
-    <!-- One-shot game box -->
-    <rect x="15" y="15" width="165" height="120" rx="10" fill="url(#defectGrad)" stroke="#ef4444" stroke-width="2" filter="url(#coopBoxShadow)"/>
-    <text x="98" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">&#10007;</text>
-    <text x="98" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b" font-family="'DM Sans', system-ui, sans-serif">One-Shot Game</text>
-    <text x="98" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No memory, no future</text>
-    <text x="98" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#ef4444" font-family="'DM Sans', system-ui, sans-serif">Defect</text>
-    <text x="98" y="122" text-anchor="middle" font-size="9" fill="#9f1239" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Rational doom</text>
-
-    <!-- Arrow 1 -->
-    <path d="M185 75 L215 75" fill="none" stroke="url(#arrowStrokeGrad)" stroke-width="3" marker-end="url(#arrow-blue-c)"/>
-    <text x="200" y="64" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">+ iteration</text>
-
-    <!-- Iterated game box -->
-    <rect x="220" y="15" width="165" height="120" rx="10" fill="url(#titGrad)" stroke="#eab308" stroke-width="2" filter="url(#coopBoxShadow)"/>
-    <text x="303" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#eab308" font-family="'DM Sans', system-ui, sans-serif">&#8596;</text>
-    <text x="303" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e" font-family="'DM Sans', system-ui, sans-serif">Iterated Game</text>
-    <text x="303" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Memory + reputation</text>
-    <text x="303" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#eab308" font-family="'DM Sans', system-ui, sans-serif">Tit-for-Tat</text>
-    <text x="303" y="122" text-anchor="middle" font-size="9" fill="#92400e" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Reciprocal clarity</text>
-
-    <!-- Arrow 2 -->
-    <path d="M390 75 L420 75" fill="none" stroke="url(#arrowStrokeGrad)" stroke-width="3" marker-end="url(#arrow-blue-c)"/>
-    <text x="405" y="64" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">+ topology</text>
-
-    <!-- Symbiotic game box -->
-    <rect x="425" y="15" width="160" height="120" rx="10" fill="url(#coopGrad)" stroke="#2563eb" stroke-width="2" filter="url(#coopBoxShadow)"/>
-    <text x="505" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">&#10003;</text>
-    <text x="505" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af" font-family="'DM Sans', system-ui, sans-serif">Symbiotic</text>
-    <text x="505" y="80" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Network effects</text>
-    <text x="505" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">Cooperate</text>
-    <text x="505" y="122" text-anchor="middle" font-size="9" fill="#1e40af" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Positive-sum</text>
-  </svg>
-
-  <p>But then, in the 1980s, the political scientist Robert Axelrod did something beautiful. He ran a tournament &mdash; not with prisoners, but with computer programs. He invited strategists to submit algorithms that would compete in an iterated Prisoner&rsquo;s Dilemma, a game played thousands of times. The winner shocked everyone. It was the simplest program submitted, a four-line piece of code called &ldquo;Tit for Tat.&rdquo; Cooperate on the first move, then do whatever your opponent did last.</p>
-
-  <div class="pullquote">
-    <p>Tit for Tat did not win because it was moral. It won because it was mathematically optimal in a game that had memory and a future. Cooperation emerged not from ethics but from iteration. Not from intention but from interaction.</p>
-  </div>
-
-  <!-- Panel 1: Prisoner's Dilemma Playground -->
-  <div class="panel">
-    <h2>Prisoner&rsquo;s Dilemma Playground</h2>
-    <div class="matrix">
-      <div class="header"></div><div class="header">B: Cooperate</div><div class="header">B: Defect</div>
-      <div class="header">A: Cooperate</div><div>3, 3</div><div>0, 5</div>
-      <div class="header">A: Defect</div><div>5, 0</div><div>1, 1</div>
+    <div class="pullquote">
+      <p>"Civilization is a movement and not a condition, a voyage and not a harbor."</p>
+      <div class="attribution">&mdash; Arnold J. Toynbee</div>
     </div>
-    <div class="slider-row">
-      <label>Iterations: <span id="iter-val">50</span></label>
-      <input type="range" id="iter-slider" min="1" max="200" value="50">
+
+    <h2>The Search for Sanity</h2>
+
+    <p>The Babylonians measured wealth in barley. The Egyptians measured flood levels of the Nile. The British Empire
+      measured in naval tonnage. We measure in dollars.</p>
+
+    <p>Each civilization's measurement system perfectly captures what matters to it, right before it kills them. The
+      Babylonians' granaries could not measure the iron weapons of their conquerors. The Egyptians' flood markers could
+      not predict the arrival of the Sea Peoples. The British counted battleships while America was inventing a new form
+      of capitalism. We count transactions while the world reinvents value itself.</p>
+
+    <p>The search for what to measure is the search for what matters. And what matters, it turns out, is not what moves
+      through the system but what allows the system to persist. Not the water in the river, but the health of the
+      riverbed that shapes its flow. Not the transactions, but the capacity for transformation.</p>
+
+    <p>After showing you the dashboard for insanity in Chapter 4, I owe you a compass for sanity. Not a perfect map, for
+      perfection is the enemy of the useful, but at least a compass that points toward survival rather than off a cliff.
+    </p>
+
+    <hr class="section-divider">
+
+    <h2>The Discovery in Costa Rica</h2>
+
+    <p>In 1948, Costa Rica did something unprecedented. They abolished their military. The generals said they were
+      committing suicide. The economists said they were wasting resources. Instead, something strange happened. The
+      money that would have bought tanks bought teachers. The energy that would have trained soldiers trained doctors.
+      The land that would have been military bases became national parks.</p>
+
+    <p>They began, implicitly, to measure different things: literacy rates, forest coverage, health outcomes, and
+      biodiversity. By 1990, Costa Rica had reversed deforestation, the first tropical country to do so. They realized
+      something profound. A standing forest providing watershed services, ecotourism, and carbon sequestration was worth
+      more than lumber, but only if you measured the right things.</p>
+
+    <div class="pullquote">
+      <p>They discovered, without quite articulating it, that a civilization's health depends on a balanced portfolio of
+        different kinds of wealth. Ignore any one of them, and you are flying blind.</p>
     </div>
-    <div class="slider-row">
-      <label>Reputation Visibility: <span id="rep-val">50%</span></label>
-      <input type="range" id="rep-slider" min="0" max="100" value="50">
-    </div>
-    <div class="slider-row">
-      <label>Time Horizon: <span id="horizon-val">50</span></label>
-      <input type="range" id="horizon-slider" min="1" max="200" value="50">
-    </div>
-    <button class="btn" onclick="runPD()">Run Game</button>
-    <div class="results-grid" id="pd-results" style="display:none;">
-      <div><div class="val" id="pd-a-score">0</div><div class="lbl">A's Score</div></div>
-      <div><div class="val" id="pd-b-score">0</div><div class="lbl">B's Score</div></div>
-      <div><div class="val" id="pd-coop">0%</div><div class="lbl">Mutual Cooperation</div></div>
-    </div>
-    <svg id="pd-chart" style="display:block; width:100%; max-width:600px;" height="160"></svg>
-  </div>
 
-  <hr class="section-divider">
+    <!-- SVG 1: From Defection to Cooperation — enhanced -->
+    <svg viewBox="0 0 600 160" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img"
+      aria-label="Evolution from defection to cooperation across game types">
+      <defs>
+        <marker id="arrow-blue-c" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb" />
+        </marker>
+        <!-- Red gradient for One-Shot/Defect box -->
+        <linearGradient id="defectGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fecaca" />
+          <stop offset="100%" stop-color="#fef2f2" />
+        </linearGradient>
+        <!-- Yellow gradient for Tit-for-Tat box -->
+        <linearGradient id="titGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fef9c3" />
+          <stop offset="100%" stop-color="#fefce8" />
+        </linearGradient>
+        <!-- Blue gradient for Cooperate/Symbiotic box -->
+        <linearGradient id="coopGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#bfdbfe" />
+          <stop offset="100%" stop-color="#eff6ff" />
+        </linearGradient>
+        <!-- Background gradient -->
+        <linearGradient id="coop-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f8faff" />
+          <stop offset="100%" stop-color="#fafaf8" />
+        </linearGradient>
+        <!-- Arrow stroke gradient -->
+        <linearGradient id="arrowStrokeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#93c5fd" />
+          <stop offset="100%" stop-color="#2563eb" />
+        </linearGradient>
+        <filter id="coopBoxShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12" />
+        </filter>
+      </defs>
 
-  <!-- Section: The Flaw in the Old Game -->
-  <h2>The Flaw in the Old Game</h2>
-
-  <p>Classical game theory made a fatal error. It assumed its agents were intelligent but its universe was stupid. It modeled players who operated in a vacuum &mdash; a featureless void with no context, no relationships, and no consequences beyond the immediate transaction.</p>
-
-  <p>The famous paradoxes of game theory are not paradoxes of human irrationality. They are the predictable outcomes of games played on impoverished landscapes. The Prisoner&rsquo;s Dilemma is so bleak because its &ldquo;prison&rdquo; is a metaphor for a specific, pathological topology: a disconnected, zero-information graph with no future. The prisoners cannot communicate. They have no basis for trust. It is a one-shot game, so reputation is worthless.</p>
-
-  <div class="pullquote">
-    <p>The tragedy is not that humans are flawed, but that classical game theory mistook this pathological edge case for the universal condition.</p>
-  </div>
-
-  <p>An even deeper puzzle, the <strong>Traveler&rsquo;s Dilemma</strong>, reveals the dimensional blindness of the old framework. In this game, the purely &ldquo;rational&rdquo; strategy leads to the worst possible collective outcome. Yet in experiments, real humans consistently choose to cooperate, achieving a far better result. The paradox is not that humans are irrational; it&rsquo;s that classical game theory is blind &mdash; capable of seeing only Material Capital while humans intuitively navigate all four.</p>
-
-  <!-- Panel 2: Strategy Tournament -->
-  <div class="panel">
-    <h2>Strategy Tournament</h2>
-    <p style="font-size:0.9rem; color:#666;">Six strategies compete in a round-robin tournament of 200 rounds each. Run it to see which approach wins.</p>
-    <button class="btn" onclick="runTournament()">Run Tournament</button>
-    <div class="leaderboard" id="tournament-board"></div>
-    <p class="caption" id="tournament-caption" style="display:none;">Tit-for-Tat wins not by being moral, but by being clear, reciprocal, and forgiving.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- Section: The Logic of the Potlatch -->
-  <h2>The Logic of the Potlatch</h2>
-
-  <p>Western observers in the 19th century were baffled by the potlatch &mdash; a vast ceremonial feast held by the Kwakwaka&rsquo;wakw and other Indigenous peoples of the Pacific Northwest. Here was a society where chiefs would spend years accumulating immense wealth, only to give it all away, or even dramatically destroy it, in a single, massive ceremony. To the scarcity mindset of the colonial administrator, this was madness. They banned it, missing the genius entirely.</p>
-
-  <!-- SVG 2: Capital Transmutation (Material → Network) — enhanced -->
-  <svg viewBox="0 0 600 180" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Potlatch transforms Material Capital into Network Capital">
-    <defs>
-      <marker id="arrow-green-p" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 Z" fill="#059669"/>
-      </marker>
-      <!-- Red-orange gradient for Material Capital -->
-      <linearGradient id="materialGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fed7aa"/>
-        <stop offset="100%" stop-color="#fef2f2"/>
-      </linearGradient>
-      <!-- Blue-indigo gradient for Network Capital -->
-      <linearGradient id="networkGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#c7d2fe"/>
-        <stop offset="100%" stop-color="#eff6ff"/>
-      </linearGradient>
-      <!-- Arrow gradient -->
-      <linearGradient id="potlatchArrowGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ea580c"/>
-        <stop offset="100%" stop-color="#059669"/>
-      </linearGradient>
       <!-- Background -->
-      <linearGradient id="potlatch-bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fffef7"/>
-        <stop offset="100%" stop-color="#f8faff"/>
-      </linearGradient>
-      <filter id="potlatchShadow">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
-      </filter>
-    </defs>
+      <rect x="0" y="0" width="600" height="160" rx="12" fill="url(#coop-bg)" />
 
-    <!-- Background -->
-    <rect x="0" y="0" width="600" height="180" rx="12" fill="url(#potlatch-bg)"/>
+      <!-- One-shot game box -->
+      <rect x="15" y="15" width="165" height="120" rx="10" fill="url(#defectGrad)" stroke="#ef4444" stroke-width="2"
+        filter="url(#coopBoxShadow)" />
+      <text x="98" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#ef4444"
+        font-family="'DM Sans', system-ui, sans-serif">&#10007;</text>
+      <text x="98" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b"
+        font-family="'DM Sans', system-ui, sans-serif">One-Shot Game</text>
+      <text x="98" y="80" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">No memory, no future</text>
+      <text x="98" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#ef4444"
+        font-family="'DM Sans', system-ui, sans-serif">Defect</text>
+      <text x="98" y="122" text-anchor="middle" font-size="9" fill="#9f1239" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">Rational doom</text>
 
-    <!-- Material Capital box -->
-    <rect x="20" y="20" width="165" height="130" rx="10" fill="url(#materialGrad)" stroke="#ea580c" stroke-width="1.5" filter="url(#potlatchShadow)"/>
-    <!-- Textile/blanket icon suggestion -->
-    <rect x="48" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5"/>
-    <rect x="73" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.35"/>
-    <rect x="98" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5"/>
-    <text x="103" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#7c2d12" font-family="'DM Sans', system-ui, sans-serif">Material Capital</text>
-    <text x="103" y="93" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1,000 blankets</text>
-    <text x="103" y="111" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Rivalrous, depletable</text>
-    <text x="103" y="134" text-anchor="middle" font-size="9" fill="#c2410c" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Hoarding = isolation</text>
+      <!-- Arrow 1 -->
+      <path d="M185 75 L215 75" fill="none" stroke="url(#arrowStrokeGrad)" stroke-width="3"
+        marker-end="url(#arrow-blue-c)" />
+      <text x="200" y="64" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">+ iteration</text>
 
-    <!-- Potlatch transformation arrow (bolder, gradient) -->
-    <path d="M190 85 L252 85" fill="none" stroke="url(#potlatchArrowGrad)" stroke-width="4.5" marker-end="url(#arrow-green-p)"/>
-    <text x="221" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">Potlatch</text>
-    <text x="221" y="100" text-anchor="middle" font-size="9" fill="#15803d" font-family="'DM Sans', system-ui, sans-serif">give away</text>
+      <!-- Iterated game box -->
+      <rect x="220" y="15" width="165" height="120" rx="10" fill="url(#titGrad)" stroke="#eab308" stroke-width="2"
+        filter="url(#coopBoxShadow)" />
+      <text x="303" y="42" text-anchor="middle" font-size="18" font-weight="700" fill="#eab308"
+        font-family="'DM Sans', system-ui, sans-serif">&#8596;</text>
+      <text x="303" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e"
+        font-family="'DM Sans', system-ui, sans-serif">Iterated Game</text>
+      <text x="303" y="80" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Memory + reputation</text>
+      <text x="303" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#eab308"
+        font-family="'DM Sans', system-ui, sans-serif">Tit-for-Tat</text>
+      <text x="303" y="122" text-anchor="middle" font-size="9" fill="#92400e" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">Reciprocal clarity</text>
 
-    <!-- Network Capital box -->
-    <rect x="258" y="20" width="165" height="130" rx="10" fill="url(#networkGrad)" stroke="#4f46e5" stroke-width="1.5" filter="url(#potlatchShadow)"/>
-    <!-- Network dots visualization -->
-    <circle cx="295" cy="45" r="4.5" fill="#4f46e5" opacity="0.8"/>
-    <circle cx="315" cy="37" r="4.5" fill="#4f46e5" opacity="0.8"/>
-    <circle cx="337" cy="47" r="4.5" fill="#4f46e5" opacity="0.8"/>
-    <circle cx="320" cy="59" r="4.5" fill="#4f46e5" opacity="0.8"/>
-    <line x1="295" y1="45" x2="315" y2="37" stroke="#4f46e5" stroke-width="1.4" opacity="0.6"/>
-    <line x1="315" y1="37" x2="337" y2="47" stroke="#4f46e5" stroke-width="1.4" opacity="0.6"/>
-    <line x1="295" y1="45" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6"/>
-    <line x1="337" y1="47" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6"/>
-    <line x1="315" y1="37" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6"/>
-    <text x="341" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1e1b4b" font-family="'DM Sans', system-ui, sans-serif">Network Capital</text>
-    <text x="341" y="93" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">1,000 obligations</text>
-    <text x="341" y="111" text-anchor="middle" font-size="10" fill="#888" font-family="'DM Sans', system-ui, sans-serif">Non-rivalrous, resilient</text>
-    <text x="341" y="134" text-anchor="middle" font-size="9" fill="#3730a3" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">Sharing = abundance</text>
+      <!-- Arrow 2 -->
+      <path d="M390 75 L420 75" fill="none" stroke="url(#arrowStrokeGrad)" stroke-width="3"
+        marker-end="url(#arrow-blue-c)" />
+      <text x="405" y="64" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600"
+        font-family="'DM Sans', system-ui, sans-serif">+ topology</text>
 
-    <!-- Callout box -->
-    <rect x="440" y="42" width="148" height="80" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#potlatchShadow)"/>
-    <text x="514" y="62" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">The richest chief =</text>
-    <text x="514" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">strongest web of</text>
-    <text x="514" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="'DM Sans', system-ui, sans-serif">relationships</text>
-  </svg>
+      <!-- Symbiotic game box -->
+      <rect x="425" y="15" width="160" height="120" rx="10" fill="url(#coopGrad)" stroke="#2563eb" stroke-width="2"
+        filter="url(#coopBoxShadow)" />
+      <text x="505" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#16a34a"
+        font-family="'DM Sans', system-ui, sans-serif">&#10003;</text>
+      <text x="505" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="#1e40af"
+        font-family="'DM Sans', system-ui, sans-serif">Symbiotic</text>
+      <text x="505" y="80" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">Network effects</text>
+      <text x="505" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb"
+        font-family="'DM Sans', system-ui, sans-serif">Cooperate</text>
+      <text x="505" y="122" text-anchor="middle" font-size="9" fill="#1e40af" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">Positive-sum</text>
+    </svg>
 
-  <p>The potlatch was not about destroying wealth. It was about <em>transmuting</em> it. When a chief gave away a thousand blankets, he was not losing a thousand blankets. He was purchasing a thousand strands of social obligation. He was broadcasting a signal of his capacity and his generosity, creating a network of allies. They were not playing a zero-sum game for a fixed pool of resources. They were playing a positive-sum game to increase the resilience and prosperity of the entire network.</p>
+    <hr class="section-divider">
 
-  <hr class="section-divider">
+    <h2>The Four Capitals Revealed: The MIND Dashboard</h2>
 
-  <!-- Section: The Selfishness of Generosity -->
-  <h2>The Selfishness of Generosity</h2>
+    <p>This framework emerged not from theory but from observing what actually allows systems to persist. Every thriving
+      civilization, every resilient ecosystem, every antifragile organization maintains four distinct but interdependent
+      forms of capital. They are the direct, measurable expressions of the Three Laws of a Living System we derived in
+      the last chapter.</p>
 
-  <p>Here is the paradox that breaks most minds. In a sufficiently connected system with a long enough time horizon, selfishness and altruism converge. Being generous becomes the most selfish possible strategy &mdash; not in some mystical sense, but in pure mathematical returns.</p>
+    <p><strong>M – Material Capital: The Physical Foundation</strong><br>
+      This is the organized matter and available energy that form the substrate of existence. Not just "stuff," but
+      stuff in useful configurations. A pile of silicon is material; a microchip is Material Capital. A forest is
+      material; a sustainably managed watershed is <strong>Material Capital.</strong> It is the measure of our adherence
+      to the Law of Flow in the physical world.</p>
 
-  <div class="stat-callout">
-    <div class="stat-number">$1T+</div>
-    <div class="stat-label">Estimated economic value generated by the open Human Genome Project data</div>
-  </div>
+    <ul>
+      <li><strong>The Incan Lesson:</strong> The Inca understood this. Their agricultural terraces turned vertical
+        mountainsides into productive land that lasted for centuries, still feeding people today. They measured not in
+        acres but in production potential.</li>
+      <li><strong>The Modern Mistake:</strong> We measure the depletion of oil reserves as an increase in GDP. We
+        confuse the liquidation of our planet's balance sheet with income.</li>
+    </ul>
 
-  <p>Consider the Human Genome Project. In the 1990s, a race began between a public, open-source consortium and a private company to sequence our DNA. The public project shared its data freely every 24 hours. The private company kept its data proprietary, hoping to sell access. The open model won. The contributors gave away their work and got back a transformed world.</p>
+    <p><strong>I – Intelligence Capital: The Pattern Library</strong><br>
+      This is the accumulated ability to solve problems, recognize patterns, and create value. It includes everything
+      from scientific knowledge to cultural wisdom, from technical skills to artistic traditions. It is the only form of
+      capital that grows when shared. It is the measure of our adherence to the Law of Flow in the world of information.
+    </p>
 
-  <div class="pullquote">
-    <p>The old game was about extracting value from the network. The new game is about generating value <em>through</em> the network.</p>
-  </div>
+    <ul>
+      <li><strong>The Alexandrian Lesson:</strong> The Library of Alexandria did not just collect scrolls; they built
+        the ancient world's Google. When it burned, humanity forgot how to make concrete for a thousand years.</li>
+      <li><strong>The Modern Mistake:</strong> We are drowning in data while starving for wisdom. The real measure is
+        not how much you know, but how well you can learn and adapt.</li>
+    </ul>
 
-  <!-- Panel 3: Topology x Cooperation -->
-  <div class="panel">
-    <h2>Topology &times; Cooperation</h2>
-    <p style="font-size:0.9rem; color:#666;">Watch how defection (red) spreads through different network structures. Mesh networks resist contagion; hub-and-spoke collapses fast.</p>
-    <div class="btn-group">
-      <button class="btn" onclick="setTopology('hub')">Hub-and-Spoke</button>
-      <button class="btn" onclick="setTopology('smallworld')">Small-World</button>
-      <button class="btn" onclick="setTopology('mesh')">Mesh</button>
+    <p><strong>N – Network Capital: The Connection Infrastructure</strong><br>
+      This is the trust, relationships, and communication channels that allow all other capitals to flow. High Network
+      Capital means low transaction costs, rapid information spread, and collective resilience. It is the direct,
+      measurable expression of the Law of Openness.</p>
+
+    <ul>
+      <li><strong>The Venetian Lesson:</strong> The Venetians built an empire on Network Capital. A merchant's word in
+        Cairo was as good as gold because breaking it meant exclusion from the network, a fate worse than death.</li>
+      <li><strong>The Modern Mistake:</strong> We build "social networks" that are actually attention extraction
+        machines, designed to create engagement through outrage, which systematically destroys the social trust that
+        constitutes real Network Capital.</li>
+    </ul>
+
+    <p><strong>D – Diversity Capital: The Option Portfolio</strong><br>
+      This is the variety of approaches, perspectives, and possibilities maintained by the system. It is not diversity
+      for its own sake but diversity as insurance against uncertainty. It is the structural embodiment of the
+      <strong>Law of Resilience.</strong> This is the capital of what Nassim Nicholas Taleb calls antifragility: the
+      quality of a system that gains from disorder.
+    </p>
+
+    <ul>
+      <li><strong>The Incan Lesson, Revisited:</strong> While the global banana industry collapsed with its single,
+        fragile variety, the Inca thrived. They cultivated three thousand varieties of potato in the Andes. When one
+        failed, others survived. They did not optimize for global export; they optimized for persistence. Their system
+        was not just resilient; it was antifragile, learning and strengthening from the constant small shocks of local
+        blights and weather events.</li>
+      <li><strong>The Modern Mistake:</strong> We have created a global monoculture in the name of efficiency and act
+        surprised when it proves catastrophically fragile. We have systematically traded the antifragility that comes
+        from diversity for the brittle illusion of short-term optimization.</li>
+    </ul>
+
+    <!-- Panel 1: Prisoner's Dilemma Playground -->
+    <div class="panel">
+      <h2>Prisoner&rsquo;s Dilemma Playground</h2>
+      <div class="matrix">
+        <div class="header"></div>
+        <div class="header">B: Cooperate</div>
+        <div class="header">B: Defect</div>
+        <div class="header">A: Cooperate</div>
+        <div>3, 3</div>
+        <div>0, 5</div>
+        <div class="header">A: Defect</div>
+        <div>5, 0</div>
+        <div>1, 1</div>
+      </div>
+      <div class="slider-row">
+        <label>Iterations: <span id="iter-val">50</span></label>
+        <input type="range" id="iter-slider" min="1" max="200" value="50">
+      </div>
+      <div class="slider-row">
+        <label>Reputation Visibility: <span id="rep-val">50%</span></label>
+        <input type="range" id="rep-slider" min="0" max="100" value="50">
+      </div>
+      <div class="slider-row">
+        <label>Time Horizon: <span id="horizon-val">50</span></label>
+        <input type="range" id="horizon-slider" min="1" max="200" value="50">
+      </div>
+      <button class="btn" onclick="runPD()">Run Game</button>
+      <div class="results-grid" id="pd-results" style="display:none;">
+        <div>
+          <div class="val" id="pd-a-score">0</div>
+          <div class="lbl">A's Score</div>
+        </div>
+        <div>
+          <div class="val" id="pd-b-score">0</div>
+          <div class="lbl">B's Score</div>
+        </div>
+        <div>
+          <div class="val" id="pd-coop">0%</div>
+          <div class="lbl">Mutual Cooperation</div>
+        </div>
+      </div>
+      <svg id="pd-chart" style="display:block; width:100%; max-width:600px;" height="160"></svg>
     </div>
-    <svg id="spread-svg" style="display:block; width:100%; max-width:600px;" height="360"></svg>
-    <div id="spread-stat" class="stat" style="text-align:center;"></div>
-  </div>
 
-  <hr class="section-divider">
+    <hr class="section-divider">
 
-  <!-- Section: The Principal-Agent Problem -->
-  <h2>Aligning the Players</h2>
+    <hr class="section-divider">
 
-  <p>The failure of classical game theory is not just academic; it manifests in every boardroom. The &ldquo;Principal-Agent Problem&rdquo; &mdash; the struggle to align the interests of a CEO with their shareholders &mdash; has consumed corporate governance for fifty years. Conventional economics tries to solve this with better contracts, a classic attempt to write more complex rules for a broken game.</p>
+    <h2>The Multiplication Principle</h2>
 
-  <p>The symbiotic solution is not to write a better contract, but to reshape the landscape. Structures like cooperatives, which give the &ldquo;agent&rdquo; employee ownership and a stake in long-term health, are acts of topology engineering. They change the game itself, making the agent&rsquo;s and the principal&rsquo;s paths of least resistance converge toward the <strong>Symbiotic Equilibrium</strong>.</p>
+    <p>Here is the crucial insight that changes everything. These four capitals do not add. They multiply.</p>
 
-  <hr class="section-divider">
+    <div class="stat-callout" style="background: var(--bg2); border-color: var(--blue);">
+      <div class="stat-number" style="font-size: 2.5rem; letter-spacing: 0.1em;">M &times; I &times; N &times; D</div>
+      <div class="stat-label" style="font-weight: 600; font-size: 1.1rem; color: var(--blue);">Civilizational Vitality
+      </div>
+    </div>
 
-  <!-- Section: From Nash to Symbiosis -->
-  <h2>From Nash to Symbiosis</h2>
+    <p>This means a zero in any category equals total system failure, regardless of the other three. The multiplication
+      forces balance. The Soviet Union had massive Material Capital and impressive Intelligence Capital. But their
+      Network Capital was poisoned by mistrust and their Diversity Capital was systematically eliminated by central
+      planning. The multiplication by near zero doomed them.</p>
 
-  <p>A Nash Equilibrium is a state where no player can improve their outcome by unilaterally changing their strategy. It is a state of selfish stability. The Prisoner&rsquo;s Dilemma shows us that this can often be a terrible place.</p>
+    <p>This framework is not an ideology. It is a diagnostic tool. It allows us to look at any system, from a person to
+      a planet, and ask four simple questions. Is it regenerating its material base? Is it learning and sharing
+      knowledge? Is it strengthening its connections? Is it maintaining its options?</p>
 
-  <p>Intelligent Game Theory introduces a new, higher equilibrium: the <strong>Symbiotic Equilibrium</strong>. This is a state where the system&rsquo;s overall health is maximized. In this state, an individual agent cannot improve its own long-term prospects by taking an action that degrades the health of the network.</p>
+    <div class="pullquote">
+      <p>A system that can answer yes to all four is a system that is built to last. A system that cannot is a system
+        that is already dying. It just has not read its own autopsy report yet.</p>
+    </div>
 
-  <!-- SVG 3: Nash vs Symbiotic Equilibrium — enhanced -->
-  <svg viewBox="0 0 600 190" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img" aria-label="Nash Equilibrium versus Symbiotic Equilibrium">
-    <defs>
-      <!-- Nash muted red gradient -->
-      <linearGradient id="nashGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fecaca"/>
-        <stop offset="100%" stop-color="#fef2f2"/>
-      </linearGradient>
-      <!-- Symbiotic vibrant blue-green gradient -->
-      <linearGradient id="symbioticGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#a7f3d0"/>
-        <stop offset="100%" stop-color="#dbeafe"/>
-      </linearGradient>
-      <!-- Symbiotic glow animation filter -->
-      <filter id="symbGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
-        <feFlood flood-color="#059669" flood-opacity="0.22" result="color"/>
-        <feComposite in="color" in2="blur" operator="in" result="glow"/>
-        <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="nashBoxShadow">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
-      </filter>
+    <!-- Panel 2: Strategy Tournament -->
+    <div class="panel">
+      <h2>Strategy Tournament</h2>
+      <p style="font-size:0.9rem; color:#666;">Six strategies compete in a round-robin tournament of 200 rounds each.
+        Run it to see which approach wins.</p>
+      <button class="btn" onclick="runTournament()">Run Tournament</button>
+      <div class="leaderboard" id="tournament-board"></div>
+      <p class="caption" id="tournament-caption" style="display:none;">Tit-for-Tat wins not by being moral, but by being
+        clear, reciprocal, and forgiving.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>The Portfolio of a Flourishing Human</h2>
+
+    <p>This framework is not just for civilizations. It is a guide for life. Consider the state of your own vitality
+      through this lens.</p>
+
+    <p>A person focused only on Material Capital ends up with a large house full of possessions but with decaying
+      health, no new skills, and few true friends.</p>
+
+    <p>A person focused only on Intelligence Capital becomes the brilliant academic, celebrated for their ideas but
+      physically unhealthy, socially isolated, and incapable of adapting when their field is disrupted.</p>
+
+    <p>A person focused only on Network Capital is the ultimate socialite, knowing everyone but having no deep skills or
+      material stability to stand on.</p>
+
+    <p>A person focused only on Diversity Capital is the dilettante, dabbling in everything but mastering nothing,
+      maintaining infinite options but never building anything of substance.</p>
+
+    <p>A flourishing human, like a flourishing civilization, does not maximize one of these capitals. They cultivate a
+      balanced portfolio. They tend to their health and their environment (M). They never stop learning (I). They
+      nurture deep relationships (N). And they stay open to new experiences and possibilities (D).</p>
+
+    <p>The logic is the same for a person as it is for a planet. The multiplication principle is unforgiving. A zero in
+      any category leads to a life that, despite its apparent successes, feels fundamentally broken. Health, in a system
+      or a soul, is the product of a balanced portfolio.</p>
+
+    <p>This framework, therefore, provides a physical and informational basis for what traditional economics vaguely
+      called "utility." The drive for human flourishing is not an arbitrary set of preferences to be maximized. It is
+      the innate, scale-invariant drive to cultivate a balanced and resilient MIND portfolio.</p>
+
+    <div class="pullquote">
+      <p>The search for meaning, connection, and growth is the subjective experience of a thriving MIND portfolio. This
+        reframes the foundational problem of microeconomics: the goal is not to satisfy infinite, unknowable wants, but
+        to create the conditions for all agents to cultivate their own systemic vitality.</p>
+    </div>
+
+    <!-- SVG 2: Capital Transmutation (Material → Network) — enhanced -->
+    <svg viewBox="0 0 600 180" style="width:100%; max-width:600px; display:block; margin:2rem auto;" role="img"
+      aria-label="Potlatch transforms Material Capital into Network Capital">
+      <defs>
+        <marker id="arrow-green-p" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#059669" />
+        </marker>
+        <!-- Red-orange gradient for Material Capital -->
+        <linearGradient id="materialGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fed7aa" />
+          <stop offset="100%" stop-color="#fef2f2" />
+        </linearGradient>
+        <!-- Blue-indigo gradient for Network Capital -->
+        <linearGradient id="networkGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c7d2fe" />
+          <stop offset="100%" stop-color="#eff6ff" />
+        </linearGradient>
+        <!-- Arrow gradient -->
+        <linearGradient id="potlatchArrowGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ea580c" />
+          <stop offset="100%" stop-color="#059669" />
+        </linearGradient>
+        <!-- Background -->
+        <linearGradient id="potlatch-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fffef7" />
+          <stop offset="100%" stop-color="#f8faff" />
+        </linearGradient>
+        <filter id="potlatchShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12" />
+        </filter>
+      </defs>
+
       <!-- Background -->
-      <linearGradient id="ns-bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#f8faff"/>
-        <stop offset="100%" stop-color="#f8fff8"/>
-      </linearGradient>
-    </defs>
+      <rect x="0" y="0" width="600" height="180" rx="12" fill="url(#potlatch-bg)" />
 
-    <!-- Background -->
-    <rect x="0" y="0" width="600" height="190" rx="12" fill="url(#ns-bg)"/>
+      <!-- Material Capital box -->
+      <rect x="20" y="20" width="165" height="130" rx="10" fill="url(#materialGrad)" stroke="#ea580c" stroke-width="1.5"
+        filter="url(#potlatchShadow)" />
+      <!-- Textile/blanket icon suggestion -->
+      <rect x="48" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5" />
+      <rect x="73" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.35" />
+      <rect x="98" y="35" width="20" height="14" rx="2" fill="#ea580c" opacity="0.5" />
+      <text x="103" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#7c2d12"
+        font-family="'DM Sans', system-ui, sans-serif">Material Capital</text>
+      <text x="103" y="93" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">1,000 blankets</text>
+      <text x="103" y="111" text-anchor="middle" font-size="10" fill="#888"
+        font-family="'DM Sans', system-ui, sans-serif">Rivalrous, depletable</text>
+      <text x="103" y="134" text-anchor="middle" font-size="9" fill="#c2410c" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">Hoarding = isolation</text>
 
-    <!-- Nash Equilibrium box -->
-    <rect x="20" y="18" width="248" height="154" rx="12" fill="url(#nashGrad)" stroke="#ef4444" stroke-width="1.5" filter="url(#nashBoxShadow)"/>
-    <!-- Isolated sad dots -->
-    <circle cx="65" cy="52" r="7" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
-    <circle cx="95" cy="44" r="7" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
-    <circle cx="128" cy="52" r="7" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="144" y="52" text-anchor="middle" fill="#ef4444" font-size="9" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">isolated</text>
-    <text x="144" y="78" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b" font-family="'Playfair Display', Georgia, serif">Nash Equilibrium</text>
-    <text x="144" y="100" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No player can improve alone</text>
-    <text x="144" y="118" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">Selfish stability</text>
-    <text x="144" y="155" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="600" font-family="'DM Sans', system-ui, sans-serif">Can be globally terrible</text>
+      <!-- Potlatch transformation arrow (bolder, gradient) -->
+      <path d="M190 85 L252 85" fill="none" stroke="url(#potlatchArrowGrad)" stroke-width="4.5"
+        marker-end="url(#arrow-green-p)" />
+      <text x="221" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a"
+        font-family="'DM Sans', system-ui, sans-serif">Potlatch</text>
+      <text x="221" y="100" text-anchor="middle" font-size="9" fill="#15803d"
+        font-family="'DM Sans', system-ui, sans-serif">give away</text>
 
-    <!-- Arrow -->
-    <text x="300" y="100" text-anchor="middle" font-size="28" fill="#16a34a" font-family="'DM Sans', system-ui, sans-serif">&#8594;</text>
-    <text x="300" y="118" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Goal of policy</text>
+      <!-- Network Capital box -->
+      <rect x="258" y="20" width="165" height="130" rx="10" fill="url(#networkGrad)" stroke="#4f46e5" stroke-width="1.5"
+        filter="url(#potlatchShadow)" />
+      <!-- Network dots visualization -->
+      <circle cx="295" cy="45" r="4.5" fill="#4f46e5" opacity="0.8" />
+      <circle cx="315" cy="37" r="4.5" fill="#4f46e5" opacity="0.8" />
+      <circle cx="337" cy="47" r="4.5" fill="#4f46e5" opacity="0.8" />
+      <circle cx="320" cy="59" r="4.5" fill="#4f46e5" opacity="0.8" />
+      <line x1="295" y1="45" x2="315" y2="37" stroke="#4f46e5" stroke-width="1.4" opacity="0.6" />
+      <line x1="315" y1="37" x2="337" y2="47" stroke="#4f46e5" stroke-width="1.4" opacity="0.6" />
+      <line x1="295" y1="45" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6" />
+      <line x1="337" y1="47" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6" />
+      <line x1="315" y1="37" x2="320" y2="59" stroke="#4f46e5" stroke-width="1.4" opacity="0.6" />
+      <text x="341" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1e1b4b"
+        font-family="'DM Sans', system-ui, sans-serif">Network Capital</text>
+      <text x="341" y="93" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">1,000 obligations</text>
+      <text x="341" y="111" text-anchor="middle" font-size="10" fill="#888"
+        font-family="'DM Sans', system-ui, sans-serif">Non-rivalrous, resilient</text>
+      <text x="341" y="134" text-anchor="middle" font-size="9" fill="#3730a3" font-style="italic"
+        font-family="'DM Sans', system-ui, sans-serif">Sharing = abundance</text>
 
-    <!-- Symbiotic Equilibrium box (animated glow) -->
-    <rect x="332" y="18" width="248" height="154" rx="12" fill="url(#symbioticGrad)" stroke="#059669" stroke-width="1.5" filter="url(#symbGlow)">
-      <animate attributeName="stroke-opacity" values="1;0.35;1" dur="2.5s" repeatCount="indefinite"/>
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="2.5s" repeatCount="indefinite"/>
-    </rect>
-    <!-- Connected happy network dots -->
-    <circle cx="370" cy="48" r="6.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
-    <circle cx="397" cy="40" r="6.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
-    <circle cx="424" cy="50" r="6.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
-    <circle cx="410" cy="63" r="6.5" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
-    <line x1="370" y1="48" x2="397" y2="40" stroke="#059669" stroke-width="1.8" opacity="0.7"/>
-    <line x1="397" y1="40" x2="424" y2="50" stroke="#059669" stroke-width="1.8" opacity="0.7"/>
-    <line x1="370" y1="48" x2="410" y2="63" stroke="#059669" stroke-width="1.8" opacity="0.7"/>
-    <line x1="424" y1="50" x2="410" y2="63" stroke="#059669" stroke-width="1.8" opacity="0.7"/>
-    <line x1="397" y1="40" x2="410" y2="63" stroke="#059669" stroke-width="1.8" opacity="0.7"/>
-    <text x="447" y="52" text-anchor="start" fill="#059669" font-size="9" font-style="italic" font-family="'DM Sans', system-ui, sans-serif">connected</text>
-    <text x="456" y="78" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="'Playfair Display', Georgia, serif">Symbiotic Equilibrium</text>
-    <text x="456" y="100" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">System health is maximized</text>
-    <text x="456" y="118" text-anchor="middle" font-size="11" fill="#555" font-family="'DM Sans', system-ui, sans-serif">No gain from degrading network</text>
-    <text x="456" y="155" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700" font-family="'DM Sans', system-ui, sans-serif">Locally + globally optimal</text>
-  </svg>
+      <!-- Callout box -->
+      <rect x="440" y="42" width="148" height="80" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"
+        filter="url(#potlatchShadow)" />
+      <text x="514" y="62" text-anchor="middle" font-size="11" fill="#555"
+        font-family="'DM Sans', system-ui, sans-serif">The richest chief =</text>
+      <text x="514" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb"
+        font-family="'DM Sans', system-ui, sans-serif">strongest web of</text>
+      <text x="514" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb"
+        font-family="'DM Sans', system-ui, sans-serif">relationships</text>
+    </svg>
 
-  <div class="pullquote">
-    <p>The goal of policy in the 21st century is to design systems where the Nash Equilibrium and the Symbiotic Equilibrium are the same. This is not about changing human nature. It is about changing the math of the game.</p>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- Section: The Computation of Trust -->
-  <h2>The Computation of Trust</h2>
-
-  <p>Classical game theory failed because it assumed a world of disconnected transactions. To cooperate, its prisoners needed to trust each other, and trust was a variable it could not model.</p>
-
-  <p>This is precisely the problem that modern AI and cryptographic systems are built to solve. Consider a multi-agent AI system managing a supply chain. The AIs will learn to cooperate not because of a moral code, but because they will mathematically discover that transparent, shared ledgers and verifiable commitments dramatically reduce their collective prediction error.</p>
-
-  <p>Trust, in this new world, is not an emotion. It is a computational feature. The most successful systems will be those that engineer trust into their very architecture &mdash; building games where cooperation is not a matter of hope, but a matter of mathematical certainty.</p>
-
-  <hr class="section-divider">
-
-  <!-- Panel 4: Real-World Proof -->
-  <h2>Dispatches from a Future That Already Works</h2>
-
-  <p>These are not quaint experiments. They are proof that an economy built on symbiosis is not just more humane, but mathematically more efficient and robust.</p>
-
-  <div class="stat-row">
-    <div class="stat-callout">
-      <div class="stat-number">0%</div>
-      <div class="stat-label">Mondragon internal unemployment during the 2008 crisis</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number">8%</div>
-      <div class="stat-label">Buurtzorg overhead vs. 24% industry standard</div>
-    </div>
-    <div class="stat-callout">
-      <div class="stat-number">4 lines</div>
-      <div class="stat-label">of code in Tit-for-Tat, the winning strategy</div>
+    <div class="illustration">
+      <img src="/the-last-economy/chapter-8/mind-dashboard-dark.png" alt="MIND Dashboard"
+        style="width:100%; max-width:600px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
     </div>
   </div>
 
-  <div class="panel">
-    <h2>Real-World Proof</h2>
-
-    <div class="case-card" onclick="this.classList.toggle('open')">
-      <h3>Mondragon 2008</h3>
-      <div class="big-stat">0% internal unemployment</div>
-      <p style="font-size:0.85rem; color:#888;">vs. Spain's 26% peak</p>
-      <div class="detail">During the 2008 financial crisis, the Mondragon Corporation &mdash; a federation of 80,000 worker-owners in the Basque Country of Spain &mdash; faced the crisis with an internal unemployment rate of zero percent while the rest of the country suffered at twenty-six. Workers voted to reduce hours and pay rather than fire colleagues. Cooperation, encoded in ownership structure, produced resilience that hierarchical firms could not match.</div>
-    </div>
-
-    <div class="case-card" onclick="this.classList.toggle('open')">
-      <h3>Buurtzorg</h3>
-      <div class="big-stat">8% overhead</div>
-      <p style="font-size:0.85rem; color:#888;">vs. 24% industry standard</p>
-      <div class="detail">15,000 nurses in the Netherlands. No managers. 8% overhead vs. 24% industry standard &mdash; a third of the industry norm. Patients recover 40% faster. Each team of 12 is self-managing. Trust replaces supervision. Cooperation emerges from small, autonomous groups with shared purpose, delivering the nation&rsquo;s highest-rated patient care.</div>
-    </div>
-
-    <div class="case-card" onclick="this.classList.toggle('open')">
-      <h3>Linux Kernel</h3>
-      <div class="big-stat">~30M lines of code</div>
-      <p style="font-size:0.85rem; color:#888;">produced by voluntary cooperation</p>
-      <div class="detail">Produced by voluntary cooperation. Powers 96% of top 1M web servers, all Android phones, most of the internet's infrastructure. The GPL license enforces cooperation by code: you can use it, but you must share improvements. Cooperation, once structurally encoded, scales without limit.</div>
-    </div>
-
-    <div class="case-card" onclick="this.classList.toggle('open')">
-      <h3>Human Genome Project</h3>
-      <div class="big-stat">$1T+ value</div>
-      <p style="font-size:0.85rem; color:#888;">from freely shared public data</p>
-      <div class="detail">In the 1990s, a race began between an open consortium and a private company to sequence human DNA. The public project shared data freely every 24 hours. The private company kept data proprietary. The open model won, generating an estimated trillion dollars in economic value and creating entire new industries. The contributors gave away their work and got back a transformed world.</div>
-    </div>
-  </div>
-</div>
-
-<script>
-// Reading progress bar
-window.addEventListener('scroll', () => {
-  const p = document.documentElement;
-  document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
-});
-
-// ========== Panel 1: Prisoner's Dilemma ==========
-function runPD() {
-  const iters = +document.getElementById('iter-slider').value;
-  const rep = +document.getElementById('rep-slider').value / 100;
-  const horizon = +document.getElementById('horizon-slider').value;
-
-  const coopProb = Math.min(0.95, rep * 0.6 + (horizon / 200) * 0.35 + (iters > 5 ? 0.1 : 0));
-  let aScore = 0, bScore = 0, coopRounds = 0;
-  const rounds = [];
-  let aLastCoop = true, bLastCoop = true;
-
-  for (let i = 0; i < iters; i++) {
-    const endEffect = (iters - i) < 3 && rep < 0.5 ? 0.7 : 0;
-    const aCoop = Math.random() < (coopProb - endEffect) && (i === 0 || bLastCoop || Math.random() < rep * 0.3);
-    const bCoop = Math.random() < (coopProb - endEffect) && (i === 0 || aLastCoop || Math.random() < rep * 0.3);
-
-    if (aCoop && bCoop) { aScore += 3; bScore += 3; coopRounds++; }
-    else if (aCoop && !bCoop) { aScore += 0; bScore += 5; }
-    else if (!aCoop && bCoop) { aScore += 5; bScore += 0; }
-    else { aScore += 1; bScore += 1; }
-
-    rounds.push({ round: i, aCoop, bCoop });
-    aLastCoop = aCoop; bLastCoop = bCoop;
-  }
-
-  document.getElementById('pd-results').style.display = 'grid';
-  document.getElementById('pd-a-score').textContent = aScore;
-  document.getElementById('pd-b-score').textContent = bScore;
-  document.getElementById('pd-coop').textContent = Math.round(coopRounds / iters * 100) + '%';
-
-  const svg = d3.select('#pd-chart');
-  svg.selectAll('*').remove();
-  const w = svg.node().clientWidth || 600;
-  const h = 160, m = { t: 10, r: 10, b: 25, l: 30 };
-  const x = d3.scaleLinear().domain([0, iters - 1]).range([m.l, w - m.r]);
-  const barW = Math.max(1, (w - m.l - m.r) / iters - 0.5);
-
-  svg.attr('viewBox', `0 0 ${w} ${h}`);
-
-  svg.selectAll('.bar').data(rounds).enter().append('rect')
-    .attr('x', d => x(d.round)).attr('y', m.t)
-    .attr('width', barW).attr('height', (h - m.t - m.b) / 2 - 2)
-    .attr('fill', d => d.aCoop ? '#3b82f6' : '#ef4444').attr('rx', 1);
-  svg.selectAll('.bar2').data(rounds).enter().append('rect')
-    .attr('x', d => x(d.round)).attr('y', m.t + (h - m.t - m.b) / 2 + 2)
-    .attr('width', barW).attr('height', (h - m.t - m.b) / 2 - 2)
-    .attr('fill', d => d.bCoop ? '#3b82f6' : '#ef4444').attr('rx', 1);
-
-  svg.append('text').attr('x', 5).attr('y', m.t + 20).attr('font-size', 10).attr('fill', '#888').attr('font-family', "'DM Sans', system-ui, sans-serif").text('A');
-  svg.append('text').attr('x', 5).attr('y', m.t + (h - m.t - m.b) / 2 + 22).attr('font-size', 10).attr('fill', '#888').attr('font-family', "'DM Sans', system-ui, sans-serif").text('B');
-  svg.append('text').attr('x', w / 2).attr('y', h - 3).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', '#aaa').attr('font-family', "'DM Sans', system-ui, sans-serif").text('Blue = Cooperate, Red = Defect');
-}
-
-['iter-slider', 'rep-slider', 'horizon-slider'].forEach(id => {
-  document.getElementById(id).addEventListener('input', function() {
-    const map = { 'iter-slider': 'iter-val', 'rep-slider': 'rep-val', 'horizon-slider': 'horizon-val' };
-    const suffix = id === 'rep-slider' ? '%' : '';
-    document.getElementById(map[id]).textContent = this.value + suffix;
-  });
-});
-
-// ========== Panel 2: Strategy Tournament ==========
-function runTournament() {
-  const strategies = {
-    'Always Defect': (myHist, theirHist) => false,
-    'Always Cooperate': (myHist, theirHist) => true,
-    'Random (50/50)': (myHist, theirHist) => Math.random() > 0.5,
-    'Tit-for-Tat': (myHist, theirHist) => theirHist.length === 0 ? true : theirHist[theirHist.length - 1],
-    'Generous TfT': (myHist, theirHist) => theirHist.length === 0 ? true : (theirHist[theirHist.length - 1] || Math.random() < 0.1),
-    'Grim Trigger': (myHist, theirHist) => !theirHist.includes(false),
-  };
-  const names = Object.keys(strategies);
-  const scores = {};
-  names.forEach(n => scores[n] = 0);
-
-  for (let i = 0; i < names.length; i++) {
-    for (let j = 0; j < names.length; j++) {
-      if (i === j) continue;
-      let histI = [], histJ = [];
-      for (let r = 0; r < 200; r++) {
-        const a = strategies[names[i]](histI, histJ);
-        const b = strategies[names[j]](histJ, histI);
-        if (a && b) { scores[names[i]] += 3; }
-        else if (a && !b) { scores[names[i]] += 0; }
-        else if (!a && b) { scores[names[i]] += 5; }
-        else { scores[names[i]] += 1; }
-        histI.push(a); histJ.push(b);
-      }
-    }
-  }
-
-  const ranked = names.map(n => ({ name: n, score: scores[n] })).sort((a, b) => b.score - a.score);
-  const board = document.getElementById('tournament-board');
-  board.innerHTML = ranked.map((r, i) => `<div class="entry"><span class="rank">#${i + 1}</span><span>${r.name}</span><span style="font-weight:600;">${r.score.toLocaleString()}</span></div>`).join('');
-  document.getElementById('tournament-caption').style.display = 'block';
-}
-
-// ========== Panel 3: Topology x Cooperation ==========
-var activeTopology = null;
-
-function setTopology(type) {
-  const btns = document.querySelectorAll('.btn-group .btn');
-  btns.forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  activeTopology = type;
-  runSpread(type);
-}
-
-function runSpread(type) {
-  const N = 64;
-  const cols = 8, rows = 8;
-  const svg = d3.select('#spread-svg');
-  svg.selectAll('*').remove();
-  const w = svg.node().clientWidth || 600;
-  const h = 360;
-  const cw = w / cols;
-  const ch = (h - 40) / rows;
-  const ox = 0, oy = 20;
-
-  svg.attr('viewBox', `0 0 ${w} ${h}`);
-
-  // Build adjacency
-  const adj = Array.from({ length: N }, () => []);
-  if (type === 'hub') {
-    const hub = 0;
-    for (let i = 1; i < N; i++) { adj[hub].push(i); adj[i].push(hub); }
-  } else if (type === 'smallworld') {
-    for (let i = 0; i < N; i++) {
-      [1, 2].forEach(d => { const j = (i + d) % N; adj[i].push(j); adj[j].push(i); });
-    }
-    for (let i = 0; i < 6; i++) {
-      const a = Math.floor(Math.random() * N), b = Math.floor(Math.random() * N);
-      if (a !== b) { adj[a].push(b); adj[b].push(a); }
-    }
-  } else {
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const i = r * cols + c;
-        if (c + 1 < cols) { adj[i].push(i + 1); adj[i + 1].push(i); }
-        if (r + 1 < rows) { adj[i].push(i + cols); adj[i + cols].push(i); }
-      }
-    }
-  }
-
-  const state = Array(N).fill(true);
-  const startDefector = type === 'hub' ? 0 : Math.floor(N / 2);
-  state[startDefector] = false;
-
-  const rects = svg.selectAll('rect').data(d3.range(N)).enter().append('rect')
-    .attr('x', (d) => ox + (d % cols) * cw + 2)
-    .attr('y', (d) => oy + Math.floor(d / cols) * ch + 2)
-    .attr('width', cw - 4).attr('height', ch - 4)
-    .attr('rx', 4)
-    .attr('fill', d => state[d] ? '#3b82f6' : '#ef4444');
-
-  let step = 0;
-  const maxSteps = 20;
-
-  function tick() {
-    if (step >= maxSteps) {
-      const defCount = state.filter(s => !s).length;
-      d3.select('#spread-stat').html(`After ${step} steps: <strong>${defCount}/${N}</strong> nodes defecting (${Math.round(defCount/N*100)}%)`);
-      return;
-    }
-    step++;
-    const newState = [...state];
-    for (let i = 0; i < N; i++) {
-      if (state[i]) {
-        const defNeighbors = adj[i].filter(j => !state[j]).length;
-        const totalNeighbors = adj[i].length || 1;
-        if (defNeighbors / totalNeighbors > 0.3 + Math.random() * 0.2) {
-          newState[i] = false;
-        }
-      }
-    }
-    for (let i = 0; i < N; i++) state[i] = newState[i];
-    rects.transition().duration(200)
-      .attr('fill', d => state[d] ? '#3b82f6' : '#ef4444');
-
-    const defCount = state.filter(s => !s).length;
-    d3.select('#spread-stat').html(`Step ${step}: <strong>${defCount}/${N}</strong> defecting`);
-    setTimeout(tick, 350);
-  }
-  tick();
-}
-</script>
-<script>
-(function() {
-  var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
-  els.forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  });
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
+  <script>
+    // Reading progress bar
+    window.addEventListener('scroll', () => {
+      const p = document.documentElement;
+      document.getElementById('progress-bar').style.width = (p.scrollTop / (p.scrollHeight - p.clientHeight) * 100) + '%';
     });
-  }, { threshold: 0.1 });
-  els.forEach(function(el) { io.observe(el); });
-})();
-</script>
+
+
+  </script>
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.panel, .illustration, .pullquote, .stat-callout, .panel-full');
+      els.forEach(function (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
+
 </html>
